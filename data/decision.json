@@ -106,15 +106,15 @@
       "name": "나가사키·하우스텐보스 (큐슈)",
       "region": "규슈",
       "scores": {
-        "cost": 6,
+        "cost": 5,
         "schedule_fit": 6,
         "physical_burden": 6,
-        "experience": 7,
-        "family_fit": 6,
+        "experience": 8,
+        "family_fit": 7,
         "medical_access": 4,
         "seasonality": 8
       },
-      "notes": "2026-05-12~16 시나리오 (4인, 시부모 동반, 4박5일). 인천↔나가사키 KE 직항 4인 ₩1,147,025, HTB 1일권 4인 ₩238,800. 평일 출발 부담·지방 의료 ↓. 상세: docs/nagasaki-htb-itinerary-may-2026.md"
+      "notes": "2026-05-12~16 시나리오 (4인, 시부모 동반, 4박5일). 시내 호텔 2박 + 료칸 2박(Day 3-4) 구성. 인천↔나가사키 KE 직항 4인 ₩1,147,025, HTB 1일권 4인 ₩238,800. 료칸 도입으로 숙박비 상한 ↑(₩3.9M~₩6.4M), 경험·가족 적합성 ↑. 료칸 지역(우레시노/운젠/히라도) 결정 보류. 상세: docs/nagasaki-htb-itinerary-may-2026.md"
     }
   ]
 }
