@@ -77,8 +77,16 @@
       "id": "kyoto",
       "name": "교토",
       "region": "관서",
-      "scores": {},
-      "notes": ""
+      "scores": {
+        "cost": 6,
+        "schedule_fit": 8,
+        "physical_burden": 6,
+        "experience": 9,
+        "family_fit": 8,
+        "medical_access": 6,
+        "seasonality": 9
+      },
+      "notes": "2026-05-24~27 시나리오 (4인, 시부모 동반, 마지막 박 우메코지 카덴쇼 료칸·조식 포함). 비용 5.5M 근접, 5월 신록·도보 다수, 시부모 선호 전통 분위기. 상세: docs/kyoto-itinerary-may-2026.md"
     },
     {
       "id": "sapporo",
