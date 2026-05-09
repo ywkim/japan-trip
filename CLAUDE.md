@@ -56,6 +56,7 @@ japan-trip/
 - `viz/dashboard.html`은 인라인 데이터 (브라우저 더블클릭 동작 보장)
 - `data/decision.json` 수정 시 → HTML의 인라인 데이터도 동시 갱신 필요
 - 단일 출처는 `data/decision.json` (정본)
+- 단일 출처는 `data/weather.json`. `docs/weather.md`의 표는 사람용 사본 — JSON 수정 시 함께 갱신
 
 ## 점수 입력 규칙
 

@@ -65,6 +65,6 @@
     "2026-05": {"best": ["osaka", "kyoto", "tokyo", "fukuoka", "sapporo"], "worst": ["okinawa"], "comment": "5월은 신록기. 오키나와는 5월 중순부터 우기 진입. 그 외는 전반적으로 쾌적."},
     "2026-06": {"best": ["sapporo"], "worst": ["kyoto", "okinawa", "fukuoka"], "comment": "본토는 장마. 삿포로는 거의 영향 없음(예외적)."},
     "2026-09": {"best": ["sapporo"], "worst": ["okinawa", "kyoto", "osaka"], "comment": "잔서 + 태풍 최성기. 삿포로만 안정적."},
-    "2026-10": {"best": ["fukuoka", "osaka", "kyoto", "tokyo"], "worst": ["sapporo"], "comment": "본토 가을 황금기. 삿포로는 한기 빠름."}
+    "2026-10": {"best": ["fukuoka", "osaka", "kyoto"], "worst": ["sapporo"], "comment": "본토 가을 황금기. 삿포로는 한기 빠름. 도쿄는 강수일이 살짝 많아 8점으로 한 단계 아래."}
   }
 }
