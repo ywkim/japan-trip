@@ -24,6 +24,8 @@
 ### 5. 보조 데이터 활용
 - `data/weather.json` — 후보지 × 시기 기후 데이터 (JMA 평년값)
 - `docs/weather.md` — 시기별 쾌적도 순위, `seasonality`/`physical_burden` 점수 제안
+- `docs/kyoto-itinerary-may-2026.md` — 교토 5/24~27 시부모 동반 4인 시나리오 상세
+- `docs/huis-ten-bosch-flights-may-2026.md` — 하우스텐보스 3박4일 항공편 리서치 (LCC FUK vs KE 직항 NGS, 5월 출발일 후보)
 
 ## 평가 기준 (초안 — 함께 조정)
 
