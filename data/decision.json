@@ -20,7 +20,7 @@
       "name": "일정 적합성",
       "weight": 0.15,
       "direction": "higher_is_better",
-      "description": "양쪽 일정과 외래·업무 일정 정합"
+      "description": "양쪽 일정과 업무·개인 일정 정합"
     },
     {
       "id": "physical_burden",
