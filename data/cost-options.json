@@ -3,6 +3,53 @@
   "budget_cap_krw": 3000000,
   "trip_pax": 4,
   "fx_assumption": "100엔 ≈ 950원 (2026-05 리서치 시점)",
+  "budget_allocation_targets": {
+    "_doc": "3M을 카테고리별로 쪼개는 가이드 비율. 4인 3~5박 일본 여행 일반 기준. 시나리오 평가 시 카테고리별 비율을 본 가이드와 비교.",
+    "categories": [
+      {
+        "id": "flight",
+        "label": "항공",
+        "pct": 0.40,
+        "max_krw": 1200000,
+        "rationale": "한일 4인 왕복 직항 평균 ₩1.1~1.2M (확정값). 더 줄이기 어려움."
+      },
+      {
+        "id": "lodging",
+        "label": "숙박",
+        "pct": 0.27,
+        "max_krw": 810000,
+        "rationale": "박당 4인 평균 ₩200~300K × 3~4박. 료칸 1박 포함 시 비중 ↑"
+      },
+      {
+        "id": "food",
+        "label": "식비",
+        "pct": 0.15,
+        "max_krw": 450000,
+        "rationale": "1인1일 중간형 ₩28.5K × 4인 × 4~5일"
+      },
+      {
+        "id": "transport",
+        "label": "지역 교통",
+        "pct": 0.08,
+        "max_krw": 240000,
+        "rationale": "공항-시내, 도시 간, 지하철 1일권"
+      },
+      {
+        "id": "activity",
+        "label": "활동·입장",
+        "pct": 0.07,
+        "max_krw": 210000,
+        "rationale": "사찰·테마파크·크루즈"
+      },
+      {
+        "id": "other",
+        "label": "기타 (세금·청소비·예비)",
+        "pct": 0.03,
+        "max_krw": 90000,
+        "rationale": "교토 숙박세, 에어비앤비 청소비 등"
+      }
+    ]
+  },
   "flights": [
     {
       "id": "rs_kix_may24_27",
@@ -212,6 +259,7 @@
     {
       "id": "haruka_rt_4pax",
       "label": "JR 하루카 KIX↔교토 왕복 4인",
+      "category": "transport",
       "krw": 192000,
       "source": "JR 공식 ¥2,400 × 4 × 2",
       "data_quality": "official_fare"
@@ -219,6 +267,7 @@
     {
       "id": "kyoto_local_3day_4pax",
       "label": "교토 시영 1일권 4인 × 3일",
+      "category": "transport",
       "krw": 84000,
       "source": "교토시 공식 ¥700 × 4 × 3",
       "data_quality": "official_fare"
@@ -226,6 +275,7 @@
     {
       "id": "kyoto_temples_4pax",
       "label": "교토 사찰 입장 4인 (키요미즈·금각·료안·텐류·후시미·토지 등)",
+      "category": "activity",
       "krw": 124000,
       "source": "각 사찰 공식 약 ¥3,100 × 4",
       "data_quality": "official_fare"
@@ -233,6 +283,7 @@
     {
       "id": "kyoto_lodging_tax_2nights_4pax",
       "label": "교토시 숙박세 4인 × 2박",
+      "category": "other",
       "krw": 30400,
       "source": "2026-03 시행 ¥400/인/박 × 4 × 2",
       "data_quality": "official_fare",
@@ -241,6 +292,7 @@
     {
       "id": "airbnb_cleaning_fee",
       "label": "에어비앤비 청소비·서비스 수수료 (1회)",
+      "category": "other",
       "krw": 65000,
       "source": "Airbnb 시세 리서치 ₩50-80K 중간값",
       "data_quality": "researched_market_rate"
@@ -248,6 +300,7 @@
     {
       "id": "htb_1day_4pax",
       "label": "하우스텐보스 1일권 4인",
+      "category": "activity",
       "krw": 238800,
       "source": "네이버 패키지 ₩59,700 × 4",
       "data_quality": "confirmed_booking"
@@ -255,6 +308,7 @@
     {
       "id": "ngs_limousine_rt_4pax",
       "label": "나가사키 공항-시내 리무진 왕복 4인",
+      "category": "transport",
       "krw": 106000,
       "source": "나가사키 공항 공식 ¥1,400 × 4 × 2",
       "data_quality": "official_fare"
@@ -262,6 +316,7 @@
     {
       "id": "ngs_jr_to_sasebo_rt_4pax",
       "label": "JR 나가사키↔사세보 왕복 4인 (특급)",
+      "category": "transport",
       "krw": 152000,
       "source": "JR 큐슈 시카이라이너 약 ¥2,000 × 4 × 2 (리서치)",
       "data_quality": "researched_market_rate"
@@ -269,6 +324,7 @@
     {
       "id": "ngs_bus_to_sasebo_rt_4pax",
       "label": "고속버스 나가사키↔사세보 왕복 4인 (사이히 버스)",
+      "category": "transport",
       "krw": 114000,
       "source": "WILLER·사이히 버스 ¥1,500 × 4 × 2 (리서치)",
       "data_quality": "researched_market_rate",
@@ -276,10 +332,12 @@
     },
     {
       "id": "gunkanjima_cruise_4pax",
-      "label": "군함도 크루즈 4인 (시만상회 + 견학시설료)",
-      "krw": 150000,
-      "source": "시만상회 ¥3,600 × 4 + 견학료 ¥310 × 4 (리서치)",
-      "data_quality": "researched_market_rate"
+      "label": "군함도 크루즈 4인 (Marbella + 견학시설료)",
+      "category": "activity",
+      "krw": 148580,
+      "source": "gunkanjima-cruise.jp(Marbella) 공식 어른 ¥3,600 + 견학료 ¥310 × 4인",
+      "data_quality": "official_fare",
+      "notes": "Yamasa Kaiun(Kankomaru)는 ¥4,500-4,700 → 4인 ₩183K로 더 비쌈"
     }
   ],
   "scenarios": [
