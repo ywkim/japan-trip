@@ -1,0 +1,217 @@
+{
+  "_doc": "비용 옵션 카탈로그 — 확정 가격만 채우고 미확정은 null. scripts/budget.py로 시나리오 평가.",
+  "budget_cap_krw": 3000000,
+  "trip_pax": 4,
+  "flights": [
+    {
+      "id": "rs_kix_may24_27",
+      "label": "에어서울 ICN↔KIX (5/24~27, 3박)",
+      "carrier": "에어서울",
+      "route": "ICN→KIX→ICN",
+      "depart_date": "2026-05-24",
+      "return_date": "2026-05-27",
+      "nights": 3,
+      "pax": 4,
+      "total_krw": 1170638,
+      "source": "Skyscanner Gotogate 2026-05-09"
+    },
+    {
+      "id": "ke_ngs_may12_16",
+      "label": "대한항공 ICN↔NGS (5/12~16, 4박)",
+      "carrier": "대한항공",
+      "route": "ICN→NGS→ICN",
+      "depart_date": "2026-05-12",
+      "return_date": "2026-05-16",
+      "nights": 4,
+      "pax": 4,
+      "total_krw": 1147025,
+      "source": "Skyscanner Gotogate 2026-05-09"
+    }
+  ],
+  "lodging": [
+    {
+      "id": "kadensho_with_breakfast",
+      "city": "교토",
+      "name": "우메코지 카덴쇼 (트윈 2실, 조식 포함)",
+      "pax": 4,
+      "rooms": 2,
+      "per_night_krw": 1599926,
+      "source": "Agoda 2026-05-09 (₩799,963 × 2실)",
+      "notes": "환불 불가, 커넥팅룸 옵션, 1박당"
+    },
+    {
+      "id": "kadensho_no_breakfast",
+      "city": "교토",
+      "name": "우메코지 카덴쇼 (베이직 더블 2실, 조식 미포함)",
+      "pax": 4,
+      "rooms": 2,
+      "per_night_krw": 1231264,
+      "source": "Agoda 2026-05-09 (₩615,632 × 2실)",
+      "notes": "환불 불가, 1박당"
+    },
+    {
+      "id": "kyoto_airbnb_4pax",
+      "city": "교토",
+      "name": "교토 에어비앤비 (4인 1채)",
+      "pax": 4,
+      "rooms": 1,
+      "per_night_krw": null,
+      "source": null,
+      "notes": "TBD — Airbnb에서 가와라마치/교토역 인근 4인용 1채 검색"
+    },
+    {
+      "id": "kyoto_city_hotel_2rooms",
+      "city": "교토",
+      "name": "교토 시내 호텔 (트윈 2실)",
+      "pax": 4,
+      "rooms": 2,
+      "per_night_krw": null,
+      "source": null,
+      "notes": "TBD"
+    },
+    {
+      "id": "nagasaki_city_hotel_2rooms",
+      "city": "나가사키",
+      "name": "나가사키 시내 호텔 (트윈 2실)",
+      "pax": 4,
+      "rooms": 2,
+      "per_night_krw": null,
+      "source": null,
+      "notes": "TBD"
+    },
+    {
+      "id": "htb_inside_hotel",
+      "city": "사세보(HTB)",
+      "name": "하우스텐보스 내 호텔",
+      "pax": 4,
+      "rooms": 2,
+      "per_night_krw": null,
+      "source": null,
+      "notes": "TBD — Forest Villa, Hotel Europe 등"
+    }
+  ],
+  "daily_fixed": [
+    {
+      "id": "food_kyoto",
+      "label": "교토 식사 (1인 1일 평균)",
+      "city": "교토",
+      "krw_per_pax_per_day": null,
+      "source": null,
+      "notes": "TBD — 점심·저녁 1식 평균. 료칸 조식·가이세키는 lodging에 포함되거나 one_time으로 분리"
+    },
+    {
+      "id": "food_nagasaki",
+      "label": "나가사키 식사 (1인 1일 평균)",
+      "city": "나가사키",
+      "krw_per_pax_per_day": null,
+      "source": null,
+      "notes": "TBD"
+    }
+  ],
+  "one_time": [
+    {
+      "id": "haruka_rt_4pax",
+      "label": "JR 하루카 KIX↔교토 왕복 4인",
+      "krw": 192000,
+      "source": "JR 공식 ¥2,400 × 4 × 2 (환율 1엔=10원 기준)"
+    },
+    {
+      "id": "kyoto_local_3day_4pax",
+      "label": "교토 시영 1일권 4인 × 3일",
+      "krw": 84000,
+      "source": "교토시 ¥700 × 4 × 3"
+    },
+    {
+      "id": "kyoto_temples_4pax",
+      "label": "교토 사찰 입장 4인 (키요미즈·금각·료안·텐류·후시미·토지 등)",
+      "krw": 124000,
+      "source": "각 사찰 공식 약 ¥3,100 × 4"
+    },
+    {
+      "id": "htb_1day_4pax",
+      "label": "하우스텐보스 1일권 4인",
+      "krw": 238800,
+      "source": "네이버 패키지 ₩59,700 × 4"
+    },
+    {
+      "id": "ngs_limousine_rt_4pax",
+      "label": "나가사키 공항-시내 리무진 왕복 4인",
+      "krw": null,
+      "source": null,
+      "notes": "TBD"
+    },
+    {
+      "id": "ngs_jr_to_sasebo_rt_4pax",
+      "label": "JR 나가사키↔사세보 왕복 4인",
+      "krw": null,
+      "source": null,
+      "notes": "TBD"
+    },
+    {
+      "id": "gunkanjima_cruise_4pax",
+      "label": "군함도 크루즈 4인",
+      "krw": null,
+      "source": null,
+      "notes": "TBD"
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "kyoto_recommended",
+      "label": "교토 3박4일 추천안 (료칸 조식 포함 + 에어비앤비 2박)",
+      "flight": "rs_kix_may24_27",
+      "lodging_plan": [
+        {"lodging": "kyoto_airbnb_4pax", "nights": 2},
+        {"lodging": "kadensho_with_breakfast", "nights": 1}
+      ],
+      "fixed_days": [
+        {"daily_fixed": "food_kyoto", "days": 4}
+      ],
+      "one_time": ["haruka_rt_4pax", "kyoto_local_3day_4pax", "kyoto_temples_4pax"]
+    },
+    {
+      "id": "kyoto_minimal",
+      "label": "교토 3박4일 최저가안 (료칸 조식 미포함 + 에어비앤비 2박)",
+      "flight": "rs_kix_may24_27",
+      "lodging_plan": [
+        {"lodging": "kyoto_airbnb_4pax", "nights": 2},
+        {"lodging": "kadensho_no_breakfast", "nights": 1}
+      ],
+      "fixed_days": [
+        {"daily_fixed": "food_kyoto", "days": 4}
+      ],
+      "one_time": ["haruka_rt_4pax", "kyoto_local_3day_4pax", "kyoto_temples_4pax"]
+    },
+    {
+      "id": "kyoto_no_ryokan",
+      "label": "교토 3박4일 료칸 제외안 (전 박 에어비앤비)",
+      "flight": "rs_kix_may24_27",
+      "lodging_plan": [
+        {"lodging": "kyoto_airbnb_4pax", "nights": 3}
+      ],
+      "fixed_days": [
+        {"daily_fixed": "food_kyoto", "days": 4}
+      ],
+      "one_time": ["haruka_rt_4pax", "kyoto_local_3day_4pax", "kyoto_temples_4pax"]
+    },
+    {
+      "id": "nagasaki_htb",
+      "label": "나가사키·HTB 4박5일",
+      "flight": "ke_ngs_may12_16",
+      "lodging_plan": [
+        {"lodging": "nagasaki_city_hotel_2rooms", "nights": 2},
+        {"lodging": "htb_inside_hotel", "nights": 1},
+        {"lodging": "nagasaki_city_hotel_2rooms", "nights": 1}
+      ],
+      "fixed_days": [
+        {"daily_fixed": "food_nagasaki", "days": 5}
+      ],
+      "one_time": [
+        "htb_1day_4pax",
+        "ngs_limousine_rt_4pax",
+        "ngs_jr_to_sasebo_rt_4pax",
+        "gunkanjima_cruise_4pax"
+      ]
+    }
+  ]
+}
