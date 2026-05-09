@@ -23,7 +23,8 @@
 - 상세: `docs/budget-options.md`
 
 ### 4. 결정 기록
-- `docs/decision-log.md`에 합의 사항·보류 사항 기록
+- `docs/decision-log/` 디렉토리에 **새 파일** 추가 (`YYYY-MM-DD-slug.md`). 기존 파일은 편집하지 않음.
+- 컨벤션: `docs/decision-log/README.md`
 - 최종 결정 후 `reports/final-report.md` 작성 → `bash scripts/render-pdf.sh`로 PDF
 
 ### 5. 보조 데이터 활용
@@ -53,7 +54,7 @@
 
 ```
 data/        # 의사결정 데이터 (decision.json: 정본, weather.json: 보조)
-docs/        # 비교표, 날씨 분석, 의사결정 일지
+docs/        # 비교표, 날씨 분석, 의사결정 일지(decision-log/)
 viz/         # 인터랙티브 대시보드 (HTML)
 scripts/     # 계산·PDF 변환 스크립트
 reports/     # 최종 보고서
@@ -71,7 +72,7 @@ reports/     # 최종 보고서
 
 | 갱신 대상 | 무엇을 적나 |
 |---|---|
-| `docs/decision-log.md` | 날짜·주제·산출물·합의/보류/다음 단계 |
+| `docs/decision-log/YYYY-MM-DD-slug.md` (새 파일) | 날짜·주제·산출물·합의/보류/다음 단계 |
 | `README.md` (이 파일) | 새 산출물의 사용법·디렉토리 1줄 이상 |
 | `CLAUDE.md` | 디렉토리 트리·작업 규칙·데이터 동기화 규칙 |
 

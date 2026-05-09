@@ -26,7 +26,7 @@
 3. 각 후보 × 각 기준 → 1~10 점수 입력 (`scores` 객체)
 4. `python scripts/score.py` 실행 → 종합 점수 출력
 5. `viz/dashboard.html`에서 가중치 슬라이더로 민감도 확인
-6. `docs/decision-log.md`에 결정 근거 기록
+6. `docs/decision-log/`에 항목 1개 = 파일 1개로 결정 근거 기록 (파일명 `YYYY-MM-DD-slug.md`)
 7. `reports/final-report.md` 갱신 → `bash scripts/render-pdf.sh`로 PDF 생성
 
 ## 디렉토리 구조
@@ -41,7 +41,7 @@ japan-trip/
 ├── docs/
 │   ├── candidates.md    # 후보지 상세 비교
 │   ├── weather.md       # 날씨 분석 (시기별 쾌적도 순위)
-│   └── decision-log.md  # 의사결정 일지
+│   └── decision-log/    # 의사결정 일지 (항목 1개 = 파일 1개, README.md에 컨벤션)
 ├── viz/
 │   └── dashboard.html   # 인터랙티브 대시보드 (가중치 슬라이더)
 ├── scripts/
@@ -114,9 +114,12 @@ japan-trip/
 
 ### 모든 PR이 반드시 갱신해야 하는 항목
 
-1. **`docs/decision-log.md`**
-   - 새 일지 항목 추가: 날짜, 주제, 산출물, 합의·보류·다음 단계
+1. **`docs/decision-log/`**
+   - **새 파일을 추가**한다. 기존 파일을 편집하지 않는다 (충돌 방지).
+   - 파일명 `YYYY-MM-DD-slug.md` (같은 날 여러 항목이면 슬러그로 구분, 강한 순서가 필요하면 `YYYY-MM-DD-NN-slug.md`)
+   - 내용: 날짜·주제·산출물·합의·보류·다음 단계
    - 데이터/분석 PR은 **핵심 관찰 3~5줄**도 포함
+   - 컨벤션 상세: `docs/decision-log/README.md`
 
 2. **`README.md`**
    - 새 산출물(데이터·문서·스크립트·뷰)이 추가되면 사용법·디렉토리 안내에 1줄 이상 반영
