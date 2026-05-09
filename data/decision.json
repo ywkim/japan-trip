@@ -100,6 +100,21 @@
       "region": "규슈",
       "scores": {},
       "notes": ""
+    },
+    {
+      "id": "nagasaki_htb",
+      "name": "나가사키·하우스텐보스 (큐슈)",
+      "region": "규슈",
+      "scores": {
+        "cost": 6,
+        "schedule_fit": 6,
+        "physical_burden": 6,
+        "experience": 7,
+        "family_fit": 6,
+        "medical_access": 4,
+        "seasonality": 8
+      },
+      "notes": "2026-05-12~16 시나리오 (4인, 시부모 동반, 4박5일). 인천↔나가사키 KE 직항 4인 ₩1,147,025, HTB 1일권 4인 ₩238,800. 평일 출발 부담·지방 의료 ↓. 상세: docs/nagasaki-htb-itinerary-may-2026.md"
     }
   ]
 }
