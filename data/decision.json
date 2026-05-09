@@ -1,0 +1,105 @@
+{
+  "trip": {
+    "destination_country": "일본",
+    "travelers": ["영욱", "소연"],
+    "optional_companions": ["시부모"],
+    "duration_days_options": [4, 5, 6, 7],
+    "budget_krw_options": [3000000, 5000000, 7000000],
+    "season_options": ["2026-05", "2026-06", "2026-09", "2026-10"]
+  },
+  "criteria": [
+    {
+      "id": "cost",
+      "name": "비용",
+      "weight": 0.20,
+      "direction": "lower_is_better",
+      "description": "총 예산 부담. 점수는 '부담이 적을수록 높음'으로 입력"
+    },
+    {
+      "id": "schedule_fit",
+      "name": "일정 적합성",
+      "weight": 0.15,
+      "direction": "higher_is_better",
+      "description": "양쪽 일정과 외래·업무 일정 정합"
+    },
+    {
+      "id": "physical_burden",
+      "name": "신체 부담",
+      "weight": 0.15,
+      "direction": "lower_is_better",
+      "description": "이동·시차·기후로 인한 신체 부담. 점수는 '부담이 적을수록 높음'"
+    },
+    {
+      "id": "experience",
+      "name": "경험 가치",
+      "weight": 0.20,
+      "direction": "higher_is_better",
+      "description": "관광·문화·미식 등 경험 만족도"
+    },
+    {
+      "id": "family_fit",
+      "name": "가족 적합성",
+      "weight": 0.10,
+      "direction": "higher_is_better",
+      "description": "시부모 동반 시 적합성 (단독 여행 시 N/A로 비워도 됨)"
+    },
+    {
+      "id": "medical_access",
+      "name": "의료 접근성",
+      "weight": 0.10,
+      "direction": "higher_is_better",
+      "description": "응급 시 의료 접근 (한국어 가능 의료기관, 거리)"
+    },
+    {
+      "id": "seasonality",
+      "name": "계절성",
+      "weight": 0.10,
+      "direction": "higher_is_better",
+      "description": "여행 시기의 기후·이벤트 적합성"
+    }
+  ],
+  "candidates": [
+    {
+      "id": "tokyo",
+      "name": "도쿄",
+      "region": "관동",
+      "scores": {},
+      "notes": ""
+    },
+    {
+      "id": "osaka",
+      "name": "오사카",
+      "region": "관서",
+      "scores": {},
+      "notes": ""
+    },
+    {
+      "id": "kyoto",
+      "name": "교토",
+      "region": "관서",
+      "scores": {},
+      "notes": ""
+    },
+    {
+      "id": "sapporo",
+      "name": "삿포로 (홋카이도)",
+      "region": "홋카이도",
+      "scores": {},
+      "notes": ""
+    },
+    {
+      "id": "okinawa",
+      "name": "오키나와",
+      "region": "오키나와",
+      "scores": {},
+      "notes": ""
+    },
+    {
+      "id": "fukuoka",
+      "name": "후쿠오카",
+      "region": "규슈",
+      "scores": {},
+      "notes": ""
+    }
+  ]
+}

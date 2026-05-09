@@ -1,0 +1,15 @@
+# 임시 파일
+.DS_Store
+*.swp
+*~
+
+# 생성물
+reports/final-report.pdf
+
+# 에디터
+.vscode/
+.idea/
+.obsidian/
+
+# 로컬 상태
+*.local
