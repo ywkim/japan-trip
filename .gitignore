@@ -1,15 +1,24 @@
-# 임시 파일
+# macOS system files
 .DS_Store
-*.swp
-*~
 
-# 생성물
-reports/final-report.pdf
+# Obsidian
+.obsidian/
+*.md:Zone.Identifier
+*:Zone.Identifier
+
+# Python
+__pycache__/
+*.pyc
+
+# Claude Code
+.claude/worktrees/
 
 # 에디터
 .vscode/
 .idea/
-.obsidian/
+
+# 생성물
+reports/final-report.pdf
 
 # 로컬 상태
 *.local
