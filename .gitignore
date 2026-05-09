@@ -22,3 +22,4 @@ reports/final-report.pdf
 
 # 로컬 상태
 *.local
+.vercel
