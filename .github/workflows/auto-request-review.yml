@@ -1,0 +1,15 @@
+name: Auto Request Review
+
+on:
+  pull_request:
+    types: [opened, ready_for_review]
+
+jobs:
+  auto-request-review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: necojackarc/auto-request-review@v0.13.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          config: .github/auto_request_review.yml
