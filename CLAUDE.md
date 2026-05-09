@@ -57,6 +57,7 @@ japan-trip/
 - `data/decision.json` 수정 시 → HTML의 인라인 데이터도 동시 갱신 필요
 - 단일 출처는 `data/decision.json` (정본)
 - 단일 출처는 `data/weather.json`. `docs/weather.md`의 표는 사람용 사본 — JSON 수정 시 함께 갱신
+- `index.html`은 모바일에서 보는 **최종 결정 요약 페이지**. `reports/final-report.md`의 결정 요약·근거·일정과 동일 내용을 정적으로 보여주므로, 보고서가 갱신되면 함께 갱신
 
 ## 점수 입력 규칙
 

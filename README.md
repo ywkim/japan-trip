@@ -25,6 +25,9 @@
 - `data/weather.json` — 후보지 × 시기 기후 데이터 (JMA 평년값)
 - `docs/weather.md` — 시기별 쾌적도 순위, `seasonality`/`physical_burden` 점수 제안
 
+### 6. 모바일에서 결정 보기
+- `index.html` — 모바일-퍼스트 최종 결정 요약 (목적지·시기·예산·왜·일정 한눈에). 카드 단을 세로로 쌓아 작은 화면에서 읽기 쉽도록 구성. 더블클릭 또는 GitHub Pages URL로 접근
+
 ## 평가 기준 (초안 — 함께 조정)
 
 | 기준 | 의미 | 초기 가중치 |
