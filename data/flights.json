@@ -1,0 +1,176 @@
+{
+  "snapshot_date": "2026-05-09",
+  "scope": {
+    "season": "2026-05",
+    "season_note": "스냅샷일 기준 잔여 5월(5/10~5/31). 일본 골든위크(4/29~5/6)는 이미 종료되어 5월 중·하순은 연중 비교적 저렴한 구간.",
+    "origins": ["ICN", "GMP"],
+    "travelers_basis": {"adults": 4, "composition": "부부 2인 + 시부모 2인"},
+    "cabin": "economy",
+    "trip_type": "round_trip",
+    "duration_days_assumed": 5
+  },
+  "sources": [
+    {"name": "Skyscanner / KAYAK / Expedia / Trip.com / 호텔스컴바인", "type": "real_time_meta", "queried_on": "2026-05-09"},
+    {"name": "각 사이트의 '최저가/평균가/노선 평균' 표기", "type": "historical_average", "note": "월별 평균은 12개월 표본 기반으로, 2026-05 실시세와 차이 가능"}
+  ],
+  "fare_unit": "KRW",
+  "fare_legend": {
+    "low": "현 시세 기준 LCC 최저가 근사 (1인 왕복 이코노미)",
+    "median": "주요 항공권 메타사이트 '평균/노선 평균' 근사",
+    "high": "근거리 출발일·풀서비스 항공사·인기 시간대 상한 근사",
+    "total_4pax_krw": "low·median·high를 1인 기준으로 환산한 4인 총액 추정 범위"
+  },
+  "airport_map": {
+    "tokyo": ["HND", "NRT"],
+    "osaka": ["KIX", "ITM"],
+    "kyoto": ["KIX", "ITM"],
+    "sapporo": ["CTS"],
+    "okinawa": ["OKA"],
+    "fukuoka": ["FUK"]
+  },
+  "gmp_availability_2026": {
+    "available": ["HND", "KIX", "NGO"],
+    "unavailable_for_candidates": ["NRT", "ITM", "CTS", "OKA", "FUK"],
+    "note": "GMP 일본 직항은 HND·KIX·NGO 3개 노선뿐 (2026-03-30 GMP-HND 정기 취항 재개·확대 반영). 후쿠오카·삿포로·오키나와는 GMP 직항 없음."
+  },
+  "destinations": {
+    "tokyo": {
+      "name": "도쿄",
+      "routes": [
+        {
+          "origin": "ICN", "dest": "HND",
+          "carriers": ["대한항공", "아시아나", "Peach"],
+          "freq_per_week_approx": 22,
+          "flight_time_h": 2.5,
+          "fare_per_person_krw": {"low": 130000, "median": 350000, "high": 450000},
+          "total_4pax_krw": {"low": 520000, "median": 1400000, "high": 1800000},
+          "available": true,
+          "note": "도심 접근성 최상(하네다-도심 30분). 5월은 평년 평균 30~40만대"
+        },
+        {
+          "origin": "ICN", "dest": "NRT",
+          "carriers": ["대한항공", "아시아나", "제주항공", "진에어", "티웨이", "에어서울", "Peach", "ZipAir"],
+          "freq_per_week_approx": 70,
+          "flight_time_h": 2.5,
+          "fare_per_person_krw": {"low": 110000, "median": 250000, "high": 350000},
+          "total_4pax_krw": {"low": 440000, "median": 1000000, "high": 1400000},
+          "available": true,
+          "note": "선택지 가장 풍부. 도심까지 60~90분 추가 이동 필요"
+        },
+        {
+          "origin": "GMP", "dest": "HND",
+          "carriers": ["대한항공", "아시아나", "ANA", "JAL"],
+          "freq_per_week_approx": 28,
+          "flight_time_h": 2.5,
+          "fare_per_person_krw": {"low": 230000, "median": 425000, "high": 500000},
+          "total_4pax_krw": {"low": 920000, "median": 1700000, "high": 2000000},
+          "available": true,
+          "note": "FSC만 운항(LCC 없음). 시부모님 동반 시 김포·하네다 양쪽 도심 접근성 최상이라 가산점 가능"
+        }
+      ],
+      "best_low_route": "ICN-NRT",
+      "best_premium_route": "GMP-HND"
+    },
+    "osaka": {
+      "name": "오사카",
+      "routes": [
+        {
+          "origin": "ICN", "dest": "KIX",
+          "carriers": ["대한항공", "아시아나", "제주항공", "진에어", "티웨이", "에어서울", "이스타", "Peach"],
+          "freq_per_week_approx": 80,
+          "flight_time_h": 1.75,
+          "fare_per_person_krw": {"low": 100000, "median": 280000, "high": 400000},
+          "total_4pax_krw": {"low": 400000, "median": 1120000, "high": 1600000},
+          "available": true,
+          "note": "한일 노선 중 좌석 가장 풍부. 25%가 31만 이하로 발권"
+        },
+        {
+          "origin": "GMP", "dest": "KIX",
+          "carriers": ["티웨이", "JAL"],
+          "freq_per_week_approx": 14,
+          "flight_time_h": 1.75,
+          "fare_per_person_krw": {"low": 92000, "median": 200000, "high": 300000},
+          "total_4pax_krw": {"low": 370000, "median": 800000, "high": 1200000},
+          "available": true,
+          "note": "GMP 노선 중 가장 저렴. 4인 동반 시 ICN-KIX보다 김포 접근성 이점이 큼"
+        }
+      ],
+      "best_low_route": "GMP-KIX",
+      "best_premium_route": "GMP-KIX"
+    },
+    "kyoto": {
+      "name": "교토",
+      "routes_inherit_from": "osaka",
+      "note": "교토 직항 공항 없음. KIX 또는 ITM 경유 후 하루카(70분) / 신칸센으로 이동. 항공권 시세는 오사카와 동일 적용",
+      "ground_transfer_per_person_krw": {"haruka_one_way": 30000, "round_trip": 60000},
+      "best_low_route": "GMP-KIX (+하루카)",
+      "best_premium_route": "GMP-KIX (+하루카)"
+    },
+    "sapporo": {
+      "name": "삿포로",
+      "routes": [
+        {
+          "origin": "ICN", "dest": "CTS",
+          "carriers": ["대한항공", "아시아나", "제주항공", "티웨이", "진에어"],
+          "freq_per_week_approx": 25,
+          "flight_time_h": 2.75,
+          "fare_per_person_krw": {"low": 50000, "median": 205000, "high": 350000},
+          "total_4pax_krw": {"low": 200000, "median": 820000, "high": 1400000},
+          "available": true,
+          "note": "5월이 연중 최저가 시즌(평균 약 20.5만). 4인 비용 효율 최상위권"
+        }
+      ],
+      "best_low_route": "ICN-CTS",
+      "best_premium_route": "ICN-CTS",
+      "gmp_route": null
+    },
+    "okinawa": {
+      "name": "오키나와",
+      "routes": [
+        {
+          "origin": "ICN", "dest": "OKA",
+          "carriers": ["대한항공", "아시아나", "제주항공", "진에어", "티웨이", "Peach"],
+          "freq_per_week_approx": 35,
+          "flight_time_h": 2.25,
+          "fare_per_person_krw": {"low": 80000, "median": 280000, "high": 380000},
+          "total_4pax_krw": {"low": 320000, "median": 1120000, "high": 1520000},
+          "available": true,
+          "note": "5월 중순부터 우기 진입. 7~8월 성수기 진입 전이라 5월은 가격 안정"
+        }
+      ],
+      "best_low_route": "ICN-OKA",
+      "best_premium_route": "ICN-OKA",
+      "gmp_route": null
+    },
+    "fukuoka": {
+      "name": "후쿠오카",
+      "routes": [
+        {
+          "origin": "ICN", "dest": "FUK",
+          "carriers": ["대한항공", "아시아나", "제주항공", "진에어", "티웨이", "에어서울", "이스타"],
+          "freq_per_week_approx": 60,
+          "flight_time_h": 1.25,
+          "fare_per_person_krw": {"low": 75000, "median": 150000, "high": 250000},
+          "total_4pax_krw": {"low": 300000, "median": 600000, "high": 1000000},
+          "available": true,
+          "note": "한일 노선 최저가군. 비행시간 75분으로 시부모 동반 신체 부담도 가장 작음"
+        }
+      ],
+      "best_low_route": "ICN-FUK",
+      "best_premium_route": "ICN-FUK",
+      "gmp_route": null
+    }
+  },
+  "ranking_4pax_total_2026_05": {
+    "by_median_low_to_high": [
+      {"city": "fukuoka", "route": "ICN-FUK", "median_4pax_krw": 600000},
+      {"city": "osaka", "route": "GMP-KIX", "median_4pax_krw": 800000},
+      {"city": "sapporo", "route": "ICN-CTS", "median_4pax_krw": 820000},
+      {"city": "tokyo", "route": "ICN-NRT", "median_4pax_krw": 1000000},
+      {"city": "okinawa", "route": "ICN-OKA", "median_4pax_krw": 1120000},
+      {"city": "kyoto", "route": "GMP-KIX (+하루카 24만)", "median_4pax_krw": 1040000},
+      {"city": "tokyo", "route": "GMP-HND", "median_4pax_krw": 1700000}
+    ],
+    "comment": "median 기준. 후쿠오카 < 오사카(GMP) ≈ 삿포로 ≈ 교토(GMP+하루카) < 도쿄(NRT) < 오키나와 < 도쿄(GMP-HND)"
+  }
+}

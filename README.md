@@ -24,6 +24,8 @@
 ### 5. 보조 데이터 활용
 - `data/weather.json` — 후보지 × 시기 기후 데이터 (JMA 평년값)
 - `docs/weather.md` — 시기별 쾌적도 순위, `seasonality`/`physical_burden` 점수 제안
+- `data/flights.json` — 후보지 × 출발지(ICN/GMP) 항공권 시세 스냅샷
+- `docs/flights.md` — 4인 총액 비교, GMP 가용성, `cost` 점수 환산 가이드
 
 ## 평가 기준 (초안 — 함께 조정)
 
@@ -44,8 +46,8 @@
 ## 디렉토리
 
 ```
-data/        # 의사결정 데이터 (decision.json: 정본, weather.json: 보조)
-docs/        # 비교표, 날씨 분석, 의사결정 일지
+data/        # 의사결정 데이터 (decision.json: 정본, weather.json·flights.json: 보조)
+docs/        # 비교표, 날씨·항공권 분석, 의사결정 일지
 viz/         # 인터랙티브 대시보드 (HTML)
 scripts/     # 계산·PDF 변환 스크립트
 reports/     # 최종 보고서

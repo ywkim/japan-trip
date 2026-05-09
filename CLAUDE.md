@@ -37,10 +37,12 @@ japan-trip/
 ├── CLAUDE.md            # AI 세션 지시
 ├── data/
 │   ├── decision.json    # 단일 출처 (criteria + candidates + scores)
-│   └── weather.json     # 후보지 × 시기 기후 데이터 (JMA 평년값)
+│   ├── weather.json     # 후보지 × 시기 기후 데이터 (JMA 평년값)
+│   └── flights.json     # 후보지 × 출발지 항공권 시세 스냅샷 (메타사이트 근사)
 ├── docs/
 │   ├── candidates.md    # 후보지 상세 비교
 │   ├── weather.md       # 날씨 분석 (시기별 쾌적도 순위)
+│   ├── flights.md       # 항공권 분석 (4인 총액·GMP 가용성)
 │   └── decision-log.md  # 의사결정 일지
 ├── viz/
 │   └── dashboard.html   # 인터랙티브 대시보드 (가중치 슬라이더)
@@ -57,6 +59,8 @@ japan-trip/
 - `data/decision.json` 수정 시 → HTML의 인라인 데이터도 동시 갱신 필요
 - 단일 출처는 `data/decision.json` (정본)
 - 단일 출처는 `data/weather.json`. `docs/weather.md`의 표는 사람용 사본 — JSON 수정 시 함께 갱신
+- 단일 출처는 `data/flights.json`. `docs/flights.md`의 표는 사람용 사본 — JSON 수정 시 함께 갱신
+- `data/flights.json`은 **시점 스냅샷** (snapshot_date 명시). 시세 재조회 시 새 스냅샷으로 덮어쓰지 말고 snapshot_date 갱신 + 변경 사유를 `docs/decision-log.md`에 기록
 
 ## 점수 입력 규칙
 
