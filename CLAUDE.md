@@ -39,9 +39,10 @@ japan-trip/
 │   ├── decision.json    # 단일 출처 (criteria + candidates + scores)
 │   └── weather.json     # 후보지 × 시기 기후 데이터 (JMA 평년값)
 ├── docs/
-│   ├── candidates.md    # 후보지 상세 비교
-│   ├── weather.md       # 날씨 분석 (시기별 쾌적도 순위)
-│   └── decision-log.md  # 의사결정 일지
+│   ├── candidates.md             # 후보지 상세 비교
+│   ├── weather.md                # 날씨 분석 (시기별 쾌적도 순위)
+│   ├── dashboard-alternatives.md # 대시보드 필요성·대안 검토
+│   └── decision-log.md           # 의사결정 일지
 ├── viz/
 │   └── dashboard.html   # 인터랙티브 대시보드 (가중치 슬라이더)
 ├── scripts/

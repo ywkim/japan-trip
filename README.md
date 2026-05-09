@@ -25,6 +25,9 @@
 - `data/weather.json` — 후보지 × 시기 기후 데이터 (JMA 평년값)
 - `docs/weather.md` — 시기별 쾌적도 순위, `seasonality`/`physical_burden` 점수 제안
 
+### 6. 도구 메타 검토
+- `docs/dashboard-alternatives.md` — `viz/dashboard.html`이 정말 필요한지·축소안은 무엇인지 정리한 검토 문서
+
 ## 평가 기준 (초안 — 함께 조정)
 
 | 기준 | 의미 | 초기 가중치 |
