@@ -1,0 +1,70 @@
+{
+  "source": "JMA(일본 기상청) 1991–2020 평년값 근사 + 공개 기후 자료",
+  "note": "월 평균 기온/강수량/습도/강수일수는 평년값. 2026년 실제 날씨와는 차이 가능. 점수는 1~10, 높을수록 '여행 쾌적도'가 높음.",
+  "months": ["2026-05", "2026-06", "2026-09", "2026-10"],
+  "metrics_legend": {
+    "tmax_c": "월 평균 최고기온 (°C)",
+    "tmin_c": "월 평균 최저기온 (°C)",
+    "precip_mm": "월 강수량 (mm)",
+    "rain_days": "월 강수일수 (≥1mm 기준 근사)",
+    "humidity_pct": "월 평균 상대습도 (%)",
+    "comfort_score": "여행 쾌적도(1~10, 높을수록 쾌적). 기온·강수·습도·재해 위험을 종합한 정성 평가",
+    "hazards": "주요 기상 리스크(장마/태풍/폭염/한기 등)"
+  },
+  "cities": {
+    "tokyo": {
+      "name": "도쿄",
+      "station": "Tokyo (JMA)",
+      "2026-05": {"tmax_c": 23.0, "tmin_c": 14.8, "precip_mm": 138, "rain_days": 10, "humidity_pct": 70, "comfort_score": 8, "hazards": ["일교차"]},
+      "2026-06": {"tmax_c": 25.9, "tmin_c": 18.5, "precip_mm": 168, "rain_days": 12, "humidity_pct": 78, "comfort_score": 5, "hazards": ["장마(쓰유)", "고습"]},
+      "2026-09": {"tmax_c": 27.5, "tmin_c": 20.7, "precip_mm": 225, "rain_days": 12, "humidity_pct": 76, "comfort_score": 6, "hazards": ["태풍", "잔여 폭염"]},
+      "2026-10": {"tmax_c": 22.0, "tmin_c": 15.0, "precip_mm": 235, "rain_days": 9, "humidity_pct": 73, "comfort_score": 8, "hazards": ["가을비"]}
+    },
+    "osaka": {
+      "name": "오사카",
+      "station": "Osaka (JMA)",
+      "2026-05": {"tmax_c": 25.0, "tmin_c": 15.6, "precip_mm": 111, "rain_days": 9, "humidity_pct": 64, "comfort_score": 9, "hazards": []},
+      "2026-06": {"tmax_c": 28.0, "tmin_c": 20.0, "precip_mm": 175, "rain_days": 12, "humidity_pct": 73, "comfort_score": 5, "hazards": ["장마", "고온다습"]},
+      "2026-09": {"tmax_c": 30.4, "tmin_c": 22.7, "precip_mm": 153, "rain_days": 10, "humidity_pct": 70, "comfort_score": 5, "hazards": ["잔서(殘暑)", "태풍"]},
+      "2026-10": {"tmax_c": 25.2, "tmin_c": 16.7, "precip_mm": 136, "rain_days": 8, "humidity_pct": 67, "comfort_score": 9, "hazards": []}
+    },
+    "kyoto": {
+      "name": "교토",
+      "station": "Kyoto (JMA)",
+      "2026-05": {"tmax_c": 25.1, "tmin_c": 13.6, "precip_mm": 150, "rain_days": 10, "humidity_pct": 64, "comfort_score": 9, "hazards": ["일교차"]},
+      "2026-06": {"tmax_c": 28.1, "tmin_c": 18.7, "precip_mm": 225, "rain_days": 12, "humidity_pct": 73, "comfort_score": 4, "hazards": ["장마", "분지 무더위"]},
+      "2026-09": {"tmax_c": 29.6, "tmin_c": 20.3, "precip_mm": 178, "rain_days": 11, "humidity_pct": 70, "comfort_score": 5, "hazards": ["잔서", "태풍", "분지 폭염"]},
+      "2026-10": {"tmax_c": 24.4, "tmin_c": 13.7, "precip_mm": 143, "rain_days": 8, "humidity_pct": 70, "comfort_score": 9, "hazards": ["일교차"]}
+    },
+    "sapporo": {
+      "name": "삿포로",
+      "station": "Sapporo (JMA)",
+      "2026-05": {"tmax_c": 17.9, "tmin_c": 8.0, "precip_mm": 56, "rain_days": 9, "humidity_pct": 67, "comfort_score": 8, "hazards": ["서늘함, 야간 추위"]},
+      "2026-06": {"tmax_c": 21.8, "tmin_c": 12.7, "precip_mm": 60, "rain_days": 9, "humidity_pct": 73, "comfort_score": 10, "hazards": ["장마 거의 없음"]},
+      "2026-09": {"tmax_c": 22.3, "tmin_c": 14.1, "precip_mm": 142, "rain_days": 10, "humidity_pct": 75, "comfort_score": 9, "hazards": ["태풍 잔재 가능"]},
+      "2026-10": {"tmax_c": 16.4, "tmin_c": 7.5, "precip_mm": 110, "rain_days": 10, "humidity_pct": 71, "comfort_score": 7, "hazards": ["빠른 한기, 단풍"]}
+    },
+    "okinawa": {
+      "name": "오키나와(나하)",
+      "station": "Naha (JMA)",
+      "2026-05": {"tmax_c": 26.7, "tmin_c": 21.0, "precip_mm": 220, "rain_days": 13, "humidity_pct": 79, "comfort_score": 5, "hazards": ["우기 진입(5월 중순~)"]},
+      "2026-06": {"tmax_c": 29.4, "tmin_c": 24.0, "precip_mm": 261, "rain_days": 13, "humidity_pct": 83, "comfort_score": 4, "hazards": ["우기 절정", "초기 태풍"]},
+      "2026-09": {"tmax_c": 30.4, "tmin_c": 24.9, "precip_mm": 275, "rain_days": 13, "humidity_pct": 76, "comfort_score": 3, "hazards": ["태풍 최성기", "고온"]},
+      "2026-10": {"tmax_c": 27.9, "tmin_c": 22.5, "precip_mm": 179, "rain_days": 11, "humidity_pct": 73, "comfort_score": 7, "hazards": ["태풍 후기 가능"]}
+    },
+    "fukuoka": {
+      "name": "후쿠오카",
+      "station": "Fukuoka (JMA)",
+      "2026-05": {"tmax_c": 23.9, "tmin_c": 14.1, "precip_mm": 144, "rain_days": 9, "humidity_pct": 70, "comfort_score": 8, "hazards": []},
+      "2026-06": {"tmax_c": 27.2, "tmin_c": 19.1, "precip_mm": 270, "rain_days": 12, "humidity_pct": 78, "comfort_score": 4, "hazards": ["장마 강수 최다", "고습"]},
+      "2026-09": {"tmax_c": 28.9, "tmin_c": 21.4, "precip_mm": 192, "rain_days": 10, "humidity_pct": 72, "comfort_score": 6, "hazards": ["태풍 경로", "잔서"]},
+      "2026-10": {"tmax_c": 23.9, "tmin_c": 15.5, "precip_mm": 87, "rain_days": 7, "humidity_pct": 68, "comfort_score": 9, "hazards": []}
+    }
+  },
+  "season_comfort_summary": {
+    "2026-05": {"best": ["osaka", "kyoto", "tokyo", "fukuoka", "sapporo"], "worst": ["okinawa"], "comment": "5월은 신록기. 오키나와는 5월 중순부터 우기 진입. 그 외는 전반적으로 쾌적."},
+    "2026-06": {"best": ["sapporo"], "worst": ["kyoto", "okinawa", "fukuoka"], "comment": "본토는 장마. 삿포로는 거의 영향 없음(예외적)."},
+    "2026-09": {"best": ["sapporo"], "worst": ["okinawa", "kyoto", "osaka"], "comment": "잔서 + 태풍 최성기. 삿포로만 안정적."},
+    "2026-10": {"best": ["fukuoka", "osaka", "kyoto", "tokyo"], "worst": ["sapporo"], "comment": "본토 가을 황금기. 삿포로는 한기 빠름."}
+  }
+}
