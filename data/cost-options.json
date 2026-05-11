@@ -180,6 +180,61 @@
       "notes": "청소비·서비스 수수료 분배 후 단가. 실제 매물별 변동, 예약 시 갱신"
     },
     {
+      "id": "airbnb_sukei_kyoto_inn",
+      "city": "교토",
+      "name": "교토 에어비앤비 #1 — Sukei & Kyoto Inn (동산구·기요미즈고조 5분, 5/31~6/2 2박)",
+      "pax": 4,
+      "rooms": 1,
+      "per_night_krw": 357287,
+      "source": "Airbnb 매물 13900786, 4명 직접 조회 2026-05-11 (2박 총액 ₩714,574)",
+      "data_quality": "confirmed_booking",
+      "notes": "후기 232·★4.89·슈퍼호스트 11년·셀프체크인·정식 료칸업 등록. 호스트 룰: 한국식 김치/피클 숙소 내 섭취 금지."
+    },
+    {
+      "id": "airbnb_kyoto_st_8min_machiya",
+      "city": "교토",
+      "name": "교토 에어비앤비 #2 — 교토역 8분 마치야 (미나미구·쿠조역 2분, 5/31~6/2 2박)",
+      "pax": 4,
+      "rooms": 1,
+      "per_night_krw": 346923,
+      "source": "Airbnb 매물 1293062833291480706, 4명 직접 조회 2026-05-11 (2박 총액 ₩693,845)",
+      "data_quality": "confirmed_booking",
+      "notes": "후기 116·★4.93·65㎡ 2LDK·1F 킹+2F 싱글3·풀주방·바닥난방·디즈니+넷플릭스·정원. 1일 1조 프라이빗."
+    },
+    {
+      "id": "airbnb_shio_machiya",
+      "city": "교토",
+      "name": "교토 에어비앤비 #3 — 시오(Shio) 100년 마치야 (중교구·니조역 7분, 5/31~6/2 2박)",
+      "pax": 4,
+      "rooms": 1,
+      "per_night_krw": 365186,
+      "source": "Airbnb 매물 1373928005681941061, 4명 직접 조회 2026-05-11 (2박 총액 ₩730,371)",
+      "data_quality": "confirmed_booking",
+      "notes": "후기 59·★4.95(최고)·침실 3/욕실 2/화장실 2·78㎡ 2층·시부모-부부 완전 분리 가능. 슈퍼호스트 2년."
+    },
+    {
+      "id": "airbnb_sei_higashiyama_sanjo",
+      "city": "교토",
+      "name": "교토 에어비앤비 #4 — 세이 히가시야마 산조 (가모강 동쪽·산조케이한 5분, 5/31~6/2 2박)",
+      "pax": 4,
+      "rooms": 1,
+      "per_night_krw": 275229,
+      "source": "Airbnb 매물 1064095167105408231, 4명 직접 조회 2026-05-11 (2박 총액 ₩550,458)",
+      "data_quality": "confirmed_booking",
+      "notes": "후기 106·★4.87·5개 후보 중 최저가·폰토초·기야마치·가와라마치 도보권·헤이안 신사 도보. 욕실 1개(아침 동선 빡빡 가능)."
+    },
+    {
+      "id": "airbnb_open_air_bath_house",
+      "city": "교토",
+      "name": "교토 에어비앤비 #5 — New Open 반노천탕 한동 (시치조역·교토역 8분, 5/31~6/2 2박)",
+      "pax": 4,
+      "rooms": 1,
+      "per_night_krw": 291518,
+      "source": "Airbnb 매물 1082959287874676204, 4명 직접 조회 2026-05-11 (2박 총액 ₩583,035)",
+      "data_quality": "confirmed_booking",
+      "notes": "후기 66·★4.85·슈퍼호스트 10년·반노천탕+정원·풀키친·바닥난방·드럼식 세탁건조기. 정원 4명 정확(침대 3개)."
+    },
+    {
       "id": "kyoto_business_hotel_2rooms",
       "city": "교토",
       "name": "교토 비즈니스호텔 (트윈 2실, 가성비)",
