@@ -59,12 +59,20 @@
       "2026-06": {"tmax_c": 27.2, "tmin_c": 19.1, "precip_mm": 270, "rain_days": 12, "humidity_pct": 78, "comfort_score": 4, "hazards": ["장마 강수 최다", "고습"]},
       "2026-09": {"tmax_c": 28.9, "tmin_c": 21.4, "precip_mm": 192, "rain_days": 10, "humidity_pct": 72, "comfort_score": 6, "hazards": ["태풍 경로", "잔서"]},
       "2026-10": {"tmax_c": 23.9, "tmin_c": 15.5, "precip_mm": 87, "rain_days": 7, "humidity_pct": 68, "comfort_score": 9, "hazards": []}
+    },
+    "kobe": {
+      "name": "고베",
+      "station": "Kobe (JMA)",
+      "2026-05": {"tmax_c": 23.4, "tmin_c": 15.3, "precip_mm": 135, "rain_days": 9, "humidity_pct": 68, "comfort_score": 9, "hazards": []},
+      "2026-06": {"tmax_c": 26.7, "tmin_c": 20.6, "precip_mm": 207, "rain_days": 13, "humidity_pct": 75, "comfort_score": 5, "hazards": ["장마(쓰유)", "고습"]},
+      "2026-09": {"tmax_c": 28.5, "tmin_c": 22.3, "precip_mm": 176, "rain_days": 10, "humidity_pct": 72, "comfort_score": 5, "hazards": ["잔서", "태풍 잔재"]},
+      "2026-10": {"tmax_c": 23.0, "tmin_c": 17.0, "precip_mm": 110, "rain_days": 8, "humidity_pct": 68, "comfort_score": 9, "hazards": []}
     }
   },
   "season_comfort_summary": {
-    "2026-05": {"best": ["osaka", "kyoto", "tokyo", "fukuoka", "sapporo"], "worst": ["okinawa"], "comment": "5월은 신록기. 오키나와는 5월 중순부터 우기 진입. 그 외는 전반적으로 쾌적."},
-    "2026-06": {"best": ["sapporo"], "worst": ["kyoto", "okinawa", "fukuoka"], "comment": "본토는 장마. 삿포로는 거의 영향 없음(예외적)."},
-    "2026-09": {"best": ["sapporo"], "worst": ["okinawa", "kyoto", "osaka"], "comment": "잔서 + 태풍 최성기. 삿포로만 안정적."},
-    "2026-10": {"best": ["fukuoka", "osaka", "kyoto"], "worst": ["sapporo"], "comment": "본토 가을 황금기. 삿포로는 한기 빠름. 도쿄는 강수일이 살짝 많아 8점으로 한 단계 아래."}
+    "2026-05": {"best": ["osaka", "kyoto", "kobe", "tokyo", "fukuoka", "sapporo"], "worst": ["okinawa"], "comment": "5월은 신록기. 오키나와는 5월 중순부터 우기 진입. 그 외는 전반적으로 쾌적. 고베는 오사카·교토와 유사."},
+    "2026-06": {"best": ["sapporo"], "worst": ["kyoto", "okinawa", "fukuoka"], "comment": "본토는 장마. 삿포로는 거의 영향 없음(예외적). 고베(5)는 해안 입지로 교토(4)보다 한 단계 양호."},
+    "2026-09": {"best": ["sapporo"], "worst": ["okinawa", "kyoto", "osaka"], "comment": "잔서 + 태풍 최성기. 삿포로만 안정적. 고베는 오사카와 유사한 5."},
+    "2026-10": {"best": ["fukuoka", "osaka", "kyoto", "kobe"], "worst": ["sapporo"], "comment": "본토 가을 황금기. 삿포로는 한기 빠름. 도쿄는 강수일이 살짝 많아 8점으로 한 단계 아래."}
   }
 }
