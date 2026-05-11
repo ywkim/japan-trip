@@ -150,13 +150,13 @@ const DECISION = {
     { "id": "seasonality",     "name": "계절성",       "weight": 0.10, "direction": "higher_is_better" }
   ],
   "candidates": [
-    { "id": "tokyo",   "name": "도쿄",                "scores": {} },
-    { "id": "osaka",   "name": "오사카",              "scores": {} },
+    { "id": "tokyo",   "name": "도쿄",                "scores": { "seasonality": 8 } },
+    { "id": "osaka",   "name": "오사카",              "scores": { "seasonality": 9 } },
     { "id": "kyoto",   "name": "교토",                "scores": { "cost": 7, "schedule_fit": 8, "physical_burden": 6, "experience": 9, "family_fit": 8, "medical_access": 6, "seasonality": 9 } },
-    { "id": "sapporo", "name": "삿포로 (홋카이도)",   "scores": {} },
-    { "id": "okinawa", "name": "오키나와",            "scores": {} },
-    { "id": "fukuoka", "name": "후쿠오카",            "scores": {} },
-    { "id": "kobe",    "name": "고베",                "scores": { "seasonality": 5 } }
+    { "id": "sapporo", "name": "삿포로 (홋카이도)",   "scores": { "seasonality": 8 } },
+    { "id": "okinawa", "name": "오키나와",            "scores": { "seasonality": 5 } },
+    { "id": "fukuoka", "name": "후쿠오카",            "scores": { "seasonality": 8 } },
+    { "id": "kobe",    "name": "고베",                "scores": { "seasonality": 9 } }
   ]
 };
 
