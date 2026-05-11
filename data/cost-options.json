@@ -74,6 +74,20 @@
       "pax": 4,
       "total_krw": 1147025,
       "source": "Skyscanner Gotogate 2026-05-09"
+    },
+    {
+      "id": "rs_kix_may31_jun3",
+      "label": "ICN↔KIX (5/31~6/3, 3박) — 가족 일정(5/28~29) 회피 후보",
+      "carrier": "TBD (Skyscanner 추천순 직항 최저가)",
+      "route": "ICN→KIX→ICN",
+      "depart_date": "2026-05-31",
+      "return_date": "2026-06-03",
+      "nights": 3,
+      "pax": 4,
+      "total_krw": 1012000,
+      "source": "Skyscanner 4인 직항 일반석 2026-05-11 (₩253,000/인 × 4)",
+      "data_quality": "researched_market_rate",
+      "notes": "변경가능 날짜 비교: 5/27~30 ₩940K(가족 일정 충돌), 5/30~6/2 ₩1,130K, 5/31~6/3 ₩1,012K(선택). 발권사 평점 미확인 → 영욱 직접 재조회 권장."
     }
   ],
   "lodging": [
@@ -98,6 +112,17 @@
       "source": "Agoda 2026-05-09 스크린샷 (₩615,632 × 2실)",
       "data_quality": "confirmed_booking",
       "notes": "환불 불가, 1박당"
+    },
+    {
+      "id": "kadensho_early_bird_with_breakfast_2026jun2",
+      "city": "교토",
+      "name": "우메코지 카덴쇼 (2명×2실, 조식 포함, 조기할인 15% OFF, 2026-06-02→06-03 1박)",
+      "pax": 4,
+      "rooms": 2,
+      "per_night_krw": 726750,
+      "source": "dormy-hotels.com 공식 검색 2026-05-11 (¥19,125/인 × 4 = ¥76,500/박, FX 100엔=950원)",
+      "data_quality": "confirmed_booking",
+      "notes": "원안 4인 1실은 카덴쇼 객실 정원 한계로 가격 노출 0건 → 2명×2실 분리 시 18개 플랜 모두 가용. 공식 사이트(Kyoritsu Resort) 직판 = OTA 대비 일반 저렴 + 쿠폰. 환불 불가 조건 사전 확인 필요."
     },
     {
       "id": "kadensho_may_weekday_min",
