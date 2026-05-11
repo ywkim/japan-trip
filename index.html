@@ -2,25 +2,157 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="refresh" content="0; url=viz/dashboard.html">
-<title>일본 여행 의사결정</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1a1a1a" media="(prefers-color-scheme: dark)">
+<title>일본 여행 최종 결정</title>
 <style>
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "AppleGothic", sans-serif;
-    max-width: 600px;
-    margin: 4rem auto;
-    padding: 1rem;
-    color: #222;
-    background: #fafafa;
+  :root {
+    --bg: #fafafa;
+    --fg: #222;
+    --muted: #666;
+    --border: #ddd;
+    --accent: #d33;
+    --card: #fff;
   }
   @media (prefers-color-scheme: dark) {
-    body { color: #eee; background: #1a1a1a; }
-    a { color: #ff6464; }
+    :root {
+      --bg: #1a1a1a;
+      --fg: #eee;
+      --muted: #999;
+      --border: #333;
+      --accent: #ff6464;
+      --card: #232323;
+    }
   }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "AppleGothic", sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    margin: 0;
+    padding: 1rem;
+    max-width: 640px;
+    margin: 0 auto;
+    line-height: 1.5;
+    font-size: 16px;
+  }
+  h1 { font-size: 1.4rem; margin: 0.5rem 0 0.25rem; }
+  .status { color: var(--muted); font-size: 0.85rem; margin-bottom: 1rem; }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 0.75rem 0;
+  }
+  .card h2 { font-size: 1rem; margin: 0 0 0.5rem; color: var(--muted); font-weight: 500; }
+  .big { font-size: 1.6rem; font-weight: 600; line-height: 1.2; }
+  .sub { color: var(--muted); font-size: 0.9rem; margin-top: 0.25rem; }
+  .row { display: flex; justify-content: space-between; padding: 0.4rem 0; border-bottom: 1px solid var(--border); }
+  .row:last-child { border-bottom: none; }
+  .row .k { color: var(--muted); }
+  .row .v { font-variant-numeric: tabular-nums; text-align: right; }
+  ul { padding-left: 1.2rem; margin: 0.3rem 0; }
+  li { margin: 0.2rem 0; }
+  .day { padding: 0.5rem 0; border-bottom: 1px solid var(--border); }
+  .day:last-child { border-bottom: none; }
+  .day .date { font-weight: 600; }
+  .day .plan { color: var(--muted); font-size: 0.9rem; margin-top: 0.15rem; }
+  .links { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.75rem; }
+  .links a {
+    flex: 1 1 auto;
+    text-align: center;
+    padding: 0.6rem 0.8rem;
+    background: transparent;
+    color: var(--fg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    min-width: 8rem;
+  }
+  .links a:hover { border-color: var(--accent); }
+  footer { color: var(--muted); font-size: 0.75rem; margin-top: 1.5rem; text-align: center; }
 </style>
 </head>
 <body>
-<h1>일본 여행 의사결정</h1>
-<p>대시보드로 이동 중… 자동으로 이동하지 않으면 <a href="viz/dashboard.html">여기를 클릭</a>하세요.</p>
+
+<h1>일본 여행 최종 결정</h1>
+<div class="status">제안 단계 — 다른 후보지 점수 확정 전 임시. 갱신 시점: 2026-05-09</div>
+
+<div class="card">
+  <h2>가는 곳</h2>
+  <div class="big">교토</div>
+  <div class="sub">관서 · 인천 → 간사이 직항 → 전철 약 1시간</div>
+</div>
+
+<div class="card">
+  <h2>요약</h2>
+  <div class="row"><span class="k">시기</span><span class="v">2026-05-24 (토) ~ 05-27 (화)</span></div>
+  <div class="row"><span class="k">기간</span><span class="v">3박 4일</span></div>
+  <div class="row"><span class="k">동반</span><span class="v">영욱·소연 + 시부모 (4인)</span></div>
+  <div class="row"><span class="k">예상 비용</span><span class="v">약 ₩4,956,000</span></div>
+  <div class="row"><span class="k">예산 옵션</span><span class="v">5M 내 수렴</span></div>
+  <div class="row"><span class="k">종합 점수</span><span class="v">7.60 / 10</span></div>
+</div>
+
+<div class="card">
+  <h2>왜 교토</h2>
+  <ul>
+    <li>경험 9 — 사찰·정원·가이세키·전통 료칸 1박</li>
+    <li>계절성 9 — 5월 신록, 장마 직전 적기</li>
+    <li>가족 적합성 8 — 정적 분위기 + 료칸 조식 포함</li>
+    <li>일정 8 — 토~화, 마지막 박 료칸으로 공항 동선 단축</li>
+  </ul>
+</div>
+
+<div class="card">
+  <h2>약점·보완</h2>
+  <ul>
+    <li>도보 동선 부담 (신체 6) → 일자별 도보 ≤ 7km</li>
+    <li>한국어 의료 제한 (의료 6) → 시부모 보험·병원 위치 사전 확인</li>
+  </ul>
+</div>
+
+<div class="card">
+  <h2>일정 개요</h2>
+  <div class="day">
+    <div class="date">5/24 토 — 도착</div>
+    <div class="plan">키요미즈데라·기온 · 에어비앤비</div>
+  </div>
+  <div class="day">
+    <div class="date">5/25 일 — 아라시야마</div>
+    <div class="plan">금각사·료안지 · 에어비앤비</div>
+  </div>
+  <div class="day">
+    <div class="date">5/26 월 — 후시미 이나리</div>
+    <div class="plan">우메코지 카덴쇼 체크인·온천·가이세키</div>
+  </div>
+  <div class="day">
+    <div class="date">5/27 화 — 출국</div>
+    <div class="plan">료칸 조식 → 토지 → 간사이 공항</div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>보류·차후</h2>
+  <ul>
+    <li>1·2박 에어비앤비 매물 선정</li>
+    <li>5/26 가이세키: 료칸 내 vs 외부</li>
+    <li>다른 후보지 점수 입력 → 비교 후 최종 확정</li>
+    <li>항공권 발권사 선택</li>
+  </ul>
+</div>
+
+<div class="links">
+  <a href="reports/final-report.md">전체 보고서</a>
+  <a href="docs/kyoto-itinerary-may-2026.md">상세 일정·비용</a>
+  <a href="viz/dashboard.html">민감도 대시보드</a>
+</div>
+
+<footer>data/decision.json · docs/decision-log.md 단일 출처</footer>
+
 </body>
 </html>
