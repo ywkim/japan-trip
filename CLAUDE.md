@@ -39,9 +39,11 @@ japan-trip/
 │   ├── decision.json    # 단일 출처 (criteria + candidates + scores)
 │   └── weather.json     # 후보지 × 시기 기후 데이터 (JMA 평년값)
 ├── docs/
-│   ├── candidates.md    # 후보지 상세 비교
-│   ├── weather.md       # 날씨 분석 (시기별 쾌적도 순위)
-│   └── decision-log.md  # 의사결정 일지
+│   ├── candidates.md                      # 후보지 상세 비교
+│   ├── weather.md                         # 날씨 분석 (시기별 쾌적도 순위)
+│   ├── decision-log.md                    # 의사결정 일지
+│   ├── kyoto-itinerary-may-2026.md        # 교토 5월 시나리오 (4인 시부모 동반)
+│   └── jejuair-icn-kobe-june-2026.md      # 제주항공 인천-고베 신규 노선·가격 리서치
 ├── viz/
 │   └── dashboard.html   # 인터랙티브 대시보드 (가중치 슬라이더)
 ├── scripts/
