@@ -26,7 +26,7 @@
 3. 각 후보 × 각 기준 → 1~10 점수 입력 (`scores` 객체)
 4. `python scripts/score.py` 실행 → 종합 점수 출력
 5. `viz/dashboard.html`에서 가중치 슬라이더로 민감도 확인
-6. `docs/decision-log.md`에 결정 근거 기록
+6. `docs/decision-log/`에 항목 1개 = 파일 1개로 결정 근거 기록 (파일명 `YYYY-MM-DD-slug.md`)
 7. `reports/final-report.md` 갱신 → `bash scripts/render-pdf.sh`로 PDF 생성
 
 ## 디렉토리 구조
@@ -43,7 +43,7 @@ japan-trip/
 │   ├── candidates.md    # 후보지 상세 비교
 │   ├── weather.md       # 날씨 분석 (시기별 쾌적도 순위)
 │   ├── flights.md       # 항공권 분석 (4인 총액·GMP 가용성)
-│   └── decision-log.md  # 의사결정 일지
+│   └── decision-log/    # 의사결정 일지 (항목 1개 = 파일 1개, README.md에 컨벤션)
 ├── viz/
 │   └── dashboard.html   # 인터랙티브 대시보드 (가중치 슬라이더)
 ├── scripts/
@@ -60,7 +60,8 @@ japan-trip/
 - 단일 출처는 `data/decision.json` (정본)
 - 단일 출처는 `data/weather.json`. `docs/weather.md`의 표는 사람용 사본 — JSON 수정 시 함께 갱신
 - 단일 출처는 `data/flights.json`. `docs/flights.md`의 표는 사람용 사본 — JSON 수정 시 함께 갱신
-- `data/flights.json`은 **시점 스냅샷** (snapshot_date 명시). 시세 재조회 시 새 스냅샷으로 덮어쓰지 말고 snapshot_date 갱신 + 변경 사유를 `docs/decision-log.md`에 기록
+- `data/flights.json`은 **시점 스냅샷** (snapshot_date 명시). 시세 재조회 시 새 스냅샷으로 덮어쓰지 말고 snapshot_date 갱신 + 변경 사유를 `docs/decision-log/`에 새 일지로 기록
+- `index.html`은 모바일에서 보는 **최종 결정 요약 페이지**. `reports/final-report.md`의 결정 요약·근거·일정과 동일 내용을 정적으로 보여주므로, 보고서가 갱신되면 함께 갱신
 
 ## 점수 입력 규칙
 
@@ -69,6 +70,47 @@ japan-trip/
   - 예: 비용은 `lower_is_better`이지만 점수는 "비용 부담이 적을수록 높은 점수"로 입력
 - 점수 입력 시 `notes` 필드에 근거 짧게 기록
 
+## 실시간 가격 리서치 우선 (모든 세션 공통, 강제 규칙)
+
+> 여행 계획의 본질은 리서치다. 가격·운임·시세·운영 정보는 매일 바뀌므로
+> AI 학습 데이터의 기억으로 대체할 수 없다. 모든 세션은 다음 규칙을 따른다.
+
+### 절대 금지
+
+- ❌ **학습 데이터 기반 가격 추측 금지** — "보통 그쯤" 같은 표현으로 숫자 입력 금지
+- ❌ **출처 없는 숫자 입력 금지** — `source` 필드 비어 있으면 머지 불가
+- ❌ **"적절한 추정값"으로 빈칸 채우기 금지** — 차라리 `null` + TBD 유지
+- ❌ **사용자가 보여준 스크린샷 외 가격을 임의 추정해 비교 금지**
+
+### 가격·시세 입력 시 의무 절차
+
+1. **WebSearch/WebFetch로 실시간 검색** (Klook·Booking·Agoda·Trip.com·Airbnb·공식 사이트 등)
+2. **여러 출처 교차 검증** — 단일 사이트 가격에 의존하지 않음
+3. **`source` 필드에 사이트명·검색 일자 기록** (예: "Klook 2026-05-09")
+4. **`data_quality` 라벨 부여** (아래 분류 사용)
+5. 환율 가정 명시 (`fx_assumption` 필드 등) — 엔→원 환산 시 기준 환율 기록
+
+### `data_quality` 분류
+
+| 라벨 | 의미 | 예 |
+|---|---|---|
+| `confirmed_booking` | 사용자가 본 실제 예약 사이트 가격 (스크린샷·링크) | Skyscanner·Agoda 스크린샷 가격 |
+| `official_fare` | 공식 운영자 발표 운임/요금 | JR 공식, 시 교통, 사찰 입장료 |
+| `researched_market_rate` | 비교 사이트·블로그·여행 가이드 시세 | Klook 평균, 트립스토어 가이드 |
+
+→ 시나리오 평가 출력 시에도 라벨별로 신뢰도가 다름을 사용자에게 표시.
+
+### 사용자에게 제시할 때
+
+- "약 30만원 정도 예상" 같은 모호한 표현 금지
+- "Klook 2026-05-09 검색 기준 ₩300,000" 처럼 출처·시점 명시
+- 리서치가 부족한 항목은 정직하게 "TBD — 리서치 필요" 표기
+
+### 가격 데이터 갱신 정책
+
+- 예약 시점에 모든 `researched_market_rate` 항목을 재검색 → `confirmed_booking`으로 승격
+- 30일 이상 묵은 리서치 가격은 신뢰하지 않고 재조회
+
 ## 메타 문서화 규칙 (모든 PR 공통)
 
 > 이후 모든 의사결정에 자료가 누적·재사용되도록, 어떤 PR이든 작업물뿐 아니라
@@ -76,9 +118,12 @@ japan-trip/
 
 ### 모든 PR이 반드시 갱신해야 하는 항목
 
-1. **`docs/decision-log.md`**
-   - 새 일지 항목 추가: 날짜, 주제, 산출물, 합의·보류·다음 단계
+1. **`docs/decision-log/`**
+   - **새 파일을 추가**한다. 기존 파일을 편집하지 않는다 (충돌 방지).
+   - 파일명 `YYYY-MM-DD-slug.md` (같은 날 여러 항목이면 슬러그로 구분, 강한 순서가 필요하면 `YYYY-MM-DD-NN-slug.md`)
+   - 내용: 날짜·주제·산출물·합의·보류·다음 단계
    - 데이터/분석 PR은 **핵심 관찰 3~5줄**도 포함
+   - 컨벤션 상세: `docs/decision-log/README.md`
 
 2. **`README.md`**
    - 새 산출물(데이터·문서·스크립트·뷰)이 추가되면 사용법·디렉토리 안내에 1줄 이상 반영
@@ -94,6 +139,9 @@ japan-trip/
 - 데이터 출처(예: JMA, 정부 통계, 공개 API) 명시
 - 갱신 주기·평년값 vs 실측 구분 명시
 - 점수화한 경우 점수 기준(1~10이 무엇을 의미하는지)을 `docs/`에 기록
+- **가격·운임·시세 데이터는 "실시간 가격 리서치 우선" 섹션 규칙 따름**
+  - 모든 가격 항목에 `source` + `data_quality` + 검색 일자
+  - 추측치·기억 기반 가격 입력은 PR 머지 차단 사유
 
 ### 메타 문서를 갱신하지 않는 경우
 
