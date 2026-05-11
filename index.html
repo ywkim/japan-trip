@@ -31,10 +31,9 @@
     font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "AppleGothic", sans-serif;
     background: var(--bg);
     color: var(--fg);
-    margin: 0;
+    margin: 0 auto;
     padding: 1rem;
     max-width: 640px;
-    margin: 0 auto;
     line-height: 1.5;
     font-size: 16px;
   }
@@ -80,24 +79,28 @@
 <body>
 
 <h1>일본 여행 최종 결정</h1>
-<div class="status">제안 단계 — 다른 후보지 점수 확정 전 임시. 갱신 시점: 2026-05-09</div>
+<div class="status">제안 단계 — 다른 후보지 점수 확정 전 임시. 최근 보고서 갱신일 기준.</div>
 
+<!-- SYNC: reports/final-report.md §1 (결정 요약) -->
 <div class="card">
   <h2>가는 곳</h2>
   <div class="big">교토</div>
   <div class="sub">관서 · 인천 → 간사이 직항 → 전철 약 1시간</div>
 </div>
 
+<!-- SYNC: reports/final-report.md §1 (결정 요약) · data/decision.json (점수·예산옵션) -->
 <div class="card">
   <h2>요약</h2>
   <div class="row"><span class="k">시기</span><span class="v">2026-05-24 (토) ~ 05-27 (화)</span></div>
   <div class="row"><span class="k">기간</span><span class="v">3박 4일</span></div>
   <div class="row"><span class="k">동반</span><span class="v">영욱·소연 + 시부모 (4인)</span></div>
   <div class="row"><span class="k">예상 비용</span><span class="v">약 ₩4,956,000</span></div>
-  <div class="row"><span class="k">예산 옵션</span><span class="v">5M 내 수렴</span></div>
+  <div class="row"><span class="k">예산 옵션</span><span class="v">3M 옵션 실패 → 5M 적용</span></div>
   <div class="row"><span class="k">종합 점수</span><span class="v">7.60 / 10</span></div>
+  <div class="sub" style="margin-top:0.5rem;">3M 하드캡 정책(<code>data/cost-options.json</code>) 기준 료칸 포함안은 확정 합계 ₩3.17M으로 통과 실패. 5M 옵션을 적용해 료칸 1박을 유지한 시나리오.</div>
 </div>
 
+<!-- SYNC: reports/final-report.md §4 (강점) · data/decision.json scores -->
 <div class="card">
   <h2>왜 교토</h2>
   <ul>
@@ -116,6 +119,7 @@
   </ul>
 </div>
 
+<!-- SYNC: reports/final-report.md §6 (일정 개요) · docs/kyoto-itinerary-may-2026.md -->
 <div class="card">
   <h2>일정 개요</h2>
   <div class="day">
@@ -147,8 +151,8 @@
 </div>
 
 <div class="links">
-  <a href="reports/final-report.md">전체 보고서</a>
-  <a href="docs/kyoto-itinerary-may-2026.md">상세 일정·비용</a>
+  <a href="https://github.com/ywkim/japan-trip/blob/main/reports/final-report.md">전체 보고서</a>
+  <a href="https://github.com/ywkim/japan-trip/blob/main/docs/kyoto-itinerary-may-2026.md">상세 일정·비용</a>
   <a href="viz/dashboard.html">민감도 대시보드</a>
 </div>
 

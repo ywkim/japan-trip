@@ -60,6 +60,8 @@ japan-trip/
 - 단일 출처는 `data/decision.json` (정본)
 - 단일 출처는 `data/weather.json`. `docs/weather.md`의 표는 사람용 사본 — JSON 수정 시 함께 갱신
 - `index.html`은 모바일에서 보는 **최종 결정 요약 페이지**. `reports/final-report.md`의 결정 요약·근거·일정과 동일 내용을 정적으로 보여주므로, 보고서가 갱신되면 함께 갱신
+  - 하드코딩된 카드 블록 위에는 `<!-- SYNC: <출처> -->` 주석으로 동기화 대상을 명시 (예: `<!-- SYNC: reports/final-report.md §1 -->`). 보고서 절·JSON 키를 수정할 때 같은 SYNC 주석이 가리키는 블록을 함께 갱신
+  - 외부 문서 링크는 GitHub blob URL(`https://github.com/ywkim/japan-trip/blob/main/...`) 사용 — GitHub Pages가 `.md` 파일을 raw로 렌더하지 못하므로 상대 경로(`reports/final-report.md`)는 금지
 
 ## 점수 입력 규칙
 
