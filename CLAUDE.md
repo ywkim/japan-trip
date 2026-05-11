@@ -40,10 +40,12 @@ japan-trip/
 │   ├── weather.json     # 후보지 × 시기 기후 데이터 (JMA 평년값)
 │   └── flights.json     # 후보지 × 출발지 항공권 시세 스냅샷 (메타사이트 근사)
 ├── docs/
-│   ├── candidates.md    # 후보지 상세 비교
-│   ├── weather.md       # 날씨 분석 (시기별 쾌적도 순위)
-│   ├── flights.md       # 항공권 분석 (4인 총액·GMP 가용성)
-│   └── decision-log/    # 의사결정 일지 (항목 1개 = 파일 1개, README.md에 컨벤션)
+│   ├── candidates.md                      # 후보지 상세 비교
+│   ├── weather.md                         # 날씨 분석 (시기별 쾌적도 순위)
+│   ├── flights.md                         # 항공권 분석 (4인 총액·GMP 가용성)
+│   ├── decision-log/                      # 의사결정 일지 (항목 1개 = 파일 1개, README.md에 컨벤션)
+│   ├── kyoto-itinerary-may-2026.md        # 교토 5월 시나리오 (4인 시부모 동반)
+│   └── jejuair-icn-kobe-june-2026.md      # 제주항공 인천-고베 신규 노선·가격 리서치
 ├── viz/
 │   └── dashboard.html   # 인터랙티브 대시보드 (가중치 슬라이더)
 ├── scripts/
