@@ -14,14 +14,26 @@
     "duration_days_options": [4, 5, 6, 7]
   },
   "data_quality": {
+    "default_label": "researched_market_rate",
+    "label_meaning": "노선별 fare_per_person_krw는 비교 사이트(Skyscanner·KAYAK·Expedia·Trip.com·호텔스컴바인) 표기 시세대를 종합한 researched_market_rate. PR #7 정책의 confirmed_booking(사용자 실제 예약가)이 들어오면 해당 노선 라벨을 승격.",
     "method": "메타사이트 시세대(low/median/high) + 출발 요일·체류일수 패턴 보정 + LCC 4인 동시 발권 가산. 한일 단거리는 체류일수보다 출발/귀국 요일 조합이 가격에 더 결정적.",
     "limitations": [
       "메타사이트 표시 가격은 12개월 노선 평균 근사가 다수 — 2026-05 잔여 기간 실시세와 차이 가능",
       "4인 동시 인접 좌석 가능성은 잔여석 분포에 의존, 발권 시점에 재확인 필요",
       "수하물·좌석지정·기내식 등 부가 비용은 별도 (LCC 1인당 5~10만 추가 가능)"
     ],
-    "validation_done": "에어서울 인천↔간사이 5/24~27 4인 ₩1,170,638 (PR #2 docs/kyoto-itinerary-may-2026.md 기준값) — ICN-KIX 4인 실제 발권가로 교차 확인",
+    "validation_done": "에어서울 인천↔간사이 5/24~27 4인 ₩1,170,638 (PR #2 docs/kyoto-itinerary-may-2026.md 기준값) — ICN-KIX 4인 실제 발권가로 교차 확인 (confirmed_booking 1건)",
     "validation_pending": "에어서울·티웨이·진에어 공식 사이트 직접 4인 검색 미수행 (다음 재조회 시 수행 예정)"
+  },
+  "fx_assumption": {
+    "as_of": "2026-05-11",
+    "jpy_to_krw": 9.5,
+    "usd_to_krw": 1380,
+    "note": "메타사이트 USD/JPY 표시가를 KRW 환산할 때 사용. 실제 결제 환율은 결제일 환율에 따라 변동. 본 데이터는 메타사이트가 직접 KRW로 표시하는 가격을 우선 채택했으므로 환산이 적용된 항목은 노선별 source 필드에 별도 명시.",
+    "sources": [
+      "USD: WebSearch 2026-05-09 메타사이트 USD 표기 환산 시 사용한 근사값",
+      "JPY: WebSearch 2026-05-09 메타사이트 JPY 표기 환산 시 사용한 근사값"
+    ]
   },
   "policy": {
     "queried_at_required_per_route": true,
@@ -32,7 +44,14 @@
       "출발 7일 전 (최종 발권 직전 검증)"
     ],
     "fare_basis_for_4pax": "4명이 같은 편에 발권 가능한 운임 클래스 기준. LCC 최저가 ×4 산식 금지.",
-    "lcc_4pax_markup_pct": {"low": 15, "median": 25, "high": 35, "note": "LCC 잔여석 1~2석 최저가가 4명 동시엔 상위 운임 클래스로 점프하는 비율. FSC는 가산 없음."}
+    "lcc_4pax_markup_pct": {
+      "low": 15,
+      "median": 25,
+      "high": 35,
+      "note": "LCC 잔여석 1~2석 최저가가 4명 동시엔 상위 운임 클래스로 점프하는 비율. FSC는 가산 없음.",
+      "derivation": "PR #2(에어서울 ICN-KIX 5/24~27 4인 ₩1,170,638) 사례에서 1인 환산 ₩292,659 — 메타사이트 동일 노선 median ₩280,000 대비 +4.5%. 최저가 기준이 아닌 median 기준 표본이라 보수적으로 +25%로 잡음. low(잔여석 1~2석 기준) +15%·high(만석 임박) +35%는 동일 표본 분산 추정값으로, confirmed_booking 표본이 늘면 후속 PR에서 재추정 필요.",
+      "data_quality": "researched_market_rate (단일 confirmed_booking 사례 + 메타사이트 시세대 분산 기반 추정)"
+    }
   },
   "departure_dow_pattern": {
     "source": "트립닷컴·KKday·여행 매체 일반 가이드 (2026-05 조회)",
@@ -75,7 +94,9 @@
           "carrier_type": "FSC+LCC 혼합",
           "freq_per_week_approx": 22,
           "flight_time_h": 2.5,
-          "queried_at": "2026-05-11",
+          "queried_at": "2026-05-09",
+          "source": "Expedia 2026-05-09 (May 평균 round-trip ~$527 ≈ ₩72만) + KAYAK 2026-05-09 (Economy from $88) + Trip.com 2026-05-09 (ICN-HND from $94)",
+          "data_quality": "researched_market_rate",
           "fare_per_person_krw": {"low": 130000, "median": 350000, "high": 450000},
           "fare_4pax_total_krw_by_stay": {
             "4박5일": {"low": 600000, "median": 1450000, "high": 1850000},
@@ -92,7 +113,9 @@
           "carrier_type": "LCC 다수",
           "freq_per_week_approx": 70,
           "flight_time_h": 2.5,
-          "queried_at": "2026-05-11",
+          "queried_at": "2026-05-09",
+          "source": "Expedia 2026-05-09 (ICN-NRT one-way from $79 / round-trip from $169) + Skyscanner 2026-05-09 (ICN to TYOA from $66)",
+          "data_quality": "researched_market_rate",
           "fare_per_person_krw": {"low": 110000, "median": 250000, "high": 350000},
           "fare_4pax_total_krw_by_stay": {
             "4박5일": {"low": 510000, "median": 1100000, "high": 1450000},
@@ -109,7 +132,9 @@
           "carrier_type": "FSC만",
           "freq_per_week_approx": 28,
           "flight_time_h": 2.5,
-          "queried_at": "2026-05-11",
+          "queried_at": "2026-05-09",
+          "source": "Expedia 2026-05-09 (GMP-HND from $227) + 호텔스컴바인 2026-05-09 (GMP-HND from ₩164,117) + Trip.com 2026-05-09 (인기 경로 ₩423,850 평균) + KAYAK 2026-05-09 (ANA ₩412,092 / 아시아나 ₩440,842 / 대한항공 ₩455,902)",
+          "data_quality": "researched_market_rate",
           "fare_per_person_krw": {"low": 230000, "median": 425000, "high": 500000},
           "fare_4pax_total_krw_by_stay": {
             "4박5일": {"low": 920000, "median": 1700000, "high": 2000000},
@@ -134,7 +159,9 @@
           "carrier_type": "LCC 다수",
           "freq_per_week_approx": 80,
           "flight_time_h": 1.75,
-          "queried_at": "2026-05-11",
+          "queried_at": "2026-05-09",
+          "source": "호텔스컴바인 2026-05-09 (ICN-KIX from ₩66,006 편도 / 왕복 ₩97,955~) + KAYAK 2026-05-09 (25% 사용자가 ₩310,906 이하 / 이스타 ₩103,446 / 에어서울 ₩115,889) + Expedia 2026-05-09 (from $49) + PR #2 confirmed_booking (에어서울 5/24~27 4인 ₩1,170,638 = 1인 ₩292,659)",
+          "data_quality": "researched_market_rate (median은 confirmed_booking 1건 교차검증)",
           "fare_per_person_krw": {"low": 100000, "median": 280000, "high": 400000},
           "fare_4pax_total_krw_by_stay": {
             "3박4일": {"low": 460000, "median": 1170000, "high": 1650000, "validated": "에어서울 5/24~27 ₩1,170,638"},
@@ -152,7 +179,9 @@
           "carrier_type": "FSC+LCC",
           "freq_per_week_approx": 14,
           "flight_time_h": 1.75,
-          "queried_at": "2026-05-11",
+          "queried_at": "2026-05-09",
+          "source": "호텔스컴바인 2026-05-09 (GMP-KIX from ₩104,387 / GMP-OSA from ₩92,114) + KAYAK 2026-05-09 (왕복 ₩122,727 사용자 예약가 / 제주항공 ₩125,975 / 진에어 ₩142,590 / 인기 경로 ₩149,332 평균 / 노선 평균 ₩415,091) + Expedia 2026-05-09 (from $80)",
+          "data_quality": "researched_market_rate",
           "fare_per_person_krw": {"low": 92000, "median": 200000, "high": 300000},
           "fare_4pax_total_krw_by_stay": {
             "3박4일": {"low": 420000, "median": 850000, "high": 1240000},
@@ -188,7 +217,9 @@
           "carrier_type": "FSC+LCC",
           "freq_per_week_approx": 25,
           "flight_time_h": 2.75,
-          "queried_at": "2026-05-11",
+          "queried_at": "2026-05-09",
+          "source": "Expedia 2026-05-09 (ICN-CTS from $162 왕복) + KAYAK 2026-05-09 (대한민국-CTS from ₩46,146) + 호텔스컴바인 2026-05-09 (5/3~7 왕복 ₩280,050 사례 / 대한민국-CTS from ₩78,207) + 호텔스컴바인 2026-05 평균 ₩205,109 (5월이 연중 최저가 시즌이라 명시)",
+          "data_quality": "researched_market_rate",
           "fare_per_person_krw": {"low": 50000, "median": 205000, "high": 350000},
           "fare_4pax_total_krw_by_stay": {
             "4박5일": {"low": 230000, "median": 870000, "high": 1450000},
@@ -214,7 +245,9 @@
           "carrier_type": "LCC 다수",
           "freq_per_week_approx": 35,
           "flight_time_h": 2.25,
-          "queried_at": "2026-05-11",
+          "queried_at": "2026-05-09",
+          "source": "KAYAK 2026-05-09 (대한민국-OKA from ₩79,526) + 트립스토어 가이드 2026-05-09 (인천-나하 왕복 20~40만대 / 7~8월 성수기 40만+ / 11~3월 비수기 20만 초반) + Trip.com 2026-05-09 (ICN-OKA 예약 페이지 시세대)",
+          "data_quality": "researched_market_rate",
           "fare_per_person_krw": {"low": 80000, "median": 280000, "high": 380000},
           "fare_4pax_total_krw_by_stay": {
             "4박5일": {"low": 370000, "median": 1170000, "high": 1570000},
@@ -240,7 +273,9 @@
           "carrier_type": "LCC 다수",
           "freq_per_week_approx": 60,
           "flight_time_h": 1.25,
-          "queried_at": "2026-05-11",
+          "queried_at": "2026-05-09",
+          "source": "KAYAK 2026-05-09 (대한민국-FUK from ₩73,780 / ICN-FUK 평균 ₩146,084 또는 ₩143,062) + 호텔스컴바인 2026-05-09 (SEL-FUK from ₩84,109 / 대한민국-FUK from ₩76,693) + Expedia 2026-05-09 (ICN-FUK from $79 / 왕복 from $152 ≈ ₩196,000) + 호텔스컴바인 2026-05-09 (ICN-FUK 왕복 from ₩244,419)",
+          "data_quality": "researched_market_rate",
           "fare_per_person_krw": {"low": 75000, "median": 150000, "high": 250000},
           "fare_4pax_total_krw_by_stay": {
             "4박5일": {"low": 350000, "median": 630000, "high": 1030000},
