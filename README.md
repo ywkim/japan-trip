@@ -17,6 +17,11 @@
 - 브라우저로 `viz/dashboard.html` 더블클릭 → 가중치 슬라이더로 민감도 확인
 - 또는 터미널에서 `python scripts/score.py` 실행
 
+### 3-1. 예산 (3M 하드캡) 통과 여부 확인
+- `data/cost-options.json`에 항공·숙박·고정비·일회성 단가와 시나리오 입력
+- `python scripts/budget.py` 실행 → 시나리오별 확정 합계·여유·TBD 항목 출력
+- 상세: `docs/budget-options.md`
+
 ### 4. 결정 기록
 - `docs/decision-log.md`에 합의 사항·보류 사항 기록
 - 최종 결정 후 `reports/final-report.md` 작성 → `bash scripts/render-pdf.sh`로 PDF
@@ -24,6 +29,9 @@
 ### 5. 보조 데이터 활용
 - `data/weather.json` — 후보지 × 시기 기후 데이터 (JMA 평년값)
 - `docs/weather.md` — 시기별 쾌적도 순위, `seasonality`/`physical_burden` 점수 제안
+
+### 6. 모바일에서 결정 보기
+- `index.html` — 모바일-퍼스트 최종 결정 요약 (목적지·시기·예산·왜·일정 한눈에). 카드 단을 세로로 쌓아 작은 화면에서 읽기 쉽도록 구성. 더블클릭 또는 GitHub Pages URL로 접근
 
 ## 평가 기준 (초안 — 함께 조정)
 
