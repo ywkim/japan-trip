@@ -7,6 +7,7 @@
 ## 산출물
 
 - `.github/auto_request_review.yml` 재작성
+- `.github/workflows/auto-request-review.yml`에 `permissions: pull-requests: write` 추가 + `reopened` 트리거 추가
 
 ## 핵심 관찰
 
@@ -20,6 +21,8 @@
 - 스키마를 표준 형식으로 교체.
 - `files: '**'` + `reviewers.defaults` 양쪽에 두 사람 등록 → 액션이 작성자를 자동 제외하므로 상대방만 할당됨.
 - `required: 1` 같은 강제 승인 수는 액션 기능이 아니라 GitHub 브랜치 보호 규칙에서 별도 설정 (기존 주석 그대로 유지).
+- 워크플로우에 `permissions: pull-requests: write` 명시. 스키마 수정 후 매칭은 성공했으나 API 호출이 `HttpError: Resource not accessible by integration`으로 실패 → 레포 기본 GITHUB_TOKEN이 read-only였기 때문. 명시적 권한 부여로 해결.
+- `on.pull_request.types`에 `reopened` 추가 (v0.13.0 README 예시와 일치).
 
 ## 보류
 
