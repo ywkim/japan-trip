@@ -1,16 +1,23 @@
 # 리뷰어 자동 지정 설정
 # 최소 1명 승인 필수는 GitHub 브랜치 보호 규칙에서 설정
 #
-# 원칙: 부부 상호 리뷰. 작성자는 자동 제외됨.
+# 원칙: 부부 상호 리뷰. 작성자는 액션이 자동 제외하므로 상대방만 할당됨.
 #
 # 팀 역할
 #   소연 (Lee-Soyeon)  공동 결정자
 #   영욱 (ywkim)       공동 결정자
+#
+# 스키마: necojackarc/auto-request-review v0.13.0
+#   https://github.com/necojackarc/auto-request-review
+
+reviewers:
+  # 매칭 실패 시 fallback (현재 files: '**'이 항상 매칭하므로 보험용)
+  defaults:
+    - Lee-Soyeon
+    - ywkim
 
 files:
-  # 모든 변경 → 상대방 리뷰
-  - '**':
-      reviewers:
-        - Lee-Soyeon
-        - ywkim
-      required: 1
+  # 모든 변경 → 두 사람 모두 후보 → 작성자 제외 후 상대방만 할당
+  '**':
+    - Lee-Soyeon
+    - ywkim
