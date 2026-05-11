@@ -63,15 +63,19 @@
       "id": "tokyo",
       "name": "도쿄",
       "region": "관동",
-      "scores": {},
-      "notes": ""
+      "scores": {
+        "seasonality": 8
+      },
+      "notes": "seasonality: weather.json tokyo 2026-05 comfort_score=8 (일교차)"
     },
     {
       "id": "osaka",
       "name": "오사카",
       "region": "관서",
-      "scores": {},
-      "notes": ""
+      "scores": {
+        "seasonality": 9
+      },
+      "notes": "seasonality: weather.json osaka 2026-05 comfort_score=9 (신록기 최적, 강수일 9)"
     },
     {
       "id": "kyoto",
@@ -86,37 +90,43 @@
         "medical_access": 6,
         "seasonality": 9
       },
-      "notes": "2026-05-24~27 시나리오 (4인, 시부모 동반). 1·2박 에어비앤비(4인 1채), 마지막 박 우메코지 카덴쇼 료칸·조식 포함. 총 약 4.95M, 5M 예산 옵션 안에 수렴. 상세: docs/kyoto-itinerary-may-2026.md"
+      "notes": "2026-05-24~27 시나리오 (4인, 시부모 동반). 1·2박 에어비앤비(4인 1채), 마지막 박 우메코지 카덴쇼 료칸·조식 포함. 총 약 4.95M, 5M 예산 옵션 안에 수렴. seasonality: weather.json kyoto 2026-05 comfort_score=9. 상세: docs/kyoto-itinerary-may-2026.md"
     },
     {
       "id": "sapporo",
       "name": "삿포로 (홋카이도)",
       "region": "홋카이도",
-      "scores": {},
-      "notes": ""
+      "scores": {
+        "seasonality": 8
+      },
+      "notes": "seasonality: weather.json sapporo 2026-05 comfort_score=8 (서늘, 야간 추위). 5월 삿포로는 본토 절정기보다 한 단계 낮음 — 삿포로 최적기는 6월(10)이지만 본 PR은 5월 시기 고정."
     },
     {
       "id": "okinawa",
       "name": "오키나와",
       "region": "오키나와",
-      "scores": {},
-      "notes": ""
+      "scores": {
+        "seasonality": 5
+      },
+      "notes": "seasonality: weather.json okinawa 2026-05 comfort_score=5. 5월 중순부터 우기 진입 — 18일 이후 출발이면 우기 한복판. 후보 중 5월 최저."
     },
     {
       "id": "fukuoka",
       "name": "후쿠오카",
       "region": "규슈",
-      "scores": {},
-      "notes": ""
+      "scores": {
+        "seasonality": 8
+      },
+      "notes": "seasonality: weather.json fukuoka 2026-05 comfort_score=8 (강수 138mm, hazards 없음)"
     },
     {
       "id": "kobe",
       "name": "고베",
       "region": "관서",
       "scores": {
-        "seasonality": 5
+        "seasonality": 9
       },
-      "notes": "2026-06-11 제주항공(7C) 인천-고베(ICN-UKB) 신규 직항 매일 취항. 취항 기념 프로모션(~2026-05-24): 3만 J포인트 + 항공권·기내식·수하물 할인 쿠폰. 6월은 장마(쓰유) 영향권이나 해안 입지로 교토 분지보다 체감 양호. 상세: docs/jejuair-icn-kobe-june-2026.md"
+      "notes": "2026-06-11 제주항공(7C) 인천-고베(ICN-UKB) 신규 직항 매일 취항. 취항 기념 프로모션(~2026-05-24): 3만 J포인트 + 항공권·기내식·수하물 할인 쿠폰. seasonality: weather.json kobe 2026-05 comfort_score=9 (5월 시기 고정). 6월 시나리오를 평가할 땐 comfort_score=5로 재산정 필요 — 본 PR 스코프 외. 상세: docs/jejuair-icn-kobe-june-2026.md"
     }
   ]
 }
