@@ -23,13 +23,14 @@
 - 상세: `docs/budget-options.md`
 
 ### 4. 결정 기록
-- `docs/decision-log.md`에 합의 사항·보류 사항 기록
+- `docs/decision-log/` 디렉토리에 **새 파일** 추가 (`YYYY-MM-DD-slug.md`). 기존 파일은 편집하지 않음.
+- 컨벤션: `docs/decision-log/README.md`
 - 최종 결정 후 `reports/final-report.md` 작성 → `bash scripts/render-pdf.sh`로 PDF
 
 ### 5. 보조 데이터 활용
 - `data/weather.json` — 후보지 × 시기 기후 데이터 (JMA 평년값)
 - `docs/weather.md` — 시기별 쾌적도 순위, `seasonality`/`physical_burden` 점수 제안
-- **`seasonality` 점수는 현재 2026-05 시기 고정** — 각 후보의 `weather.json` 2026-05 `comfort_score`를 `decision.json`에 그대로 입력. 다른 시기로 비교하려면 `weather.json`에서 해당 월 `comfort_score`로 수동 교체 (스키마 확장은 미실시). 상세: `docs/decision-log.md` 2026-05-11 항목
+- **`seasonality` 점수는 현재 2026-05 시기 고정** — 각 후보의 `weather.json` 2026-05 `comfort_score`를 `decision.json`에 그대로 입력. 다른 시기로 비교하려면 `weather.json`에서 해당 월 `comfort_score`로 수동 교체 (스키마 확장은 미실시). 상세: `docs/decision-log/2026-05-11-seasonality-scoring.md`
 
 ### 6. 모바일에서 결정 보기
 - `index.html` — 모바일-퍼스트 최종 결정 요약 (목적지·시기·예산·왜·일정 한눈에). 카드 단을 세로로 쌓아 작은 화면에서 읽기 쉽도록 구성. 더블클릭 또는 GitHub Pages URL로 접근
@@ -56,7 +57,7 @@
 
 ```
 data/        # 의사결정 데이터 (decision.json: 정본, weather.json: 보조)
-docs/        # 비교표, 날씨 분석, 의사결정 일지
+docs/        # 비교표, 날씨 분석, 의사결정 일지(decision-log/)
 viz/         # 인터랙티브 대시보드 (HTML)
 scripts/     # 계산·PDF 변환 스크립트
 reports/     # 최종 보고서
@@ -74,7 +75,7 @@ reports/     # 최종 보고서
 
 | 갱신 대상 | 무엇을 적나 |
 |---|---|
-| `docs/decision-log.md` | 날짜·주제·산출물·합의/보류/다음 단계 |
+| `docs/decision-log/YYYY-MM-DD-slug.md` (새 파일) | 날짜·주제·산출물·합의/보류/다음 단계 |
 | `README.md` (이 파일) | 새 산출물의 사용법·디렉토리 1줄 이상 |
 | `CLAUDE.md` | 디렉토리 트리·작업 규칙·데이터 동기화 규칙 |
 
