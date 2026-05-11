@@ -32,9 +32,11 @@
 - `docs/weather.md` — 시기별 쾌적도 순위, `seasonality`/`physical_burden` 점수 제안
 - `data/flights.json` — 후보지 × 출발지(ICN/GMP) 항공권 시세 스냅샷
 - `docs/flights.md` — 4인 총액 비교, GMP 가용성, `cost` 점수 환산 가이드
+- **`seasonality` 점수는 현재 2026-05 시기 고정** — 각 후보의 `weather.json` 2026-05 `comfort_score`를 `decision.json`에 그대로 입력. 다른 시기로 비교하려면 `weather.json`에서 해당 월 `comfort_score`로 수동 교체 (스키마 확장은 미실시). 상세: `docs/decision-log/2026-05-11-seasonality-scoring.md`
 
 ### 6. 모바일에서 결정 보기
 - `index.html` — 모바일-퍼스트 최종 결정 요약 (목적지·시기·예산·왜·일정 한눈에). 카드 단을 세로로 쌓아 작은 화면에서 읽기 쉽도록 구성. 더블클릭 또는 GitHub Pages URL로 접근
+- 하드코딩된 점수·비용·일정 블록 위에는 `<!-- SYNC: ... -->` 주석으로 동기화 출처(보고서 절·JSON)를 명시 — `reports/final-report.md` 또는 `data/decision.json` 수정 시 함께 갱신
 
 ## 평가 기준 (초안 — 함께 조정)
 
