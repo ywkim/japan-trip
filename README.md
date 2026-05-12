@@ -30,6 +30,8 @@
 ### 5. 보조 데이터 활용
 - `data/weather.json` — 후보지 × 시기 기후 데이터 (JMA 평년값)
 - `docs/weather.md` — 시기별 쾌적도 순위, `seasonality`/`physical_burden` 점수 제안
+- `data/flights.json` — 후보지 × 출발지(ICN/GMP) 항공권 시세 스냅샷
+- `docs/flights.md` — 4인 총액 비교, GMP 가용성, `cost` 점수 환산 가이드
 - **`seasonality` 점수는 현재 2026-05 시기 고정** — 각 후보의 `weather.json` 2026-05 `comfort_score`를 `decision.json`에 그대로 입력. 다른 시기로 비교하려면 `weather.json`에서 해당 월 `comfort_score`로 수동 교체 (스키마 확장은 미실시). 상세: `docs/decision-log/2026-05-11-seasonality-scoring.md`
 
 ### 6. 모바일에서 결정 보기
@@ -65,8 +67,8 @@
 ## 디렉토리
 
 ```
-data/        # decision.json·cost-options.json·weather.json·booking-checklist.json (단일 출처)
-docs/        # 비교표, 날씨 분석, 의사결정 일지(decision-log/)
+data/        # decision.json·cost-options.json·weather.json·flights.json·booking-checklist.json (단일 출처)
+docs/        # 비교표, 날씨·항공권 분석, 의사결정 일지(decision-log/)
 viz/         # 인터랙티브 대시보드 (HTML)
 scripts/     # score·budget·build_index·validate·render-pdf
 tests/       # unittest (validate·build_index·score·budget)

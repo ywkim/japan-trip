@@ -37,13 +37,15 @@ japan-trip/
 ├── CLAUDE.md            # AI 세션 지시
 ├── index.html           # 모바일 8섹션 카드 (build_index.py 산출물 — 직접 편집 금지)
 ├── data/
-│   ├── decision.json         # 단일 출처 (criteria + candidates + scores)
-│   ├── cost-options.json     # 단일 출처 (flights/lodging/daily_fixed/one_time/scenarios)
-│   ├── weather.json          # 후보지 × 시기 기후 데이터 (JMA 평년값)
+│   ├── decision.json          # 단일 출처 (criteria + candidates + scores)
+│   ├── cost-options.json      # 단일 출처 (flights/lodging/daily_fixed/one_time/scenarios)
+│   ├── weather.json           # 후보지 × 시기 기후 데이터 (JMA 평년값)
+│   ├── flights.json           # 후보지 × 출발지 항공권 시세 스냅샷 (메타사이트 근사)
 │   └── booking-checklist.json # 단일 출처 (예약 진행 상태 8 항목)
 ├── docs/
 │   ├── candidates.md                      # 후보지 상세 비교
 │   ├── weather.md                         # 날씨 분석 (시기별 쾌적도 순위)
+│   ├── flights.md                         # 항공권 분석 (4인 총액·GMP 가용성)
 │   ├── decision-log/                      # 의사결정 일지 (항목 1개 = 파일 1개, README.md에 컨벤션)
 │   ├── kyoto-itinerary-may-2026.md        # 교토 5월 시나리오 (4인 시부모 동반)
 │   ├── airbnb-kyoto-may31-jun2-2026.md    # 에어비앤비 5개 매물 비교
@@ -69,10 +71,12 @@ japan-trip/
   - `data/decision.json` — criteria·candidates·scores
   - `data/cost-options.json` — 항공·숙박·고정비·일회성·시나리오
   - `data/weather.json` — 후보지×시기 기후
+  - `data/flights.json` — 후보지×출발지 항공권 시세 스냅샷 (시점 스냅샷, snapshot_date 명시)
   - `data/booking-checklist.json` — 예약 진행 상태
 - **`index.html`은 `scripts/build_index.py` 산출물 — 직접 편집 금지**. 데이터·일정 표 변경 후 `python scripts/build_index.py` 실행. CI(`build_index.py --check`)가 PR 단계에서 drift를 차단
 - `viz/dashboard.html`은 인라인 데이터 (브라우저 더블클릭 동작 보장). 본 파일은 아직 build_index 대상이 아니므로 `data/decision.json` 수정 시 수동 갱신 (TODO: build 통합)
-- `docs/weather.md`의 표는 `data/weather.json`의 사람용 사본 — JSON 수정 시 함께 갱신
+- `docs/weather.md`·`docs/flights.md`의 표는 각각 `data/weather.json`·`data/flights.json`의 사람용 사본 — JSON 수정 시 함께 갱신
+- `data/flights.json`은 **시점 스냅샷**. 시세 재조회 시 새 스냅샷으로 덮어쓰지 말고 snapshot_date 갱신 + 변경 사유를 `docs/decision-log/`에 새 일지로 기록
 - 카드 블록 위 `<!-- SYNC: <출처> -->` 주석으로 동기화 대상 명시 (예: `<!-- SYNC: reports/final-report.md §1 -->`). `scripts/validate.py`가 경로 유효성과 §N 절 번호를 검증
 - 외부 문서 링크는 GitHub blob URL(`https://github.com/ywkim/japan-trip/blob/main/...`) 사용 — Vercel(본 레포의 호스트)이 `.md` 파일을 자동 렌더하지 않고 raw text로 서빙하므로 상대 경로(`reports/final-report.md`)는 금지
 
@@ -85,7 +89,7 @@ japan-trip/
 | 단위 테스트 | `python -m unittest discover tests` | 1개라도 실패 |
 | 점수 계산 동작 | `scripts/score.py` | exit ≠ 0 |
 | 예산 평가 동작 | `scripts/budget.py` | exit ≠ 0 |
-| 가격 필드 무결성 | `scripts/validate.py` (B) | `flights`/`lodging`/`daily_fixed`/`one_time` 항목에 `source`·`data_quality` 누락, `data_quality` 값이 화이트리스트 외 |
+| 가격 필드 무결성 | `scripts/validate.py` (B) | `cost-options.json`의 `flights`/`lodging`/`daily_fixed`/`one_time` 항목에 `source`·`data_quality` 누락, `data_quality` 값이 화이트리스트 외 |
 | 묵은 가격 | `scripts/validate.py` (C) | `researched_market_rate` 항목 source 일자 > 60일 (30~60일은 경고만) |
 | SYNC 주석 무결성 | `scripts/validate.py` (D) | `index.html`의 SYNC 주석에 명시된 path가 존재하지 않음, §N이 final-report 절 수보다 큼 |
 | index.html drift | `scripts/build_index.py --check` | 빌드 결과 ≠ 커밋된 index.html |
