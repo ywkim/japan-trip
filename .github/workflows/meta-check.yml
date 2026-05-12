@@ -1,0 +1,28 @@
+name: meta-check
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  push:
+    branches: [main]
+
+jobs:
+  meta:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: score.py runs
+        run: python scripts/score.py
+
+      - name: budget.py runs
+        run: python scripts/budget.py
+
+      - name: check_meta.py (price fields, stale prices, SYNC paths)
+        run: python scripts/check_meta.py
+
+      - name: build_index.py --check (index.html sync with data sources)
+        run: python scripts/build_index.py --check
