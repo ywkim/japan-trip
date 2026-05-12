@@ -54,10 +54,11 @@ japan-trip/
 │   ├── score.py         # 종합 점수 계산 (--json 지원)
 │   ├── budget.py        # 3M 예산 시나리오 평가 (--json 지원)
 │   ├── build_index.py   # index.html 빌드 (--check 모드로 CI drift 검사)
-│   ├── check_meta.py    # 가격 필드·묵은 가격·SYNC 주석 무결성 검사
+│   ├── validate.py      # 가격 필드·묵은 가격·SYNC 주석 무결성 검사
 │   └── render-pdf.sh    # PDF 생성
+├── tests/               # unittest (validate·build_index·score·budget)
 ├── .github/workflows/
-│   └── meta-check.yml   # PR 게이트: build_index --check + check_meta + score + budget
+│   └── validate.yml     # PR 게이트: unittest + build_index --check + validate + score + budget
 └── reports/
     └── final-report.md  # 최종 보고서 (PDF 변환 대상)
 ```
@@ -72,21 +73,30 @@ japan-trip/
 - **`index.html`은 `scripts/build_index.py` 산출물 — 직접 편집 금지**. 데이터·일정 표 변경 후 `python scripts/build_index.py` 실행. CI(`build_index.py --check`)가 PR 단계에서 drift를 차단
 - `viz/dashboard.html`은 인라인 데이터 (브라우저 더블클릭 동작 보장). 본 파일은 아직 build_index 대상이 아니므로 `data/decision.json` 수정 시 수동 갱신 (TODO: build 통합)
 - `docs/weather.md`의 표는 `data/weather.json`의 사람용 사본 — JSON 수정 시 함께 갱신
-- 카드 블록 위 `<!-- SYNC: <출처> -->` 주석으로 동기화 대상 명시 (예: `<!-- SYNC: reports/final-report.md §1 -->`). `scripts/check_meta.py`가 경로 유효성과 §N 절 번호를 검증
+- 카드 블록 위 `<!-- SYNC: <출처> -->` 주석으로 동기화 대상 명시 (예: `<!-- SYNC: reports/final-report.md §1 -->`). `scripts/validate.py`가 경로 유효성과 §N 절 번호를 검증
 - 외부 문서 링크는 GitHub blob URL(`https://github.com/ywkim/japan-trip/blob/main/...`) 사용 — Vercel(본 레포의 호스트)이 `.md` 파일을 자동 렌더하지 않고 raw text로 서빙하므로 상대 경로(`reports/final-report.md`)는 금지
 
-## CI 메타 검사 (PR 게이트)
+## CI 검증 (PR 게이트)
 
-`.github/workflows/meta-check.yml`이 모든 PR에서 다음을 실행한다.
+`.github/workflows/validate.yml`이 모든 PR에서 다음을 실행한다.
 
 | 검사 | 스크립트 | 실패 조건 |
 |---|---|---|
+| 단위 테스트 | `python -m unittest discover tests` | 1개라도 실패 |
 | 점수 계산 동작 | `scripts/score.py` | exit ≠ 0 |
 | 예산 평가 동작 | `scripts/budget.py` | exit ≠ 0 |
-| 가격 필드 무결성 | `scripts/check_meta.py` (B) | `flights`/`lodging`/`daily_fixed`/`one_time` 항목에 `source`·`data_quality` 누락, `data_quality` 값이 화이트리스트 외 |
-| 묵은 가격 | `scripts/check_meta.py` (C) | `researched_market_rate` 항목 source 일자 > 60일 (30~60일은 경고만) |
-| SYNC 주석 무결성 | `scripts/check_meta.py` (D) | `index.html`의 SYNC 주석에 명시된 path가 존재하지 않음, §N이 final-report 절 수보다 큼 |
+| 가격 필드 무결성 | `scripts/validate.py` (B) | `flights`/`lodging`/`daily_fixed`/`one_time` 항목에 `source`·`data_quality` 누락, `data_quality` 값이 화이트리스트 외 |
+| 묵은 가격 | `scripts/validate.py` (C) | `researched_market_rate` 항목 source 일자 > 60일 (30~60일은 경고만) |
+| SYNC 주석 무결성 | `scripts/validate.py` (D) | `index.html`의 SYNC 주석에 명시된 path가 존재하지 않음, §N이 final-report 절 수보다 큼 |
 | index.html drift | `scripts/build_index.py --check` | 빌드 결과 ≠ 커밋된 index.html |
+
+## 테스트 작성 규칙 (TDD)
+
+- **스크립트(`scripts/*.py`) 또는 빌드/검증 로직을 변경할 때는 `tests/`의 테스트를 먼저 작성/갱신**한 뒤 코드를 수정한다. 새 분기·새 검사 규칙·새 출력 필드는 실패하는 테스트가 먼저 들어와야 한다.
+- 테스트는 `unittest` 표준 라이브러리만 사용. 외부 의존성 추가 금지 (CI 단순화).
+- 데이터 변경(JSON·MD)은 테스트 작성 의무에서 제외 — 단, 데이터 스키마 변경(필드 추가/제거)은 `validate.py` 화이트리스트와 함께 테스트 갱신.
+- 테스트가 production 데이터에 의존하는 케이스(`ProductionDataTests`)는 회귀 가드로만 사용. 새 규칙 검증은 `tempfile` 기반 fixture로 격리.
+- 로컬 실행: `python -m unittest discover -s tests -v`. CI도 동일 명령으로 실행.
 
 ## 점수 입력 규칙
 

@@ -1,4 +1,4 @@
-# 2026-05-12 — 모바일 8섹션 카드 + 빌드 스크립트 + CI 메타 검사
+# 2026-05-12 — 모바일 8섹션 카드 + 빌드 스크립트 + CI 검증
 
 - 트리거: ① `index.html`이 결정 요약 1장뿐이라 폰에서 에어비앤비 비교·항공·예산·일정·체크리스트를 볼 화면이 없음, ② 메타 동기화가 수동이라 PR마다 부채 발생.
 - 합의 (한 batch):
@@ -7,9 +7,9 @@
   - CI 게이트 6개 검사로 부채 회귀 차단.
 - 산출물:
   - `scripts/build_index.py` — 8섹션 카드(요약·에어비앤비·카덴쇼 4 플랜·항공·예산·일정·체크리스트·점수) 생성, `--check` 모드 (drift 시 exit 1)
-  - `scripts/check_meta.py` — 가격 필드 무결성(B), 묵은 가격 30/60일 경고·실패(C), SYNC 주석 경로·§N 검증(D)
+  - `scripts/validate.py` — 가격 필드 무결성(B), 묵은 가격 30/60일 경고·실패(C), SYNC 주석 경로·§N 검증(D)
   - `data/booking-checklist.json` — 예약 진행 상태 8 항목 (status: 미정/예약중/확정)
-  - `.github/workflows/meta-check.yml` — PR 게이트 (build_index --check, check_meta, score, budget)
+  - `.github/workflows/validate.yml` — PR 게이트 (unittest, build_index --check, validate, score, budget)
   - `scripts/score.py`·`scripts/budget.py` — `--json` 플래그 추가 (사람용 출력은 기본 동작으로 보존)
   - `index.html` — 빌드 산출물로 재생성 (28KB, 8 섹션, 다크모드 자동, 구글맵 딥링크, 카드별 SYNC 주석)
 - 핵심 관찰:

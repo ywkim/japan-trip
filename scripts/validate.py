@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""메타 데이터 무결성 검사 (CI 게이트).
+"""데이터 무결성 + SYNC 무결성 검사 (CI 게이트).
 
 검사 항목:
   B. 가격 필드 무결성: cost-options.json 모든 가격 항목에 source·data_quality
@@ -13,21 +13,19 @@
 exit 0 = 모두 통과 또는 경고만, exit 1 = 실패.
 
 용법:
-  python scripts/check_meta.py
+  python scripts/validate.py
+  python scripts/validate.py --base <path>      # 테스트용 루트 오버라이드
+  python scripts/validate.py --today YYYY-MM-DD # 테스트용 기준일 오버라이드
 """
 
 from __future__ import annotations
 
+import argparse
 import json
 import re
 import sys
-from datetime import date, datetime
+from datetime import date
 from pathlib import Path
-
-BASE = Path(__file__).resolve().parent.parent
-COST = BASE / "data" / "cost-options.json"
-INDEX = BASE / "index.html"
-FINAL_REPORT = BASE / "reports" / "final-report.md"
 
 ALLOWED_QUALITY = {"confirmed_booking", "official_fare", "researched_market_rate"}
 PRICE_SECTIONS = ("flights", "lodging", "daily_fixed", "one_time")
@@ -35,7 +33,6 @@ DATE_RE = re.compile(r"(20\d{2})[-/.](\d{1,2})[-/.](\d{1,2})")
 SYNC_RE = re.compile(r"<!--\s*SYNC:\s*(.+?)\s*-->")
 SECTION_RE = re.compile(r"§(\d+)")
 PATH_RE = re.compile(r"([\w./\-]+\.(?:md|json|py|html))")
-TODAY = date.today()
 
 
 def extract_date(text: str):
@@ -48,9 +45,9 @@ def extract_date(text: str):
         return None
 
 
-def check_price_fields() -> tuple[list[str], list[str]]:
+def check_price_fields(base: Path, today: date) -> tuple[list[str], list[str]]:
     errors, warnings = [], []
-    cost = json.loads(COST.read_text(encoding="utf-8"))
+    cost = json.loads((base / "data" / "cost-options.json").read_text(encoding="utf-8"))
     for section in PRICE_SECTIONS:
         for item in cost.get(section, []):
             iid = item.get("id", "<no-id>")
@@ -62,12 +59,11 @@ def check_price_fields() -> tuple[list[str], list[str]]:
             elif item["data_quality"] not in ALLOWED_QUALITY:
                 errors.append(f"[B] {loc}: data_quality '{item['data_quality']}' not in {sorted(ALLOWED_QUALITY)}")
 
-            # C. 묵은 가격
             src = item.get("source", "")
             qual = item.get("data_quality", "")
             d = extract_date(src)
             if d and qual == "researched_market_rate":
-                age = (TODAY - d).days
+                age = (today - d).days
                 if age > 60:
                     errors.append(f"[C] {loc}: researched_market_rate stale {age}d (source: {src!r}) — re-research required")
                 elif age > 30:
@@ -75,24 +71,23 @@ def check_price_fields() -> tuple[list[str], list[str]]:
     return errors, warnings
 
 
-def check_sync_comments() -> list[str]:
+def check_sync_comments(base: Path) -> list[str]:
     errors = []
-    if not INDEX.exists():
+    index_path = base / "index.html"
+    final_report = base / "reports" / "final-report.md"
+    if not index_path.exists():
         return ["[D] index.html missing — run scripts/build_index.py"]
-    text = INDEX.read_text(encoding="utf-8")
+    text = index_path.read_text(encoding="utf-8")
 
-    # final-report.md 헤더 카운트 (## …)
-    fr_text = FINAL_REPORT.read_text(encoding="utf-8") if FINAL_REPORT.exists() else ""
+    fr_text = final_report.read_text(encoding="utf-8") if final_report.exists() else ""
     fr_sections = len(re.findall(r"^## ", fr_text, re.MULTILINE))
 
     for m in SYNC_RE.finditer(text):
         body = m.group(1)
-        # 경로 검증
         for p in PATH_RE.findall(body):
-            target = BASE / p
+            target = base / p
             if not target.exists():
                 errors.append(f"[D] SYNC path missing: {p!r} (in '{body}')")
-        # 절 번호 검증 (final-report.md를 가리킬 때만)
         if "final-report.md" in body:
             for snum in SECTION_RE.findall(body):
                 if int(snum) > fr_sections:
@@ -100,25 +95,33 @@ def check_sync_comments() -> list[str]:
     return errors
 
 
+def run(base: Path, today: date) -> tuple[list[str], list[str]]:
+    errors: list[str] = []
+    warnings: list[str] = []
+    e, w = check_price_fields(base, today)
+    errors.extend(e)
+    warnings.extend(w)
+    errors.extend(check_sync_comments(base))
+    return errors, warnings
+
+
 def main() -> int:
-    all_errors: list[str] = []
-    all_warnings: list[str] = []
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--base", type=Path, default=Path(__file__).resolve().parent.parent,
+                        help="레포 루트 (테스트용 오버라이드)")
+    parser.add_argument("--today", type=lambda s: date.fromisoformat(s), default=date.today(),
+                        help="기준일 (테스트용 오버라이드, YYYY-MM-DD)")
+    args = parser.parse_args()
 
-    e, w = check_price_fields()
-    all_errors.extend(e)
-    all_warnings.extend(w)
-
-    all_errors.extend(check_sync_comments())
-
-    for warn in all_warnings:
+    errors, warnings = run(args.base, args.today)
+    for warn in warnings:
         print(f"WARN  {warn}", file=sys.stderr)
-    for err in all_errors:
+    for err in errors:
         print(f"ERROR {err}", file=sys.stderr)
-
-    if all_errors:
-        print(f"\nFAIL — {len(all_errors)} error(s), {len(all_warnings)} warning(s)", file=sys.stderr)
+    if errors:
+        print(f"\nFAIL — {len(errors)} error(s), {len(warnings)} warning(s)", file=sys.stderr)
         return 1
-    print(f"OK — 0 errors, {len(all_warnings)} warning(s)")
+    print(f"OK — 0 errors, {len(warnings)} warning(s)")
     return 0
 
 
