@@ -537,10 +537,10 @@
     },
     {
       "id": "kyoto_may31_kadensho_early_bird",
-      "label": "[확정 일정] 교토 3박4일 5/31~6/3 (에어비앤비 2박 + 카덴쇼 조기할인 조식 1박)",
+      "label": "[확정] 교토 3박4일 5/31~6/3 (시오 2박 + 카덴쇼 조기할인 조식 1박)",
       "flight": "rs_kix_may31_jun3",
       "lodging_plan": [
-        {"lodging": "kyoto_airbnb_4pax", "nights": 2},
+        {"lodging": "airbnb_shio_machiya", "nights": 2},
         {"lodging": "kadensho_early_bird_with_breakfast_2026jun2", "nights": 1}
       ],
       "fixed_days": [
@@ -550,7 +550,7 @@
         "haruka_rt_4pax", "kyoto_local_3day_4pax", "kyoto_temples_4pax",
         "kyoto_lodging_tax_2nights_4pax", "airbnb_cleaning_fee"
       ],
-      "notes": "에어비앤비 1·2박은 5개 후보(airbnb_sukei_kyoto_inn, airbnb_kyoto_st_8min_machiya, airbnb_shio_machiya, airbnb_sei_higashiyama_sanjo, airbnb_open_air_bath_house) 중 미선정. 본 시나리오는 placeholder kyoto_airbnb_4pax(₩180K/박 중간값) 기준 합계. 매물 결정 후 시나리오 분기 추가 예정."
+      "notes": "에어비앤비 1·2박은 PR #16 소연 추천 #3 시오(Shio) 100년 마치야 채택 — ★4.95, 침실 3·욕실 2·화장실 2로 시부모·부부 완전 분리 가능. 합계 약 ₩3.42M (3M 초과, 5M 옵션 적용)."
     },
     {
       "id": "nagasaki_forest_villa_mid",
