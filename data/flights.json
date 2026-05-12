@@ -1,0 +1,318 @@
+{
+  "version": "v2",
+  "snapshot_date": "2026-05-11",
+  "previous_versions": [
+    {"version": "v1", "snapshot_date": "2026-05-09", "deprecated_reason": "단일 평균치 기반·체류일수 단일 가정·4인 동시 발권 미반영 (PR #6 소연 리뷰)"}
+  ],
+  "scope": {
+    "season": "2026-05",
+    "season_note": "스냅샷일(5/11) 기준 잔여 5월 = 5/12~5/31. GW(4/29~5/6) 종료 후. 출발 임박이라 시세 변동성 큼.",
+    "origins": ["ICN", "GMP"],
+    "travelers_basis": {"adults": 4, "composition": "부부 2인 + 시부모 2인", "seating": "4인 동일 항공편 인접 좌석 가정"},
+    "cabin": "economy",
+    "trip_type": "round_trip",
+    "duration_days_options": [4, 5, 6, 7]
+  },
+  "data_quality": {
+    "default_label": "researched_market_rate",
+    "label_meaning": "노선별 fare_per_person_krw는 비교 사이트(Skyscanner·KAYAK·Expedia·Trip.com·호텔스컴바인) 표기 시세대를 종합한 researched_market_rate. PR #7 정책의 confirmed_booking(사용자 실제 예약가)이 들어오면 해당 노선 라벨을 승격.",
+    "method": "메타사이트 시세대(low/median/high) + 출발 요일·체류일수 패턴 보정 + LCC 4인 동시 발권 가산. 한일 단거리는 체류일수보다 출발/귀국 요일 조합이 가격에 더 결정적.",
+    "limitations": [
+      "메타사이트 표시 가격은 12개월 노선 평균 근사가 다수 — 2026-05 잔여 기간 실시세와 차이 가능",
+      "4인 동시 인접 좌석 가능성은 잔여석 분포에 의존, 발권 시점에 재확인 필요",
+      "수하물·좌석지정·기내식 등 부가 비용은 별도 (LCC 1인당 5~10만 추가 가능)"
+    ],
+    "validation_done": "에어서울 인천↔간사이 5/24~27 4인 ₩1,170,638 (PR #2 docs/kyoto-itinerary-may-2026.md 기준값) — ICN-KIX 4인 실제 발권가로 교차 확인 (confirmed_booking 1건)",
+    "validation_pending": "에어서울·티웨이·진에어 공식 사이트 직접 4인 검색 미수행 (다음 재조회 시 수행 예정)"
+  },
+  "fx_assumption": {
+    "as_of": "2026-05-11",
+    "jpy_to_krw": 9.5,
+    "usd_to_krw": 1380,
+    "note": "메타사이트 USD/JPY 표시가를 KRW 환산할 때 사용. 실제 결제 환율은 결제일 환율에 따라 변동. 본 데이터는 메타사이트가 직접 KRW로 표시하는 가격을 우선 채택했으므로 환산이 적용된 항목은 노선별 source 필드에 별도 명시.",
+    "sources": [
+      "USD: WebSearch 2026-05-09 메타사이트 USD 표기 환산 시 사용한 근사값",
+      "JPY: WebSearch 2026-05-09 메타사이트 JPY 표기 환산 시 사용한 근사값"
+    ]
+  },
+  "policy": {
+    "queried_at_required_per_route": true,
+    "rerun_schedule": [
+      "도시 후보 단축 시 해당 노선 집중 재조회",
+      "출발 30일 전",
+      "출발 14일 전",
+      "출발 7일 전 (최종 발권 직전 검증)"
+    ],
+    "fare_basis_for_4pax": "4명이 같은 편에 발권 가능한 운임 클래스 기준. LCC 최저가 ×4 산식 금지.",
+    "lcc_4pax_markup_pct": {
+      "low": 15,
+      "median": 25,
+      "high": 35,
+      "note": "LCC 잔여석 1~2석 최저가가 4명 동시엔 상위 운임 클래스로 점프하는 비율. FSC는 가산 없음.",
+      "derivation": "PR #2(에어서울 ICN-KIX 5/24~27 4인 ₩1,170,638) 사례에서 1인 환산 ₩292,659 — 메타사이트 동일 노선 median ₩280,000 대비 +4.5%. 최저가 기준이 아닌 median 기준 표본이라 보수적으로 +25%로 잡음. low(잔여석 1~2석 기준) +15%·high(만석 임박) +35%는 동일 표본 분산 추정값으로, confirmed_booking 표본이 늘면 후속 PR에서 재추정 필요.",
+      "data_quality": "researched_market_rate (단일 confirmed_booking 사례 + 메타사이트 시세대 분산 기반 추정)"
+    }
+  },
+  "departure_dow_pattern": {
+    "source": "트립닷컴·KKday·여행 매체 일반 가이드 (2026-05 조회)",
+    "low_days": ["화", "수", "토"],
+    "high_days": ["월", "금"],
+    "med_days": ["목", "일"],
+    "note": "일반적으로 화·수·토 출발이 가장 저렴. 월·금은 출장·주말 수요로 비쌈. 한일 단거리는 ±10~30% 수준의 차이.",
+    "may_2026_recommended_outbound_dates": ["2026-05-12 (화)", "2026-05-16 (토)", "2026-05-19 (화)", "2026-05-26 (화)", "2026-05-30 (토)"]
+  },
+  "stay_length_pattern": {
+    "general_rule": "한일 노선은 편도 운임 ×2 구조라 체류일수 자체가 가격에 미치는 영향은 작음(±5%). 다만 귀국이 토·일이면 +10~15%, 월·금이면 +5~10% 가산.",
+    "by_nights": {
+      "3박4일": "교토 시나리오 등 짧은 일정. 가격 영향 거의 없음",
+      "4박5일": "표준. 기준선",
+      "5박6일": "표준. 기준선 (이전 v1 가정)",
+      "6박7일": "+0~5% (귀국 요일 영향)",
+      "7박8일": "주중 출발+주말 귀국 또는 토~토 시 +10~15%"
+    }
+  },
+  "airport_map": {
+    "tokyo": ["HND", "NRT"],
+    "osaka": ["KIX", "ITM"],
+    "kyoto": ["KIX", "ITM"],
+    "sapporo": ["CTS"],
+    "okinawa": ["OKA"],
+    "fukuoka": ["FUK"]
+  },
+  "gmp_availability_2026": {
+    "available": ["HND", "KIX", "NGO"],
+    "unavailable_for_candidates": ["NRT", "ITM", "CTS", "OKA", "FUK"],
+    "note": "GMP 일본 직항은 HND·KIX·NGO 3개뿐. 후쿠오카·삿포로·오키나와는 GMP 직항 없음."
+  },
+  "destinations": {
+    "tokyo": {
+      "name": "도쿄",
+      "routes": [
+        {
+          "origin": "ICN", "dest": "HND",
+          "carriers": ["대한항공", "아시아나", "Peach"],
+          "carrier_type": "FSC+LCC 혼합",
+          "freq_per_week_approx": 22,
+          "flight_time_h": 2.5,
+          "queried_at": "2026-05-09",
+          "source": "Expedia 2026-05-09 (May 평균 round-trip ~$527 ≈ ₩72만) + KAYAK 2026-05-09 (Economy from $88) + Trip.com 2026-05-09 (ICN-HND from $94)",
+          "data_quality": "researched_market_rate",
+          "fare_per_person_krw": {"low": 130000, "median": 350000, "high": 450000},
+          "fare_4pax_total_krw_by_stay": {
+            "4박5일": {"low": 600000, "median": 1450000, "high": 1850000},
+            "5박6일": {"low": 600000, "median": 1450000, "high": 1850000},
+            "6박7일": {"low": 620000, "median": 1500000, "high": 1900000},
+            "7박8일": {"low": 660000, "median": 1600000, "high": 2050000}
+          },
+          "lcc_4pax_markup_applied_pct": 15,
+          "note": "Peach만 LCC. 대한항공·아시아나가 다수라 LCC 마크업 영향 작음(15%)."
+        },
+        {
+          "origin": "ICN", "dest": "NRT",
+          "carriers": ["대한항공", "아시아나", "제주항공", "진에어", "티웨이", "에어서울", "Peach", "ZipAir"],
+          "carrier_type": "LCC 다수",
+          "freq_per_week_approx": 70,
+          "flight_time_h": 2.5,
+          "queried_at": "2026-05-09",
+          "source": "Expedia 2026-05-09 (ICN-NRT one-way from $79 / round-trip from $169) + Skyscanner 2026-05-09 (ICN to TYOA from $66)",
+          "data_quality": "researched_market_rate",
+          "fare_per_person_krw": {"low": 110000, "median": 250000, "high": 350000},
+          "fare_4pax_total_krw_by_stay": {
+            "4박5일": {"low": 510000, "median": 1100000, "high": 1450000},
+            "5박6일": {"low": 510000, "median": 1100000, "high": 1450000},
+            "6박7일": {"low": 530000, "median": 1140000, "high": 1490000},
+            "7박8일": {"low": 570000, "median": 1220000, "high": 1600000}
+          },
+          "lcc_4pax_markup_applied_pct": 25,
+          "note": "선택지 가장 풍부. LCC 다수라 4인 동시 발권 시 25% 가산. 도심까지 60~90분 추가."
+        },
+        {
+          "origin": "GMP", "dest": "HND",
+          "carriers": ["대한항공", "아시아나", "ANA", "JAL"],
+          "carrier_type": "FSC만",
+          "freq_per_week_approx": 28,
+          "flight_time_h": 2.5,
+          "queried_at": "2026-05-09",
+          "source": "Expedia 2026-05-09 (GMP-HND from $227) + 호텔스컴바인 2026-05-09 (GMP-HND from ₩164,117) + Trip.com 2026-05-09 (인기 경로 ₩423,850 평균) + KAYAK 2026-05-09 (ANA ₩412,092 / 아시아나 ₩440,842 / 대한항공 ₩455,902)",
+          "data_quality": "researched_market_rate",
+          "fare_per_person_krw": {"low": 230000, "median": 425000, "high": 500000},
+          "fare_4pax_total_krw_by_stay": {
+            "4박5일": {"low": 920000, "median": 1700000, "high": 2000000},
+            "5박6일": {"low": 920000, "median": 1700000, "high": 2000000},
+            "6박7일": {"low": 940000, "median": 1740000, "high": 2050000},
+            "7박8일": {"low": 990000, "median": 1830000, "high": 2150000}
+          },
+          "lcc_4pax_markup_applied_pct": 0,
+          "note": "FSC만 운항 → 4인 동시 발권 가산 없음. 운임 클래스 변동 폭 작음. 시부모 동반 시 김포·하네다 양쪽 도심 접근성 최상."
+        }
+      ],
+      "best_low_route": "ICN-NRT (4박5일 51만)",
+      "best_premium_route": "GMP-HND (4박5일 170만 median)",
+      "median_4pax_5night_krw": 1100000
+    },
+    "osaka": {
+      "name": "오사카",
+      "routes": [
+        {
+          "origin": "ICN", "dest": "KIX",
+          "carriers": ["대한항공", "아시아나", "제주항공", "진에어", "티웨이", "에어서울", "이스타", "Peach"],
+          "carrier_type": "LCC 다수",
+          "freq_per_week_approx": 80,
+          "flight_time_h": 1.75,
+          "queried_at": "2026-05-09",
+          "source": "호텔스컴바인 2026-05-09 (ICN-KIX from ₩66,006 편도 / 왕복 ₩97,955~) + KAYAK 2026-05-09 (25% 사용자가 ₩310,906 이하 / 이스타 ₩103,446 / 에어서울 ₩115,889) + Expedia 2026-05-09 (from $49) + PR #2 confirmed_booking (에어서울 5/24~27 4인 ₩1,170,638 = 1인 ₩292,659)",
+          "data_quality": "researched_market_rate (median은 confirmed_booking 1건 교차검증)",
+          "fare_per_person_krw": {"low": 100000, "median": 280000, "high": 400000},
+          "fare_4pax_total_krw_by_stay": {
+            "3박4일": {"low": 460000, "median": 1170000, "high": 1650000, "validated": "에어서울 5/24~27 ₩1,170,638"},
+            "4박5일": {"low": 460000, "median": 1170000, "high": 1650000},
+            "5박6일": {"low": 460000, "median": 1170000, "high": 1650000},
+            "6박7일": {"low": 480000, "median": 1210000, "high": 1700000},
+            "7박8일": {"low": 510000, "median": 1290000, "high": 1810000}
+          },
+          "lcc_4pax_markup_applied_pct": 25,
+          "note": "한일 노선 중 좌석 가장 풍부. PR #2 교토 시나리오의 ₩1,170,638(에어서울 5/24~27)로 median 검증됨."
+        },
+        {
+          "origin": "GMP", "dest": "KIX",
+          "carriers": ["티웨이", "JAL"],
+          "carrier_type": "FSC+LCC",
+          "freq_per_week_approx": 14,
+          "flight_time_h": 1.75,
+          "queried_at": "2026-05-09",
+          "source": "호텔스컴바인 2026-05-09 (GMP-KIX from ₩104,387 / GMP-OSA from ₩92,114) + KAYAK 2026-05-09 (왕복 ₩122,727 사용자 예약가 / 제주항공 ₩125,975 / 진에어 ₩142,590 / 인기 경로 ₩149,332 평균 / 노선 평균 ₩415,091) + Expedia 2026-05-09 (from $80)",
+          "data_quality": "researched_market_rate",
+          "fare_per_person_krw": {"low": 92000, "median": 200000, "high": 300000},
+          "fare_4pax_total_krw_by_stay": {
+            "3박4일": {"low": 420000, "median": 850000, "high": 1240000},
+            "4박5일": {"low": 420000, "median": 850000, "high": 1240000},
+            "5박6일": {"low": 420000, "median": 850000, "high": 1240000},
+            "6박7일": {"low": 430000, "median": 880000, "high": 1280000},
+            "7박8일": {"low": 460000, "median": 940000, "high": 1370000}
+          },
+          "lcc_4pax_markup_applied_pct": 15,
+          "note": "GMP 노선 중 가장 저렴. 티웨이 LCC지만 좌석 여유 비교적 안정."
+        }
+      ],
+      "best_low_route": "GMP-KIX (5박6일 42만)",
+      "best_premium_route": "GMP-KIX (median 85만)",
+      "median_4pax_5night_krw": 850000
+    },
+    "kyoto": {
+      "name": "교토",
+      "routes_inherit_from": "osaka",
+      "note": "교토 직항 공항 없음. KIX 또는 ITM 경유 후 하루카(70분) / 신칸센으로 이동. 항공권 시세는 오사카와 동일 적용.",
+      "ground_transfer_per_person_krw": {"haruka_one_way": 30000, "round_trip": 60000},
+      "ground_transfer_4pax_round_trip_krw": 240000,
+      "median_4pax_5night_krw_with_transfer": 1090000,
+      "best_low_route": "GMP-KIX (+하루카)",
+      "best_premium_route": "GMP-KIX (+하루카)"
+    },
+    "sapporo": {
+      "name": "삿포로",
+      "routes": [
+        {
+          "origin": "ICN", "dest": "CTS",
+          "carriers": ["대한항공", "아시아나", "제주항공", "티웨이", "진에어"],
+          "carrier_type": "FSC+LCC",
+          "freq_per_week_approx": 25,
+          "flight_time_h": 2.75,
+          "queried_at": "2026-05-09",
+          "source": "Expedia 2026-05-09 (ICN-CTS from $162 왕복) + KAYAK 2026-05-09 (대한민국-CTS from ₩46,146) + 호텔스컴바인 2026-05-09 (5/3~7 왕복 ₩280,050 사례 / 대한민국-CTS from ₩78,207) + 호텔스컴바인 2026-05 평균 ₩205,109 (5월이 연중 최저가 시즌이라 명시)",
+          "data_quality": "researched_market_rate",
+          "fare_per_person_krw": {"low": 50000, "median": 205000, "high": 350000},
+          "fare_4pax_total_krw_by_stay": {
+            "4박5일": {"low": 230000, "median": 870000, "high": 1450000},
+            "5박6일": {"low": 230000, "median": 870000, "high": 1450000},
+            "6박7일": {"low": 240000, "median": 900000, "high": 1490000},
+            "7박8일": {"low": 250000, "median": 960000, "high": 1600000}
+          },
+          "lcc_4pax_markup_applied_pct": 25,
+          "note": "5월이 연중 최저가 시즌(평균 약 20.5만, 호텔스컴바인). LCC 마크업 25% 반영."
+        }
+      ],
+      "best_low_route": "ICN-CTS",
+      "best_premium_route": "ICN-CTS",
+      "gmp_route": null,
+      "median_4pax_5night_krw": 870000
+    },
+    "okinawa": {
+      "name": "오키나와",
+      "routes": [
+        {
+          "origin": "ICN", "dest": "OKA",
+          "carriers": ["대한항공", "아시아나", "제주항공", "진에어", "티웨이", "Peach"],
+          "carrier_type": "LCC 다수",
+          "freq_per_week_approx": 35,
+          "flight_time_h": 2.25,
+          "queried_at": "2026-05-09",
+          "source": "KAYAK 2026-05-09 (대한민국-OKA from ₩79,526) + 트립스토어 가이드 2026-05-09 (인천-나하 왕복 20~40만대 / 7~8월 성수기 40만+ / 11~3월 비수기 20만 초반) + Trip.com 2026-05-09 (ICN-OKA 예약 페이지 시세대)",
+          "data_quality": "researched_market_rate",
+          "fare_per_person_krw": {"low": 80000, "median": 280000, "high": 380000},
+          "fare_4pax_total_krw_by_stay": {
+            "4박5일": {"low": 370000, "median": 1170000, "high": 1570000},
+            "5박6일": {"low": 370000, "median": 1170000, "high": 1570000},
+            "6박7일": {"low": 380000, "median": 1210000, "high": 1620000},
+            "7박8일": {"low": 410000, "median": 1290000, "high": 1730000}
+          },
+          "lcc_4pax_markup_applied_pct": 25,
+          "note": "5월 중순부터 우기 진입. 7~8월 성수기 진입 전이라 5월은 가격 안정."
+        }
+      ],
+      "best_low_route": "ICN-OKA",
+      "best_premium_route": "ICN-OKA",
+      "gmp_route": null,
+      "median_4pax_5night_krw": 1170000
+    },
+    "fukuoka": {
+      "name": "후쿠오카",
+      "routes": [
+        {
+          "origin": "ICN", "dest": "FUK",
+          "carriers": ["대한항공", "아시아나", "제주항공", "진에어", "티웨이", "에어서울", "이스타"],
+          "carrier_type": "LCC 다수",
+          "freq_per_week_approx": 60,
+          "flight_time_h": 1.25,
+          "queried_at": "2026-05-09",
+          "source": "KAYAK 2026-05-09 (대한민국-FUK from ₩73,780 / ICN-FUK 평균 ₩146,084 또는 ₩143,062) + 호텔스컴바인 2026-05-09 (SEL-FUK from ₩84,109 / 대한민국-FUK from ₩76,693) + Expedia 2026-05-09 (ICN-FUK from $79 / 왕복 from $152 ≈ ₩196,000) + 호텔스컴바인 2026-05-09 (ICN-FUK 왕복 from ₩244,419)",
+          "data_quality": "researched_market_rate",
+          "fare_per_person_krw": {"low": 75000, "median": 150000, "high": 250000},
+          "fare_4pax_total_krw_by_stay": {
+            "4박5일": {"low": 350000, "median": 630000, "high": 1030000},
+            "5박6일": {"low": 350000, "median": 630000, "high": 1030000},
+            "6박7일": {"low": 360000, "median": 650000, "high": 1060000},
+            "7박8일": {"low": 380000, "median": 690000, "high": 1130000}
+          },
+          "lcc_4pax_markup_applied_pct": 25,
+          "note": "한일 노선 최저가군. 비행시간 75분으로 시부모 동반 신체 부담도 가장 작음."
+        }
+      ],
+      "best_low_route": "ICN-FUK",
+      "best_premium_route": "ICN-FUK",
+      "gmp_route": null,
+      "median_4pax_5night_krw": 630000
+    }
+  },
+  "ranking_4pax_median_5night_2026_05": {
+    "by_total_low_to_high": [
+      {"city": "fukuoka", "route": "ICN-FUK", "median_4pax_krw": 630000},
+      {"city": "osaka", "route": "GMP-KIX", "median_4pax_krw": 850000},
+      {"city": "sapporo", "route": "ICN-CTS", "median_4pax_krw": 870000},
+      {"city": "kyoto", "route": "GMP-KIX (+하루카 24만)", "median_4pax_krw": 1090000},
+      {"city": "tokyo", "route": "ICN-NRT", "median_4pax_krw": 1100000},
+      {"city": "okinawa", "route": "ICN-OKA", "median_4pax_krw": 1170000},
+      {"city": "tokyo", "route": "GMP-HND", "median_4pax_krw": 1700000}
+    ],
+    "comment": "median·5박6일·LCC 4인 가산 반영. v1 대비 후쿠오카 +5만, 오사카 +5만, 삿포로 +5만 — LCC 마크업 25% 반영분. 도쿄 GMP-HND는 FSC만이라 v1과 동일."
+  },
+  "v1_to_v2_diff_summary": {
+    "structural": [
+      "fare_4pax_total_krw_by_stay 추가 (체류일수 4·5·6·7박)",
+      "lcc_4pax_markup_applied_pct 노선별 명시",
+      "queried_at 노선별 명시",
+      "departure_dow_pattern·stay_length_pattern·policy 섹션 신설"
+    ],
+    "price_changes": "median 4인 총액이 LCC 노선에서 +5만~+10만 상승 (4인 동시 발권 가산 반영)",
+    "ranking_changes": "후쿠오카·오사카(GMP)·삿포로 1~3위 순서는 동일. 교토는 v1 5위에서 4위로 (도쿄 NRT median과 거의 같음)"
+  }
+}

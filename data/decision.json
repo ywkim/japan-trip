@@ -1,8 +1,8 @@
 {
   "trip": {
     "destination_country": "일본",
-    "travelers": ["영욱", "소연"],
-    "optional_companions": ["시부모"],
+    "travelers": ["영욱", "소연", "시아버지", "시어머니"],
+    "travelers_composition": "부부 2인 + 시부모 2인 (총 4인)",
     "duration_days_options": [4, 5, 6, 7],
     "budget_krw_options": [3000000, 5000000, 7000000],
     "season_options": ["2026-05", "2026-06", "2026-09", "2026-10"]
@@ -41,7 +41,7 @@
       "name": "가족 적합성",
       "weight": 0.10,
       "direction": "higher_is_better",
-      "description": "시부모 동반 시 적합성 (단독 여행 시 N/A로 비워도 됨)"
+      "description": "시부모 동반(고령자 2인 포함) 4인 여행 적합성. 보행 부담·식사 호환·언어·동선 단순함 등을 종합."
     },
     {
       "id": "medical_access",
