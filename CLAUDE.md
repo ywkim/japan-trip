@@ -35,37 +35,72 @@
 japan-trip/
 ├── README.md            # 사람용 안내
 ├── CLAUDE.md            # AI 세션 지시
+├── index.html           # 모바일 8섹션 카드 (build_index.py 산출물 — 직접 편집 금지)
 ├── data/
-│   ├── decision.json    # 단일 출처 (criteria + candidates + scores)
-│   ├── weather.json     # 후보지 × 시기 기후 데이터 (JMA 평년값)
-│   └── flights.json     # 후보지 × 출발지 항공권 시세 스냅샷 (메타사이트 근사)
+│   ├── decision.json          # 단일 출처 (criteria + candidates + scores)
+│   ├── cost-options.json      # 단일 출처 (flights/lodging/daily_fixed/one_time/scenarios)
+│   ├── weather.json           # 후보지 × 시기 기후 데이터 (JMA 평년값)
+│   ├── flights.json           # 후보지 × 출발지 항공권 시세 스냅샷 (메타사이트 근사)
+│   └── booking-checklist.json # 단일 출처 (예약 진행 상태 8 항목)
 ├── docs/
 │   ├── candidates.md                      # 후보지 상세 비교
 │   ├── weather.md                         # 날씨 분석 (시기별 쾌적도 순위)
 │   ├── flights.md                         # 항공권 분석 (4인 총액·GMP 가용성)
 │   ├── decision-log/                      # 의사결정 일지 (항목 1개 = 파일 1개, README.md에 컨벤션)
 │   ├── kyoto-itinerary-may-2026.md        # 교토 5월 시나리오 (4인 시부모 동반)
+│   ├── airbnb-kyoto-may31-jun2-2026.md    # 에어비앤비 5개 매물 비교
 │   └── jejuair-icn-kobe-june-2026.md      # 제주항공 인천-고베 신규 노선·가격 리서치
 ├── viz/
 │   └── dashboard.html   # 인터랙티브 대시보드 (가중치 슬라이더)
 ├── scripts/
-│   ├── score.py         # 종합 점수 계산
+│   ├── score.py         # 종합 점수 계산 (--json 지원)
+│   ├── budget.py        # 3M 예산 시나리오 평가 (--json 지원)
+│   ├── build_index.py   # index.html 빌드 (--check 모드로 CI drift 검사)
+│   ├── validate.py      # 가격 필드·묵은 가격·SYNC 주석 무결성 검사
 │   └── render-pdf.sh    # PDF 생성
+├── tests/               # unittest (validate·build_index·score·budget)
+├── .github/workflows/
+│   └── validate.yml     # PR 게이트: unittest + build_index --check + validate + score + budget
 └── reports/
     └── final-report.md  # 최종 보고서 (PDF 변환 대상)
 ```
 
 ## 데이터 동기화 규칙
 
-- `viz/dashboard.html`은 인라인 데이터 (브라우저 더블클릭 동작 보장)
-- `data/decision.json` 수정 시 → HTML의 인라인 데이터도 동시 갱신 필요
-- 단일 출처는 `data/decision.json` (정본)
-- 단일 출처는 `data/weather.json`. `docs/weather.md`의 표는 사람용 사본 — JSON 수정 시 함께 갱신
-- 단일 출처는 `data/flights.json`. `docs/flights.md`의 표는 사람용 사본 — JSON 수정 시 함께 갱신
-- `data/flights.json`은 **시점 스냅샷** (snapshot_date 명시). 시세 재조회 시 새 스냅샷으로 덮어쓰지 말고 snapshot_date 갱신 + 변경 사유를 `docs/decision-log/`에 새 일지로 기록
-- `index.html`은 모바일에서 보는 **최종 결정 요약 페이지**. `reports/final-report.md`의 결정 요약·근거·일정과 동일 내용을 정적으로 보여주므로, 보고서가 갱신되면 함께 갱신
-  - 하드코딩된 카드 블록 위에는 `<!-- SYNC: <출처> -->` 주석으로 동기화 대상을 명시 (예: `<!-- SYNC: reports/final-report.md §1 -->`). 보고서 절·JSON 키를 수정할 때 같은 SYNC 주석이 가리키는 블록을 함께 갱신
-  - 외부 문서 링크는 GitHub blob URL(`https://github.com/ywkim/japan-trip/blob/main/...`) 사용 — Vercel(본 레포의 호스트)이 `.md` 파일을 자동 렌더하지 않고 raw text로 서빙하므로 상대 경로(`reports/final-report.md`)는 금지
+- 단일 출처(정본):
+  - `data/decision.json` — criteria·candidates·scores
+  - `data/cost-options.json` — 항공·숙박·고정비·일회성·시나리오
+  - `data/weather.json` — 후보지×시기 기후
+  - `data/flights.json` — 후보지×출발지 항공권 시세 스냅샷 (시점 스냅샷, snapshot_date 명시)
+  - `data/booking-checklist.json` — 예약 진행 상태
+- **`index.html`은 `scripts/build_index.py` 산출물 — 직접 편집 금지**. 데이터·일정 표 변경 후 `python scripts/build_index.py` 실행. CI(`build_index.py --check`)가 PR 단계에서 drift를 차단
+- `viz/dashboard.html`은 인라인 데이터 (브라우저 더블클릭 동작 보장). 본 파일은 아직 build_index 대상이 아니므로 `data/decision.json` 수정 시 수동 갱신 (TODO: build 통합)
+- `docs/weather.md`·`docs/flights.md`의 표는 각각 `data/weather.json`·`data/flights.json`의 사람용 사본 — JSON 수정 시 함께 갱신
+- `data/flights.json`은 **시점 스냅샷**. 시세 재조회 시 새 스냅샷으로 덮어쓰지 말고 snapshot_date 갱신 + 변경 사유를 `docs/decision-log/`에 새 일지로 기록
+- 카드 블록 위 `<!-- SYNC: <출처> -->` 주석으로 동기화 대상 명시 (예: `<!-- SYNC: reports/final-report.md §1 -->`). `scripts/validate.py`가 경로 유효성과 §N 절 번호를 검증
+- 외부 문서 링크는 GitHub blob URL(`https://github.com/ywkim/japan-trip/blob/main/...`) 사용 — Vercel(본 레포의 호스트)이 `.md` 파일을 자동 렌더하지 않고 raw text로 서빙하므로 상대 경로(`reports/final-report.md`)는 금지
+
+## CI 검증 (PR 게이트)
+
+`.github/workflows/validate.yml`이 모든 PR에서 다음을 실행한다.
+
+| 검사 | 스크립트 | 실패 조건 |
+|---|---|---|
+| 단위 테스트 | `python -m unittest discover tests` | 1개라도 실패 |
+| 점수 계산 동작 | `scripts/score.py` | exit ≠ 0 |
+| 예산 평가 동작 | `scripts/budget.py` | exit ≠ 0 |
+| 가격 필드 무결성 | `scripts/validate.py` (B) | `cost-options.json`의 `flights`/`lodging`/`daily_fixed`/`one_time` 항목에 `source`·`data_quality` 누락, `data_quality` 값이 화이트리스트 외 |
+| 묵은 가격 | `scripts/validate.py` (C) | `researched_market_rate` 항목 source 일자 > 60일 (30~60일은 경고만) |
+| SYNC 주석 무결성 | `scripts/validate.py` (D) | `index.html`의 SYNC 주석에 명시된 path가 존재하지 않음, §N이 final-report 절 수보다 큼 |
+| index.html drift | `scripts/build_index.py --check` | 빌드 결과 ≠ 커밋된 index.html |
+
+## 테스트 작성 규칙 (TDD)
+
+- **스크립트(`scripts/*.py`) 또는 빌드/검증 로직을 변경할 때는 `tests/`의 테스트를 먼저 작성/갱신**한 뒤 코드를 수정한다. 새 분기·새 검사 규칙·새 출력 필드는 실패하는 테스트가 먼저 들어와야 한다.
+- 테스트는 `unittest` 표준 라이브러리만 사용. 외부 의존성 추가 금지 (CI 단순화).
+- 데이터 변경(JSON·MD)은 테스트 작성 의무에서 제외 — 단, 데이터 스키마 변경(필드 추가/제거)은 `validate.py` 화이트리스트와 함께 테스트 갱신.
+- 테스트가 production 데이터에 의존하는 케이스(`ProductionDataTests`)는 회귀 가드로만 사용. 새 규칙 검증은 `tempfile` 기반 fixture로 격리.
+- 로컬 실행: `python -m unittest discover -s tests -v`. CI도 동일 명령으로 실행.
 
 ## 점수 입력 규칙
 

@@ -1,0 +1,55 @@
+{
+  "_doc": "예약 진행 상태. status: 미정|예약중|확정. index.html §7 카드 데이터 출처. 변경 시 build_index.py 재실행.",
+  "scenario": "kyoto_may31_kadensho_early_bird",
+  "items": [
+    {
+      "id": "flight",
+      "label": "항공 (ICN↔KIX 5/31~6/3, 4인)",
+      "status": "미정",
+      "due_date": "2026-05-18",
+      "note": "Skyscanner 추정 ₩1,012K. 영욱 직접 재조회 후 발권사 평점 확인 → Booking.com 또는 항공사 직판 권장"
+    },
+    {
+      "id": "lodging_night1",
+      "label": "에어비앤비 #3 시오(Shio) 5/31~6/2 (2박, 4명)",
+      "status": "미정",
+      "due_date": "2026-05-18",
+      "note": "PR #16 소연 추천으로 채택. 매물 1373928005681941061, ★4.95, 침실 3·욕실 2. 2박 ₩730,372. 후기 59개·운영 2년 → 호스트 응답성 사전 확인 + 환불 정책 검토"
+    },
+    {
+      "id": "ryokan",
+      "label": "우메코지 카덴쇼 6/2 (1박, 2명×2실 조기할인 조식)",
+      "status": "미정",
+      "due_date": "2026-05-18",
+      "note": "dormy-hotels.com 직판. 환불 정책 사전 확인 후 결제. 4인 ¥76,500 ≈ ₩726,750"
+    },
+    {
+      "id": "insurance",
+      "label": "여행자보험 (4인, 시부모 포함)",
+      "status": "미정",
+      "due_date": "2026-05-25",
+      "note": "시부모 보험·상비약, 한국어 가능 의료기관 위치 사전 저장"
+    },
+    {
+      "id": "esim",
+      "label": "eSIM / 데이터 (4인)",
+      "status": "미정",
+      "due_date": "2026-05-28",
+      "note": "Klook·Trip.com 4일권 시세 ₩5~10K/인"
+    },
+    {
+      "id": "transit_pass",
+      "label": "교통패스 (ICOCA & HARUKA + 교토 시영 1일권)",
+      "status": "미정",
+      "due_date": "2026-05-25",
+      "note": "JR 하루카 KIX↔교토 왕복 ¥2,400 × 4 × 2 = ₩192K, 교토 시영 1일권 ¥700 × 4 × 3 = ₩84K"
+    },
+    {
+      "id": "fx",
+      "label": "환전 / 트래블카드",
+      "status": "미정",
+      "due_date": "2026-05-28",
+      "note": "1인 ¥30,000 가정 (현금 식비·신사 새전·잔돈). 트래블월렛/하나비바X 등 무환전료 카드 권장"
+    }
+  ]
+}

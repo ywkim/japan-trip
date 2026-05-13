@@ -1,0 +1,23 @@
+# 2026-05-12 — 모바일 8섹션 카드 + 빌드 스크립트 + CI 검증
+
+- 트리거: ① `index.html`이 결정 요약 1장뿐이라 폰에서 에어비앤비 비교·항공·예산·일정·체크리스트를 볼 화면이 없음, ② 메타 동기화가 수동이라 PR마다 부채 발생.
+- 합의 (한 batch):
+  - **수동 편집 종료** — `index.html`은 `scripts/build_index.py` 산출물. 직접 편집 금지.
+  - 데이터 정본 4개(`decision.json`·`cost-options.json`·`weather.json`·`booking-checklist.json`)와 `score.py --json`·`budget.py --json` 결과를 빌드가 합성.
+  - CI 게이트 6개 검사로 부채 회귀 차단.
+- 산출물:
+  - `scripts/build_index.py` — 8섹션 카드(요약·에어비앤비·카덴쇼 4 플랜·항공·예산·일정·체크리스트·점수) 생성, `--check` 모드 (drift 시 exit 1)
+  - `scripts/validate.py` — 가격 필드 무결성(B), 묵은 가격 30/60일 경고·실패(C), SYNC 주석 경로·§N 검증(D)
+  - `data/booking-checklist.json` — 예약 진행 상태 8 항목 (status: 미정/예약중/확정)
+  - `.github/workflows/validate.yml` — PR 게이트 (unittest, build_index --check, validate, score, budget)
+  - `scripts/score.py`·`scripts/budget.py` — `--json` 플래그 추가 (사람용 출력은 기본 동작으로 보존)
+  - `index.html` — 빌드 산출물로 재생성 (28KB, 8 섹션, 다크모드 자동, 구글맵 딥링크, 카드별 SYNC 주석)
+- 핵심 관찰:
+  - 카드 레이아웃은 단일 HTML 자기완결(인라인 데이터, 외부 fetch 없음) — CLAUDE.md "더블클릭 동작" 규칙 보존
+  - `viz/dashboard.html`은 본 batch 범위 외 (TODO 주석으로 남김) — 별 PR로 빌드 통합 예정
+  - 검사 실행 시 기존 항공 2건에서 `data_quality` 누락 발견 → 즉시 보강 (검사 B의 첫 효과)
+  - `index.html`을 직접 편집 후 push 시 `--check` 실패로 막힘 (회귀 시뮬 가능)
+- 보류:
+  - 에어비앤비 5개 중 1개 선정 (영욱·소연 합의 필요)
+  - Vercel 배포 URL을 README에 명시 + iOS 홈스크린 메타 (사용자 지시: "진입이 아닌 화면 부재" → 본 batch에서 제외, 별 PR)
+- 다음 단계: PR 머지 후 CI 동작 확인 → 다음 PR부터는 데이터만 수정하고 `python scripts/build_index.py`로 갱신.

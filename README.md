@@ -35,8 +35,16 @@
 - **`seasonality` 점수는 현재 2026-05 시기 고정** — 각 후보의 `weather.json` 2026-05 `comfort_score`를 `decision.json`에 그대로 입력. 다른 시기로 비교하려면 `weather.json`에서 해당 월 `comfort_score`로 수동 교체 (스키마 확장은 미실시). 상세: `docs/decision-log/2026-05-11-seasonality-scoring.md`
 
 ### 6. 모바일에서 결정 보기
-- `index.html` — 모바일-퍼스트 최종 결정 요약 (목적지·시기·예산·왜·일정 한눈에). 카드 단을 세로로 쌓아 작은 화면에서 읽기 쉽도록 구성. 더블클릭 또는 GitHub Pages URL로 접근
-- 하드코딩된 점수·비용·일정 블록 위에는 `<!-- SYNC: ... -->` 주석으로 동기화 출처(보고서 절·JSON)를 명시 — `reports/final-report.md` 또는 `data/decision.json` 수정 시 함께 갱신
+- `index.html` — 모바일-퍼스트 8섹션 카드 (요약·에어비앤비·카덴쇼·항공·예산·일정·체크리스트·점수). 인라인 데이터로 자기완결, 더블클릭 동작
+- **빌드 산출물 — 직접 편집 금지**. 데이터(`data/*.json`)·스크립트 변경 후 `python scripts/build_index.py` 실행
+- `data/booking-checklist.json` — 예약 진행 상태 (8개 항목, status: 미정/예약중/확정). §7 카드 출처
+- 각 섹션 위 `<!-- SYNC: ... -->` 주석이 데이터 출처를 명시. CI(`scripts/validate.py`)가 경로 유효성과 §N 절 번호를 검증
+
+### 7. 검증 (CI)
+- `python -m unittest discover tests` — 단위 테스트 (validate·build_index·score·budget 24개)
+- `python scripts/validate.py` — 가격 필드 무결성(source·data_quality), 30/60일 묵은 가격 경고/실패, SYNC 주석 경로·절 번호 검증
+- `python scripts/build_index.py --check` — `index.html`이 데이터와 동기화 상태인지 (drift 시 exit 1)
+- `.github/workflows/validate.yml`이 PR마다 unittest + 위 4개 실행
 
 ## 평가 기준 (초안 — 함께 조정)
 
@@ -59,11 +67,13 @@
 ## 디렉토리
 
 ```
-data/        # 의사결정 데이터 (decision.json: 정본, weather.json·flights.json: 보조)
+data/        # decision.json·cost-options.json·weather.json·flights.json·booking-checklist.json (단일 출처)
 docs/        # 비교표, 날씨·항공권 분석, 의사결정 일지(decision-log/)
 viz/         # 인터랙티브 대시보드 (HTML)
-scripts/     # 계산·PDF 변환 스크립트
+scripts/     # score·budget·build_index·validate·render-pdf
+tests/       # unittest (validate·build_index·score·budget)
 reports/     # 최종 보고서
+index.html   # 모바일 8섹션 카드 (build_index.py 산출물)
 ```
 
 ## 환경 요구

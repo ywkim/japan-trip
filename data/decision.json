@@ -90,7 +90,7 @@
         "medical_access": 6,
         "seasonality": 9
       },
-      "notes": "2026-05-24~27 시나리오 (4인, 시부모 동반). 1·2박 에어비앤비(4인 1채), 마지막 박 우메코지 카덴쇼 료칸·조식 포함. 총 약 4.95M, 5M 예산 옵션 안에 수렴. seasonality: weather.json kyoto 2026-05 comfort_score=9. 상세: docs/kyoto-itinerary-may-2026.md"
+      "notes": "2026-05-31~06-03 시나리오 (4인 시부모 동반 확정). 1·2박 에어비앤비(5/31~6/2), 마지막 박 우메코지 카덴쇼 료칸 2명×2실 조기할인 조식 포함(6/2~6/3). seasonality: weather.json kyoto 2026-05 comfort_score=9. 상세: docs/kyoto-itinerary-may-2026.md, docs/airbnb-kyoto-may31-jun2-2026.md, docs/decision-log/2026-05-11-may31-jun3-kyoto-update.md"
     },
     {
       "id": "sapporo",

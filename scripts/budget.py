@@ -10,6 +10,7 @@ data/cost-options.json을 읽어 각 시나리오의 비용을 분해하고
 을 출력한다.
 """
 
+import argparse
 import json
 import sys
 from pathlib import Path
@@ -123,13 +124,58 @@ def render_scenario(scn, options, cap, targets_index):
     print()
 
 
+def to_json(options, cap, targets_index):
+    out_scenarios = []
+    for scn in options["scenarios"]:
+        confirmed, tbd, by_cat = evaluate(scn, options)
+        confirmed_total = sum(a for _, a in confirmed)
+        cats = []
+        for cat_id, target in targets_index.items():
+            actual = by_cat.get(cat_id, 0)
+            limit = target["max_krw"]
+            if actual <= limit:
+                status = "ok"
+            elif actual <= limit * 1.1:
+                status = "near"
+            else:
+                status = "over"
+            cats.append({
+                "id": cat_id,
+                "label": target["label"],
+                "actual_krw": actual,
+                "limit_krw": limit,
+                "actual_pct": round(actual / cap * 100, 1),
+                "target_pct": round(target["pct"] * 100, 1),
+                "status": status,
+            })
+        out_scenarios.append({
+            "id": scn["id"],
+            "label": scn["label"],
+            "confirmed_total_krw": confirmed_total,
+            "passes_cap": confirmed_total <= cap,
+            "headroom_krw": cap - confirmed_total,
+            "tbd_count": len(tbd),
+            "categories": cats,
+        })
+    return {"cap_krw": cap, "pax": options["trip_pax"], "scenarios": out_scenarios}
+
+
 def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--json", action="store_true", help="JSON 출력 (build_index.py용)")
+    args = parser.parse_args()
+
     options = json.loads(DATA.read_text(encoding="utf-8"))
     cap = options["budget_cap_krw"]
     pax = options["trip_pax"]
 
     targets = options.get("budget_allocation_targets", {}).get("categories", [])
     targets_index = {t["id"]: t for t in targets}
+
+    if args.json:
+        json.dump(to_json(options, cap, targets_index), sys.stdout, ensure_ascii=False, indent=2)
+        sys.stdout.write("\n")
+        return 0
 
     print(f"예산 상한: {fmt_won(cap)}  ·  여행자 수: {pax}명")
     print(f"카탈로그: 항공 {len(options['flights'])} / 숙박 {len(options['lodging'])} / "
