@@ -23,3 +23,6 @@ reports/final-report.pdf
 # 로컬 상태
 *.local
 .vercel
+
+# Playwright MCP 임시 캐시 (DOM 스냅샷 등)
+.playwright-mcp/

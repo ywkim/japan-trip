@@ -19,6 +19,7 @@
     "iri_normal": "6월 6일경",
     "ake_normal": "7월 19일경",
     "recent_history": [
+      {"year": 2025, "iri": "5월 17일경", "iri_class": "かなり早い", "ake": null, "ake_note": "JMA 속보 페이지에는 작년(2025) 매우명 階級·일자 미게재 — 확정값 사이트 별도 조회 필요"},
       {"year": 2024, "iri": "6월 17일경", "ake": "7월 18일경"},
       {"year": 2023, "iri": "5월 29일경", "ake": "7월 16일경"},
       {"year": 2022, "iri": "6월 14일경", "ake": "7월 23일경"},
@@ -27,13 +28,33 @@
       {"year": 2019, "iri": "6월 27일경", "ake": "7월 24일경"},
       {"year": 2018, "iri": "6월 5일경", "ake": "7월 9일경"}
     ],
+    "sokuhou_2026": {
+      "snapshot_date": "2026-05-14",
+      "page_updated_at": "令和8年5月4日 (2026-05-04)",
+      "source": "JMA 令和8年の梅雨入りと梅雨明け(速報値). https://www.data.jma.go.jp/cpd/baiu/sokuhou_baiu.html — Playwright DOM·스크린샷 검증 (docs/screenshots/jma-sokuhou-2026-05-14-*.png)",
+      "verification_method": "Playwright로 HTML 표 셀 단위 추출. 헤더 2단(地方/令和8年[時期·階級·平年差·昨年差]/平年の時期/昨年[時期·階級]) 구조에서 令和8年 4셀이 공란이면 미발표로 판정.",
+      "kinki_iri": null,
+      "kinki_iri_status": "미발표 (令和8年 4셀 모두 공란)",
+      "kinki_ake": null,
+      "kinki_ake_status": "미발표",
+      "okinawa_iri_2026": "5월 4일경",
+      "okinawa_iri_class": "早い (平年差 6일 빠름, 昨年差 1일 빠름)",
+      "amami_iri_2026": "5월 3일경",
+      "amami_iri_class": "早い (平年差 9일 빠름, 昨年差 2일 빠름)",
+      "announced_regions_iri": ["沖縄", "奄美"],
+      "pending_regions_iri": ["九州南部", "九州北部", "四国", "中国", "近畿", "東海", "関東甲信", "北陸", "東北南部", "東北北部"],
+      "ake_announced_regions": [],
+      "interpretation": "2026-05-14 시점 긴키 매우입 미발표. 평년 6/6 도래 전이라 정상. 발표된 沖縄(5/4)·奄美(5/3)는 둘 다 평년보다 6~9일 이른 階級 '早い' — 단 沖縄·奄美는 매우 시스템이 본토와 분리되므로 본토 입림이 빠를 것으로 직접 외삽하지 않는다(JMA 해설).",
+      "rechecks_planned": "5/22경(평년 입림 2주 전), 5/28경(여행 3일 전), 5/30경(출국 전날) 재조회."
+    },
     "trip_window_analysis": {
       "trip_dates": "2026-05-31 ~ 2026-06-03",
       "normal_status": "평년 매우입(6/6) 직전 진입기. 4일 평년 강수 합계 ~16mm.",
-      "early_iri_probability_7y": "최근 7년(2018~2024) 중 1회(2023, 5/29) — 약 14%",
-      "before_jun3_iri_probability_7y": "최근 7년 중 1회(2023) — 약 14%",
-      "by_jun10_iri_probability_7y": "최근 7년 중 3회(2018·2020·2023) — 약 43%",
-      "interpretation": "평년 기준 매우입 직전이라 장마 본격 강수는 회피 가능성 높음. 단 2023년형(조기 입림) 시나리오에서는 일정 전체가 우천 영향. 항공·료칸은 환불 정책 사전 확인 + 우천 대비 실내 백업 동선 권장."
+      "early_iri_probability_8y": "최근 8년(2018~2025) 중 2회(2023 5/29, 2025 5/17) — 25%",
+      "before_jun3_iri_probability_8y": "최근 8년 중 2회(2023·2025) — 25%",
+      "by_jun10_iri_probability_8y": "최근 8년 중 4회(2018·2020·2023·2025) — 50%",
+      "history_note": "2025년 긴키 매우입 5/17頃(かなり早い)이 2026-05-14 sokuhou 페이지 '昨年' 컬럼으로 확인되어 윈도우를 7년→8년으로 확장. 2025 데이터 추가 효과: 조기 입림 확률 14%→25%, 6/10 이전 입림 50%(이전 43%).",
+      "interpretation": "평년 기준 매우입 직전이지만 2025년 데이터 추가로 조기 입림 확률이 14%→25%로 상향. 2023년·2025년형 조기 입림 시나리오에서는 일정 전체가 우천 영향. 항공·료칸은 환불 정책 사전 확인 + 우천 대비 실내 백업 동선 권장."
     }
   },
   "cities": {
