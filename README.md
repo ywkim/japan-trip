@@ -42,7 +42,7 @@
 
 ### 7. 검증 (CI)
 - `python -m unittest discover tests` — 단위 테스트 (validate·build_index·score·budget 24개)
-- `python scripts/validate.py` — 가격 필드 무결성(source·data_quality), 30/60일 묵은 가격 경고/실패, SYNC 주석 경로·절 번호 검증
+- `python scripts/validate.py` — 가격 필드 무결성(source·data_quality), 30/60일 묵은 가격 경고/실패, SYNC 주석 경로·절 번호 검증, `docs/weather.md`↔`data/weather.json` 및 `docs/flights.md`↔`data/flights.json` 동기화 검증
 - `python scripts/build_index.py --check` — `index.html`이 데이터와 동기화 상태인지 (drift 시 exit 1)
 - `.github/workflows/validate.yml`이 PR마다 unittest + 위 4개 실행
 
