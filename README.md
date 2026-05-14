@@ -15,6 +15,7 @@
 
 ### 3. 결과 보기
 - 브라우저로 `viz/dashboard.html` 더블클릭 → 가중치 슬라이더로 민감도 확인
+- 브라우저로 `viz/checklist.html` 더블클릭 → 예약 진행 상태 8 항목 시각화 (미정/예약중/확정 + due_date)
 - 또는 터미널에서 `python scripts/score.py` 실행
 
 ### 3-1. 예산 (3M 하드캡) 통과 여부 확인

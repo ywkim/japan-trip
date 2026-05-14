@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>예약 체크리스트 — 교토 5/31~6/3</title>
+<style>
+  :root {
+    --bg: #fafafa;
+    --fg: #222;
+    --muted: #666;
+    --border: #ddd;
+    --accent: #d33;
+    --card-bg: #fff;
+    --chip-bg: #eee;
+    --status-todo-bg: #fce4e4;
+    --status-todo-fg: #a33;
+    --status-progress-bg: #fff4d6;
+    --status-progress-fg: #8a6a00;
+    --status-done-bg: #e0f3e0;
+    --status-done-fg: #2d6a2d;
+    --due-soon: #d33;
+    --due-mid: #b78a00;
+    --due-far: #666;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1a1a1a;
+      --fg: #eee;
+      --muted: #999;
+      --border: #333;
+      --accent: #ff6464;
+      --card-bg: #232323;
+      --chip-bg: #2d2d2d;
+      --status-todo-bg: #4a2424;
+      --status-todo-fg: #ff9b9b;
+      --status-progress-bg: #44391a;
+      --status-progress-fg: #ffd366;
+      --status-done-bg: #1f3a1f;
+      --status-done-fg: #8cd28c;
+      --due-soon: #ff8a8a;
+      --due-mid: #ffcc66;
+      --due-far: #999;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "AppleGothic", sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    margin: 0 auto;
+    padding: 1.25rem;
+    max-width: 720px;
+    line-height: 1.5;
+  }
+  h1 { font-size: 1.4rem; margin: 0 0 0.3rem; }
+  .scenario {
+    color: var(--muted);
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  .summary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  .summary .chip {
+    background: var(--chip-bg);
+    padding: 0.3rem 0.7rem;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-variant-numeric: tabular-nums;
+  }
+  .summary .chip strong { font-weight: 600; }
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+    margin-bottom: 1rem;
+    font-size: 0.85rem;
+  }
+  .controls label { color: var(--muted); }
+  select, button {
+    padding: 0.35rem 0.7rem;
+    background: var(--card-bg);
+    color: var(--fg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-family: inherit;
+  }
+  button:hover, select:hover { border-color: var(--accent); }
+  .items { display: flex; flex-direction: column; gap: 0.6rem; }
+  .item {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.8rem 0.9rem;
+  }
+  .item-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.3rem;
+  }
+  .item-label { font-weight: 600; flex: 1 1 auto; min-width: 0; }
+  .item-id { color: var(--muted); font-size: 0.75rem; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; margin-right: 0.4rem; }
+  .badge {
+    display: inline-block;
+    padding: 0.15rem 0.55rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .badge.status-todo { background: var(--status-todo-bg); color: var(--status-todo-fg); }
+  .badge.status-progress { background: var(--status-progress-bg); color: var(--status-progress-fg); }
+  .badge.status-done { background: var(--status-done-bg); color: var(--status-done-fg); }
+  .item-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.7rem;
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-bottom: 0.4rem;
+  }
+  .due { font-variant-numeric: tabular-nums; }
+  .due.soon { color: var(--due-soon); font-weight: 600; }
+  .due.mid { color: var(--due-mid); }
+  .due.far { color: var(--due-far); }
+  .item-note {
+    font-size: 0.85rem;
+    color: var(--fg);
+    margin-bottom: 0.4rem;
+    white-space: pre-wrap;
+  }
+  .item-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    align-items: center;
+    font-size: 0.8rem;
+  }
+  .item-actions select { padding: 0.2rem 0.45rem; font-size: 0.8rem; }
+  .item-actions .memo-input {
+    flex: 1 1 14rem;
+    min-width: 0;
+    padding: 0.25rem 0.5rem;
+    background: var(--bg);
+    color: var(--fg);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    font-family: inherit;
+    font-size: 0.8rem;
+  }
+  .footer {
+    margin-top: 1.4rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+  .footer .note { flex: 1 1 100%; }
+  details { margin-top: 1rem; }
+  summary { cursor: pointer; color: var(--muted); font-size: 0.85rem; }
+  pre {
+    background: var(--chip-bg);
+    padding: 0.7rem;
+    border-radius: 4px;
+    overflow-x: auto;
+    font-size: 0.75rem;
+    line-height: 1.4;
+  }
+</style>
+</head>
+<body>
+
+<h1>예약 체크리스트</h1>
+<div class="scenario" id="scenario"></div>
+
+<div class="summary" id="summary"></div>
+
+<div class="controls">
+  <label for="sort">정렬</label>
+  <select id="sort">
+    <option value="due">마감일 빠른 순</option>
+    <option value="status">상태 (확정 → 예약중 → 미정)</option>
+    <option value="original">원본 순서</option>
+  </select>
+  <button id="reset">로컬 변경 초기화</button>
+  <button id="export">JSON 내보내기</button>
+</div>
+
+<div class="items" id="items"></div>
+
+<details>
+  <summary>현재 상태 (JSON) — 단일 출처는 <code>data/booking-checklist.json</code></summary>
+  <pre id="export-area"></pre>
+</details>
+
+<div class="footer">
+  <span class="note">단일 출처는 <code>data/booking-checklist.json</code>. 이 화면의 상태/메모 변경은 localStorage에만 저장되므로 실제 갱신은 JSON 내보내기 → JSON 파일 반영 → 커밋이 필요.</span>
+</div>
+
+<script>
+// data/booking-checklist.json과 동기화 — 단일 출처는 JSON 파일
+const CHECKLIST = {
+  "_doc": "예약 진행 상태. status: 미정|예약중|확정. index.html §7 카드 데이터 출처. 변경 시 build_index.py 재실행.",
+  "scenario": "kyoto_may31_kadensho_early_bird",
+  "items": [
+    {
+      "id": "flight",
+      "label": "항공 (ICN↔KIX 5/31~6/3, 4인)",
+      "status": "미정",
+      "due_date": "2026-05-18",
+      "note": "Skyscanner 추정 ₩1,012K. 영욱 직접 재조회 후 발권사 평점 확인 → Booking.com 또는 항공사 직판 권장"
+    },
+    {
+      "id": "lodging_night1",
+      "label": "에어비앤비 #3 시오(Shio) 5/31~6/2 (2박, 4명)",
+      "status": "미정",
+      "due_date": "2026-05-18",
+      "note": "PR #16 소연 추천으로 채택. 매물 1373928005681941061, ★4.95, 침실 3·욕실 2. 2박 ₩730,372. 후기 59개·운영 2년 → 호스트 응답성 사전 확인 + 환불 정책 검토"
+    },
+    {
+      "id": "ryokan",
+      "label": "우메코지 카덴쇼 6/2 (1박, 2명×2실 조기할인 조식)",
+      "status": "미정",
+      "due_date": "2026-05-18",
+      "note": "dormy-hotels.com 직판. 환불 정책 사전 확인 후 결제. 4인 ¥76,500 ≈ ₩726,750"
+    },
+    {
+      "id": "insurance",
+      "label": "여행자보험 (4인, 시부모 포함)",
+      "status": "미정",
+      "due_date": "2026-05-25",
+      "note": "시부모 보험·상비약, 한국어 가능 의료기관 위치 사전 저장"
+    },
+    {
+      "id": "esim",
+      "label": "eSIM / 데이터 (4인)",
+      "status": "미정",
+      "due_date": "2026-05-28",
+      "note": "Klook·Trip.com 4일권 시세 ₩5~10K/인"
+    },
+    {
+      "id": "transit_pass",
+      "label": "교통패스 (ICOCA & HARUKA + 교토 시영 1일권)",
+      "status": "미정",
+      "due_date": "2026-05-25",
+      "note": "JR 하루카 KIX↔교토 왕복 ¥2,400 × 4 × 2 = ₩192K, 교토 시영 1일권 ¥700 × 4 × 3 = ₩84K"
+    },
+    {
+      "id": "fx",
+      "label": "환전 / 트래블카드",
+      "status": "미정",
+      "due_date": "2026-05-28",
+      "note": "1인 ¥30,000 가정 (현금 식비·신사 새전·잔돈). 트래블월렛/하나비바X 등 무환전료 카드 권장"
+    }
+  ]
+};
+
+const STORAGE_KEY = "japan-trip-checklist";
+const TODAY = new Date();
+TODAY.setHours(0, 0, 0, 0);
+const STATUS_OPTIONS = ["미정", "예약중", "확정"];
+const STATUS_RANK = { "확정": 0, "예약중": 1, "미정": 2 };
+const STATUS_CLASS = { "미정": "status-todo", "예약중": "status-progress", "확정": "status-done" };
+
+// ----- 상태 -----
+const overrides = loadOverrides();
+let sortMode = overrides.sort || "due";
+
+function loadOverrides() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
+    if (saved && typeof saved === "object") return saved;
+  } catch (e) {}
+  return { items: {}, sort: "due" };
+}
+function persist() {
+  overrides.sort = sortMode;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(overrides));
+}
+function getItemState(item) {
+  const o = overrides.items?.[item.id] || {};
+  return {
+    status: o.status ?? item.status,
+    memo: o.memo ?? "",
+  };
+}
+
+// ----- 유틸 -----
+function parseDate(s) {
+  const d = new Date(s + "T00:00:00");
+  return isNaN(d.getTime()) ? null : d;
+}
+function diffDays(s) {
+  const d = parseDate(s);
+  if (!d) return null;
+  return Math.round((d - TODAY) / (1000 * 60 * 60 * 24));
+}
+function dueClass(days) {
+  if (days == null) return "far";
+  if (days <= 7) return "soon";
+  if (days <= 14) return "mid";
+  return "far";
+}
+function dueLabel(days) {
+  if (days == null) return "";
+  if (days < 0) return `${-days}일 지남`;
+  if (days === 0) return "오늘";
+  return `D-${days}`;
+}
+
+// ----- 헤더/요약 -----
+function renderHeader() {
+  document.getElementById("scenario").textContent =
+    `시나리오: ${CHECKLIST.scenario} · 총 ${CHECKLIST.items.length}개 항목`;
+}
+function renderSummary() {
+  const counts = { "미정": 0, "예약중": 0, "확정": 0 };
+  for (const it of CHECKLIST.items) {
+    const s = getItemState(it).status;
+    counts[s] = (counts[s] || 0) + 1;
+  }
+  const wrap = document.getElementById("summary");
+  wrap.innerHTML = STATUS_OPTIONS
+    .map(s => `<span class="chip"><strong>${s}</strong>: ${counts[s] || 0}</span>`)
+    .join("");
+}
+
+// ----- 정렬 -----
+function sortedItems() {
+  const arr = CHECKLIST.items.map((it, idx) => ({ it, idx, state: getItemState(it) }));
+  if (sortMode === "due") {
+    arr.sort((a, b) => {
+      const da = parseDate(a.it.due_date)?.getTime() ?? Infinity;
+      const db = parseDate(b.it.due_date)?.getTime() ?? Infinity;
+      return da - db || a.idx - b.idx;
+    });
+  } else if (sortMode === "status") {
+    arr.sort((a, b) => {
+      const r = (STATUS_RANK[a.state.status] ?? 99) - (STATUS_RANK[b.state.status] ?? 99);
+      if (r !== 0) return r;
+      const da = parseDate(a.it.due_date)?.getTime() ?? Infinity;
+      const db = parseDate(b.it.due_date)?.getTime() ?? Infinity;
+      return da - db || a.idx - b.idx;
+    });
+  }
+  return arr;
+}
+
+// ----- 항목 카드 -----
+function renderItems() {
+  const wrap = document.getElementById("items");
+  wrap.innerHTML = "";
+  for (const { it, state } of sortedItems()) {
+    const days = diffDays(it.due_date);
+    const card = document.createElement("div");
+    card.className = "item";
+    const statusClass = STATUS_CLASS[state.status] || "status-todo";
+    const statusOpts = STATUS_OPTIONS.map(
+      s => `<option value="${s}"${s === state.status ? " selected" : ""}>${s}</option>`
+    ).join("");
+    card.innerHTML = `
+      <div class="item-head">
+        <div class="item-label"><span class="item-id">${it.id}</span>${it.label}</div>
+        <span class="badge ${statusClass}">${state.status}</span>
+      </div>
+      <div class="item-meta">
+        <span class="due ${dueClass(days)}">마감 ${it.due_date}${days != null ? ` · ${dueLabel(days)}` : ""}</span>
+      </div>
+      <div class="item-note">${it.note}</div>
+      <div class="item-actions">
+        <label>상태</label>
+        <select data-id="${it.id}" data-field="status">${statusOpts}</select>
+        <input type="text" class="memo-input" placeholder="내 메모 (localStorage)" data-id="${it.id}" data-field="memo" value="${escapeAttr(state.memo)}">
+      </div>
+    `;
+    wrap.appendChild(card);
+  }
+  wrap.querySelectorAll("select[data-field]").forEach(el => el.addEventListener("change", onItemChange));
+  wrap.querySelectorAll("input[data-field]").forEach(el => el.addEventListener("input", onItemChange));
+}
+function escapeAttr(s) {
+  return String(s).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+function onItemChange(e) {
+  const { id, field } = e.target.dataset;
+  const value = e.target.value;
+  if (!overrides.items) overrides.items = {};
+  if (!overrides.items[id]) overrides.items[id] = {};
+  overrides.items[id][field] = value;
+  persist();
+  if (field === "status") {
+    renderSummary();
+    renderItems();
+  }
+  renderExport();
+}
+
+// ----- 내보내기 -----
+function buildExport() {
+  const out = JSON.parse(JSON.stringify(CHECKLIST));
+  for (const it of out.items) {
+    const o = overrides.items?.[it.id];
+    if (o?.status) it.status = o.status;
+  }
+  return out;
+}
+function renderExport() {
+  document.getElementById("export-area").textContent = JSON.stringify(buildExport(), null, 2);
+}
+
+// ----- 컨트롤 -----
+document.getElementById("sort").addEventListener("change", e => {
+  sortMode = e.target.value;
+  persist();
+  renderItems();
+});
+document.getElementById("reset").addEventListener("click", () => {
+  if (!confirm("이 브라우저에 저장된 상태/메모 변경을 모두 지웁니다.")) return;
+  localStorage.removeItem(STORAGE_KEY);
+  overrides.items = {};
+  overrides.sort = "due";
+  sortMode = "due";
+  document.getElementById("sort").value = "due";
+  renderSummary();
+  renderItems();
+  renderExport();
+});
+document.getElementById("export").addEventListener("click", () => {
+  const blob = new Blob([JSON.stringify(buildExport(), null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "booking-checklist.json";
+  a.click();
+  URL.revokeObjectURL(url);
+});
+
+// ----- 초기 렌더 -----
+document.getElementById("sort").value = sortMode;
+renderHeader();
+renderSummary();
+renderItems();
+renderExport();
+</script>
+
+</body>
+</html>
