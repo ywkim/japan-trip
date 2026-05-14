@@ -28,8 +28,9 @@
 - 최종 결정 후 `reports/final-report.md` 작성 → `bash scripts/render-pdf.sh`로 PDF
 
 ### 5. 보조 데이터 활용
-- `data/weather.json` — 후보지 × 시기 기후 데이터 (JMA 평년값)
-- `docs/weather.md` — 시기별 쾌적도 순위, `seasonality`/`physical_burden` 점수 제안
+- `data/weather.json` — 후보지 × 시기 기후 데이터 (JMA 평년값) + `tsuyu_normals`(긴키 매우입·매우명 평년 + 최근 8년 실적 + `sokuhou_2026` 2026 속보 스냅샷) + `cities.kyoto.sub_monthly_precip`(순계열 강수)·`trip_window_daily_precip`(5/31~6/3 일별 평년)
+- `docs/weather.md` — 시기별 쾌적도 순위, `seasonality`/`physical_burden` 점수 제안. §5에 교토 5/31~6/3 장마 정량 분석 (평년 입림 6/6, 여행 4일 합계 ~16mm, 최근 8년 기준 조기 입림 확률 ~25%, 2026-05-14 시점 긴키 미발표)
+- `docs/screenshots/jma-sokuhou-2026-05-14-*.png` — JMA 2026 매우 속보 페이지 검증 캡처 (Playwright)
 - `data/flights.json` — 후보지 × 출발지(ICN/GMP) 항공권 시세 스냅샷
 - `docs/flights.md` — 4인 총액 비교, GMP 가용성, `cost` 점수 환산 가이드
 - **`seasonality` 점수는 현재 2026-05 시기 고정** — 각 후보의 `weather.json` 2026-05 `comfort_score`를 `decision.json`에 그대로 입력. 다른 시기로 비교하려면 `weather.json`에서 해당 월 `comfort_score`로 수동 교체 (스키마 확장은 미실시). 상세: `docs/decision-log/2026-05-11-seasonality-scoring.md`

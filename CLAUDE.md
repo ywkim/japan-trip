@@ -39,7 +39,7 @@ japan-trip/
 ├── data/
 │   ├── decision.json          # 단일 출처 (criteria + candidates + scores)
 │   ├── cost-options.json      # 단일 출처 (flights/lodging/daily_fixed/one_time/scenarios)
-│   ├── weather.json           # 후보지 × 시기 기후 데이터 (JMA 평년값)
+│   ├── weather.json           # 후보지 × 시기 기후 + 긴키 매우(梅雨) 평년·실적 + 교토 5/31~6/3 일별 강수 평년
 │   ├── flights.json           # 후보지 × 출발지 항공권 시세 스냅샷 (메타사이트 근사)
 │   └── booking-checklist.json # 단일 출처 (예약 진행 상태 8 항목)
 ├── docs/
@@ -70,7 +70,7 @@ japan-trip/
 - 단일 출처(정본):
   - `data/decision.json` — criteria·candidates·scores
   - `data/cost-options.json` — 항공·숙박·고정비·일회성·시나리오
-  - `data/weather.json` — 후보지×시기 기후
+  - `data/weather.json` — 후보지×시기 기후 + `tsuyu_normals`(긴키 매우입·매우명 평년 + 최근 7년 실적) + `cities.kyoto.sub_monthly_precip`(순계열)·`trip_window_daily_precip`(5/31~6/3 일별). 원자료: JMA 매우 평년값·京都(47759) 일별 평년값 1991–2020. `docs/weather.md` §5와 동기화
   - `data/flights.json` — 후보지×출발지 항공권 시세 스냅샷 (시점 스냅샷, snapshot_date 명시)
   - `data/booking-checklist.json` — 예약 진행 상태
 - **`index.html`은 `scripts/build_index.py` 산출물 — 직접 편집 금지**. 데이터·일정 표 변경 후 `python scripts/build_index.py` 실행. CI(`build_index.py --check`)가 PR 단계에서 drift를 차단
