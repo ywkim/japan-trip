@@ -1,16 +1,14 @@
 #!/usr/bin/env python3
-"""index.html 빌드 스크립트.
+"""index.html + viz/itinerary.html + viz/checklist.html 빌드.
 
-data/decision.json·data/cost-options.json·data/weather.json·data/booking-checklist.json
-을 읽고 scripts/score.py·scripts/budget.py를 --json으로 호출해 인라인 데이터로
-모바일 친화 8섹션 카드를 생성. CLAUDE.md "더블클릭 동작" 규칙 보존을 위해
-단일 HTML 자기완결 (외부 fetch 없음).
+data/decision.json·data/cost-options.json·data/weather.json·data/itinerary.json
+·data/booking-checklist.json을 읽고 scripts/score.py·scripts/budget.py를
+--json으로 호출해 인라인 데이터로 3개 정적 HTML을 생성한다. 모든 산출물은
+"브라우저 더블클릭 동작"을 위해 외부 fetch 없음.
 
 용법:
-  python scripts/build_index.py            # index.html 갱신
+  python scripts/build_index.py            # 3개 파일 갱신
   python scripts/build_index.py --check    # 빌드 결과와 디스크 diff (CI용, exit 1 if drift)
-
-# TODO: viz/dashboard.html도 동일 스크립트로 generate (별 PR)
 """
 
 from __future__ import annotations
@@ -26,7 +24,9 @@ BASE = Path(__file__).resolve().parent.parent
 SCRIPTS = BASE / "scripts"
 DATA = BASE / "data"
 DOCS = BASE / "docs"
-OUT = BASE / "index.html"
+OUT_INDEX = BASE / "index.html"
+OUT_ITINERARY = BASE / "viz" / "itinerary.html"
+OUT_CHECKLIST = BASE / "viz" / "checklist.html"
 
 GH_BLOB = "https://github.com/ywkim/japan-trip/blob/main"
 SCENARIO_ID = "kyoto_may31_kadensho_early_bird"
@@ -42,6 +42,11 @@ def won(n: int) -> str:
     return f"₩{n:,}"
 
 
+def maps_link(query: str, label: str) -> str:
+    q = esc(query.replace(" ", "+"))
+    return f'<a href="https://maps.google.com/?q={q}" target="_blank" rel="noopener">{esc(label)}</a>'
+
+
 def run_json(script: str) -> dict:
     res = subprocess.run(
         [sys.executable, str(SCRIPTS / script), "--json"],
@@ -55,17 +60,107 @@ def load_data():
         "decision": json.loads((DATA / "decision.json").read_text(encoding="utf-8")),
         "cost": json.loads((DATA / "cost-options.json").read_text(encoding="utf-8")),
         "weather": json.loads((DATA / "weather.json").read_text(encoding="utf-8")),
+        "itinerary": json.loads((DATA / "itinerary.json").read_text(encoding="utf-8")),
         "checklist": json.loads((DATA / "booking-checklist.json").read_text(encoding="utf-8")),
         "score": run_json("score.py"),
         "budget": run_json("budget.py"),
     }
 
 
-# ─── 섹션 빌더 ─────────────────────────────────────────────────────────────
+# ─── 공통 스타일 ───────────────────────────────────────────────────────────
+
+CSS = """
+  :root {
+    --bg: #fafafa; --fg: #222; --muted: #666; --border: #ddd;
+    --accent: #d33; --card: #fff; --subcard: #fafafa;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1a1a1a; --fg: #eee; --muted: #999; --border: #333;
+      --accent: #ff6464; --card: #232323; --subcard: #1e1e1e;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "AppleGothic", sans-serif;
+    background: var(--bg); color: var(--fg);
+    margin: 0 auto; padding: 1rem; max-width: 640px;
+    line-height: 1.5; font-size: 16px;
+  }
+  h1 { font-size: 1.4rem; margin: 0.5rem 0 0.25rem; }
+  h2 { font-size: 1rem; margin: 0 0 0.5rem; color: var(--muted); font-weight: 500; }
+  .status { color: var(--muted); font-size: 0.85rem; margin-bottom: 1rem; }
+  nav { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 1rem 0; }
+  nav a {
+    padding: 0.4rem 0.7rem; border: 1px solid var(--border); border-radius: 999px;
+    text-decoration: none; color: var(--fg); font-size: 0.8rem; background: var(--card);
+  }
+  nav a:hover { border-color: var(--accent); }
+  .card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+    padding: 1rem; margin: 0.75rem 0;
+  }
+  .subcard {
+    background: var(--subcard); border: 1px solid var(--border); border-radius: 6px;
+    padding: 0.75rem; margin: 0.5rem 0;
+  }
+  .subtitle { font-weight: 600; margin-bottom: 0.4rem; font-size: 0.95rem; }
+  .big { font-size: 1.6rem; font-weight: 600; line-height: 1.2; }
+  .sub { color: var(--muted); font-size: 0.85rem; margin-top: 0.25rem; }
+  .row {
+    display: flex; justify-content: space-between; gap: 0.5rem;
+    padding: 0.35rem 0; border-bottom: 1px solid var(--border);
+  }
+  .row:last-child { border-bottom: none; }
+  .row .k { color: var(--muted); flex-shrink: 0; }
+  .row .v { font-variant-numeric: tabular-nums; text-align: right; word-break: keep-all; }
+  ul { padding-left: 1.2rem; margin: 0.3rem 0; }
+  li { margin: 0.2rem 0; }
+  .day { padding: 0.35rem 0; border-bottom: 1px solid var(--border); }
+  .day:last-child { border-bottom: none; }
+  .day .date { font-size: 0.9rem; }
+  .day .date .k { display: inline-block; min-width: 3.2rem; color: var(--muted); }
+  .day a { color: var(--fg); text-decoration: underline; text-decoration-color: var(--border); }
+  .bar { height: 6px; background: var(--border); border-radius: 3px; margin: 0.2rem 0 0.5rem; overflow: hidden; }
+  .bar-fill { height: 100%; background: var(--accent); }
+  .links { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.6rem; }
+  .links a {
+    flex: 1 1 auto; text-align: center; padding: 0.5rem 0.7rem;
+    background: transparent; color: var(--fg); border: 1px solid var(--border);
+    border-radius: 6px; text-decoration: none; font-size: 0.85rem;
+  }
+  .links a:hover { border-color: var(--accent); }
+  .badge {
+    display: inline-block; padding: 0.1rem 0.45rem; border-radius: 4px;
+    font-size: 0.75rem; border: 1px solid currentColor;
+  }
+  footer { color: var(--muted); font-size: 0.75rem; margin-top: 1.5rem; text-align: center; }
+"""
+
+
+def html_doc(title: str, body: str) -> str:
+    return f"""<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1a1a1a" media="(prefers-color-scheme: dark)">
+<title>{esc(title)}</title>
+<style>{CSS}</style>
+</head>
+<body>
+{body}
+</body>
+</html>
+"""
+
+
+# ─── index.html 섹션 ──────────────────────────────────────────────────────
 
 def card_summary(d) -> str:
     decision = d["decision"]
-    cost = d["cost"]
     score = d["score"]
     budget = d["budget"]
     kyoto = next(c for c in decision["candidates"] if c["id"] == "kyoto")
@@ -96,7 +191,6 @@ def card_airbnb(d) -> str:
     items = [l for l in d["cost"]["lodging"] if l["id"].startswith("airbnb_") and l["id"] != "kyoto_airbnb_4pax"]
     cards = []
     for l in items:
-        # 매물 ID에서 airbnb 링크 추출
         src = l.get("source", "")
         airbnb_id = ""
         for tok in src.split():
@@ -195,60 +289,28 @@ def card_budget(d) -> str:
 """
 
 
-# 일자별 일정 (정적 — 5/31~6/3 평행 이동)
-ITINERARY = [
-    {"date": "5/31 (일) — 도착", "items": [
-        ("09:05", "간사이공항 도착 → JR 하루카 → 교토역", "Kansai International Airport"),
-        ("11:30", "에어비앤비 짐 보관 + 점심", "Kyoto Station"),
-        ("13:30", "키요미즈데라 (清水寺)", "Kiyomizu-dera"),
-        ("16:30", "산넨자카 → 야사카 신사 → 기온", "Gion Kyoto"),
-        ("18:30", "가와라마치 저녁", "Kawaramachi"),
-    ], "walk": "도보 약 5km", "lodge": "에어비앤비"},
-    {"date": "6/1 (월) — 아라시야마", "items": [
-        ("09:00", "죽림길 (지쿠린)", "Arashiyama Bamboo Grove"),
-        ("09:45", "텐류지 정원", "Tenryu-ji Temple"),
-        ("12:00", "두부 가이세키 점심", "Arashiyama"),
-        ("14:00", "금각사 (鹿苑寺)", "Kinkaku-ji"),
-        ("15:30", "료안지 석정원", "Ryoan-ji"),
-        ("18:30", "폰토초 저녁", "Pontocho Alley"),
-    ], "walk": "도보 약 7km", "lodge": "에어비앤비 (2박째)"},
-    {"date": "6/2 (화) — 후시미 + 료칸", "items": [
-        ("07:30", "후시미 이나리 신사 (이른 시간 인파 회피)", "Fushimi Inari Taisha"),
-        ("09:30", "토후쿠지 정원", "Tofuku-ji"),
-        ("13:30", "우메코지 카덴쇼 체크인", "Umekoji Kadensho"),
-        ("17:00", "료칸 대욕장 (천연식 온천)", "Umekoji Kadensho"),
-        ("18:30", "가이세키 저녁", "Umekoji Kadensho"),
-    ], "walk": "도보 약 4km", "lodge": "우메코지 카덴쇼 (2명×2실)"},
-    {"date": "6/3 (수) — 출국", "items": [
-        ("07:30", "료칸 조식 (포함)", "Umekoji Kadensho"),
-        ("10:00", "토지 (東寺) 5중탑", "To-ji Temple"),
-        ("14:00", "JR 하루카 → 간사이공항", "Kansai International Airport"),
-        ("18:00", "출국", "Kansai International Airport"),
-    ], "walk": "도보 약 3km", "lodge": "—"},
-]
-
-
 def card_itinerary(d) -> str:
+    itin = d["itinerary"]
     days = []
-    for day in ITINERARY:
+    for day in itin["days"]:
         items_html = []
-        for time, name, query in day["items"]:
-            map_url = f"https://maps.google.com/?q={esc(query.replace(' ', '+'))}"
+        for it in day["items"]:
+            link = maps_link(it["maps_query"], it["title"]) if it.get("maps_query") else esc(it["title"])
             items_html.append(f"""
     <div class="day">
-      <div class="date"><span class="k">{esc(time)}</span> <a href="{map_url}" target="_blank" rel="noopener">{esc(name)}</a></div>
+      <div class="date"><span class="k">{esc(it['time'])}</span> {link}</div>
     </div>""")
         days.append(f"""
   <div class="subcard">
-    <div class="subtitle">{esc(day['date'])}</div>
+    <div class="subtitle">{esc(day['day_label'])}</div>
     {''.join(items_html)}
-    <div class="sub" style="margin-top:0.4rem;">{esc(day['walk'])} · 숙박: {esc(day['lodge'])}</div>
+    <div class="sub" style="margin-top:0.4rem;">도보 약 {day['walking_km']}km · 숙박: {esc(day['lodging'])}</div>
   </div>""")
     return f"""
-<!-- SYNC: docs/kyoto-itinerary-may-2026.md (5/24~27 → 5/31~6/3 평행 이동) · scripts/build_index.py ITINERARY -->
+<!-- SYNC: data/itinerary.json · docs/kyoto-itinerary-may31-jun3-2026.md -->
 <section id="itinerary" class="card">
   <h2>일자별 일정</h2>
-  <div class="sub" style="margin-bottom:0.5rem;">장소 탭 → 구글맵.</div>
+  <div class="sub" style="margin-bottom:0.5rem;">장소 탭 → 구글맵. 상세: <a href="viz/itinerary.html">전체 일정 화면 ↗</a></div>
   {''.join(days)}
 </section>
 """
@@ -271,6 +333,7 @@ def card_checklist(d) -> str:
 <!-- SYNC: data/booking-checklist.json -->
 <section id="checklist" class="card">
   <h2>예약 체크리스트 ({len(items)}개)</h2>
+  <div class="sub" style="margin-bottom:0.5rem;">상세: <a href="viz/checklist.html">전체 체크리스트 화면 ↗</a></div>
   {''.join(rows)}
 </section>
 """
@@ -279,7 +342,6 @@ def card_checklist(d) -> str:
 def card_score(d) -> str:
     score = d["score"]
     rows = []
-    max_score = max((s["score"] for s in score["scored"]), default=10)
     for s in score["scored"]:
         pct = (s["score"] / 10) * 100
         rows.append(f"""
@@ -301,84 +363,7 @@ def card_score(d) -> str:
 """
 
 
-# ─── 메인 ──────────────────────────────────────────────────────────────────
-
-HEAD = """<!DOCTYPE html>
-<html lang="ko">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#1a1a1a" media="(prefers-color-scheme: dark)">
-<title>일본 여행 최종 결정</title>
-<style>
-  :root {
-    --bg: #fafafa; --fg: #222; --muted: #666; --border: #ddd;
-    --accent: #d33; --card: #fff; --subcard: #fafafa;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #1a1a1a; --fg: #eee; --muted: #999; --border: #333;
-      --accent: #ff6464; --card: #232323; --subcard: #1e1e1e;
-    }
-  }
-  * { box-sizing: border-box; }
-  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "AppleGothic", sans-serif;
-    background: var(--bg); color: var(--fg);
-    margin: 0 auto; padding: 1rem; max-width: 640px;
-    line-height: 1.5; font-size: 16px;
-  }
-  h1 { font-size: 1.4rem; margin: 0.5rem 0 0.25rem; }
-  h2 { font-size: 1rem; margin: 0 0 0.5rem; color: var(--muted); font-weight: 500; }
-  .status { color: var(--muted); font-size: 0.85rem; margin-bottom: 1rem; }
-  nav { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 1rem 0; }
-  nav a {
-    padding: 0.4rem 0.7rem; border: 1px solid var(--border); border-radius: 999px;
-    text-decoration: none; color: var(--fg); font-size: 0.8rem; background: var(--card);
-  }
-  nav a:hover { border-color: var(--accent); }
-  .card {
-    background: var(--card); border: 1px solid var(--border); border-radius: 8px;
-    padding: 1rem; margin: 0.75rem 0;
-  }
-  .subcard {
-    background: var(--subcard); border: 1px solid var(--border); border-radius: 6px;
-    padding: 0.75rem; margin: 0.5rem 0;
-  }
-  .subtitle { font-weight: 600; margin-bottom: 0.4rem; font-size: 0.95rem; }
-  .big { font-size: 1.6rem; font-weight: 600; line-height: 1.2; }
-  .sub { color: var(--muted); font-size: 0.85rem; margin-top: 0.25rem; }
-  .row {
-    display: flex; justify-content: space-between; gap: 0.5rem;
-    padding: 0.35rem 0; border-bottom: 1px solid var(--border);
-  }
-  .row:last-child { border-bottom: none; }
-  .row .k { color: var(--muted); flex-shrink: 0; }
-  .row .v { font-variant-numeric: tabular-nums; text-align: right; word-break: keep-all; }
-  ul { padding-left: 1.2rem; margin: 0.3rem 0; }
-  li { margin: 0.2rem 0; }
-  .day { padding: 0.35rem 0; border-bottom: 1px solid var(--border); }
-  .day:last-child { border-bottom: none; }
-  .day .date { font-size: 0.9rem; }
-  .day .date .k { display: inline-block; min-width: 3.2rem; color: var(--muted); }
-  .day a { color: var(--fg); text-decoration: underline; text-decoration-color: var(--border); }
-  .bar { height: 6px; background: var(--border); border-radius: 3px; margin: 0.2rem 0 0.5rem; overflow: hidden; }
-  .bar-fill { height: 100%; background: var(--accent); }
-  .links { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.6rem; }
-  .links a {
-    flex: 1 1 auto; text-align: center; padding: 0.5rem 0.7rem;
-    background: transparent; color: var(--fg); border: 1px solid var(--border);
-    border-radius: 6px; text-decoration: none; font-size: 0.85rem;
-  }
-  .links a:hover { border-color: var(--accent); }
-  footer { color: var(--muted); font-size: 0.75rem; margin-top: 1.5rem; text-align: center; }
-</style>
-</head>
-<body>
-
-<h1>일본 여행 최종 결정</h1>
+INDEX_HEAD = """<h1>일본 여행 최종 결정</h1>
 <div class="status">교토 5/31~6/3 시나리오 (시부모 4인 확정). 본 페이지는 <code>scripts/build_index.py</code> 산출물 — 직접 편집 금지.</div>
 
 <nav>
@@ -393,23 +378,19 @@ HEAD = """<!DOCTYPE html>
 </nav>
 """
 
-FOOTER = f"""
+INDEX_FOOTER = f"""
 <div class="links">
   <a href="{GH_BLOB}/reports/final-report.md" target="_blank" rel="noopener">최종 보고서</a>
-  <a href="{GH_BLOB}/docs/airbnb-kyoto-may31-jun2-2026.md" target="_blank" rel="noopener">에어비앤비 비교 상세</a>
-  <a href="{GH_BLOB}/docs/kyoto-itinerary-may-2026.md" target="_blank" rel="noopener">상세 일정</a>
-  <a href="viz/dashboard.html">민감도 대시보드</a>
+  <a href="{GH_BLOB}/docs/airbnb-kyoto-may31-jun2-2026.md" target="_blank" rel="noopener">에어비앤비 비교</a>
+  <a href="viz/itinerary.html">일자별 일정</a>
+  <a href="viz/checklist.html">예약 체크리스트</a>
 </div>
 
-<footer>data/decision.json · data/cost-options.json · data/booking-checklist.json 단일 출처 · scripts/build_index.py 산출</footer>
-
-</body>
-</html>
+<footer>data/decision.json · data/cost-options.json · data/itinerary.json · data/booking-checklist.json 단일 출처 · scripts/build_index.py 산출</footer>
 """
 
 
-def build() -> str:
-    d = load_data()
+def build_index(d) -> str:
     sections = [
         card_summary(d),
         card_airbnb(d),
@@ -420,7 +401,132 @@ def build() -> str:
         card_checklist(d),
         card_score(d),
     ]
-    return HEAD + "\n".join(sections) + FOOTER
+    body = INDEX_HEAD + "\n".join(sections) + INDEX_FOOTER
+    return html_doc("일본 여행 최종 결정", body)
+
+
+# ─── viz/itinerary.html ────────────────────────────────────────────────────
+
+def build_itinerary(d) -> str:
+    itin = d["itinerary"]
+    trip = itin["trip"]
+    lodging_rows = "".join(
+        f"""<div class="row"><span class="k">{esc(l['name'])} ({l['nights']}박)</span><span class="v">{esc(l.get('location',''))}</span></div>
+  <div class="sub">{esc(l.get('note',''))}</div>"""
+        for l in trip.get("lodging", [])
+    )
+
+    day_cards = []
+    for day in itin["days"]:
+        item_rows = []
+        for it in day["items"]:
+            link = maps_link(it["maps_query"], it["title"]) if it.get("maps_query") else esc(it["title"])
+            note_html = f'<div class="sub">{esc(it["note"])}</div>' if it.get("note") else ""
+            item_rows.append(f"""
+    <div class="day">
+      <div class="date"><span class="k">{esc(it['time'])}</span> {link}</div>
+      {note_html}
+    </div>""")
+        day_cards.append(f"""
+  <div class="subcard">
+    <div class="subtitle">{esc(day['day_label'])}</div>
+    {''.join(item_rows)}
+    <div class="sub" style="margin-top:0.4rem;">도보 약 {day['walking_km']}km · 숙박: {esc(day['lodging'])}</div>
+  </div>""")
+
+    pending_items = "".join(f"<li>{esc(p)}</li>" for p in itin.get("pending", []))
+
+    body = f"""<h1>교토 3박4일 일정</h1>
+<div class="status">{esc(trip['dates'])} · {trip['nights']}박 · {trip['travelers']}인 · {esc(trip.get('composition',''))}</div>
+
+<!-- SYNC: data/itinerary.json -->
+<section class="card">
+  <h2>여행 메타</h2>
+  <div class="row"><span class="k">목적지</span><span class="v">{esc(trip['destination'])}</span></div>
+  <div class="row"><span class="k">강도</span><span class="v">{esc(trip.get('intensity',''))}</span></div>
+  <div class="row"><span class="k">총 도보</span><span class="v">약 {trip.get('walking_km_total','—')}km</span></div>
+  {lodging_rows}
+</section>
+
+<section class="card">
+  <h2>일자별 코스</h2>
+  {''.join(day_cards)}
+</section>
+
+<section class="card">
+  <h2>보류·확인 필요</h2>
+  <ul>{pending_items}</ul>
+</section>
+
+<div class="links">
+  <a href="../index.html">← 결정 요약으로</a>
+  <a href="{GH_BLOB}/{esc(itin.get('source_doc',''))}" target="_blank" rel="noopener">사람용 마크다운</a>
+  <a href="checklist.html">예약 체크리스트</a>
+</div>
+
+<footer>data/itinerary.json 단일 출처 · scripts/build_index.py 산출 — 직접 편집 금지</footer>
+"""
+    return html_doc("교토 3박4일 일정", body)
+
+
+# ─── viz/checklist.html ────────────────────────────────────────────────────
+
+def build_checklist(d) -> str:
+    cl = d["checklist"]
+    items = cl["items"]
+    color_map = {"확정": "#2a7", "예약중": "#c80", "미정": "#c33"}
+    counts = {"확정": 0, "예약중": 0, "미정": 0}
+    for it in items:
+        counts[it.get("status", "미정")] = counts.get(it.get("status", "미정"), 0) + 1
+
+    summary_rows = "".join(
+        f'<div class="row"><span class="k" style="color:{color_map[k]}">● {k}</span><span class="v">{counts[k]}개</span></div>'
+        for k in ("확정", "예약중", "미정")
+    )
+
+    sorted_items = sorted(items, key=lambda it: it.get("due_date", "9999-99-99"))
+    item_cards = []
+    for it in sorted_items:
+        color = color_map.get(it["status"], "#666")
+        item_cards.append(f"""
+  <div class="subcard">
+    <div class="subtitle">{esc(it['label'])}</div>
+    <div class="row"><span class="k">상태</span><span class="v"><span class="badge" style="color:{color}">{esc(it['status'])}</span></span></div>
+    <div class="row"><span class="k">기한</span><span class="v">{esc(it.get('due_date',''))}</span></div>
+    <div class="sub">{esc(it.get('note',''))}</div>
+  </div>""")
+
+    body = f"""<h1>예약 체크리스트</h1>
+<div class="status">시나리오: {esc(cl.get('scenario',''))} · {len(items)}개 항목</div>
+
+<!-- SYNC: data/booking-checklist.json -->
+<section class="card">
+  <h2>상태 요약</h2>
+  {summary_rows}
+</section>
+
+<section class="card">
+  <h2>항목 (기한 이른 순)</h2>
+  {''.join(item_cards)}
+</section>
+
+<div class="links">
+  <a href="../index.html">← 결정 요약으로</a>
+  <a href="itinerary.html">일자별 일정</a>
+</div>
+
+<footer>data/booking-checklist.json 단일 출처 · scripts/build_index.py 산출 — 직접 편집 금지</footer>
+"""
+    return html_doc("예약 체크리스트", body)
+
+
+# ─── 메인 ──────────────────────────────────────────────────────────────────
+
+OUTPUTS = (
+    ("index.html", lambda p: p / "index.html", build_index),
+    ("viz/itinerary.html", lambda p: p / "viz" / "itinerary.html", build_itinerary),
+    ("viz/checklist.html", lambda p: p / "viz" / "checklist.html", build_checklist),
+)
 
 
 def main() -> int:
@@ -428,17 +534,25 @@ def main() -> int:
     parser.add_argument("--check", action="store_true", help="빌드 결과와 디스크 diff (drift 시 exit 1)")
     args = parser.parse_args()
 
-    rendered = build()
+    d = load_data()
+    rendered = [(label, path_fn(BASE), build_fn(d)) for label, path_fn, build_fn in OUTPUTS]
+
     if args.check:
-        existing = OUT.read_text(encoding="utf-8") if OUT.exists() else ""
-        if existing != rendered:
-            print("DRIFT: index.html out of sync. Run `python scripts/build_index.py` and commit.", file=sys.stderr)
+        drift = []
+        for label, path, content in rendered:
+            existing = path.read_text(encoding="utf-8") if path.exists() else ""
+            if existing != content:
+                drift.append(label)
+        if drift:
+            print(f"DRIFT: {', '.join(drift)} out of sync. Run `python scripts/build_index.py` and commit.", file=sys.stderr)
             return 1
-        print("index.html in sync.")
+        print("All outputs in sync.")
         return 0
 
-    OUT.write_text(rendered, encoding="utf-8")
-    print(f"Wrote {OUT.relative_to(BASE)} ({len(rendered):,} bytes).")
+    for label, path, content in rendered:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(content, encoding="utf-8")
+        print(f"Wrote {label} ({len(content):,} bytes).")
     return 0
 
 

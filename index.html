@@ -68,11 +68,14 @@
     border-radius: 6px; text-decoration: none; font-size: 0.85rem;
   }
   .links a:hover { border-color: var(--accent); }
+  .badge {
+    display: inline-block; padding: 0.1rem 0.45rem; border-radius: 4px;
+    font-size: 0.75rem; border: 1px solid currentColor;
+  }
   footer { color: var(--muted); font-size: 0.75rem; margin-top: 1.5rem; text-align: center; }
 </style>
 </head>
 <body>
-
 <h1>일본 여행 최종 결정</h1>
 <div class="status">교토 5/31~6/3 시나리오 (시부모 4인 확정). 본 페이지는 <code>scripts/build_index.py</code> 산출물 — 직접 편집 금지.</div>
 
@@ -261,19 +264,19 @@
 </section>
 
 
-<!-- SYNC: docs/kyoto-itinerary-may-2026.md (5/24~27 → 5/31~6/3 평행 이동) · scripts/build_index.py ITINERARY -->
+<!-- SYNC: data/itinerary.json · docs/kyoto-itinerary-may31-jun3-2026.md -->
 <section id="itinerary" class="card">
   <h2>일자별 일정</h2>
-  <div class="sub" style="margin-bottom:0.5rem;">장소 탭 → 구글맵.</div>
+  <div class="sub" style="margin-bottom:0.5rem;">장소 탭 → 구글맵. 상세: <a href="viz/itinerary.html">전체 일정 화면 ↗</a></div>
   
   <div class="subcard">
-    <div class="subtitle">5/31 (일) — 도착</div>
+    <div class="subtitle">5/31 (일) — 도착 + 동산 지구</div>
     
     <div class="day">
       <div class="date"><span class="k">09:05</span> <a href="https://maps.google.com/?q=Kansai+International+Airport" target="_blank" rel="noopener">간사이공항 도착 → JR 하루카 → 교토역</a></div>
     </div>
     <div class="day">
-      <div class="date"><span class="k">11:30</span> <a href="https://maps.google.com/?q=Kyoto+Station" target="_blank" rel="noopener">에어비앤비 짐 보관 + 점심</a></div>
+      <div class="date"><span class="k">11:30</span> <a href="https://maps.google.com/?q=Kyoto+Station" target="_blank" rel="noopener">시오 짐 보관 + 점심</a></div>
     </div>
     <div class="day">
       <div class="date"><span class="k">13:30</span> <a href="https://maps.google.com/?q=Kiyomizu-dera" target="_blank" rel="noopener">키요미즈데라 (清水寺)</a></div>
@@ -282,12 +285,12 @@
       <div class="date"><span class="k">16:30</span> <a href="https://maps.google.com/?q=Gion+Kyoto" target="_blank" rel="noopener">산넨자카 → 야사카 신사 → 기온</a></div>
     </div>
     <div class="day">
-      <div class="date"><span class="k">18:30</span> <a href="https://maps.google.com/?q=Kawaramachi" target="_blank" rel="noopener">가와라마치 저녁</a></div>
+      <div class="date"><span class="k">18:30</span> <a href="https://maps.google.com/?q=Kawaramachi" target="_blank" rel="noopener">가와라마치 저녁 (시라카와·폰토초)</a></div>
     </div>
-    <div class="sub" style="margin-top:0.4rem;">도보 약 5km · 숙박: 에어비앤비</div>
+    <div class="sub" style="margin-top:0.4rem;">도보 약 3km · 숙박: 에어비앤비 시오</div>
   </div>
   <div class="subcard">
-    <div class="subtitle">6/1 (월) — 아라시야마</div>
+    <div class="subtitle">6/1 (월) — 아라시야마 + 북서쪽</div>
     
     <div class="day">
       <div class="date"><span class="k">09:00</span> <a href="https://maps.google.com/?q=Arashiyama+Bamboo+Grove" target="_blank" rel="noopener">죽림길 (지쿠린)</a></div>
@@ -296,7 +299,7 @@
       <div class="date"><span class="k">09:45</span> <a href="https://maps.google.com/?q=Tenryu-ji+Temple" target="_blank" rel="noopener">텐류지 정원</a></div>
     </div>
     <div class="day">
-      <div class="date"><span class="k">12:00</span> <a href="https://maps.google.com/?q=Arashiyama" target="_blank" rel="noopener">두부 가이세키 점심</a></div>
+      <div class="date"><span class="k">12:00</span> <a href="https://maps.google.com/?q=Arashiyama+Tofu" target="_blank" rel="noopener">두부 가이세키 점심 (시그라쿠 토후)</a></div>
     </div>
     <div class="day">
       <div class="date"><span class="k">14:00</span> <a href="https://maps.google.com/?q=Kinkaku-ji" target="_blank" rel="noopener">금각사 (鹿苑寺)</a></div>
@@ -305,18 +308,21 @@
       <div class="date"><span class="k">15:30</span> <a href="https://maps.google.com/?q=Ryoan-ji" target="_blank" rel="noopener">료안지 석정원</a></div>
     </div>
     <div class="day">
-      <div class="date"><span class="k">18:30</span> <a href="https://maps.google.com/?q=Pontocho+Alley" target="_blank" rel="noopener">폰토초 저녁</a></div>
+      <div class="date"><span class="k">18:30</span> <a href="https://maps.google.com/?q=Pontocho+Alley" target="_blank" rel="noopener">가와라마치 + 니시키 시장 저녁</a></div>
     </div>
-    <div class="sub" style="margin-top:0.4rem;">도보 약 7km · 숙박: 에어비앤비 (2박째)</div>
+    <div class="sub" style="margin-top:0.4rem;">도보 약 4km · 숙박: 에어비앤비 시오 (2박째)</div>
   </div>
   <div class="subcard">
-    <div class="subtitle">6/2 (화) — 후시미 + 료칸</div>
+    <div class="subtitle">6/2 (화) — 후시미 + 료칸 체크인</div>
     
     <div class="day">
-      <div class="date"><span class="k">07:30</span> <a href="https://maps.google.com/?q=Fushimi+Inari+Taisha" target="_blank" rel="noopener">후시미 이나리 신사 (이른 시간 인파 회피)</a></div>
+      <div class="date"><span class="k">07:30</span> <a href="https://maps.google.com/?q=Fushimi+Inari+Taisha" target="_blank" rel="noopener">후시미 이나리 신사</a></div>
     </div>
     <div class="day">
       <div class="date"><span class="k">09:30</span> <a href="https://maps.google.com/?q=Tofuku-ji" target="_blank" rel="noopener">토후쿠지 정원</a></div>
+    </div>
+    <div class="day">
+      <div class="date"><span class="k">11:30</span> <a href="https://maps.google.com/?q=Kyoto+Station" target="_blank" rel="noopener">교토역 라멘코지 점심</a></div>
     </div>
     <div class="day">
       <div class="date"><span class="k">13:30</span> <a href="https://maps.google.com/?q=Umekoji+Kadensho" target="_blank" rel="noopener">우메코지 카덴쇼 체크인</a></div>
@@ -325,26 +331,23 @@
       <div class="date"><span class="k">17:00</span> <a href="https://maps.google.com/?q=Umekoji+Kadensho" target="_blank" rel="noopener">료칸 대욕장 (천연식 온천)</a></div>
     </div>
     <div class="day">
-      <div class="date"><span class="k">18:30</span> <a href="https://maps.google.com/?q=Umekoji+Kadensho" target="_blank" rel="noopener">가이세키 저녁</a></div>
+      <div class="date"><span class="k">18:00</span> <a href="https://maps.google.com/?q=Umekoji+Kadensho" target="_blank" rel="noopener">카덴쇼 가이세키 저녁</a></div>
     </div>
-    <div class="sub" style="margin-top:0.4rem;">도보 약 4km · 숙박: 우메코지 카덴쇼 (2명×2실)</div>
+    <div class="sub" style="margin-top:0.4rem;">도보 약 5km · 숙박: 우메코지 카덴쇼 (2명×2실)</div>
   </div>
   <div class="subcard">
-    <div class="subtitle">6/3 (수) — 출국</div>
+    <div class="subtitle">6/3 (수) — 출국 (아침 일찍)</div>
     
     <div class="day">
-      <div class="date"><span class="k">07:30</span> <a href="https://maps.google.com/?q=Umekoji+Kadensho" target="_blank" rel="noopener">료칸 조식 (포함)</a></div>
+      <div class="date"><span class="k">이른 아침</span> <a href="https://maps.google.com/?q=Kyoto+Station" target="_blank" rel="noopener">카덴쇼 체크아웃 → 교토역</a></div>
     </div>
     <div class="day">
-      <div class="date"><span class="k">10:00</span> <a href="https://maps.google.com/?q=To-ji+Temple" target="_blank" rel="noopener">토지 (東寺) 5중탑</a></div>
+      <div class="date"><span class="k">시간 여유 시</span> <a href="https://maps.google.com/?q=To-ji+Temple" target="_blank" rel="noopener">토지(東寺) 오층탑 또는 교토역 이세탄</a></div>
     </div>
     <div class="day">
-      <div class="date"><span class="k">14:00</span> <a href="https://maps.google.com/?q=Kansai+International+Airport" target="_blank" rel="noopener">JR 하루카 → 간사이공항</a></div>
+      <div class="date"><span class="k">출국</span> <a href="https://maps.google.com/?q=Kansai+International+Airport" target="_blank" rel="noopener">JR 하루카 → 간사이공항 → 인천</a></div>
     </div>
-    <div class="day">
-      <div class="date"><span class="k">18:00</span> <a href="https://maps.google.com/?q=Kansai+International+Airport" target="_blank" rel="noopener">출국</a></div>
-    </div>
-    <div class="sub" style="margin-top:0.4rem;">도보 약 3km · 숙박: —</div>
+    <div class="sub" style="margin-top:0.4rem;">도보 약 1km · 숙박: —</div>
   </div>
 </section>
 
@@ -352,6 +355,7 @@
 <!-- SYNC: data/booking-checklist.json -->
 <section id="checklist" class="card">
   <h2>예약 체크리스트 (7개)</h2>
+  <div class="sub" style="margin-bottom:0.5rem;">상세: <a href="viz/checklist.html">전체 체크리스트 화면 ↗</a></div>
   
   <div class="subcard">
     <div class="subtitle">항공 (ICN↔KIX 5/31~6/3, 4인)</div>
@@ -442,12 +446,12 @@
 
 <div class="links">
   <a href="https://github.com/ywkim/japan-trip/blob/main/reports/final-report.md" target="_blank" rel="noopener">최종 보고서</a>
-  <a href="https://github.com/ywkim/japan-trip/blob/main/docs/airbnb-kyoto-may31-jun2-2026.md" target="_blank" rel="noopener">에어비앤비 비교 상세</a>
-  <a href="https://github.com/ywkim/japan-trip/blob/main/docs/kyoto-itinerary-may-2026.md" target="_blank" rel="noopener">상세 일정</a>
-  <a href="viz/dashboard.html">민감도 대시보드</a>
+  <a href="https://github.com/ywkim/japan-trip/blob/main/docs/airbnb-kyoto-may31-jun2-2026.md" target="_blank" rel="noopener">에어비앤비 비교</a>
+  <a href="viz/itinerary.html">일자별 일정</a>
+  <a href="viz/checklist.html">예약 체크리스트</a>
 </div>
 
-<footer>data/decision.json · data/cost-options.json · data/booking-checklist.json 단일 출처 · scripts/build_index.py 산출</footer>
+<footer>data/decision.json · data/cost-options.json · data/itinerary.json · data/booking-checklist.json 단일 출처 · scripts/build_index.py 산출</footer>
 
 </body>
 </html>

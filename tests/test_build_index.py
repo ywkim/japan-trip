@@ -9,6 +9,9 @@ from pathlib import Path
 
 BASE = Path(__file__).resolve().parent.parent
 INDEX = BASE / "index.html"
+ITINERARY = BASE / "viz" / "itinerary.html"
+CHECKLIST = BASE / "viz" / "checklist.html"
+ALL_OUTPUTS = (INDEX, ITINERARY, CHECKLIST)
 SCRIPT = BASE / "scripts" / "build_index.py"
 
 
@@ -25,20 +28,22 @@ class BuildIndexTests(unittest.TestCase):
 
     def test_build_is_idempotent(self):
         run()
-        first = INDEX.read_text(encoding="utf-8")
+        first = [p.read_text(encoding="utf-8") for p in ALL_OUTPUTS]
         run()
-        second = INDEX.read_text(encoding="utf-8")
+        second = [p.read_text(encoding="utf-8") for p in ALL_OUTPUTS]
         self.assertEqual(first, second, "build_index.py is not idempotent")
 
-    def test_check_detects_drift(self):
+    def test_check_detects_drift_in_each_output(self):
         run()
-        original = INDEX.read_text(encoding="utf-8")
-        try:
-            INDEX.write_text(original + "<!-- drift -->", encoding="utf-8")
-            r = run("--check")
-            self.assertEqual(r.returncode, 1, "expected --check to fail on drift")
-        finally:
-            INDEX.write_text(original, encoding="utf-8")
+        for path in ALL_OUTPUTS:
+            with self.subTest(path=path.name):
+                original = path.read_text(encoding="utf-8")
+                try:
+                    path.write_text(original + "<!-- drift -->", encoding="utf-8")
+                    r = run("--check")
+                    self.assertEqual(r.returncode, 1, f"expected --check to fail on drift in {path.name}")
+                finally:
+                    path.write_text(original, encoding="utf-8")
 
     def test_all_eight_sections_rendered(self):
         run()
@@ -50,6 +55,21 @@ class BuildIndexTests(unittest.TestCase):
         run()
         html = INDEX.read_text(encoding="utf-8")
         self.assertGreaterEqual(html.count("<!-- SYNC:"), 8, "expected at least 8 SYNC comments (one per section)")
+
+    def test_viz_outputs_have_no_external_fetch(self):
+        run()
+        for path in (ITINERARY, CHECKLIST):
+            with self.subTest(path=path.name):
+                content = path.read_text(encoding="utf-8")
+                self.assertNotIn("fetch(", content, f"{path.name} must be standalone (no fetch)")
+                self.assertNotIn("XMLHttpRequest", content, f"{path.name} must be standalone (no XHR)")
+
+    def test_viz_outputs_reference_their_data_source(self):
+        run()
+        itin = ITINERARY.read_text(encoding="utf-8")
+        self.assertIn("data/itinerary.json", itin)
+        cl = CHECKLIST.read_text(encoding="utf-8")
+        self.assertIn("data/booking-checklist.json", cl)
 
 
 if __name__ == "__main__":
