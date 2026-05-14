@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1a1a1a" media="(prefers-color-scheme: dark)">
+<title>교토 일자별 상세 일정</title>
+<style>
+  :root {
+    --bg: #fafafa;
+    --fg: #222;
+    --muted: #666;
+    --border: #ddd;
+    --accent: #d33;
+    --bar: #d33;
+    --bar-bg: #f0e0e0;
+    --card: #fff;
+    --subcard: #fafafa;
+    --table-stripe: #f4f4f4;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1a1a1a;
+      --fg: #eee;
+      --muted: #999;
+      --border: #333;
+      --accent: #ff6464;
+      --bar: #ff6464;
+      --bar-bg: #3a2424;
+      --card: #232323;
+      --subcard: #1e1e1e;
+      --table-stripe: #232323;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "AppleGothic", sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    margin: 0 auto;
+    padding: 1rem;
+    max-width: 760px;
+    line-height: 1.5;
+    font-size: 16px;
+  }
+  h1 { font-size: 1.4rem; margin: 0.5rem 0 0.25rem; }
+  h2 { font-size: 1.05rem; margin: 1.25rem 0 0.5rem; border-bottom: 1px solid var(--border); padding-bottom: 0.3rem; }
+  .status { color: var(--muted); font-size: 0.85rem; margin-bottom: 1rem; }
+  .meta-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.9rem 1rem;
+    margin: 0.75rem 0;
+  }
+  .meta-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.35rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .meta-row:last-child { border-bottom: none; }
+  .meta-row .k { color: var(--muted); flex-shrink: 0; }
+  .meta-row .v { text-align: right; font-variant-numeric: tabular-nums; word-break: keep-all; }
+  .tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: 0.75rem 0 0.5rem;
+  }
+  .tab {
+    padding: 0.45rem 0.8rem;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--fg);
+    border-radius: 999px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .tab:hover { border-color: var(--accent); }
+  .tab.active {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+  .day-panel {
+    display: none;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 0.75rem 0;
+  }
+  .day-panel.active { display: block; }
+  .day-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+    flex-wrap: wrap;
+  }
+  .day-title { font-weight: 600; font-size: 1rem; }
+  .day-walk {
+    color: var(--muted);
+    font-size: 0.85rem;
+    font-variant-numeric: tabular-nums;
+  }
+  table.blocks {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+  }
+  table.blocks th, table.blocks td {
+    padding: 0.5rem 0.4rem;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+    vertical-align: top;
+  }
+  table.blocks th {
+    background: var(--table-stripe);
+    font-weight: 600;
+    color: var(--muted);
+    font-size: 0.8rem;
+  }
+  table.blocks td.time {
+    white-space: nowrap;
+    color: var(--muted);
+    font-size: 0.85rem;
+    width: 6.5rem;
+  }
+  table.blocks td.title { font-weight: 500; }
+  table.blocks td.note { color: var(--muted); font-size: 0.85rem; }
+  .walk-summary { margin: 0.5rem 0 0.25rem; }
+  .walk-row {
+    display: grid;
+    grid-template-columns: 5rem 1fr 4rem;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0;
+    font-size: 0.9rem;
+  }
+  .walk-day { color: var(--muted); font-size: 0.85rem; }
+  .bar-bg {
+    background: var(--bar-bg);
+    height: 0.9rem;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .bar-fill {
+    background: var(--bar);
+    height: 100%;
+    transition: width 0.2s ease;
+  }
+  .walk-km {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+  ul.pending {
+    padding-left: 1.2rem;
+    margin: 0.3rem 0;
+  }
+  ul.pending li { margin: 0.25rem 0; color: var(--muted); font-size: 0.9rem; }
+  footer { color: var(--muted); font-size: 0.75rem; margin-top: 1.5rem; text-align: center; }
+
+  @media (max-width: 480px) {
+    table.blocks td.time { width: 5rem; font-size: 0.8rem; }
+    table.blocks td, table.blocks th { padding: 0.4rem 0.3rem; }
+    .walk-row { grid-template-columns: 4rem 1fr 3rem; }
+  }
+</style>
+</head>
+<body>
+
+<h1>교토 일자별 상세 일정</h1>
+<div class="status">2026-05-31 → 06-03 (3박 4일) · 시부모 동반 4인 · <code>data/itinerary.json</code> 인라인.</div>
+
+<div class="meta-card" id="meta"></div>
+
+<h2>일자 선택</h2>
+<div class="tabs" id="tabs"></div>
+<div id="day-panels"></div>
+
+<h2>도보 거리 (일자별)</h2>
+<div class="walk-summary" id="walk-summary"></div>
+
+<h2>보류·확인 필요</h2>
+<ul class="pending" id="pending"></ul>
+
+<footer>data/itinerary.json 단일 출처 · 사람용 사본: docs/kyoto-itinerary-may31-jun3-2026.md</footer>
+
+<script>
+// data/itinerary.json과 동기화 — 단일 출처는 JSON 파일
+const ITINERARY = {
+  "_doc": "교토 3박4일 일정 단일 출처. viz/itinerary.html의 데이터 출처. docs/kyoto-itinerary-may31-jun3-2026.md는 사람용 사본.",
+  "trip": {
+    "destination": "교토",
+    "dates": "2026-05-31 → 2026-06-03",
+    "nights": 3,
+    "travelers": 4,
+    "composition": "부부 2인 + 시부모 2인 (고령자 2인 포함)",
+    "intensity": "빡빡 (소연 취향 — 미감·디자인·사진 동선 우선)",
+    "lodging": [
+      {
+        "nights": 2,
+        "name": "시오 (Shio) 100년 마치야",
+        "type": "에어비앤비",
+        "location": "중교구 니조역 도보 7분",
+        "note": "침실 3·욕실 2·화장실 2 (시부모/부부 분리)"
+      },
+      {
+        "nights": 1,
+        "name": "우메코지 카덴쇼",
+        "type": "료칸",
+        "location": "교토역 인근 우메코지",
+        "note": "2명×2실, 조식 미포함 (6/3 새벽 출발)"
+      }
+    ],
+    "walking_km_total": 13
+  },
+  "days": [
+    {
+      "date": "2026-05-31",
+      "day_label": "5/31 (일) — 도착 + 동산 지구",
+      "walking_km": 3,
+      "blocks": [
+        { "time": "오전~점심", "title": "인천 출발 → 간사이 도착", "note": "시부 예약 항공편 시간 확인 필요" },
+        { "time": "도착 후", "title": "JR 하루카 KIX → 교토역 (75분) → 시오 체크인", "note": "니조역 도보 7분. 짐 풀고 출발" },
+        { "time": "오후", "title": "키요미즈데라 → 산넨자카·니넨자카 → 야사카 신사", "note": "동산 산책. 키요미즈 17:00 마감 주의" },
+        { "time": "저녁", "title": "기온 시라카와 → 폰토초 거리", "note": "야간 가장 예쁨. 가이세키 또는 야끼토리" }
+      ]
+    },
+    {
+      "date": "2026-06-01",
+      "day_label": "6/1 (월) — 서/북쪽 풀데이",
+      "walking_km": 4,
+      "blocks": [
+        { "time": "아침", "title": "시오 출발 → 아라시야마 (대나무숲 → 도게츠교 → 텐류지 정원 → 노노미야)", "note": "일찍 출발 (관광객 적음)" },
+        { "time": "점심", "title": "아라시야마 시그라쿠 토후", "note": "두부 정식. 4인 좌석 사전 확인" },
+        { "time": "오후", "title": "금각사 → 료안지 (석정원)", "note": "버스로 이동 (20~30분)" },
+        { "time": "저녁", "title": "가와라마치 + 니시키 시장 산책 후 저녁", "note": "시장 17:00 닫는 가게 다수" }
+      ]
+    },
+    {
+      "date": "2026-06-02",
+      "day_label": "6/2 (화) — 남/동쪽 + 료칸 체크인",
+      "walking_km": 5,
+      "blocks": [
+        { "time": "새벽~아침", "title": "시오 출발 → 후시미이나리", "note": "7~8시 도착 시 도리이 사진 명소 한산. 정상까지 안 가도 OK" },
+        { "time": "점심", "title": "교토역 라멘코지 (or 우메코지 공원 근처)", "note": "짐 시오에서 카덴쇼로 옮기는 동선 고려" },
+        { "time": "오후", "title": "산주산겐도 (1001 관음상) → 도후쿠지 (남정원)", "note": "두 곳 도보권" },
+        { "time": "15:00~", "title": "시오 체크아웃 (10:00~) → 카덴쇼 료칸 체크인", "note": "짐 일찍 카덴쇼에 위탁 가능 여부 확인" },
+        { "time": "저녁", "title": "카덴쇼: 온천 → 가이세키 저녁", "note": "료칸 핵심 체험. 17:30~18:00 가장 빠른 시간 권장 (6/3 새벽 출발)" }
+      ]
+    },
+    {
+      "date": "2026-06-03",
+      "day_label": "6/3 (수) — 출국 (아침 일찍)",
+      "walking_km": 1,
+      "blocks": [
+        { "time": "이른 아침", "title": "카덴쇼 체크아웃 → 교토역", "note": "조식 미포함. 출국 시간 따라 조식·산책 모두 생략 가능" },
+        { "time": "시간 여유 시", "title": "토지(東寺) 오층탑 잠깐 (도보 15분) 또는 교토역 이세탄·도시락", "note": "출국 시간 빠르면 생략" },
+        { "time": "출국", "title": "JR 하루카 → 간사이 → 인천", "note": "시부 예약 항공편 시간 확인 필요" }
+      ]
+    }
+  ],
+  "pending": [
+    "항공편 시간 (시부 예약 완료) — 5/31 오전·6/3 출국일 미세 조정",
+    "시그라쿠 토후 4인 좌석 사전 예약",
+    "카덴쇼 가이세키 시간 (17:30~18:00 권장)",
+    "카덴쇼 짐 위탁 (6/2 오전 시오 체크아웃 후 일찍 맡길 수 있는지)",
+    "후시미이나리 정상은 시부모 동반이라 X — 입구 ~5분 사진 충분",
+    "6/3 출국 시간에 따라 토지 산책·교토역 식사 가능 여부 결정"
+  ],
+  "source_doc": "docs/kyoto-itinerary-may31-jun3-2026.md"
+};
+
+function el(tag, attrs = {}, ...children) {
+  const node = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === "class") node.className = v;
+    else if (k === "text") node.textContent = v;
+    else node.setAttribute(k, v);
+  }
+  for (const c of children) {
+    if (c == null) continue;
+    node.appendChild(typeof c === "string" ? document.createTextNode(c) : c);
+  }
+  return node;
+}
+
+function shortLabel(day) {
+  return day.day_label.split(" — ")[0];
+}
+
+function renderMeta() {
+  const t = ITINERARY.trip;
+  const wrap = document.getElementById("meta");
+  const rows = [
+    ["목적지", t.destination],
+    ["일자", `${t.dates} (${t.nights}박)`],
+    ["인원", `${t.travelers}인 — ${t.composition}`],
+    ["강도", t.intensity],
+    ["도보 합계", `약 ${t.walking_km_total}km`],
+  ];
+  for (const [k, v] of rows) {
+    const row = el("div", { class: "meta-row" });
+    row.appendChild(el("span", { class: "k", text: k }));
+    row.appendChild(el("span", { class: "v", text: v }));
+    wrap.appendChild(row);
+  }
+  for (const l of t.lodging) {
+    const row = el("div", { class: "meta-row" });
+    row.appendChild(el("span", { class: "k", text: `숙박 ${l.nights}박` }));
+    row.appendChild(el("span", { class: "v", text: `${l.name} (${l.type}) — ${l.location}` }));
+    wrap.appendChild(row);
+  }
+}
+
+function renderTabs() {
+  const tabs = document.getElementById("tabs");
+  const panels = document.getElementById("day-panels");
+  ITINERARY.days.forEach((day, i) => {
+    const tab = el("button", { class: "tab", type: "button", "data-idx": String(i) });
+    tab.textContent = shortLabel(day);
+    if (i === 0) tab.classList.add("active");
+    tab.addEventListener("click", () => activate(i));
+    tabs.appendChild(tab);
+
+    const panel = el("div", { class: "day-panel", id: `day-${i}` });
+    if (i === 0) panel.classList.add("active");
+
+    const header = el("div", { class: "day-header" });
+    header.appendChild(el("span", { class: "day-title", text: day.day_label }));
+    header.appendChild(el("span", { class: "day-walk", text: `도보 약 ${day.walking_km}km` }));
+    panel.appendChild(header);
+
+    const table = el("table", { class: "blocks" });
+    const thead = el("thead");
+    const trh = el("tr");
+    trh.appendChild(el("th", { text: "시간대" }));
+    trh.appendChild(el("th", { text: "동선" }));
+    trh.appendChild(el("th", { text: "메모" }));
+    thead.appendChild(trh);
+    table.appendChild(thead);
+
+    const tbody = el("tbody");
+    for (const b of day.blocks) {
+      const tr = el("tr");
+      tr.appendChild(el("td", { class: "time", text: b.time }));
+      tr.appendChild(el("td", { class: "title", text: b.title }));
+      tr.appendChild(el("td", { class: "note", text: b.note || "" }));
+      tbody.appendChild(tr);
+    }
+    table.appendChild(tbody);
+    panel.appendChild(table);
+    panels.appendChild(panel);
+  });
+}
+
+let activeIdx = 0;
+function activate(idx) {
+  if (idx === activeIdx) return;
+  activeIdx = idx;
+  document.querySelectorAll(".tab").forEach((t, i) => {
+    t.classList.toggle("active", i === idx);
+  });
+  document.querySelectorAll(".day-panel").forEach((p, i) => {
+    p.classList.toggle("active", i === idx);
+  });
+}
+
+function renderWalkSummary() {
+  const wrap = document.getElementById("walk-summary");
+  const max = Math.max(...ITINERARY.days.map(d => d.walking_km));
+  for (const day of ITINERARY.days) {
+    const pct = max > 0 ? (day.walking_km / max) * 100 : 0;
+    const row = el("div", { class: "walk-row" });
+    row.appendChild(el("div", { class: "walk-day", text: shortLabel(day) }));
+    const barBg = el("div", { class: "bar-bg" });
+    barBg.appendChild(el("div", { class: "bar-fill", style: `width: ${pct}%` }));
+    row.appendChild(barBg);
+    row.appendChild(el("div", { class: "walk-km", text: `${day.walking_km}km` }));
+    wrap.appendChild(row);
+  }
+}
+
+function renderPending() {
+  const wrap = document.getElementById("pending");
+  for (const p of ITINERARY.pending) {
+    wrap.appendChild(el("li", { text: p }));
+  }
+}
+
+renderMeta();
+renderTabs();
+renderWalkSummary();
+renderPending();
+</script>
+
+</body>
+</html>

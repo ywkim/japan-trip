@@ -41,7 +41,8 @@ japan-trip/
 │   ├── cost-options.json      # 단일 출처 (flights/lodging/daily_fixed/one_time/scenarios)
 │   ├── weather.json           # 후보지 × 시기 기후 데이터 (JMA 평년값)
 │   ├── flights.json           # 후보지 × 출발지 항공권 시세 스냅샷 (메타사이트 근사)
-│   └── booking-checklist.json # 단일 출처 (예약 진행 상태 8 항목)
+│   ├── booking-checklist.json # 단일 출처 (예약 진행 상태 8 항목)
+│   └── itinerary.json         # 단일 출처 (4일 일정·시간대·동선)
 ├── docs/
 │   ├── candidates.md                      # 후보지 상세 비교
 │   ├── weather.md                         # 날씨 분석 (시기별 쾌적도 순위)
@@ -51,7 +52,8 @@ japan-trip/
 │   ├── airbnb-kyoto-may31-jun2-2026.md    # 에어비앤비 5개 매물 비교
 │   └── jejuair-icn-kobe-june-2026.md      # 제주항공 인천-고베 신규 노선·가격 리서치
 ├── viz/
-│   └── dashboard.html   # 인터랙티브 대시보드 (가중치 슬라이더)
+│   ├── dashboard.html   # 인터랙티브 대시보드 (가중치 슬라이더)
+│   └── itinerary.html   # 일자별 상세 일정 (인라인 데이터, 더블클릭 동작)
 ├── scripts/
 │   ├── score.py         # 종합 점수 계산 (--json 지원)
 │   ├── budget.py        # 3M 예산 시나리오 평가 (--json 지원)
@@ -73,8 +75,10 @@ japan-trip/
   - `data/weather.json` — 후보지×시기 기후
   - `data/flights.json` — 후보지×출발지 항공권 시세 스냅샷 (시점 스냅샷, snapshot_date 명시)
   - `data/booking-checklist.json` — 예약 진행 상태
+  - `data/itinerary.json` — 교토 3박4일 일정(날짜·시간대·동선·메모·도보거리). 사람용 사본: `docs/kyoto-itinerary-may31-jun3-2026.md`
 - **`index.html`은 `scripts/build_index.py` 산출물 — 직접 편집 금지**. 데이터·일정 표 변경 후 `python scripts/build_index.py` 실행. CI(`build_index.py --check`)가 PR 단계에서 drift를 차단
 - `viz/dashboard.html`은 인라인 데이터 (브라우저 더블클릭 동작 보장). 본 파일은 아직 build_index 대상이 아니므로 `data/decision.json` 수정 시 수동 갱신 (TODO: build 통합)
+- `viz/itinerary.html`은 인라인 데이터 (브라우저 더블클릭 동작 보장). 본 파일은 아직 build_index 대상이 아니므로 `data/itinerary.json` 수정 시 수동 갱신 (TODO: build 통합)
 - `docs/weather.md`·`docs/flights.md`의 표는 각각 `data/weather.json`·`data/flights.json`의 사람용 사본 — JSON 수정 시 함께 갱신
 - `data/flights.json`은 **시점 스냅샷**. 시세 재조회 시 새 스냅샷으로 덮어쓰지 말고 snapshot_date 갱신 + 변경 사유를 `docs/decision-log/`에 새 일지로 기록
 - 카드 블록 위 `<!-- SYNC: <출처> -->` 주석으로 동기화 대상 명시 (예: `<!-- SYNC: reports/final-report.md §1 -->`). `scripts/validate.py`가 경로 유효성과 §N 절 번호를 검증
