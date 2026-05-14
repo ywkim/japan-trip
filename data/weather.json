@@ -9,7 +9,32 @@
     "rain_days": "월 강수일수 (≥1mm 기준 근사)",
     "humidity_pct": "월 평균 상대습도 (%)",
     "comfort_score": "여행 쾌적도(1~10, 높을수록 쾌적). 기온·강수·습도·재해 위험을 종합한 정성 평가",
-    "hazards": "주요 기상 리스크(장마/태풍/폭염/한기 등)"
+    "hazards": "주요 기상 리스크(장마/태풍/폭염/한기 등)",
+    "sub_monthly_precip": "순(旬)별 평년 강수 합계 mm — 上旬(1~10일)/中旬(11~20일)/下旬(21~말일). 출처: JMA 일별 평년값 1991–2020 합산.",
+    "recent_tsuyu_iri": "최근 N년 긴키 지방 매우입(梅雨入り) 실제 일자. 평년값과 실측의 분산을 보여줌."
+  },
+  "tsuyu_normals": {
+    "region": "긴키(近畿) — 교토·오사카·고베 포함",
+    "source": "JMA 매우 평년값 (1991–2020). https://www.data.jma.go.jp/cpd/baiu/kako_baiu07.html (2026-05-14 조회)",
+    "iri_normal": "6월 6일경",
+    "ake_normal": "7월 19일경",
+    "recent_history": [
+      {"year": 2024, "iri": "6월 17일경", "ake": "7월 18일경"},
+      {"year": 2023, "iri": "5월 29일경", "ake": "7월 16일경"},
+      {"year": 2022, "iri": "6월 14일경", "ake": "7월 23일경"},
+      {"year": 2021, "iri": "6월 12일경", "ake": "7월 17일경"},
+      {"year": 2020, "iri": "6월 10일경", "ake": "8월 1일경"},
+      {"year": 2019, "iri": "6월 27일경", "ake": "7월 24일경"},
+      {"year": 2018, "iri": "6월 5일경", "ake": "7월 9일경"}
+    ],
+    "trip_window_analysis": {
+      "trip_dates": "2026-05-31 ~ 2026-06-03",
+      "normal_status": "평년 매우입(6/6) 직전 진입기. 4일 평년 강수 합계 ~16mm.",
+      "early_iri_probability_7y": "최근 7년(2018~2024) 중 1회(2023, 5/29) — 약 14%",
+      "before_jun3_iri_probability_7y": "최근 7년 중 1회(2023) — 약 14%",
+      "by_jun10_iri_probability_7y": "최근 7년 중 3회(2018·2020·2023) — 약 43%",
+      "interpretation": "평년 기준 매우입 직전이라 장마 본격 강수는 회피 가능성 높음. 단 2023년형(조기 입림) 시나리오에서는 일정 전체가 우천 영향. 항공·료칸은 환불 정책 사전 확인 + 우천 대비 실내 백업 동선 권장."
+    }
   },
   "cities": {
     "tokyo": {
@@ -34,7 +59,22 @@
       "2026-05": {"tmax_c": 25.1, "tmin_c": 13.6, "precip_mm": 150, "rain_days": 10, "humidity_pct": 64, "comfort_score": 9, "hazards": ["일교차"]},
       "2026-06": {"tmax_c": 28.1, "tmin_c": 18.7, "precip_mm": 225, "rain_days": 12, "humidity_pct": 73, "comfort_score": 4, "hazards": ["장마", "분지 무더위"]},
       "2026-09": {"tmax_c": 29.6, "tmin_c": 20.3, "precip_mm": 178, "rain_days": 11, "humidity_pct": 70, "comfort_score": 5, "hazards": ["잔서", "태풍", "분지 폭염"]},
-      "2026-10": {"tmax_c": 24.4, "tmin_c": 13.7, "precip_mm": 143, "rain_days": 8, "humidity_pct": 70, "comfort_score": 9, "hazards": ["일교차"]}
+      "2026-10": {"tmax_c": 24.4, "tmin_c": 13.7, "precip_mm": 143, "rain_days": 8, "humidity_pct": 70, "comfort_score": 9, "hazards": ["일교차"]},
+      "sub_monthly_precip": {
+        "source": "JMA 京都(47759) 일별 평년값 1991–2020 합산 (2026-05-14 조회)",
+        "2026-05": {"jojun_mm": 47.0, "chujun_mm": 55.0, "gejun_mm": 47.5, "month_total_mm": 151.4},
+        "2026-06": {"jojun_mm": 41.5, "chujun_mm": 65.6, "gejun_mm": 89.7, "month_total_mm": 199.7},
+        "2026-07": {"month_total_mm": 223.6}
+      },
+      "trip_window_daily_precip": {
+        "source": "JMA 京都(47759) 일별 평년값 1991–2020 (2026-05-14 조회). 단위 mm.",
+        "2026-05-31": 4.1,
+        "2026-06-01": 4.0,
+        "2026-06-02": 4.0,
+        "2026-06-03": 4.0,
+        "trip_total_mm": 16.1,
+        "comment": "여행 4일은 평년상 5월 하순~6월 상순 초입. 일별 강수량은 5월 하순과 유사 수준이고, 본격 장마 상승 곡선은 6월 7일경부터(8일 4.4mm, 9일 4.6mm, 10일 4.9mm)."
+      }
     },
     "sapporo": {
       "name": "삿포로",
