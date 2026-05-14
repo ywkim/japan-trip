@@ -9,8 +9,6 @@ data/decision.json·data/cost-options.json·data/weather.json·data/booking-chec
 용법:
   python scripts/build_index.py            # index.html 갱신
   python scripts/build_index.py --check    # 빌드 결과와 디스크 diff (CI용, exit 1 if drift)
-
-# TODO: viz/dashboard.html도 동일 스크립트로 generate (별 PR)
 """
 
 from __future__ import annotations
@@ -398,7 +396,6 @@ FOOTER = f"""
   <a href="{GH_BLOB}/reports/final-report.md" target="_blank" rel="noopener">최종 보고서</a>
   <a href="{GH_BLOB}/docs/airbnb-kyoto-may31-jun2-2026.md" target="_blank" rel="noopener">에어비앤비 비교 상세</a>
   <a href="{GH_BLOB}/docs/kyoto-itinerary-may-2026.md" target="_blank" rel="noopener">상세 일정</a>
-  <a href="viz/dashboard.html">민감도 대시보드</a>
 </div>
 
 <footer>data/decision.json · data/cost-options.json · data/booking-checklist.json 단일 출처 · scripts/build_index.py 산출</footer>

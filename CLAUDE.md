@@ -16,7 +16,6 @@
 - 한국어
 - 의사결정 데이터는 `data/decision.json`에 단일 출처
 - 사람이 읽는 비교표·일지는 `docs/*.md`
-- 시각화는 `viz/dashboard.html` (인라인 데이터로 자체 완결, 더블클릭 동작)
 - 보고서는 `reports/final-report.md` → PDF
 
 ## 정량 의사결정 워크플로우 (MCDA)
@@ -25,9 +24,8 @@
 2. `data/decision.json`의 `candidates`에 후보지 추가
 3. 각 후보 × 각 기준 → 1~10 점수 입력 (`scores` 객체)
 4. `python scripts/score.py` 실행 → 종합 점수 출력
-5. `viz/dashboard.html`에서 가중치 슬라이더로 민감도 확인
-6. `docs/decision-log/`에 항목 1개 = 파일 1개로 결정 근거 기록 (파일명 `YYYY-MM-DD-slug.md`)
-7. `reports/final-report.md` 갱신 → `bash scripts/render-pdf.sh`로 PDF 생성
+5. `docs/decision-log/`에 항목 1개 = 파일 1개로 결정 근거 기록 (파일명 `YYYY-MM-DD-slug.md`)
+6. `reports/final-report.md` 갱신 → `bash scripts/render-pdf.sh`로 PDF 생성
 
 ## 디렉토리 구조
 
@@ -50,8 +48,7 @@ japan-trip/
 │   ├── kyoto-itinerary-may-2026.md        # 교토 5월 시나리오 (4인 시부모 동반)
 │   ├── airbnb-kyoto-may31-jun2-2026.md    # 에어비앤비 5개 매물 비교
 │   └── jejuair-icn-kobe-june-2026.md      # 제주항공 인천-고베 신규 노선·가격 리서치
-├── viz/
-│   └── dashboard.html   # 인터랙티브 대시보드 (가중치 슬라이더)
+├── viz/                 # (신규 화면 추가 예정)
 ├── scripts/
 │   ├── score.py         # 종합 점수 계산 (--json 지원)
 │   ├── budget.py        # 3M 예산 시나리오 평가 (--json 지원)
@@ -74,7 +71,6 @@ japan-trip/
   - `data/flights.json` — 후보지×출발지 항공권 시세 스냅샷 (시점 스냅샷, snapshot_date 명시)
   - `data/booking-checklist.json` — 예약 진행 상태
 - **`index.html`은 `scripts/build_index.py` 산출물 — 직접 편집 금지**. 데이터·일정 표 변경 후 `python scripts/build_index.py` 실행. CI(`build_index.py --check`)가 PR 단계에서 drift를 차단
-- `viz/dashboard.html`은 인라인 데이터 (브라우저 더블클릭 동작 보장). 본 파일은 아직 build_index 대상이 아니므로 `data/decision.json` 수정 시 수동 갱신 (TODO: build 통합)
 - `docs/weather.md`·`docs/flights.md`의 표는 각각 `data/weather.json`·`data/flights.json`의 사람용 사본 — JSON 수정 시 함께 갱신
 - `data/flights.json`은 **시점 스냅샷**. 시세 재조회 시 새 스냅샷으로 덮어쓰지 말고 snapshot_date 갱신 + 변경 사유를 `docs/decision-log/`에 새 일지로 기록
 - 카드 블록 위 `<!-- SYNC: <출처> -->` 주석으로 동기화 대상 명시 (예: `<!-- SYNC: reports/final-report.md §1 -->`). `scripts/validate.py`가 경로 유효성과 §N 절 번호를 검증

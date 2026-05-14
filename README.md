@@ -14,8 +14,7 @@
 - 의견이 다르면 `notes`에 이유 적기
 
 ### 3. 결과 보기
-- 브라우저로 `viz/dashboard.html` 더블클릭 → 가중치 슬라이더로 민감도 확인
-- 또는 터미널에서 `python scripts/score.py` 실행
+- 터미널에서 `python scripts/score.py` 실행
 
 ### 3-1. 예산 (3M 하드캡) 통과 여부 확인
 - `data/cost-options.json`에 항공·숙박·고정비·일회성 단가와 시나리오 입력
@@ -69,7 +68,7 @@
 ```
 data/        # decision.json·cost-options.json·weather.json·flights.json·booking-checklist.json (단일 출처)
 docs/        # 비교표, 날씨·항공권 분석, 의사결정 일지(decision-log/)
-viz/         # 인터랙티브 대시보드 (HTML)
+viz/         # (신규 화면 추가 예정)
 scripts/     # score·budget·build_index·validate·render-pdf
 tests/       # unittest (validate·build_index·score·budget)
 reports/     # 최종 보고서
@@ -80,7 +79,7 @@ index.html   # 모바일 8섹션 카드 (build_index.py 산출물)
 
 - Python 3 (점수 계산)
 - pandoc 또는 Chrome (PDF 변환, 선택)
-- 브라우저 (대시보드)
+- 브라우저 (`index.html` 모바일 8섹션 카드 열기)
 
 ## 변경 규칙 (모든 PR 공통)
 
