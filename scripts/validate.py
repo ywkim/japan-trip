@@ -14,6 +14,10 @@
   F. flights MD↔JSON 동기화: data/flights.json의 snapshot_date·version이
      docs/flights.md 본문에 등장하고, 핵심 시세(4인 median 천만원 표기) 중
      적어도 1개가 일치하는지 검증.
+  G. DESIGN MD↔JSON 동기화: DESIGN.md의 모든 hex 색상이 data/design-tokens.json의
+     color 트리에 존재하고, 그 반대(tokens의 모든 색이 DESIGN.md 본문에 등장)도
+     성립. theme_name·version 일치. viz/dashboard.html의 TOKENS:START/END 블록이
+     tokens에서 재생성한 결과와 일치.
 
 exit 0 = 모두 통과 또는 경고만, exit 1 = 실패.
 
@@ -173,6 +177,79 @@ def check_flights_sync(base: Path) -> list[str]:
     return errors
 
 
+HEX_RE = re.compile(r"#[0-9A-Fa-f]{6}\b")
+TOKENS_BLOCK_RE = re.compile(
+    r"/\* TOKENS:START[^*]*\*/.*?/\* TOKENS:END \*/",
+    re.DOTALL,
+)
+
+
+def _flatten_color_hexes(color_tree: dict) -> set[str]:
+    """{light: {bg: '#...', ...}, dark: {...}} → {'#...', ...} (대문자)."""
+    out: set[str] = set()
+    for variant in color_tree.values():
+        if not isinstance(variant, dict):
+            continue
+        for v in variant.values():
+            if isinstance(v, str) and HEX_RE.fullmatch(v):
+                out.add(v.upper())
+    return out
+
+
+def check_design_sync(base: Path) -> list[str]:
+    """검사 G: DESIGN.md ↔ data/design-tokens.json ↔ viz/dashboard.html 토큰 블록."""
+    errors: list[str] = []
+    design_md = base / "DESIGN.md"
+    tokens_json = base / "data" / "design-tokens.json"
+    dashboard = base / "viz" / "dashboard.html"
+    # 격리된 fixture가 디자인 자산을 갖추지 않은 경우 silent-skip.
+    if not design_md.exists() or not tokens_json.exists():
+        return errors
+    tokens = json.loads(tokens_json.read_text(encoding="utf-8"))
+    md = design_md.read_text(encoding="utf-8")
+
+    md_hexes = {h.upper() for h in HEX_RE.findall(md)}
+    token_hexes = _flatten_color_hexes(tokens.get("color", {}))
+
+    missing_in_tokens = md_hexes - token_hexes
+    if missing_in_tokens:
+        errors.append(
+            f"[G] DESIGN.md hex(es) not in design-tokens.json color tree: "
+            f"{sorted(missing_in_tokens)}"
+        )
+    missing_in_md = token_hexes - md_hexes
+    if missing_in_md:
+        errors.append(
+            f"[G] design-tokens.json color(s) not documented in DESIGN.md: "
+            f"{sorted(missing_in_md)}"
+        )
+
+    theme = tokens.get("theme_name")
+    version = tokens.get("version")
+    if theme and theme not in md:
+        errors.append(f"[G] DESIGN.md missing theme_name {theme!r} from tokens")
+    if version and version not in md:
+        errors.append(f"[G] DESIGN.md missing version {version!r} from tokens")
+
+    if dashboard.exists():
+        dash_text = dashboard.read_text(encoding="utf-8")
+        m = TOKENS_BLOCK_RE.search(dash_text)
+        if not m:
+            errors.append(
+                "[G] viz/dashboard.html missing /* TOKENS:START */ ~ /* TOKENS:END */ sentinel"
+            )
+        else:
+            dash_hexes = {h.upper() for h in HEX_RE.findall(m.group(0))}
+            extras = dash_hexes - token_hexes
+            if extras:
+                errors.append(
+                    f"[G] viz/dashboard.html TOKENS block has hex(es) not in tokens: "
+                    f"{sorted(extras)}"
+                )
+
+    return errors
+
+
 def run(base: Path, today: date) -> tuple[list[str], list[str]]:
     errors: list[str] = []
     warnings: list[str] = []
@@ -182,6 +259,7 @@ def run(base: Path, today: date) -> tuple[list[str], list[str]]:
     errors.extend(check_sync_comments(base))
     errors.extend(check_weather_sync(base))
     errors.extend(check_flights_sync(base))
+    errors.extend(check_design_sync(base))
     return errors, warnings
 
 

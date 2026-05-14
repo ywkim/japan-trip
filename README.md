@@ -42,10 +42,15 @@
 - 각 섹션 위 `<!-- SYNC: ... -->` 주석이 데이터 출처를 명시. CI(`scripts/validate.py`)가 경로 유효성과 §N 절 번호를 검증
 
 ### 7. 검증 (CI)
-- `python -m unittest discover tests` — 단위 테스트 (validate·build_index·score·budget 24개)
-- `python scripts/validate.py` — 가격 필드 무결성(source·data_quality), 30/60일 묵은 가격 경고/실패, SYNC 주석 경로·절 번호 검증, `docs/weather.md`↔`data/weather.json` 및 `docs/flights.md`↔`data/flights.json` 동기화 검증
-- `python scripts/build_index.py --check` — `index.html`이 데이터와 동기화 상태인지 (drift 시 exit 1)
+- `python -m unittest discover tests` — 단위 테스트 (validate·build_index·design_tokens·score·budget)
+- `python scripts/validate.py` — 가격 필드 무결성(source·data_quality), 30/60일 묵은 가격 경고/실패, SYNC 주석 경로·절 번호 검증, `docs/weather.md`↔`data/weather.json`, `docs/flights.md`↔`data/flights.json` 및 `DESIGN.md`↔`data/design-tokens.json`↔`viz/dashboard.html` TOKENS 블록 동기화 검증
+- `python scripts/build_index.py --check` — `index.html`과 `viz/dashboard.html`의 TOKENS 블록이 데이터와 동기화 상태인지 (drift 시 exit 1)
 - `.github/workflows/validate.yml`이 PR마다 unittest + 위 4개 실행
+
+### 8. 시각 디자인 출처
+- `DESIGN.md` — 시각 디자인 컨벤션 (`voltagent/awesome-design-md` 9섹션). Quiet Ledger 테마: paper-white + slate-indigo accent. AI 에이전트가 UI 변경 작업 시 본 파일을 1차 참조
+- `data/design-tokens.json` — 색·타이포·간격·반경 단일 출처. `scripts/build_index.py`가 `index.html` 인라인 CSS와 `viz/dashboard.html`의 `/* TOKENS:START */`~`/* TOKENS:END */` 블록에 주입
+- 동기화 게이트: `scripts/validate.py` (G)가 DESIGN.md ↔ tokens ↔ dashboard 블록의 drift를 PR 단계에서 차단
 
 ## 평가 기준 (초안 — 함께 조정)
 
@@ -68,11 +73,12 @@
 ## 디렉토리
 
 ```
-data/        # decision.json·cost-options.json·weather.json·flights.json·booking-checklist.json (단일 출처)
+DESIGN.md    # 시각 디자인 컨벤션 (awesome-design-md 9섹션, Quiet Ledger)
+data/        # decision.json·cost-options.json·weather.json·flights.json·booking-checklist.json·design-tokens.json (단일 출처)
 docs/        # 비교표, 날씨·항공권 분석, 의사결정 일지(decision-log/)
-viz/         # 인터랙티브 대시보드 (HTML)
+viz/         # 인터랙티브 대시보드 (HTML, :root TOKENS 블록은 build_index.py 산출)
 scripts/     # score·budget·build_index·validate·render-pdf
-tests/       # unittest (validate·build_index·score·budget)
+tests/       # unittest (validate·build_index·design_tokens·score·budget)
 reports/     # 최종 보고서
 index.html   # 모바일 8섹션 카드 (build_index.py 산출물)
 ```

@@ -5,31 +5,46 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>일본 여행 의사결정 대시보드</title>
 <style>
+  /* TOKENS:START — generated from data/design-tokens.json by scripts/build_index.py. Do not edit by hand. */
   :root {
-    --bg: #fafafa;
-    --fg: #222;
-    --muted: #666;
-    --border: #ddd;
-    --accent: #d33;
-    --bar: #d33;
-    --bar-bg: #f0e0e0;
-    --table-stripe: #f4f4f4;
+    --bg: #F7F6F2;
+    --fg: #1B1D24;
+    --muted: #5B6070;
+    --border: #D9D6CC;
+    --accent: #3E5C76;
+    --accent-soft: #E3EAF3;
+    --surface: #FFFFFF;
+    --surface-sunken: #EFEDE6;
+    --ok: #2F7D5B;
+    --warn: #B5811F;
+    --danger: #9A3B3B;
+    --bar: #3E5C76;
+    --bar-bg: #E3EAF3;
+    --table-stripe: #EFEDE6;
+    --font-sans: -apple-system, "Apple SD Gothic Neo", "Pretendard Variable", BlinkMacSystemFont, "Segoe UI", sans-serif;
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --bg: #1a1a1a;
-      --fg: #eee;
-      --muted: #999;
-      --border: #333;
-      --accent: #ff6464;
-      --bar: #ff6464;
-      --bar-bg: #3a2424;
-      --table-stripe: #232323;
+      --bg: #161821;
+      --fg: #E8E6DE;
+      --muted: #9A9DA8;
+      --border: #2E3140;
+      --accent: #8AA8C7;
+      --accent-soft: #262E3A;
+      --surface: #1F222C;
+      --surface-sunken: #13151D;
+      --ok: #6FB58E;
+      --warn: #D4B36A;
+      --danger: #D08585;
+      --bar: #8AA8C7;
+      --bar-bg: #262E3A;
+      --table-stripe: #262E3A;
     }
   }
+  /* TOKENS:END */
   * { box-sizing: border-box; }
   body {
-    font-family: -apple-system, BlinkMacSystemFont, "AppleGothic", sans-serif;
+    font-family: var(--font-sans);
     background: var(--bg);
     color: var(--fg);
     margin: 0;

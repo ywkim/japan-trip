@@ -51,6 +51,28 @@ class BuildIndexTests(unittest.TestCase):
         html = INDEX.read_text(encoding="utf-8")
         self.assertGreaterEqual(html.count("<!-- SYNC:"), 9, "expected at least 9 SYNC comments (one per section)")
 
+    def test_css_uses_token_palette(self):
+        run()
+        html = INDEX.read_text(encoding="utf-8")
+        self.assertIn("#F7F6F2", html, "light bg token not injected")
+        self.assertIn("#3E5C76", html, "slate-indigo accent not injected")
+        for legacy in ("#d33", "#fafafa", "#ff6464", "#c33", "#c80", "#2a7"):
+            self.assertNotIn(legacy, html, f"legacy color {legacy} still present in index.html")
+
+    def test_dashboard_tokens_block_in_sync(self):
+        run()
+        dashboard = (BASE / "viz" / "dashboard.html").read_text(encoding="utf-8")
+        self.assertIn("/* TOKENS:START", dashboard)
+        self.assertIn("/* TOKENS:END */", dashboard)
+        start = dashboard.index("/* TOKENS:START")
+        end = dashboard.index("/* TOKENS:END */") + len("/* TOKENS:END */")
+        block = dashboard[start:end]
+        self.assertIn("#F7F6F2", block)
+        for legacy in ("#d33", "#fafafa", "#ff6464"):
+            self.assertNotIn(legacy, block, f"legacy color {legacy} in dashboard TOKENS block")
+        r = run("--check")
+        self.assertEqual(r.returncode, 0, r.stderr)
+
 
 if __name__ == "__main__":
     unittest.main()

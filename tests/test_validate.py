@@ -23,10 +23,14 @@ def make_fixture(
     weather_md: str | None = None,
     flights: dict | None = None,
     flights_md: str | None = None,
+    design_tokens: dict | None = None,
+    design_md: str | None = None,
+    dashboard_html: str | None = None,
 ) -> Path:
     (tmp / "data").mkdir()
     (tmp / "reports").mkdir()
     (tmp / "docs").mkdir()
+    (tmp / "viz").mkdir()
     (tmp / "data" / "cost-options.json").write_text(json.dumps(cost), encoding="utf-8")
     (tmp / "reports" / "final-report.md").write_text(final_report, encoding="utf-8")
     if index_html:
@@ -39,6 +43,14 @@ def make_fixture(
         (tmp / "data" / "flights.json").write_text(json.dumps(flights, ensure_ascii=False), encoding="utf-8")
     if flights_md is not None:
         (tmp / "docs" / "flights.md").write_text(flights_md, encoding="utf-8")
+    if design_tokens is not None:
+        (tmp / "data" / "design-tokens.json").write_text(
+            json.dumps(design_tokens, ensure_ascii=False), encoding="utf-8"
+        )
+    if design_md is not None:
+        (tmp / "DESIGN.md").write_text(design_md, encoding="utf-8")
+    if dashboard_html is not None:
+        (tmp / "viz" / "dashboard.html").write_text(dashboard_html, encoding="utf-8")
     return tmp
 
 
@@ -282,6 +294,102 @@ class FlightsSyncTests(unittest.TestCase):
             )
             errs, _ = validate.run(base, date(2026, 5, 12))
             self.assertTrue(any(e.startswith("[F]") and "median" in e for e in errs), errs)
+
+
+VALID_TOKENS = {
+    "theme_name": "Quiet Ledger",
+    "version": "1.0.0",
+    "color": {
+        "light": {"bg": "#F7F6F2", "ink": "#1B1D24", "accent": "#3E5C76"},
+        "dark": {"bg": "#161821", "ink": "#E8E6DE", "accent": "#8AA8C7"},
+    },
+}
+
+VALID_DESIGN_MD = """# DESIGN.md — Quiet Ledger
+
+Version: 1.0.0
+
+Colors used: `#F7F6F2`, `#1B1D24`, `#3E5C76`, `#161821`, `#E8E6DE`, `#8AA8C7`.
+"""
+
+VALID_DASHBOARD = """<style>
+/* TOKENS:START — generated */
+:root { --bg: #F7F6F2; --fg: #1B1D24; --accent: #3E5C76; }
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #161821; --fg: #E8E6DE; --accent: #8AA8C7; }
+}
+/* TOKENS:END */
+</style>"""
+
+
+class DesignSyncTests(unittest.TestCase):
+    """검사 G: DESIGN.md ↔ data/design-tokens.json ↔ viz/dashboard.html 동기화."""
+
+    def _fixture(self, td, *, design_md=VALID_DESIGN_MD, tokens=None, dashboard=VALID_DASHBOARD):
+        return make_fixture(
+            Path(td),
+            cost=VALID_COST,
+            index_html="<html></html>",
+            design_tokens=tokens if tokens is not None else VALID_TOKENS,
+            design_md=design_md,
+            dashboard_html=dashboard,
+        )
+
+    def test_design_in_sync_passes(self):
+        with tempfile.TemporaryDirectory() as td:
+            base = self._fixture(td)
+            errs, _ = validate.run(base, date(2026, 5, 14))
+            self.assertEqual([e for e in errs if e.startswith("[G]")], [], errs)
+
+    def test_hex_in_md_not_in_tokens_fails(self):
+        bad_md = VALID_DESIGN_MD + "\nstray color: #ABCDEF\n"
+        with tempfile.TemporaryDirectory() as td:
+            base = self._fixture(td, design_md=bad_md)
+            errs, _ = validate.run(base, date(2026, 5, 14))
+            self.assertTrue(
+                any(e.startswith("[G]") and "not in design-tokens.json" in e for e in errs),
+                errs,
+            )
+
+    def test_token_color_not_in_md_fails(self):
+        bad_tokens = json.loads(json.dumps(VALID_TOKENS))
+        bad_tokens["color"]["light"]["accent"] = "#123456"
+        with tempfile.TemporaryDirectory() as td:
+            base = self._fixture(td, tokens=bad_tokens)
+            errs, _ = validate.run(base, date(2026, 5, 14))
+            self.assertTrue(
+                any(e.startswith("[G]") and "not documented in DESIGN.md" in e for e in errs),
+                errs,
+            )
+
+    def test_dashboard_missing_sentinel_fails(self):
+        bad_dash = "<style>:root { --bg: #F7F6F2; }</style>"
+        with tempfile.TemporaryDirectory() as td:
+            base = self._fixture(td, dashboard=bad_dash)
+            errs, _ = validate.run(base, date(2026, 5, 14))
+            self.assertTrue(
+                any(e.startswith("[G]") and "sentinel" in e for e in errs), errs
+            )
+
+    def test_dashboard_unknown_hex_in_block_fails(self):
+        bad_dash = VALID_DASHBOARD.replace("#F7F6F2", "#AABBCC")
+        with tempfile.TemporaryDirectory() as td:
+            base = self._fixture(td, dashboard=bad_dash)
+            errs, _ = validate.run(base, date(2026, 5, 14))
+            self.assertTrue(
+                any(e.startswith("[G]") and "TOKENS block has hex" in e for e in errs),
+                errs,
+            )
+
+    def test_theme_name_drift_fails(self):
+        bad_tokens = json.loads(json.dumps(VALID_TOKENS))
+        bad_tokens["theme_name"] = "Loud Ledger"
+        with tempfile.TemporaryDirectory() as td:
+            base = self._fixture(td, tokens=bad_tokens)
+            errs, _ = validate.run(base, date(2026, 5, 14))
+            self.assertTrue(
+                any(e.startswith("[G]") and "theme_name" in e for e in errs), errs
+            )
 
 
 class ProductionDataTests(unittest.TestCase):

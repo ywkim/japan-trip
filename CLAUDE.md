@@ -35,13 +35,15 @@
 japan-trip/
 ├── README.md            # 사람용 안내
 ├── CLAUDE.md            # AI 세션 지시
+├── DESIGN.md            # 시각 디자인 단일 출처 (awesome-design-md 9섹션, Quiet Ledger 테마)
 ├── index.html           # 모바일 8섹션 카드 (build_index.py 산출물 — 직접 편집 금지)
 ├── data/
 │   ├── decision.json          # 단일 출처 (criteria + candidates + scores)
 │   ├── cost-options.json      # 단일 출처 (flights/lodging/daily_fixed/one_time/scenarios)
 │   ├── weather.json           # 후보지 × 시기 기후 + 긴키 매우(梅雨) 평년·실적 + 교토 5/31~6/3 일별 강수 평년
 │   ├── flights.json           # 후보지 × 출발지 항공권 시세 스냅샷 (메타사이트 근사)
-│   └── booking-checklist.json # 단일 출처 (예약 진행 상태 8 항목)
+│   ├── booking-checklist.json # 단일 출처 (예약 진행 상태 8 항목)
+│   └── design-tokens.json     # 단일 출처 (색·타이포·간격·반경, DESIGN.md §2~§6과 동기화)
 ├── docs/
 │   ├── candidates.md                      # 후보지 상세 비교
 │   ├── weather.md                         # 날씨 분석 (시기별 쾌적도 순위)
@@ -51,14 +53,14 @@ japan-trip/
 │   ├── airbnb-kyoto-may31-jun2-2026.md    # 에어비앤비 5개 매물 비교
 │   └── jejuair-icn-kobe-june-2026.md      # 제주항공 인천-고베 신규 노선·가격 리서치
 ├── viz/
-│   └── dashboard.html   # 인터랙티브 대시보드 (가중치 슬라이더)
+│   └── dashboard.html   # 인터랙티브 대시보드 (가중치 슬라이더, :root TOKENS 블록은 build_index.py가 생성)
 ├── scripts/
 │   ├── score.py         # 종합 점수 계산 (--json 지원)
 │   ├── budget.py        # 3M 예산 시나리오 평가 (--json 지원)
-│   ├── build_index.py   # index.html 빌드 (--check 모드로 CI drift 검사)
-│   ├── validate.py      # 가격 필드·묵은 가격·SYNC 주석 무결성 검사
+│   ├── build_index.py   # index.html 빌드 + dashboard TOKENS 블록 재생성 (--check 모드로 CI drift 검사)
+│   ├── validate.py      # 가격 필드·묵은 가격·SYNC 주석·MD↔JSON·DESIGN 동기화 검사
 │   └── render-pdf.sh    # PDF 생성
-├── tests/               # unittest (validate·build_index·score·budget)
+├── tests/               # unittest (validate·build_index·design_tokens·score·budget)
 ├── .github/workflows/
 │   └── validate.yml     # PR 게이트: unittest + build_index --check + validate + score + budget
 └── reports/
@@ -73,8 +75,9 @@ japan-trip/
   - `data/weather.json` — 후보지×시기 기후 + `tsuyu_normals`(긴키 매우입·매우명 평년 + 최근 7년 실적) + `cities.kyoto.sub_monthly_precip`(순계열)·`trip_window_daily_precip`(5/31~6/3 일별). 원자료: JMA 매우 평년값·京都(47759) 일별 평년값 1991–2020. `docs/weather.md` §5와 동기화
   - `data/flights.json` — 후보지×출발지 항공권 시세 스냅샷 (시점 스냅샷, snapshot_date 명시)
   - `data/booking-checklist.json` — 예약 진행 상태
+  - `data/design-tokens.json` — 색·타이포·간격·반경 (DESIGN.md §2~§6과 동기화). `build_index.py`가 `index.html` 인라인 CSS와 `viz/dashboard.html`의 `/* TOKENS:START */`~`/* TOKENS:END */` 블록에 주입
 - **`index.html`은 `scripts/build_index.py` 산출물 — 직접 편집 금지**. 데이터·일정 표 변경 후 `python scripts/build_index.py` 실행. CI(`build_index.py --check`)가 PR 단계에서 drift를 차단
-- `viz/dashboard.html`은 인라인 데이터 (브라우저 더블클릭 동작 보장). 본 파일은 아직 build_index 대상이 아니므로 `data/decision.json` 수정 시 수동 갱신 (TODO: build 통합)
+- `viz/dashboard.html`은 인라인 데이터 (브라우저 더블클릭 동작 보장). `decision.json`·로직은 수기, 단 `:root` 토큰 블록만 `build_index.py`가 재생성 (센티넬 안쪽 수기 편집 시 validate G가 차단)
 - `docs/weather.md`·`docs/flights.md`의 표는 각각 `data/weather.json`·`data/flights.json`의 사람용 사본 — JSON 수정 시 함께 갱신 (CI 게이트: `scripts/validate.py` E·F가 도시·시기 수치, snapshot_date, 시세 표기의 drift를 PR 단계에서 차단)
 - `data/flights.json`은 **시점 스냅샷**. 시세 재조회 시 새 스냅샷으로 덮어쓰지 말고 snapshot_date 갱신 + 변경 사유를 `docs/decision-log/`에 새 일지로 기록
 - 카드 블록 위 `<!-- SYNC: <출처> -->` 주석으로 동기화 대상 명시 (예: `<!-- SYNC: reports/final-report.md §1 -->`). `scripts/validate.py`가 경로 유효성과 §N 절 번호를 검증
@@ -94,7 +97,20 @@ japan-trip/
 | SYNC 주석 무결성 | `scripts/validate.py` (D) | `index.html`의 SYNC 주석에 명시된 path가 존재하지 않음, §N이 final-report 절 수보다 큼 |
 | weather MD↔JSON 동기화 | `scripts/validate.py` (E) | `docs/weather.md`의 도시·시기 수치가 `data/weather.json`과 일치하지 않음 |
 | flights MD↔JSON 동기화 | `scripts/validate.py` (F) | `docs/flights.md`의 snapshot_date·시세 수치가 `data/flights.json`과 일치하지 않음 |
-| index.html drift | `scripts/build_index.py --check` | 빌드 결과 ≠ 커밋된 index.html |
+| DESIGN MD↔JSON 동기화 | `scripts/validate.py` (G) | `DESIGN.md`의 hex가 `data/design-tokens.json`에 없거나 그 반대, theme_name·version drift, `viz/dashboard.html` TOKENS 센티넬 누락·미지 hex |
+| index.html drift | `scripts/build_index.py --check` | 빌드 결과 ≠ 커밋된 `index.html` 또는 `viz/dashboard.html` TOKENS 블록 |
+
+## 디자인 워크플로우
+
+UI(`index.html`·`viz/dashboard.html`) 시각 변경 시:
+
+1. `DESIGN.md` 편집 (의도·규칙 먼저).
+2. `data/design-tokens.json` 동기화 (DESIGN.md §2~§6의 모든 hex·치수가 토큰에 반영되어야 함).
+3. `python scripts/build_index.py` 실행 → `index.html` 재빌드 + `viz/dashboard.html`의 `/* TOKENS:START */`~`/* TOKENS:END */` 블록 재생성.
+4. `python scripts/validate.py` (G 통과) + `python scripts/build_index.py --check` (drift 없음) 확인.
+5. `data/design-tokens.json`이 단일 출처. 인라인 hex 추가 금지 — 새 색은 반드시 토큰 키 추가 후 `var(--키)`로 참조.
+
+상세 가이드: `DESIGN.md` §9 (Agent Prompt Guide).
 
 ## 테스트 작성 규칙 (TDD)
 

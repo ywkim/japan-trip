@@ -1,16 +1,17 @@
 #!/usr/bin/env python3
 """index.html 빌드 스크립트.
 
-data/decision.json·data/cost-options.json·data/weather.json·data/booking-checklist.json
-을 읽고 scripts/score.py·scripts/budget.py를 --json으로 호출해 인라인 데이터로
-모바일 친화 8섹션 카드를 생성. CLAUDE.md "더블클릭 동작" 규칙 보존을 위해
-단일 HTML 자기완결 (외부 fetch 없음).
+data/decision.json·data/cost-options.json·data/weather.json·data/booking-checklist.json·
+data/design-tokens.json을 읽고 scripts/score.py·scripts/budget.py를 --json으로 호출해
+인라인 데이터로 모바일 친화 8섹션 카드를 생성. CLAUDE.md "더블클릭 동작" 규칙 보존을
+위해 단일 HTML 자기완결 (외부 fetch 없음).
+
+추가로 viz/dashboard.html의 /* TOKENS:START */ ~ /* TOKENS:END */ 구간을
+design-tokens.json에서 재생성한다 (그 외 영역은 수기 유지).
 
 용법:
-  python scripts/build_index.py            # index.html 갱신
+  python scripts/build_index.py            # index.html · dashboard 토큰 블록 갱신
   python scripts/build_index.py --check    # 빌드 결과와 디스크 diff (CI용, exit 1 if drift)
-
-# TODO: viz/dashboard.html도 동일 스크립트로 generate (별 PR)
 """
 
 from __future__ import annotations
@@ -18,6 +19,7 @@ from __future__ import annotations
 import argparse
 import html
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -27,6 +29,13 @@ SCRIPTS = BASE / "scripts"
 DATA = BASE / "data"
 DOCS = BASE / "docs"
 OUT = BASE / "index.html"
+DASHBOARD = BASE / "viz" / "dashboard.html"
+TOKENS_START = "/* TOKENS:START"
+TOKENS_END = "/* TOKENS:END */"
+TOKENS_BLOCK_RE = re.compile(
+    r"/\* TOKENS:START[^*]*\*/.*?/\* TOKENS:END \*/",
+    re.DOTALL,
+)
 
 GH_BLOB = "https://github.com/ywkim/japan-trip/blob/main"
 SCENARIO_ID = "kyoto_may31_kadensho_early_bird"
@@ -56,6 +65,7 @@ def load_data():
         "cost": json.loads((DATA / "cost-options.json").read_text(encoding="utf-8")),
         "weather": json.loads((DATA / "weather.json").read_text(encoding="utf-8")),
         "checklist": json.loads((DATA / "booking-checklist.json").read_text(encoding="utf-8")),
+        "tokens": json.loads((DATA / "design-tokens.json").read_text(encoding="utf-8")),
         "score": run_json("score.py"),
         "budget": run_json("budget.py"),
     }
@@ -128,7 +138,7 @@ def card_tsuyu(d) -> str:
   <div class="subcard">
     <div class="subtitle">최근 8년 시나리오 확률</div>
     <div class="row"><span class="k">평년형 (6/4~6/10)</span><span class="v">50%</span></div>
-    <div class="row"><span class="k">조기 입림 (6/3 이전)</span><span class="v" style="color:#c80">25%</span></div>
+    <div class="row"><span class="k">조기 입림 (6/3 이전)</span><span class="v" style="color:var(--warn)">25%</span></div>
     <div class="row"><span class="k">6/10 이전 입림</span><span class="v">50%</span></div>
     <div class="sub">조기 입림 사례: 2023(5/29) · 2025(5/17). 평년 직전 평탄 구간 — 본격 강수 상승은 6월 둘째 주부터.</div>
   </div>
@@ -228,7 +238,7 @@ def card_budget(d) -> str:
         highlight = ' style="border-color: var(--accent);"' if s["id"] == SCENARIO_ID else ""
         cats = []
         for c in s["categories"]:
-            color = {"ok": "#2a7", "near": "#c80", "over": "#c33"}[c["status"]]
+            color = {"ok": "var(--ok)", "near": "var(--warn)", "over": "var(--danger)"}[c["status"]]
             cats.append(f'<div class="row"><span class="k">{esc(c["label"])}</span><span class="v" style="color:{color}">{esc(won(c["actual_krw"]))} ({c["actual_pct"]}%)</span></div>')
         rows.append(f"""
   <div class="subcard"{highlight}>
@@ -309,9 +319,9 @@ def card_itinerary(d) -> str:
 def card_checklist(d) -> str:
     items = d["checklist"]["items"]
     rows = []
-    color_map = {"확정": "#2a7", "예약중": "#c80", "미정": "#c33"}
+    color_map = {"확정": "var(--ok)", "예약중": "var(--warn)", "미정": "var(--danger)"}
     for it in items:
-        color = color_map.get(it["status"], "#666")
+        color = color_map.get(it["status"], "var(--muted)")
         rows.append(f"""
   <div class="subcard">
     <div class="subtitle">{esc(it['label'])}</div>
@@ -353,80 +363,163 @@ def card_score(d) -> str:
 """
 
 
+# ─── 토큰 → CSS ────────────────────────────────────────────────────────────
+
+
+def _render_index_css(tokens: dict) -> str:
+    """index.html용 <style> 블록 (모든 색·폰트·간격 토큰 인젝션)."""
+    cl = tokens["color"]["light"]
+    cd = tokens["color"]["dark"]
+    fs = tokens["typography"]["font_family_sans"]
+    return f"""<style>
+  :root {{
+    --bg: {cl['bg']}; --fg: {cl['ink']}; --muted: {cl['ink_muted']}; --border: {cl['border']};
+    --accent: {cl['accent']}; --accent-soft: {cl['accent_soft']};
+    --surface: {cl['surface']}; --surface-sunken: {cl['surface_sunken']};
+    --ok: {cl['ok']}; --warn: {cl['warn']}; --danger: {cl['danger']};
+    --bar-track: {cl['bar_track']};
+    --font-sans: {fs};
+  }}
+  @media (prefers-color-scheme: dark) {{
+    :root {{
+      --bg: {cd['bg']}; --fg: {cd['ink']}; --muted: {cd['ink_muted']}; --border: {cd['border']};
+      --accent: {cd['accent']}; --accent-soft: {cd['accent_soft']};
+      --surface: {cd['surface']}; --surface-sunken: {cd['surface_sunken']};
+      --ok: {cd['ok']}; --warn: {cd['warn']}; --danger: {cd['danger']};
+      --bar-track: {cd['bar_track']};
+    }}
+  }}
+  * {{ box-sizing: border-box; }}
+  html {{ -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }}
+  body {{
+    font-family: var(--font-sans);
+    background: var(--bg); color: var(--fg);
+    margin: 0 auto; padding: 1rem; max-width: 640px;
+    line-height: 1.5; font-size: 16px;
+  }}
+  h1 {{ font-size: 1.75rem; margin: 0.5rem 0 0.25rem; line-height: 1.25; }}
+  h2 {{ font-size: 1.0625rem; margin: 0 0 0.5rem; color: var(--muted); font-weight: 500; }}
+  .status {{ color: var(--muted); font-size: 0.8125rem; margin-bottom: 1rem; }}
+  nav {{ display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 1rem 0; }}
+  nav a {{
+    padding: 0.4rem 0.7rem; border: 1px solid var(--border); border-radius: 999px;
+    text-decoration: none; color: var(--fg); font-size: 0.8125rem; background: var(--surface);
+  }}
+  nav a:hover {{ border-color: var(--accent); }}
+  .card {{
+    background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+    padding: 1rem; margin: 0.75rem 0;
+  }}
+  @media (prefers-color-scheme: dark) {{
+    .card {{ box-shadow: 0 1px 0 rgba(0,0,0,0.25); }}
+  }}
+  .subcard {{
+    background: var(--surface-sunken); border: 1px solid var(--border); border-radius: 4px;
+    padding: 0.75rem; margin: 0.5rem 0;
+  }}
+  .subtitle {{ font-weight: 600; margin-bottom: 0.4rem; font-size: 1.0625rem; }}
+  .big {{ font-size: 1.75rem; font-weight: 600; line-height: 1.25; }}
+  .sub {{ color: var(--muted); font-size: 0.8125rem; margin-top: 0.25rem; word-break: keep-all; }}
+  .row {{
+    display: flex; justify-content: space-between; gap: 0.5rem;
+    padding: 0.35rem 0; border-bottom: 1px solid var(--border);
+  }}
+  .row:last-child {{ border-bottom: none; }}
+  .row .k {{ color: var(--muted); flex-shrink: 0; }}
+  .row .v {{ font-variant-numeric: tabular-nums; text-align: right; word-break: keep-all; }}
+  ul {{ padding-left: 1.2rem; margin: 0.3rem 0; }}
+  li {{ margin: 0.2rem 0; }}
+  .day {{ padding: 0.35rem 0; border-bottom: 1px solid var(--border); }}
+  .day:last-child {{ border-bottom: none; }}
+  .day .date {{ font-size: 0.9375rem; }}
+  .day .date .k {{ display: inline-block; min-width: 3.2rem; color: var(--muted); }}
+  .day a {{ color: var(--fg); text-decoration: underline; text-decoration-color: var(--border); }}
+  .bar {{ height: 6px; background: var(--bar-track); border-radius: 3px; margin: 0.2rem 0 0.5rem; overflow: hidden; }}
+  .bar-fill {{ height: 100%; background: var(--accent); }}
+  .links {{ display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.6rem; }}
+  .links a {{
+    flex: 1 1 auto; text-align: center; padding: 0.5rem 0.7rem;
+    background: transparent; color: var(--fg); border: 1px solid var(--border);
+    border-radius: 4px; text-decoration: none; font-size: 0.8125rem;
+  }}
+  .links a:hover {{ border-color: var(--accent); }}
+  footer {{ color: var(--muted); font-size: 0.75rem; margin-top: 1.5rem; text-align: center; }}
+</style>"""
+
+
+def _render_dashboard_tokens(tokens: dict) -> str:
+    """viz/dashboard.html의 /* TOKENS:START */ ~ /* TOKENS:END */ 구간 전체."""
+    cl = tokens["color"]["light"]
+    cd = tokens["color"]["dark"]
+    fs = tokens["typography"]["font_family_sans"]
+    return (
+        "/* TOKENS:START — generated from data/design-tokens.json by scripts/build_index.py. Do not edit by hand. */\n"
+        "  :root {\n"
+        f"    --bg: {cl['bg']};\n"
+        f"    --fg: {cl['ink']};\n"
+        f"    --muted: {cl['ink_muted']};\n"
+        f"    --border: {cl['border']};\n"
+        f"    --accent: {cl['accent']};\n"
+        f"    --accent-soft: {cl['accent_soft']};\n"
+        f"    --surface: {cl['surface']};\n"
+        f"    --surface-sunken: {cl['surface_sunken']};\n"
+        f"    --ok: {cl['ok']};\n"
+        f"    --warn: {cl['warn']};\n"
+        f"    --danger: {cl['danger']};\n"
+        f"    --bar: {cl['accent']};\n"
+        f"    --bar-bg: {cl['bar_track']};\n"
+        f"    --table-stripe: {cl['table_stripe']};\n"
+        f"    --font-sans: {fs};\n"
+        "  }\n"
+        "  @media (prefers-color-scheme: dark) {\n"
+        "    :root {\n"
+        f"      --bg: {cd['bg']};\n"
+        f"      --fg: {cd['ink']};\n"
+        f"      --muted: {cd['ink_muted']};\n"
+        f"      --border: {cd['border']};\n"
+        f"      --accent: {cd['accent']};\n"
+        f"      --accent-soft: {cd['accent_soft']};\n"
+        f"      --surface: {cd['surface']};\n"
+        f"      --surface-sunken: {cd['surface_sunken']};\n"
+        f"      --ok: {cd['ok']};\n"
+        f"      --warn: {cd['warn']};\n"
+        f"      --danger: {cd['danger']};\n"
+        f"      --bar: {cd['accent']};\n"
+        f"      --bar-bg: {cd['bar_track']};\n"
+        f"      --table-stripe: {cd['table_stripe']};\n"
+        "    }\n"
+        "  }\n"
+        "  /* TOKENS:END */"
+    )
+
+
+def render_dashboard(tokens: dict) -> str:
+    """dashboard.html의 토큰 블록만 재생성 (그 외 영역은 보존)."""
+    existing = DASHBOARD.read_text(encoding="utf-8")
+    new_block = _render_dashboard_tokens(tokens)
+    if not TOKENS_BLOCK_RE.search(existing):
+        raise RuntimeError(
+            f"{DASHBOARD.relative_to(BASE)}에 TOKENS:START/END 센티넬이 없음. "
+            "수기로 /* TOKENS:START */ ~ /* TOKENS:END */ 블록을 :root 주위에 삽입해야 함."
+        )
+    return TOKENS_BLOCK_RE.sub(lambda _: new_block, existing, count=1)
+
+
 # ─── 메인 ──────────────────────────────────────────────────────────────────
 
-HEAD = """<!DOCTYPE html>
+
+def _render_head(tokens: dict) -> str:
+    bg_light = tokens["color"]["light"]["bg"]
+    bg_dark = tokens["color"]["dark"]["bg"]
+    return f"""<!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#1a1a1a" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="{bg_light}" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="{bg_dark}" media="(prefers-color-scheme: dark)">
 <title>일본 여행 최종 결정</title>
-<style>
-  :root {
-    --bg: #fafafa; --fg: #222; --muted: #666; --border: #ddd;
-    --accent: #d33; --card: #fff; --subcard: #fafafa;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #1a1a1a; --fg: #eee; --muted: #999; --border: #333;
-      --accent: #ff6464; --card: #232323; --subcard: #1e1e1e;
-    }
-  }
-  * { box-sizing: border-box; }
-  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "AppleGothic", sans-serif;
-    background: var(--bg); color: var(--fg);
-    margin: 0 auto; padding: 1rem; max-width: 640px;
-    line-height: 1.5; font-size: 16px;
-  }
-  h1 { font-size: 1.4rem; margin: 0.5rem 0 0.25rem; }
-  h2 { font-size: 1rem; margin: 0 0 0.5rem; color: var(--muted); font-weight: 500; }
-  .status { color: var(--muted); font-size: 0.85rem; margin-bottom: 1rem; }
-  nav { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 1rem 0; }
-  nav a {
-    padding: 0.4rem 0.7rem; border: 1px solid var(--border); border-radius: 999px;
-    text-decoration: none; color: var(--fg); font-size: 0.8rem; background: var(--card);
-  }
-  nav a:hover { border-color: var(--accent); }
-  .card {
-    background: var(--card); border: 1px solid var(--border); border-radius: 8px;
-    padding: 1rem; margin: 0.75rem 0;
-  }
-  .subcard {
-    background: var(--subcard); border: 1px solid var(--border); border-radius: 6px;
-    padding: 0.75rem; margin: 0.5rem 0;
-  }
-  .subtitle { font-weight: 600; margin-bottom: 0.4rem; font-size: 0.95rem; }
-  .big { font-size: 1.6rem; font-weight: 600; line-height: 1.2; }
-  .sub { color: var(--muted); font-size: 0.85rem; margin-top: 0.25rem; }
-  .row {
-    display: flex; justify-content: space-between; gap: 0.5rem;
-    padding: 0.35rem 0; border-bottom: 1px solid var(--border);
-  }
-  .row:last-child { border-bottom: none; }
-  .row .k { color: var(--muted); flex-shrink: 0; }
-  .row .v { font-variant-numeric: tabular-nums; text-align: right; word-break: keep-all; }
-  ul { padding-left: 1.2rem; margin: 0.3rem 0; }
-  li { margin: 0.2rem 0; }
-  .day { padding: 0.35rem 0; border-bottom: 1px solid var(--border); }
-  .day:last-child { border-bottom: none; }
-  .day .date { font-size: 0.9rem; }
-  .day .date .k { display: inline-block; min-width: 3.2rem; color: var(--muted); }
-  .day a { color: var(--fg); text-decoration: underline; text-decoration-color: var(--border); }
-  .bar { height: 6px; background: var(--border); border-radius: 3px; margin: 0.2rem 0 0.5rem; overflow: hidden; }
-  .bar-fill { height: 100%; background: var(--accent); }
-  .links { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.6rem; }
-  .links a {
-    flex: 1 1 auto; text-align: center; padding: 0.5rem 0.7rem;
-    background: transparent; color: var(--fg); border: 1px solid var(--border);
-    border-radius: 6px; text-decoration: none; font-size: 0.85rem;
-  }
-  .links a:hover { border-color: var(--accent); }
-  footer { color: var(--muted); font-size: 0.75rem; margin-top: 1.5rem; text-align: center; }
-</style>
+{_render_index_css(tokens)}
 </head>
 <body>
 
@@ -461,8 +554,9 @@ FOOTER = f"""
 """
 
 
-def build() -> str:
-    d = load_data()
+def build(d=None) -> str:
+    if d is None:
+        d = load_data()
     sections = [
         card_summary(d),
         card_tsuyu(d),
@@ -474,7 +568,7 @@ def build() -> str:
         card_checklist(d),
         card_score(d),
     ]
-    return HEAD + "\n".join(sections) + FOOTER
+    return _render_head(d["tokens"]) + "\n".join(sections) + FOOTER
 
 
 def main() -> int:
@@ -482,17 +576,32 @@ def main() -> int:
     parser.add_argument("--check", action="store_true", help="빌드 결과와 디스크 diff (drift 시 exit 1)")
     args = parser.parse_args()
 
-    rendered = build()
+    d = load_data()
+    rendered_index = build(d)
+    rendered_dashboard = render_dashboard(d["tokens"])
+
     if args.check:
-        existing = OUT.read_text(encoding="utf-8") if OUT.exists() else ""
-        if existing != rendered:
+        existing_index = OUT.read_text(encoding="utf-8") if OUT.exists() else ""
+        existing_dashboard = DASHBOARD.read_text(encoding="utf-8") if DASHBOARD.exists() else ""
+        if existing_index != rendered_index:
             print("DRIFT: index.html out of sync. Run `python scripts/build_index.py` and commit.", file=sys.stderr)
             return 1
-        print("index.html in sync.")
+        if existing_dashboard != rendered_dashboard:
+            print(
+                "DRIFT: viz/dashboard.html TOKENS:START/END block out of sync. "
+                "Run `python scripts/build_index.py` and commit.",
+                file=sys.stderr,
+            )
+            return 1
+        print("index.html and dashboard tokens in sync.")
         return 0
 
-    OUT.write_text(rendered, encoding="utf-8")
-    print(f"Wrote {OUT.relative_to(BASE)} ({len(rendered):,} bytes).")
+    OUT.write_text(rendered_index, encoding="utf-8")
+    DASHBOARD.write_text(rendered_dashboard, encoding="utf-8")
+    print(
+        f"Wrote {OUT.relative_to(BASE)} ({len(rendered_index):,} bytes) and "
+        f"refreshed {DASHBOARD.relative_to(BASE)} TOKENS block."
+    )
     return 0
 
 
