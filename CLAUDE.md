@@ -75,7 +75,7 @@ japan-trip/
   - `data/booking-checklist.json` — 예약 진행 상태
 - **`index.html`은 `scripts/build_index.py` 산출물 — 직접 편집 금지**. 데이터·일정 표 변경 후 `python scripts/build_index.py` 실행. CI(`build_index.py --check`)가 PR 단계에서 drift를 차단
 - `viz/dashboard.html`은 인라인 데이터 (브라우저 더블클릭 동작 보장). 본 파일은 아직 build_index 대상이 아니므로 `data/decision.json` 수정 시 수동 갱신 (TODO: build 통합)
-- `docs/weather.md`·`docs/flights.md`의 표는 각각 `data/weather.json`·`data/flights.json`의 사람용 사본 — JSON 수정 시 함께 갱신
+- `docs/weather.md`·`docs/flights.md`의 표는 각각 `data/weather.json`·`data/flights.json`의 사람용 사본 — JSON 수정 시 함께 갱신 (CI 게이트: `scripts/validate.py` E·F가 도시·시기 수치, snapshot_date, 시세 표기의 drift를 PR 단계에서 차단)
 - `data/flights.json`은 **시점 스냅샷**. 시세 재조회 시 새 스냅샷으로 덮어쓰지 말고 snapshot_date 갱신 + 변경 사유를 `docs/decision-log/`에 새 일지로 기록
 - 카드 블록 위 `<!-- SYNC: <출처> -->` 주석으로 동기화 대상 명시 (예: `<!-- SYNC: reports/final-report.md §1 -->`). `scripts/validate.py`가 경로 유효성과 §N 절 번호를 검증
 - 외부 문서 링크는 GitHub blob URL(`https://github.com/ywkim/japan-trip/blob/main/...`) 사용 — Vercel(본 레포의 호스트)이 `.md` 파일을 자동 렌더하지 않고 raw text로 서빙하므로 상대 경로(`reports/final-report.md`)는 금지
@@ -92,6 +92,8 @@ japan-trip/
 | 가격 필드 무결성 | `scripts/validate.py` (B) | `cost-options.json`의 `flights`/`lodging`/`daily_fixed`/`one_time` 항목에 `source`·`data_quality` 누락, `data_quality` 값이 화이트리스트 외 |
 | 묵은 가격 | `scripts/validate.py` (C) | `researched_market_rate` 항목 source 일자 > 60일 (30~60일은 경고만) |
 | SYNC 주석 무결성 | `scripts/validate.py` (D) | `index.html`의 SYNC 주석에 명시된 path가 존재하지 않음, §N이 final-report 절 수보다 큼 |
+| weather MD↔JSON 동기화 | `scripts/validate.py` (E) | `docs/weather.md`의 도시·시기 수치가 `data/weather.json`과 일치하지 않음 |
+| flights MD↔JSON 동기화 | `scripts/validate.py` (F) | `docs/flights.md`의 snapshot_date·시세 수치가 `data/flights.json`과 일치하지 않음 |
 | index.html drift | `scripts/build_index.py --check` | 빌드 결과 ≠ 커밋된 index.html |
 
 ## 테스트 작성 규칙 (TDD)
