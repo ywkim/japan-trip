@@ -40,7 +40,7 @@ japan-trip/
 ├── data/
 │   ├── decision.json          # 단일 출처 (criteria + candidates + scores)
 │   ├── cost-options.json      # 단일 출처 (flights/lodging/daily_fixed/one_time/scenarios)
-│   ├── weather.json           # 후보지 × 시기 기후 데이터 (JMA 평년값)
+│   ├── weather.json           # 후보지 × 시기 기후 + 긴키 매우(梅雨) 평년·실적 + 교토 5/31~6/3 일별 강수 평년
 │   ├── flights.json           # 후보지 × 출발지 항공권 시세 스냅샷 (메타사이트 근사)
 │   ├── itinerary.json         # 단일 출처 (교토 3박4일 일정 — 일자·시간대·동선·메모)
 │   └── booking-checklist.json # 단일 출처 (예약 진행 상태 7 항목)
@@ -74,12 +74,12 @@ japan-trip/
 - 단일 출처(정본):
   - `data/decision.json` — criteria·candidates·scores
   - `data/cost-options.json` — 항공·숙박·고정비·일회성·시나리오
-  - `data/weather.json` — 후보지×시기 기후
+  - `data/weather.json` — 후보지×시기 기후 + `tsuyu_normals`(긴키 매우입·매우명 평년 + 최근 7년 실적) + `cities.kyoto.sub_monthly_precip`(순계열)·`trip_window_daily_precip`(5/31~6/3 일별). 원자료: JMA 매우 평년값·京都(47759) 일별 평년값 1991–2020. `docs/weather.md` §5와 동기화
   - `data/flights.json` — 후보지×출발지 항공권 시세 스냅샷 (시점 스냅샷, snapshot_date 명시)
   - `data/itinerary.json` — 교토 3박4일 일정 (일자·시간대·동선·메모·도보거리·보류)
   - `data/booking-checklist.json` — 예약 진행 상태
 - **`index.html`·`viz/itinerary.html`·`viz/checklist.html`는 `scripts/build_index.py` 산출물 — 직접 편집 금지**. 데이터(`data/*.json`)·스크립트 변경 후 `python scripts/build_index.py` 실행. CI(`build_index.py --check`)가 3개 산출물의 drift를 PR 단계에서 차단
-- `docs/weather.md`·`docs/flights.md`의 표는 각각 `data/weather.json`·`data/flights.json`의 사람용 사본 — JSON 수정 시 함께 갱신 (별도 PR의 `validate.py` E·F 게이트로 차단 예정)
+- `docs/weather.md`·`docs/flights.md`의 표는 각각 `data/weather.json`·`data/flights.json`의 사람용 사본 — JSON 수정 시 함께 갱신 (CI 게이트: `scripts/validate.py` E·F가 도시·시기 수치, snapshot_date, 시세 표기의 drift를 PR 단계에서 차단)
 - `docs/kyoto-itinerary-may31-jun3-2026.md`는 `data/itinerary.json`의 사람용 마크다운 사본 (JSON이 정본). 일정 변경 시 JSON을 먼저 수정 → 마크다운 함께 갱신
 - `data/flights.json`은 **시점 스냅샷**. 시세 재조회 시 새 스냅샷으로 덮어쓰지 말고 snapshot_date 갱신 + 변경 사유를 `docs/decision-log/`에 새 일지로 기록
 - 카드 블록 위 `<!-- SYNC: <출처> -->` 주석으로 동기화 대상 명시 (예: `<!-- SYNC: reports/final-report.md §1 -->`). `scripts/validate.py`가 경로 유효성과 §N 절 번호를 검증
@@ -97,6 +97,8 @@ japan-trip/
 | 가격 필드 무결성 | `scripts/validate.py` (B) | `cost-options.json`의 `flights`/`lodging`/`daily_fixed`/`one_time` 항목에 `source`·`data_quality` 누락, `data_quality` 값이 화이트리스트 외 |
 | 묵은 가격 | `scripts/validate.py` (C) | `researched_market_rate` 항목 source 일자 > 60일 (30~60일은 경고만) |
 | SYNC 주석 무결성 | `scripts/validate.py` (D) | `index.html`의 SYNC 주석에 명시된 path가 존재하지 않음, §N이 final-report 절 수보다 큼 |
+| weather MD↔JSON 동기화 | `scripts/validate.py` (E) | `docs/weather.md`의 도시·시기 수치가 `data/weather.json`과 일치하지 않음 |
+| flights MD↔JSON 동기화 | `scripts/validate.py` (F) | `docs/flights.md`의 snapshot_date·시세 수치가 `data/flights.json`과 일치하지 않음 |
 | 빌드 산출물 drift | `scripts/build_index.py --check` | `index.html`·`viz/itinerary.html`·`viz/checklist.html` 중 하나라도 빌드 결과와 다름 |
 
 ## 테스트 작성 규칙 (TDD)

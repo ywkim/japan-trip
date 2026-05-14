@@ -187,6 +187,58 @@ def card_summary(d) -> str:
 """
 
 
+def card_tsuyu(d) -> str:
+    weather = d["weather"]
+    tn = weather.get("tsuyu_normals", {})
+    kyoto = weather["cities"]["kyoto"]
+    trip = kyoto.get("trip_window_daily_precip", {})
+    sokuhou = tn.get("sokuhou_2026", {})
+
+    daily_rows = []
+    for d_key in ("2026-05-31", "2026-06-01", "2026-06-02", "2026-06-03"):
+        if d_key in trip:
+            mm, dd = d_key[5:7], d_key[8:10]
+            label = f"{int(mm)}/{int(dd)}"
+            daily_rows.append(f'<div class="row"><span class="k">{esc(label)}</span><span class="v">{trip[d_key]}mm</span></div>')
+    trip_total = trip.get("trip_total_mm")
+    if trip_total is not None:
+        daily_rows.append(f'<div class="row"><span class="k">4일 합계</span><span class="v">{trip_total}mm</span></div>')
+    sokuhou_status = sokuhou.get("kinki_iri_status", "—")
+    snap_date = sokuhou.get("snapshot_date", "—")
+    okinawa = sokuhou.get("okinawa_iri_2026", "—")
+    amami = sokuhou.get("amami_iri_2026", "—")
+    rechecks = sokuhou.get("rechecks_planned", "")
+
+    return f"""
+<!-- SYNC: data/weather.json (tsuyu_normals · cities.kyoto.trip_window_daily_precip) · docs/weather.md §5 -->
+<section id="tsuyu" class="card">
+  <h2>장마(쓰유) 진입 확률</h2>
+  <div class="sub" style="margin-bottom:0.5rem;">긴키 매우입 평년 {esc(tn.get('iri_normal', '—'))}. 여행 5/31~6/3은 평년상 입림 직전 진입기.</div>
+
+  <div class="subcard">
+    <div class="subtitle">교토 평년 일별 강수 (1991–2020)</div>
+    {''.join(daily_rows)}
+  </div>
+
+  <div class="subcard">
+    <div class="subtitle">최근 8년 시나리오 확률</div>
+    <div class="row"><span class="k">평년형 (6/4~6/10)</span><span class="v">50%</span></div>
+    <div class="row"><span class="k">조기 입림 (6/3 이전)</span><span class="v" style="color:#c80">25%</span></div>
+    <div class="row"><span class="k">6/10 이전 입림</span><span class="v">50%</span></div>
+    <div class="sub">조기 입림 사례: 2023(5/29) · 2025(5/17). 평년 직전 평탄 구간 — 본격 강수 상승은 6월 둘째 주부터.</div>
+  </div>
+
+  <div class="subcard">
+    <div class="subtitle">2026 속보 (스냅샷 {esc(snap_date)})</div>
+    <div class="row"><span class="k">긴키</span><span class="v" style="color:var(--muted)">{esc(sokuhou_status)}</span></div>
+    <div class="row"><span class="k">沖縄</span><span class="v">{esc(okinawa)} 발표</span></div>
+    <div class="row"><span class="k">奄美</span><span class="v">{esc(amami)} 발표</span></div>
+    <div class="sub">출처: JMA 속보 (Playwright 검증). {esc(rechecks)}</div>
+  </div>
+</section>
+"""
+
+
 def card_airbnb(d) -> str:
     items = [l for l in d["cost"]["lodging"] if l["id"].startswith("airbnb_") and l["id"] != "kyoto_airbnb_4pax"]
     cards = []
@@ -368,6 +420,7 @@ INDEX_HEAD = """<h1>일본 여행 최종 결정</h1>
 
 <nav>
   <a href="#summary">요약</a>
+  <a href="#tsuyu">장마</a>
   <a href="#airbnb">에어비앤비</a>
   <a href="#kadensho">카덴쇼</a>
   <a href="#flights">항공</a>
@@ -393,6 +446,7 @@ INDEX_FOOTER = f"""
 def build_index(d) -> str:
     sections = [
         card_summary(d),
+        card_tsuyu(d),
         card_airbnb(d),
         card_kadensho(d),
         card_flights(d),

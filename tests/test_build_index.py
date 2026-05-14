@@ -45,16 +45,16 @@ class BuildIndexTests(unittest.TestCase):
                 finally:
                     path.write_text(original, encoding="utf-8")
 
-    def test_all_eight_sections_rendered(self):
+    def test_all_sections_rendered(self):
         run()
         html = INDEX.read_text(encoding="utf-8")
-        for section_id in ("summary", "airbnb", "kadensho", "flights", "budget", "itinerary", "checklist", "score"):
+        for section_id in ("summary", "tsuyu", "airbnb", "kadensho", "flights", "budget", "itinerary", "checklist", "score"):
             self.assertIn(f'id="{section_id}"', html, f"section #{section_id} missing")
 
     def test_sync_comments_present(self):
         run()
         html = INDEX.read_text(encoding="utf-8")
-        self.assertGreaterEqual(html.count("<!-- SYNC:"), 8, "expected at least 8 SYNC comments (one per section)")
+        self.assertGreaterEqual(html.count("<!-- SYNC:"), 9, "expected at least 9 SYNC comments (one per section)")
 
     def test_viz_outputs_have_no_external_fetch(self):
         run()
