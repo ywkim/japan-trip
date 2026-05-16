@@ -14,8 +14,7 @@
 - 의견이 다르면 `notes`에 이유 적기
 
 ### 3. 결과 보기
-- 브라우저로 `viz/dashboard.html` 더블클릭 → 가중치 슬라이더로 민감도 확인
-- 또는 터미널에서 `python scripts/score.py` 실행
+- 터미널에서 `python scripts/score.py` 실행 (의사결정 확정 후 회귀 가드)
 
 ### 3-1. 예산 (3M 하드캡) 통과 여부 확인
 - `data/cost-options.json`에 항공·숙박·고정비·일회성 단가와 시나리오 입력
@@ -37,8 +36,9 @@
 
 ### 6. 모바일에서 결정 보기
 - `index.html` — 모바일-퍼스트 8섹션 카드 (요약·에어비앤비·카덴쇼·항공·예산·일정·체크리스트·점수). 인라인 데이터로 자기완결, 더블클릭 동작
-- **빌드 산출물 — 직접 편집 금지**. 데이터(`data/*.json`)·스크립트 변경 후 `python scripts/build_index.py` 실행
-- `data/booking-checklist.json` — 예약 진행 상태 (8개 항목, status: 미정/예약중/확정). §7 카드 출처
+- `viz/itinerary.html` — 일자별 상세 일정 (시간대·동선·메모·도보거리·보류 사항). `data/itinerary.json` 단일 출처
+- `viz/checklist.html` — 예약 진행 상태 (기한 이른 순 정렬, 상태별 카운트). `data/booking-checklist.json` 단일 출처
+- **3개 모두 `scripts/build_index.py` 빌드 산출물 — 직접 편집 금지**. 데이터(`data/*.json`)·스크립트 변경 후 `python scripts/build_index.py` 실행. CI(`build_index.py --check`)가 모든 산출물의 drift를 차단
 - 각 섹션 위 `<!-- SYNC: ... -->` 주석이 데이터 출처를 명시. CI(`scripts/validate.py`)가 경로 유효성과 §N 절 번호를 검증
 
 ### 7. 검증 (CI)
@@ -68,9 +68,9 @@
 ## 디렉토리
 
 ```
-data/        # decision.json·cost-options.json·weather.json·flights.json·booking-checklist.json (단일 출처)
+data/        # decision·cost-options·weather·flights·itinerary·booking-checklist (단일 출처 JSON)
 docs/        # 비교표, 날씨·항공권 분석, 의사결정 일지(decision-log/)
-viz/         # 인터랙티브 대시보드 (HTML)
+viz/         # itinerary.html·checklist.html (build_index.py 산출물)
 scripts/     # score·budget·build_index·validate·render-pdf
 tests/       # unittest (validate·build_index·score·budget)
 reports/     # 최종 보고서
@@ -79,9 +79,9 @@ index.html   # 모바일 8섹션 카드 (build_index.py 산출물)
 
 ## 환경 요구
 
-- Python 3 (점수 계산)
+- Python 3 (점수 계산·빌드)
 - pandoc 또는 Chrome (PDF 변환, 선택)
-- 브라우저 (대시보드)
+- 브라우저 (index.html·viz/itinerary.html·viz/checklist.html 더블클릭)
 
 ## 변경 규칙 (모든 PR 공통)
 
