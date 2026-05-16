@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1a1a1a" media="(prefers-color-scheme: dark)">
+<title>교토 3박4일 시간표</title>
+<style>
+  :root {
+    --bg: #fafafa; --fg: #222; --muted: #666; --border: #ddd;
+    --accent: #d33; --card: #fff; --subcard: #fafafa;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1a1a1a; --fg: #eee; --muted: #999; --border: #333;
+      --accent: #ff6464; --card: #232323; --subcard: #1e1e1e;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "AppleGothic", sans-serif;
+    background: var(--bg); color: var(--fg);
+    margin: 0 auto; padding: 1rem; max-width: 640px;
+    line-height: 1.5; font-size: 16px;
+  }
+  h1 { font-size: 1.4rem; margin: 0.5rem 0 0.25rem; }
+  h2 { font-size: 1rem; margin: 0 0 0.5rem; color: var(--muted); font-weight: 500; }
+  .status { color: var(--muted); font-size: 0.85rem; margin-bottom: 1rem; }
+  nav { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 1rem 0; }
+  nav a {
+    padding: 0.4rem 0.7rem; border: 1px solid var(--border); border-radius: 999px;
+    text-decoration: none; color: var(--fg); font-size: 0.8rem; background: var(--card);
+  }
+  nav a:hover { border-color: var(--accent); }
+  .card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+    padding: 1rem; margin: 0.75rem 0;
+  }
+  .subcard {
+    background: var(--subcard); border: 1px solid var(--border); border-radius: 6px;
+    padding: 0.75rem; margin: 0.5rem 0;
+  }
+  .subtitle { font-weight: 600; margin-bottom: 0.4rem; font-size: 0.95rem; }
+  .big { font-size: 1.6rem; font-weight: 600; line-height: 1.2; }
+  .sub { color: var(--muted); font-size: 0.85rem; margin-top: 0.25rem; }
+  .row {
+    display: flex; justify-content: space-between; gap: 0.5rem;
+    padding: 0.35rem 0; border-bottom: 1px solid var(--border);
+  }
+  .row:last-child { border-bottom: none; }
+  .row .k { color: var(--muted); flex-shrink: 0; }
+  .row .v { font-variant-numeric: tabular-nums; text-align: right; word-break: keep-all; }
+  ul { padding-left: 1.2rem; margin: 0.3rem 0; }
+  li { margin: 0.2rem 0; }
+  .day { padding: 0.35rem 0; border-bottom: 1px solid var(--border); }
+  .day:last-child { border-bottom: none; }
+  .day .date { font-size: 0.9rem; }
+  .day .date .k { display: inline-block; min-width: 3.2rem; color: var(--muted); }
+  .day a { color: var(--fg); text-decoration: underline; text-decoration-color: var(--border); }
+  .bar { height: 6px; background: var(--border); border-radius: 3px; margin: 0.2rem 0 0.5rem; overflow: hidden; }
+  .bar-fill { height: 100%; background: var(--accent); }
+  .links { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.6rem; }
+  .links a {
+    flex: 1 1 auto; text-align: center; padding: 0.5rem 0.7rem;
+    background: transparent; color: var(--fg); border: 1px solid var(--border);
+    border-radius: 6px; text-decoration: none; font-size: 0.85rem;
+  }
+  .links a:hover { border-color: var(--accent); }
+  .badge {
+    display: inline-block; padding: 0.1rem 0.45rem; border-radius: 4px;
+    font-size: 0.75rem; border: 1px solid currentColor;
+  }
+  footer { color: var(--muted); font-size: 0.75rem; margin-top: 1.5rem; text-align: center; }
+
+  .tbl-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 0.5rem 0; }
+  table.timetable {
+    border-collapse: collapse; width: 100%; min-width: 560px;
+    font-size: 0.82rem; table-layout: fixed;
+  }
+  .timetable th {
+    background: var(--subcard); border: 1px solid var(--border);
+    padding: 0.45rem 0.5rem; text-align: center; font-weight: 600;
+    font-size: 0.85rem; position: sticky; top: 0; z-index: 1;
+  }
+  .timetable th .day-meta {
+    font-weight: 400; color: var(--muted); font-size: 0.75rem;
+    display: block; margin-top: 0.15rem;
+  }
+  .timetable td {
+    border: 1px solid var(--border); padding: 0.4rem 0.5rem;
+    vertical-align: top; width: 25%;
+  }
+  .timetable td:empty { background: var(--subcard); }
+  .timetable .t-time {
+    color: var(--muted); font-size: 0.75rem; display: block;
+    margin-bottom: 0.2rem; font-variant-numeric: tabular-nums;
+  }
+  .timetable .t-title { line-height: 1.35; }
+  .timetable .t-title a { color: var(--fg); text-decoration: underline; text-decoration-color: var(--border); }
+  .timetable .t-note {
+    color: var(--muted); font-size: 0.75rem; margin-top: 0.2rem;
+    display: block; line-height: 1.3;
+  }
+  .timetable tr:nth-child(even) td { background: var(--subcard); }
+  .timetable tr:nth-child(even) td:empty { background: var(--bg); }
+</style>
+</head>
+<body>
+<h1>교토 3박4일 · 시간표 뷰</h1>
+<div class="status">2026-05-31 → 2026-06-03 · 3박 · 4인 · 부부 2인 + 시부모 2인 (고령자 2인 포함)</div>
+
+<!-- SYNC: data/itinerary.json -->
+<div class="card">
+  <h2>4일 한눈에 보기 — 장소 탭 → 구글맵</h2>
+  <div class="sub" style="margin-bottom:0.5rem;">가로 스크롤로 전체 열 확인 가능.</div>
+  <div class="tbl-wrap">
+    <table class="timetable">
+      <thead><tr><th>5/31 (일) — 도착 + 동산 지구<span class="day-meta">도보 3km · 에어비앤비 시오</span></th><th>6/1 (월) — 아라시야마 + 북서쪽<span class="day-meta">도보 4km · 에어비앤비 시오 (2박째)</span></th><th>6/2 (화) — 후시미 + 료칸 체크인<span class="day-meta">도보 5km · 우메코지 카덴쇼 (2명×2실)</span></th><th>6/3 (수) — 출국 (아침 일찍)<span class="day-meta">도보 1km · —</span></th></tr></thead>
+      <tbody><tr><td><span class="t-time">09:05</span><span class="t-title"><a href="https://maps.google.com/?q=Kansai+International+Airport" target="_blank" rel="noopener">간사이공항 도착 → JR 하루카 → 교토역</a></span><span class="t-note">시부 예약 항공편 시간 확인 필요</span></td><td><span class="t-time">09:00</span><span class="t-title"><a href="https://maps.google.com/?q=Arashiyama+Bamboo+Grove" target="_blank" rel="noopener">죽림길 (지쿠린)</a></span><span class="t-note">일찍 출발 (관광객 적음)</span></td><td><span class="t-time">07:30</span><span class="t-title"><a href="https://maps.google.com/?q=Fushimi+Inari+Taisha" target="_blank" rel="noopener">후시미 이나리 신사</a></span><span class="t-note">이른 시간 인파 회피. 정상까지 안 가도 OK</span></td><td><span class="t-time">이른 아침</span><span class="t-title"><a href="https://maps.google.com/?q=Kyoto+Station" target="_blank" rel="noopener">카덴쇼 체크아웃 → 교토역</a></span><span class="t-note">조식 미포함. 출국 시간 따라 산책·식사 모두 생략 가능</span></td></tr><tr><td><span class="t-time">11:30</span><span class="t-title"><a href="https://maps.google.com/?q=Nijo+Station+Kyoto" target="_blank" rel="noopener">니조역 → 시오 짐 보관 후 점심</a></span><span class="t-note">에어비앤비 체크인 전 짐 맡기기 (시오 도보 7분). 코인락커 불필요</span></td><td><span class="t-time">09:45</span><span class="t-title"><a href="https://maps.google.com/?q=Tenryu-ji+Temple" target="_blank" rel="noopener">텐류지 정원</a></span></td><td><span class="t-time">09:30</span><span class="t-title"><a href="https://maps.google.com/?q=Tofuku-ji" target="_blank" rel="noopener">토후쿠지 정원</a></span></td><td><span class="t-time">시간 여유 시</span><span class="t-title"><a href="https://maps.google.com/?q=To-ji+Temple" target="_blank" rel="noopener">토지(東寺) 오층탑 또는 교토역 이세탄</a></span><span class="t-note">출국 시간 빠르면 생략</span></td></tr><tr><td><span class="t-time">13:30</span><span class="t-title"><a href="https://maps.google.com/?q=Kiyomizu-dera" target="_blank" rel="noopener">키요미즈데라 (清水寺)</a></span><span class="t-note">17:00 마감 주의</span></td><td><span class="t-time">12:00</span><span class="t-title"><a href="https://maps.google.com/?q=Arashiyama+Tofu" target="_blank" rel="noopener">두부 가이세키 점심 (시그라쿠 토후)</a></span><span class="t-note">4인 좌석 사전 확인</span></td><td><span class="t-time">11:30</span><span class="t-title"><a href="https://maps.google.com/?q=Kyoto+Station" target="_blank" rel="noopener">교토역 라멘코지 점심</a></span><span class="t-note">짐 시오→카덴쇼 이동 동선</span></td><td><span class="t-time">출국</span><span class="t-title"><a href="https://maps.google.com/?q=Kansai+International+Airport" target="_blank" rel="noopener">JR 하루카 → 간사이공항 → 인천</a></span><span class="t-note">시부 예약 항공편 시간 확인 필요</span></td></tr><tr><td><span class="t-time">16:30</span><span class="t-title"><a href="https://maps.google.com/?q=Gion+Kyoto" target="_blank" rel="noopener">산넨자카 → 야사카 신사 → 기온</a></span></td><td><span class="t-time">14:00</span><span class="t-title"><a href="https://maps.google.com/?q=Kinkaku-ji" target="_blank" rel="noopener">금각사 (鹿苑寺)</a></span></td><td><span class="t-time">13:30</span><span class="t-title"><a href="https://maps.google.com/?q=Umekoji+Kadensho" target="_blank" rel="noopener">우메코지 카덴쇼 체크인</a></span><span class="t-note">짐 일찍 위탁 가능 여부 확인</span></td><td></td></tr><tr><td><span class="t-time">18:30</span><span class="t-title"><a href="https://maps.google.com/?q=Kawaramachi" target="_blank" rel="noopener">가와라마치 저녁 (시라카와·폰토초)</a></span><span class="t-note">야간 가장 예쁨</span></td><td><span class="t-time">15:30</span><span class="t-title"><a href="https://maps.google.com/?q=Ryoan-ji" target="_blank" rel="noopener">료안지 석정원</a></span></td><td><span class="t-time">17:00</span><span class="t-title"><a href="https://maps.google.com/?q=Umekoji+Kadensho" target="_blank" rel="noopener">료칸 대욕장 (천연식 온천)</a></span></td><td></td></tr><tr><td></td><td><span class="t-time">18:30</span><span class="t-title"><a href="https://maps.google.com/?q=Pontocho+Alley" target="_blank" rel="noopener">가와라마치 + 니시키 시장 저녁</a></span><span class="t-note">시장 17:00 닫는 가게 다수</span></td><td><span class="t-time">18:00</span><span class="t-title"><a href="https://maps.google.com/?q=Umekoji+Kadensho" target="_blank" rel="noopener">카덴쇼 가이세키 저녁</a></span><span class="t-note">17:30~18:00 빠른 시간 권장 (6/3 새벽 출발)</span></td><td></td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<section class="card">
+  <h2>보류·확인 필요</h2>
+  <ul><li>항공편 시간 (시부 예약 완료) — 5/31 오전·6/3 출국일 미세 조정</li><li>시그라쿠 토후 4인 좌석 사전 예약</li><li>카덴쇼 가이세키 시간 (17:30~18:00 권장)</li><li>카덴쇼 짐 위탁 (6/2 오전 시오 체크아웃 후 일찍 맡길 수 있는지)</li><li>후시미이나리 정상은 시부모 동반이라 X — 입구 ~5분 사진 충분</li><li>6/3 출국 시간에 따라 토지 산책·교토역 식사 가능 여부 결정</li></ul>
+</section>
+
+<div class="links">
+  <a href="../index.html">← 결정 요약으로</a>
+  <a href="itinerary.html">카드 뷰</a>
+  <a href="checklist.html">예약 체크리스트</a>
+</div>
+
+<footer>data/itinerary.json 단일 출처 · scripts/build_index.py 산출 — 직접 편집 금지</footer>
+
+</body>
+</html>
