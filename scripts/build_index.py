@@ -341,6 +341,37 @@ def card_budget(d) -> str:
 """
 
 
+MODE_ICONS = {
+    "walk": "🚶",
+    "bus": "🚌",
+    "subway": "🚇",
+    "train": "🚆",
+    "jr": "🚆",
+    "airport_express": "✈️",
+    "taxi": "🚕",
+}
+
+
+def transit_line(af) -> str:
+    if not af:
+        return ""
+    icon = MODE_ICONS.get(af.get("mode"), "·")
+    if af.get("data_quality") == "tbd_needs_browser_mcp":
+        route = af.get("route") or af.get("mode", "")
+        body = f"{icon} {esc(route)} · 소요시간 미확정 — Maps 확인 필요"
+    else:
+        bits = [icon]
+        if af.get("route"):
+            bits.append(esc(af["route"]))
+        if af.get("duration_min"):
+            bits.append(f"{af['duration_min']}분")
+        dist = af.get("distance_km")
+        if isinstance(dist, (int, float)) and dist < 50:
+            bits.append(f"{dist}km")
+        body = " · ".join(bits)
+    return f'<div class="sub" style="opacity:0.75;font-size:0.85em;">{body}</div>'
+
+
 def card_itinerary(d) -> str:
     itin = d["itinerary"]
     days = []
@@ -348,8 +379,10 @@ def card_itinerary(d) -> str:
         items_html = []
         for it in day["items"]:
             link = maps_link(it["maps_query"], it["title"]) if it.get("maps_query") else esc(it["title"])
+            transit = transit_line(it.get("arrive_from"))
             items_html.append(f"""
     <div class="day">
+      {transit}
       <div class="date"><span class="k">{esc(it['time'])}</span> {link}</div>
     </div>""")
         days.append(f"""
@@ -476,8 +509,10 @@ def build_itinerary(d) -> str:
         for it in day["items"]:
             link = maps_link(it["maps_query"], it["title"]) if it.get("maps_query") else esc(it["title"])
             note_html = f'<div class="sub">{esc(it["note"])}</div>' if it.get("note") else ""
+            transit = transit_line(it.get("arrive_from"))
             item_rows.append(f"""
     <div class="day">
+      {transit}
       <div class="date"><span class="k">{esc(it['time'])}</span> {link}</div>
       {note_html}
     </div>""")
