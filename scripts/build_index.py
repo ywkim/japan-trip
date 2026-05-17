@@ -31,6 +31,28 @@ OUT_CHECKLIST = BASE / "viz" / "checklist.html"
 GH_BLOB = "https://github.com/ywkim/japan-trip/blob/main"
 SCENARIO_ID = "kyoto_may31_kadensho_early_bird"
 
+# 탭바 정의: (탭 키, 아이콘, 레이블, 루트 기준 경로, viz/ 기준 경로)
+_TABS = [
+    ("home",      "🏠", "홈",      "index.html",         "../index.html"),
+    ("itinerary", "📅", "일정",    "viz/itinerary.html",  "itinerary.html"),
+    ("lodging",   "✈️", "숙박·항공","viz/lodging.html",    "lodging.html"),
+    ("checklist", "✅", "예약",    "viz/checklist.html",  "checklist.html"),
+]
+
+
+def tab_bar(active: str, in_viz: bool = False) -> str:
+    idx = 4 if in_viz else 3
+    items = []
+    for key, icon, label, root_href, viz_href in _TABS:
+        href = viz_href if in_viz else root_href
+        active_attr = f' class="active" data-tab="{key}"' if key == active else f' data-tab="{key}"'
+        items.append(
+            f'<a href="{esc(href)}"{active_attr}>'
+            f'<span class="tab-icon">{icon}</span>'
+            f'<span>{esc(label)}</span></a>'
+        )
+    return f'<nav class="tab-bar" aria-label="하단 탭">{"".join(items)}</nav>'
+
 
 def esc(s) -> str:
     if s is None:
@@ -136,6 +158,24 @@ CSS = """
     font-size: 0.75rem; border: 1px solid currentColor;
   }
   footer { color: var(--muted); font-size: 0.75rem; margin-top: 1.5rem; text-align: center; }
+  /* ── 하단 탭바 ── */
+  body { padding-bottom: calc(3.8rem + env(safe-area-inset-bottom, 0px)); }
+  .tab-bar {
+    position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+    width: 100%; max-width: 640px;
+    display: flex; background: var(--card); border-top: 1px solid var(--border);
+    z-index: 200; padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .tab-bar a {
+    flex: 1; display: flex; flex-direction: column; align-items: center;
+    padding: 0.45rem 0.25rem 0.35rem; text-decoration: none;
+    color: var(--muted); font-size: 0.68rem; gap: 0.1rem; line-height: 1.2;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .tab-bar a.active { color: var(--accent); }
+  .tab-bar a:active { opacity: 0.7; }
+  .tab-bar .tab-icon { font-size: 1.3rem; line-height: 1; }
+  /* ── 이미지 ── */
   .place-img {
     width: 100%; aspect-ratio: 16/9; object-fit: cover;
     border-radius: 4px; display: block; margin-top: 0.35rem;
@@ -422,17 +462,13 @@ def card_score(d) -> str:
 
 
 INDEX_HEAD = """<h1>일본 여행 최종 결정</h1>
-<div class="status">교토 5/31~6/3 시나리오 (시부모 4인 확정). 본 페이지는 <code>scripts/build_index.py</code> 산출물 — 직접 편집 금지.</div>
+<div class="status">교토 5/31~6/3 · 시부모 4인 확정</div>
 
 <nav>
   <a href="#summary">요약</a>
   <a href="#tsuyu">장마</a>
-  <a href="#airbnb">에어비앤비</a>
-  <a href="#kadensho">카덴쇼</a>
-  <a href="#flights">항공</a>
   <a href="#budget">예산</a>
   <a href="#itinerary">일정</a>
-  <a href="#checklist">체크리스트</a>
   <a href="#score">점수</a>
 </nav>
 """
@@ -453,16 +489,26 @@ def build_index(d) -> str:
     sections = [
         card_summary(d),
         card_tsuyu(d),
-        card_airbnb(d),
-        card_kadensho(d),
-        card_flights(d),
         card_budget(d),
         card_itinerary(d),
-        card_checklist(d),
         card_score(d),
     ]
-    body = INDEX_HEAD + "\n".join(sections) + INDEX_FOOTER
+    body = INDEX_HEAD + "\n".join(sections) + INDEX_FOOTER + tab_bar("home", in_viz=False)
     return html_doc("일본 여행 최종 결정", body)
+
+
+# ─── viz/lodging.html ──────────────────────────────────────────────────────
+
+def build_lodging(d) -> str:
+    body = f"""<h1>숙박 · 항공</h1>
+<div class="status">에어비앤비 2박 + 카덴쇼 료칸 1박 · 항공 옵션</div>
+{card_airbnb(d)}
+{card_kadensho(d)}
+{card_flights(d)}
+<footer>data/cost-options.json 단일 출처 · scripts/build_index.py 산출 — 직접 편집 금지</footer>
+{tab_bar("lodging", in_viz=True)}
+"""
+    return html_doc("숙박·항공", body)
 
 
 # ─── viz/itinerary.html ────────────────────────────────────────────────────
@@ -563,13 +609,12 @@ def build_itinerary(d) -> str:
 </section>
 
 <div class="links">
-  <a href="../index.html">← 결정 요약으로</a>
   <a href="itinerary-table.html">시간표 뷰</a>
-  <a href="{GH_BLOB}/{esc(itin.get('source_doc',''))}" target="_blank" rel="noopener">사람용 마크다운</a>
-  <a href="checklist.html">예약 체크리스트</a>
+  <a href="{GH_BLOB}/{esc(itin.get('source_doc',''))}" target="_blank" rel="noopener">마크다운</a>
 </div>
 
 <footer>data/itinerary.json 단일 출처 · scripts/build_index.py 산출 — 직접 편집 금지</footer>
+{tab_bar("itinerary", in_viz=True)}
 """
     return html_doc("교토 3박4일 일정", body)
 
@@ -615,12 +660,8 @@ def build_checklist(d) -> str:
   {''.join(item_cards)}
 </section>
 
-<div class="links">
-  <a href="../index.html">← 결정 요약으로</a>
-  <a href="itinerary.html">일자별 일정</a>
-</div>
-
 <footer>data/booking-checklist.json 단일 출처 · scripts/build_index.py 산출 — 직접 편집 금지</footer>
+{tab_bar("checklist", in_viz=True)}
 """
     return html_doc("예약 체크리스트", body)
 
@@ -767,12 +808,11 @@ def build_itinerary_table(d) -> str:
 </section>
 
 <div class="links">
-  <a href="../index.html">← 결정 요약으로</a>
   <a href="itinerary.html">카드 뷰</a>
-  <a href="checklist.html">예약 체크리스트</a>
 </div>
 
 <footer>data/itinerary.json 단일 출처 · scripts/build_index.py 산출 — 직접 편집 금지</footer>
+{tab_bar("itinerary", in_viz=True)}
 """
     # TABLE_CSS를 공통 CSS에 추가해 단독 페이지로 렌더
     combined_css = CSS + TABLE_CSS
@@ -796,10 +836,11 @@ def build_itinerary_table(d) -> str:
 # ─── 메인 ──────────────────────────────────────────────────────────────────
 
 OUTPUTS = (
-    ("index.html", lambda p: p / "index.html", build_index),
-    ("viz/itinerary.html", lambda p: p / "viz" / "itinerary.html", build_itinerary),
-    ("viz/checklist.html", lambda p: p / "viz" / "checklist.html", build_checklist),
+    ("index.html",               lambda p: p / "index.html",                  build_index),
+    ("viz/itinerary.html",       lambda p: p / "viz" / "itinerary.html",       build_itinerary),
+    ("viz/checklist.html",       lambda p: p / "viz" / "checklist.html",       build_checklist),
     ("viz/itinerary-table.html", lambda p: p / "viz" / "itinerary-table.html", build_itinerary_table),
+    ("viz/lodging.html",         lambda p: p / "viz" / "lodging.html",         build_lodging),
 )
 
 
