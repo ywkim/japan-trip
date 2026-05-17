@@ -295,33 +295,28 @@ def card_tsuyu(d) -> str:
 
 
 def card_airbnb(d) -> str:
-    items = [l for l in d["cost"]["lodging"] if l["id"].startswith("airbnb_") and l["id"] != "kyoto_airbnb_4pax"]
-    cards = []
-    for l in items:
-        src = l.get("source", "")
-        airbnb_id = ""
-        for tok in src.split():
-            if tok.isdigit() and len(tok) > 6:
-                airbnb_id = tok.rstrip(",")
-                break
-        link = f"https://www.airbnb.co.kr/rooms/{airbnb_id}" if airbnb_id else ""
-        per_night = l["per_night_krw"]
-        two_night = per_night * 2
-        link_html = f'<a href="{esc(link)}" target="_blank" rel="noopener">매물 열기 ↗</a>' if link else ""
-        cards.append(f"""
-  <div class="subcard">
-    <div class="subtitle">{esc(l['name'])}</div>
-    <div class="row"><span class="k">2박 총액</span><span class="v">{esc(won(two_night))}</span></div>
-    <div class="row"><span class="k">1인 1박</span><span class="v">{esc(won(per_night // 4))}</span></div>
-    <div class="sub">{esc(l.get('notes', ''))}</div>
-    <div class="links">{link_html}</div>
-  </div>""")
+    l = next((x for x in d["cost"]["lodging"] if x["id"] == "airbnb_shio_machiya"), None)
+    if not l:
+        return ""
+    src = l.get("source", "")
+    airbnb_id = ""
+    for tok in src.split():
+        if tok.isdigit() and len(tok) > 6:
+            airbnb_id = tok.rstrip(",")
+            break
+    link = f"https://www.airbnb.co.kr/rooms/{airbnb_id}" if airbnb_id else ""
+    link_html = f'<a href="{esc(link)}" target="_blank" rel="noopener">매물 열기 ↗</a>' if link else ""
+    two_night = l["per_night_krw"] * 2
     return f"""
-<!-- SYNC: data/cost-options.json (lodging.airbnb_*) · docs/airbnb-kyoto-may31-jun2-2026.md -->
+<!-- SYNC: data/cost-options.json (lodging.airbnb_shio_machiya) · docs/airbnb-kyoto-may31-jun2-2026.md -->
 <section id="airbnb" class="card">
-  <h2>에어비앤비 5개 후보 (5/31~6/2 2박)</h2>
-  <div class="sub" style="margin-bottom:0.5rem;">매물 결정 후 시나리오 분기 추가 예정. 가격은 4명 직접 조회 2026-05-11.</div>
-  {''.join(cards)}
+  <h2>에어비앤비 · 시오(Shio) 100년 마치야 <span class="badge">확정</span></h2>
+  <div class="row"><span class="k">일정</span><span class="v">5/31~6/2 · 2박</span></div>
+  <div class="row"><span class="k">위치</span><span class="v">중교구 · 니조역 도보 7분</span></div>
+  <div class="row"><span class="k">2박 총액</span><span class="v">{esc(won(two_night))}</span></div>
+  <div class="row"><span class="k">1인 1박</span><span class="v">{esc(won(l['per_night_krw'] // 4))}</span></div>
+  <div class="sub" style="margin-top:0.4rem;">{esc(l.get('notes', ''))}</div>
+  <div class="links">{link_html}</div>
 </section>
 """
 
