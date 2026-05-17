@@ -16,8 +16,9 @@
      적어도 1개가 일치하는지 검증.
   G. DESIGN MD↔JSON 동기화: DESIGN.md의 모든 hex 색상이 data/design-tokens.json의
      color 트리에 존재하고, 그 반대(tokens의 모든 색이 DESIGN.md 본문에 등장)도
-     성립. theme_name·version 일치. viz/dashboard.html의 TOKENS:START/END 블록이
-     tokens에서 재생성한 결과와 일치.
+     성립. theme_name·version 일치. (3개 산출물(index·itinerary·checklist)의 CSS는
+     scripts/build_index.py가 tokens에서 생성하므로 별도 sentinel 검증 불필요 —
+     build_index.py --check가 drift를 잡는다.)
 
 exit 0 = 모두 통과 또는 경고만, exit 1 = 실패.
 
@@ -178,10 +179,6 @@ def check_flights_sync(base: Path) -> list[str]:
 
 
 HEX_RE = re.compile(r"#[0-9A-Fa-f]{6}\b")
-TOKENS_BLOCK_RE = re.compile(
-    r"/\* TOKENS:START[^*]*\*/.*?/\* TOKENS:END \*/",
-    re.DOTALL,
-)
 
 
 def _flatten_color_hexes(color_tree: dict) -> set[str]:
@@ -197,11 +194,10 @@ def _flatten_color_hexes(color_tree: dict) -> set[str]:
 
 
 def check_design_sync(base: Path) -> list[str]:
-    """검사 G: DESIGN.md ↔ data/design-tokens.json ↔ viz/dashboard.html 토큰 블록."""
+    """검사 G: DESIGN.md ↔ data/design-tokens.json hex 양방향 + theme_name·version."""
     errors: list[str] = []
     design_md = base / "DESIGN.md"
     tokens_json = base / "data" / "design-tokens.json"
-    dashboard = base / "viz" / "dashboard.html"
     # 격리된 fixture가 디자인 자산을 갖추지 않은 경우 silent-skip.
     if not design_md.exists() or not tokens_json.exists():
         return errors
@@ -230,22 +226,6 @@ def check_design_sync(base: Path) -> list[str]:
         errors.append(f"[G] DESIGN.md missing theme_name {theme!r} from tokens")
     if version and version not in md:
         errors.append(f"[G] DESIGN.md missing version {version!r} from tokens")
-
-    if dashboard.exists():
-        dash_text = dashboard.read_text(encoding="utf-8")
-        m = TOKENS_BLOCK_RE.search(dash_text)
-        if not m:
-            errors.append(
-                "[G] viz/dashboard.html missing /* TOKENS:START */ ~ /* TOKENS:END */ sentinel"
-            )
-        else:
-            dash_hexes = {h.upper() for h in HEX_RE.findall(m.group(0))}
-            extras = dash_hexes - token_hexes
-            if extras:
-                errors.append(
-                    f"[G] viz/dashboard.html TOKENS block has hex(es) not in tokens: "
-                    f"{sorted(extras)}"
-                )
 
     return errors
 

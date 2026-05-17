@@ -76,22 +76,17 @@
 - 보더만 있는 ghost 스타일. `background: transparent`, `border: 1px solid border`, `radius: 4px`.
 - hover 시 `border-color: accent`. 텍스트 색은 `ink`.
 
-### Inputs (dashboard)
-- `background: bg`, `color: ink`, `border: 1px solid border`, `radius: 4px`.
-- range slider는 시스템 기본. number input은 4rem 너비.
-
-### Table (dashboard)
-- 헤더 `background: table_stripe`, semibold.
-- 짝수 행 `background: table_stripe`.
-- 셀 `padding: 0.4rem 0.5rem`, 보더-바텀만.
+### Badge (status pill)
+- `display: inline-block`, `padding: 0.1rem 0.45rem`, `border: 1px solid currentColor`, `radius: 4px (sm)`.
+- 텍스트 색이 곧 보더 색 (`currentColor`). 사용처: `viz/checklist.html`의 상태 라벨.
 
 ## 5. Layout Principles
 
-- **Mobile-first**. `index.html` 본문 컨테이너 `max-width: 640px`. `viz/dashboard.html`은 1100px (데이터 밀도가 높아 데스크탑 우선).
+- **Mobile-first**. 3개 산출물(`index.html`·`viz/itinerary.html`·`viz/checklist.html`) 모두 단일 컬럼 `max-width: 640px`.
 - 모든 요소는 `box-sizing: border-box`.
 - 세로 리듬: 카드 간 `0.75rem (md)`, 서브카드 간 `0.5rem (sm)`.
 - 좌우 여백: 본문 `padding: 1rem (base)`.
-- 카드는 풀-너비. 그리드는 dashboard `rank-row`에만 사용 (4-column: rank · name · bar · score).
+- 카드는 풀-너비. 다중 컬럼 레이아웃은 도입하지 않음 (모바일 우선).
 
 ## 6. Depth & Elevation
 
@@ -111,14 +106,14 @@
 - 레거시 빨강 accent(이전 `#d3`+`3` 톤) 재도입 금지. danger 외 모든 강조는 slate-indigo accent.
 - 인라인 hex code 금지. 반드시 CSS 변수(`var(--accent)`, `var(--ok)`)로.
 - 그림자 남용 금지. 평면 우선.
-- Web font 추가 금지 (HTML 더블클릭 자체완결 보장 — `viz/dashboard.html` 제약).
+- Web font 추가 금지 (HTML 더블클릭 자체완결 보장 — 3개 산출물 공통 제약).
 - 일본 모티브 장식(torii·sakura·후지산) 금지. 본 레포는 의사결정 도구.
 
 ## 8. Responsive Behavior
 
 - 단일 컬럼. 미디어 쿼리는 다크 모드 전환(`prefers-color-scheme`)에만 사용.
 - breakpoint 토큰(`mobile_max: 640px`, `tablet_max: 960px`)은 후속 컴포넌트 대비 보유. 현재 layout은 flex/grid wrap으로 자연 적응.
-- 표(`dashboard score-table`)는 좁은 화면에서 `overflow-x: auto` 컨테이너로 감쌈.
+- 표가 필요하면 `overflow-x: auto` 컨테이너로 감싸 좁은 화면 가로 스크롤 보장.
 - 모든 hover 효과는 데스크탑용. 모바일은 tap 즉시 반응 (transition ≤ 0.2s).
 
 ## 9. Agent Prompt Guide
@@ -132,9 +127,8 @@
 4. 새 컴포넌트인가? → §4의 기존 컴포넌트(Card·Subcard·Row·Pill·Bar·Button)로 조합 가능한지 먼저 확인.
 
 **구현 규칙**
-- `index.html`은 `scripts/build_index.py` 산출물. 직접 편집 금지. CSS는 `_render_css(tokens)`를 통해 토큰에서 주입.
-- `viz/dashboard.html`은 수기 편집 가능하지만 `:root` 블록(`/* TOKENS:START */` ~ `/* TOKENS:END */` 구간)은 `build_index.py`가 재생성. 그 구간 안쪽을 수기 편집하면 `validate.py` (G)가 차단.
-- 새 색·간격·반경을 도입할 때: (1) tokens.json에 키 추가 → (2) DESIGN.md §2~§6 갱신 → (3) `build_index.py`의 `_render_css`가 var()로 노출 → (4) 사용처에서 `var(--키)` 참조.
+- `index.html`·`viz/itinerary.html`·`viz/checklist.html`은 모두 `scripts/build_index.py` 산출물. 직접 편집 금지. CSS는 공통 `render_css(tokens)` 함수가 design-tokens.json에서 생성 → `html_doc(title, body, tokens)`이 주입.
+- 새 색·간격·반경을 도입할 때: (1) tokens.json에 키 추가 → (2) DESIGN.md §2~§6 갱신 → (3) `render_css`가 var()로 노출 → (4) 사용처에서 `var(--키)` 참조.
 
 **금지 패턴 (자동 거부)**
 - 인라인 `style="color:#XXXXXX"`로 새 hex 도입 → CSS 변수로 교체.

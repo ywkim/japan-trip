@@ -9,6 +9,9 @@ from pathlib import Path
 
 BASE = Path(__file__).resolve().parent.parent
 INDEX = BASE / "index.html"
+ITINERARY = BASE / "viz" / "itinerary.html"
+CHECKLIST = BASE / "viz" / "checklist.html"
+ALL_OUTPUTS = (INDEX, ITINERARY, CHECKLIST)
 SCRIPT = BASE / "scripts" / "build_index.py"
 
 
@@ -25,20 +28,22 @@ class BuildIndexTests(unittest.TestCase):
 
     def test_build_is_idempotent(self):
         run()
-        first = INDEX.read_text(encoding="utf-8")
+        first = [p.read_text(encoding="utf-8") for p in ALL_OUTPUTS]
         run()
-        second = INDEX.read_text(encoding="utf-8")
+        second = [p.read_text(encoding="utf-8") for p in ALL_OUTPUTS]
         self.assertEqual(first, second, "build_index.py is not idempotent")
 
-    def test_check_detects_drift(self):
+    def test_check_detects_drift_in_each_output(self):
         run()
-        original = INDEX.read_text(encoding="utf-8")
-        try:
-            INDEX.write_text(original + "<!-- drift -->", encoding="utf-8")
-            r = run("--check")
-            self.assertEqual(r.returncode, 1, "expected --check to fail on drift")
-        finally:
-            INDEX.write_text(original, encoding="utf-8")
+        for path in ALL_OUTPUTS:
+            with self.subTest(path=path.name):
+                original = path.read_text(encoding="utf-8")
+                try:
+                    path.write_text(original + "<!-- drift -->", encoding="utf-8")
+                    r = run("--check")
+                    self.assertEqual(r.returncode, 1, f"expected --check to fail on drift in {path.name}")
+                finally:
+                    path.write_text(original, encoding="utf-8")
 
     def test_all_sections_rendered(self):
         run()
@@ -51,27 +56,33 @@ class BuildIndexTests(unittest.TestCase):
         html = INDEX.read_text(encoding="utf-8")
         self.assertGreaterEqual(html.count("<!-- SYNC:"), 9, "expected at least 9 SYNC comments (one per section)")
 
-    def test_css_uses_token_palette(self):
+    def test_viz_outputs_have_no_external_fetch(self):
         run()
-        html = INDEX.read_text(encoding="utf-8")
-        self.assertIn("#F7F6F2", html, "light bg token not injected")
-        self.assertIn("#3E5C76", html, "slate-indigo accent not injected")
-        for legacy in ("#d33", "#fafafa", "#ff6464", "#c33", "#c80", "#2a7"):
-            self.assertNotIn(legacy, html, f"legacy color {legacy} still present in index.html")
+        for path in (ITINERARY, CHECKLIST):
+            with self.subTest(path=path.name):
+                content = path.read_text(encoding="utf-8")
+                self.assertNotIn("fetch(", content, f"{path.name} must be standalone (no fetch)")
+                self.assertNotIn("XMLHttpRequest", content, f"{path.name} must be standalone (no XHR)")
 
-    def test_dashboard_tokens_block_in_sync(self):
+    def test_viz_outputs_reference_their_data_source(self):
         run()
-        dashboard = (BASE / "viz" / "dashboard.html").read_text(encoding="utf-8")
-        self.assertIn("/* TOKENS:START", dashboard)
-        self.assertIn("/* TOKENS:END */", dashboard)
-        start = dashboard.index("/* TOKENS:START")
-        end = dashboard.index("/* TOKENS:END */") + len("/* TOKENS:END */")
-        block = dashboard[start:end]
-        self.assertIn("#F7F6F2", block)
-        for legacy in ("#d33", "#fafafa", "#ff6464"):
-            self.assertNotIn(legacy, block, f"legacy color {legacy} in dashboard TOKENS block")
-        r = run("--check")
-        self.assertEqual(r.returncode, 0, r.stderr)
+        itin = ITINERARY.read_text(encoding="utf-8")
+        self.assertIn("data/itinerary.json", itin)
+        cl = CHECKLIST.read_text(encoding="utf-8")
+        self.assertIn("data/booking-checklist.json", cl)
+
+    def test_all_outputs_use_token_palette(self):
+        run()
+        for path in ALL_OUTPUTS:
+            with self.subTest(path=path.name):
+                content = path.read_text(encoding="utf-8")
+                self.assertIn("#F7F6F2", content, f"{path.name}: light bg token not injected")
+                self.assertIn("#3E5C76", content, f"{path.name}: slate-indigo accent not injected")
+                for legacy in ("#d33", "#fafafa", "#ff6464", "#c33", "#c80", "#2a7"):
+                    self.assertNotIn(
+                        legacy, content,
+                        f"{path.name}: legacy color {legacy} still present",
+                    )
 
 
 if __name__ == "__main__":

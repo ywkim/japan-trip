@@ -14,8 +14,7 @@
 - 의견이 다르면 `notes`에 이유 적기
 
 ### 3. 결과 보기
-- 브라우저로 `viz/dashboard.html` 더블클릭 → 가중치 슬라이더로 민감도 확인
-- 또는 터미널에서 `python scripts/score.py` 실행
+- 터미널에서 `python scripts/score.py` 실행 (의사결정 확정 후 회귀 가드)
 
 ### 3-1. 예산 (3M 하드캡) 통과 여부 확인
 - `data/cost-options.json`에 항공·숙박·고정비·일회성 단가와 시나리오 입력
@@ -37,20 +36,21 @@
 
 ### 6. 모바일에서 결정 보기
 - `index.html` — 모바일-퍼스트 8섹션 카드 (요약·에어비앤비·카덴쇼·항공·예산·일정·체크리스트·점수). 인라인 데이터로 자기완결, 더블클릭 동작
-- **빌드 산출물 — 직접 편집 금지**. 데이터(`data/*.json`)·스크립트 변경 후 `python scripts/build_index.py` 실행
-- `data/booking-checklist.json` — 예약 진행 상태 (8개 항목, status: 미정/예약중/확정). §7 카드 출처
+- `viz/itinerary.html` — 일자별 상세 일정 (시간대·동선·메모·도보거리·보류 사항). `data/itinerary.json` 단일 출처
+- `viz/checklist.html` — 예약 진행 상태 (기한 이른 순 정렬, 상태별 카운트). `data/booking-checklist.json` 단일 출처
+- **3개 모두 `scripts/build_index.py` 빌드 산출물 — 직접 편집 금지**. 데이터(`data/*.json`)·스크립트 변경 후 `python scripts/build_index.py` 실행. CI(`build_index.py --check`)가 모든 산출물의 drift를 차단
 - 각 섹션 위 `<!-- SYNC: ... -->` 주석이 데이터 출처를 명시. CI(`scripts/validate.py`)가 경로 유효성과 §N 절 번호를 검증
 
 ### 7. 검증 (CI)
 - `python -m unittest discover tests` — 단위 테스트 (validate·build_index·design_tokens·score·budget)
-- `python scripts/validate.py` — 가격 필드 무결성(source·data_quality), 30/60일 묵은 가격 경고/실패, SYNC 주석 경로·절 번호 검증, `docs/weather.md`↔`data/weather.json`, `docs/flights.md`↔`data/flights.json` 및 `DESIGN.md`↔`data/design-tokens.json`↔`viz/dashboard.html` TOKENS 블록 동기화 검증
-- `python scripts/build_index.py --check` — `index.html`과 `viz/dashboard.html`의 TOKENS 블록이 데이터와 동기화 상태인지 (drift 시 exit 1)
+- `python scripts/validate.py` — 가격 필드 무결성(source·data_quality), 30/60일 묵은 가격 경고/실패, SYNC 주석 경로·절 번호 검증, `docs/weather.md`↔`data/weather.json`, `docs/flights.md`↔`data/flights.json`, `DESIGN.md`↔`data/design-tokens.json` 동기화 검증
+- `python scripts/build_index.py --check` — `index.html`·`viz/itinerary.html`·`viz/checklist.html` 3개 산출물이 데이터·토큰과 동기화 상태인지 (drift 시 exit 1)
 - `.github/workflows/validate.yml`이 PR마다 unittest + 위 4개 실행
 
 ### 8. 시각 디자인 출처
 - `DESIGN.md` — 시각 디자인 컨벤션 (`voltagent/awesome-design-md` 9섹션). Quiet Ledger 테마: paper-white + slate-indigo accent. AI 에이전트가 UI 변경 작업 시 본 파일을 1차 참조
-- `data/design-tokens.json` — 색·타이포·간격·반경 단일 출처. `scripts/build_index.py`가 `index.html` 인라인 CSS와 `viz/dashboard.html`의 `/* TOKENS:START */`~`/* TOKENS:END */` 블록에 주입
-- 동기화 게이트: `scripts/validate.py` (G)가 DESIGN.md ↔ tokens ↔ dashboard 블록의 drift를 PR 단계에서 차단
+- `data/design-tokens.json` — 색·타이포·간격·반경 단일 출처. `scripts/build_index.py`의 `render_css(tokens)`가 3개 산출물(`index.html`·`viz/itinerary.html`·`viz/checklist.html`)의 인라인 CSS를 공통 생성
+- 동기화 게이트: `scripts/validate.py` (G)가 DESIGN.md ↔ tokens의 drift를 PR 단계에서 차단
 
 ## 평가 기준 (초안 — 함께 조정)
 
@@ -74,9 +74,9 @@
 
 ```
 DESIGN.md    # 시각 디자인 컨벤션 (awesome-design-md 9섹션, Quiet Ledger)
-data/        # decision.json·cost-options.json·weather.json·flights.json·booking-checklist.json·design-tokens.json (단일 출처)
+data/        # decision·cost-options·weather·flights·itinerary·booking-checklist·design-tokens (단일 출처 JSON)
 docs/        # 비교표, 날씨·항공권 분석, 의사결정 일지(decision-log/)
-viz/         # 인터랙티브 대시보드 (HTML, :root TOKENS 블록은 build_index.py 산출)
+viz/         # itinerary.html·checklist.html (build_index.py 산출물)
 scripts/     # score·budget·build_index·validate·render-pdf
 tests/       # unittest (validate·build_index·design_tokens·score·budget)
 reports/     # 최종 보고서
@@ -85,9 +85,9 @@ index.html   # 모바일 8섹션 카드 (build_index.py 산출물)
 
 ## 환경 요구
 
-- Python 3 (점수 계산)
+- Python 3 (점수 계산·빌드)
 - pandoc 또는 Chrome (PDF 변환, 선택)
-- 브라우저 (대시보드)
+- 브라우저 (index.html·viz/itinerary.html·viz/checklist.html 더블클릭)
 
 ## 변경 규칙 (모든 PR 공통)
 
