@@ -42,7 +42,7 @@ japan-trip/
 │   ├── cost-options.json      # 단일 출처 (flights/lodging/daily_fixed/one_time/scenarios)
 │   ├── weather.json           # 후보지 × 시기 기후 + 긴키 매우(梅雨) 평년·실적 + 교토 5/31~6/3 일별 강수 평년
 │   ├── flights.json           # 후보지 × 출발지 항공권 시세 스냅샷 (메타사이트 근사)
-│   ├── itinerary.json         # 단일 출처 (교토 3박4일 일정 — 일자·시간대·동선·메모)
+│   ├── itinerary.json         # 단일 출처 (교토 3박4일 일정 — 일자·시간대·동선·메모 + route_candidates 대안 코스 3개)
 │   └── booking-checklist.json # 단일 출처 (예약 진행 상태 7 항목)
 ├── docs/
 │   ├── candidates.md                      # 후보지 상세 비교
@@ -76,7 +76,7 @@ japan-trip/
   - `data/cost-options.json` — 항공·숙박·고정비·일회성·시나리오
   - `data/weather.json` — 후보지×시기 기후 + `tsuyu_normals`(긴키 매우입·매우명 평년 + 최근 7년 실적) + `cities.kyoto.sub_monthly_precip`(순계열)·`trip_window_daily_precip`(5/31~6/3 일별). 원자료: JMA 매우 평년값·京都(47759) 일별 평년값 1991–2020. `docs/weather.md` §5와 동기화
   - `data/flights.json` — 후보지×출발지 항공권 시세 스냅샷 (시점 스냅샷, snapshot_date 명시)
-  - `data/itinerary.json` — 교토 3박4일 일정 (일자·시간대·동선·메모·도보거리·보류)
+  - `data/itinerary.json` — 교토 3박4일 일정 (`days`: 확정 코스, `route_candidates`: 대안 코스 3개 — 여유형·서북 사찰 집중형·미식+문화 체험형)
   - `data/booking-checklist.json` — 예약 진행 상태
 - **`index.html`·`viz/itinerary.html`·`viz/checklist.html`는 `scripts/build_index.py` 산출물 — 직접 편집 금지**. 데이터(`data/*.json`)·스크립트 변경 후 `python scripts/build_index.py` 실행. CI(`build_index.py --check`)가 3개 산출물의 drift를 PR 단계에서 차단
 - `docs/weather.md`·`docs/flights.md`의 표는 각각 `data/weather.json`·`data/flights.json`의 사람용 사본 — JSON 수정 시 함께 갱신 (CI 게이트: `scripts/validate.py` E·F가 도시·시기 수치, snapshot_date, 시세 표기의 drift를 PR 단계에서 차단)

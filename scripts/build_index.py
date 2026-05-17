@@ -490,6 +490,42 @@ def build_itinerary(d) -> str:
 
     pending_items = "".join(f"<li>{esc(p)}</li>" for p in itin.get("pending", []))
 
+    candidate_cards = []
+    for cand in itin.get("route_candidates", []):
+        cand_day_cards = []
+        for day in cand["days"]:
+            item_rows = []
+            for it in day["items"]:
+                link = maps_link(it["maps_query"], it["title"]) if it.get("maps_query") else esc(it["title"])
+                note_html = f'<div class="sub">{esc(it["note"])}</div>' if it.get("note") else ""
+                item_rows.append(f"""
+    <div class="day">
+      <div class="date"><span class="k">{esc(it['time'])}</span> {link}</div>
+      {note_html}
+    </div>""")
+            cand_day_cards.append(f"""
+  <div class="subcard">
+    <div class="subtitle">{esc(day['day_label'])}</div>
+    {''.join(item_rows)}
+    <div class="sub" style="margin-top:0.4rem;">도보 약 {day['walking_km']}km · 숙박: {esc(day['lodging'])}</div>
+  </div>""")
+        candidate_cards.append(f"""
+<details>
+  <summary style="cursor:pointer;font-weight:600;padding:0.5rem 0;font-size:0.95rem;">{esc(cand['name'])}</summary>
+  <div class="sub" style="margin:0.25rem 0 0.5rem;">{esc(cand.get('theme',''))} · 총 도보 약 {cand.get('walking_km_total','—')}km</div>
+  {''.join(cand_day_cards)}
+</details>""")
+
+    candidates_section = ""
+    if candidate_cards:
+        candidates_section = f"""
+<section class="card">
+  <h2>후보 코스</h2>
+  <div class="sub" style="margin-bottom:0.5rem;">숙소·날짜(5/31~6/3) 동일. 동선만 다른 대안 코스. 제목 탭하면 펼쳐짐.</div>
+  {''.join(candidate_cards)}
+</section>
+"""
+
     body = f"""<h1>교토 3박4일 일정</h1>
 <div class="status">{esc(trip['dates'])} · {trip['nights']}박 · {trip['travelers']}인 · {esc(trip.get('composition',''))}</div>
 
@@ -506,7 +542,7 @@ def build_itinerary(d) -> str:
   <h2>일자별 코스</h2>
   {''.join(day_cards)}
 </section>
-
+{candidates_section}
 <section class="card">
   <h2>보류·확인 필요</h2>
   <ul>{pending_items}</ul>
