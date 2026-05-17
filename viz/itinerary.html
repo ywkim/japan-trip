@@ -83,6 +83,12 @@
     font-size: 0.75rem; border: 1px solid currentColor;
   }
   footer { color: var(--muted); font-size: 0.75rem; margin-top: 1.5rem; text-align: center; }
+  .place-img {
+    width: 100%; aspect-ratio: 16/9; object-fit: cover;
+    border-radius: 4px; display: block; margin-top: 0.35rem;
+    max-height: 200px;
+  }
+  .img-credit { color: var(--muted); font-size: 0.65rem; text-align: right; }
 </style>
 </head>
 <body>
@@ -111,12 +117,12 @@
       <div class="sub">시부 예약 항공편 시간 확인 필요</div>
     </div>
     <div class="day">
-      <div class="date"><span class="k">11:30</span> <a href="https://maps.google.com/?q=Kyoto+Station" target="_blank" rel="noopener">시오 짐 보관 + 점심</a></div>
-      
+      <div class="date"><span class="k">11:30</span> <a href="https://maps.google.com/?q=Nijo+Station+Kyoto" target="_blank" rel="noopener">니조역 → 시오 짐 보관 후 점심</a></div>
+      <div class="sub">에어비앤비 체크인 전 짐 맡기기 (시오 도보 7분). 코인락커 불필요</div>
     </div>
     <div class="day">
       <div class="date"><span class="k">13:30</span> <a href="https://maps.google.com/?q=Kiyomizu-dera" target="_blank" rel="noopener">키요미즈데라 (清水寺)</a></div>
-      <div class="sub">17:00 마감 주의</div>
+      <div class="sub">17:00 마감 주의</div><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Kyoto-Kiyomizu_Temple-2.JPG?width=480" alt="키요미즈데라 (清水寺)" class="place-img" loading="lazy"><div class="img-credit">Wikimedia Commons</div>
     </div>
     <div class="day">
       <div class="date"><span class="k">16:30</span> <a href="https://maps.google.com/?q=Gion+Kyoto" target="_blank" rel="noopener">산넨자카 → 야사카 신사 → 기온</a></div>
@@ -124,7 +130,7 @@
     </div>
     <div class="day">
       <div class="date"><span class="k">18:30</span> <a href="https://maps.google.com/?q=Kawaramachi" target="_blank" rel="noopener">가와라마치 저녁 (시라카와·폰토초)</a></div>
-      <div class="sub">야간 가장 예쁨</div>
+      <div class="sub">야간 가장 예쁨</div><img src="https://commons.wikimedia.org/wiki/Special:FilePath/JP-Kyoto-Gion-Area-Traditional-House-Night-View.JPG?width=480" alt="가와라마치 저녁 (시라카와·폰토초)" class="place-img" loading="lazy"><div class="img-credit">Wikimedia Commons</div>
     </div>
     <div class="sub" style="margin-top:0.4rem;">도보 약 3km · 숙박: 에어비앤비 시오</div>
   </div>
@@ -133,27 +139,27 @@
     
     <div class="day">
       <div class="date"><span class="k">09:00</span> <a href="https://maps.google.com/?q=Arashiyama+Bamboo+Grove" target="_blank" rel="noopener">죽림길 (지쿠린)</a></div>
-      <div class="sub">일찍 출발 (관광객 적음)</div>
+      <div class="sub">일찍 출발 (관광객 적음)</div><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Sagano_Bamboo_forest%2C_Arashiyama%2C_Kyoto.jpg?width=480" alt="죽림길 (지쿠린)" class="place-img" loading="lazy"><div class="img-credit">Wikimedia Commons</div>
     </div>
     <div class="day">
       <div class="date"><span class="k">09:45</span> <a href="https://maps.google.com/?q=Tenryu-ji+Temple" target="_blank" rel="noopener">텐류지 정원</a></div>
-      
+      <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Tenryuji%2C_Kyoto-_DSC06041.JPG?width=480" alt="텐류지 정원" class="place-img" loading="lazy"><div class="img-credit">Wikimedia Commons</div>
     </div>
     <div class="day">
       <div class="date"><span class="k">12:00</span> <a href="https://maps.google.com/?q=Arashiyama+Tofu" target="_blank" rel="noopener">두부 가이세키 점심 (시그라쿠 토후)</a></div>
-      <div class="sub">4인 좌석 사전 확인</div>
+      <div class="sub">4인 좌석 사전 확인</div><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Japanese_SilkyTofu_%28Kinugoshi_Tofu%29.JPG?width=480" alt="두부 가이세키 점심 (시그라쿠 토후)" class="place-img" loading="lazy"><div class="img-credit">Wikimedia Commons</div>
     </div>
     <div class="day">
       <div class="date"><span class="k">14:00</span> <a href="https://maps.google.com/?q=Kinkaku-ji" target="_blank" rel="noopener">금각사 (鹿苑寺)</a></div>
-      
+      <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Kinkaku-ji_the_Golden_Temple_in_Kyoto_overlooking_the_lake_-_high_rez.JPG?width=480" alt="금각사 (鹿苑寺)" class="place-img" loading="lazy"><div class="img-credit">Wikimedia Commons</div>
     </div>
     <div class="day">
       <div class="date"><span class="k">15:30</span> <a href="https://maps.google.com/?q=Ryoan-ji" target="_blank" rel="noopener">료안지 석정원</a></div>
-      
+      <img src="https://commons.wikimedia.org/wiki/Special:FilePath/RyoanJi-Dry_garden.jpg?width=480" alt="료안지 석정원" class="place-img" loading="lazy"><div class="img-credit">Wikimedia Commons</div>
     </div>
     <div class="day">
       <div class="date"><span class="k">18:30</span> <a href="https://maps.google.com/?q=Pontocho+Alley" target="_blank" rel="noopener">가와라마치 + 니시키 시장 저녁</a></div>
-      <div class="sub">시장 17:00 닫는 가게 다수</div>
+      <div class="sub">시장 17:00 닫는 가게 다수</div><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Nishiki_ichiba_kyoto.jpg?width=480" alt="가와라마치 + 니시키 시장 저녁" class="place-img" loading="lazy"><div class="img-credit">Wikimedia Commons</div>
     </div>
     <div class="sub" style="margin-top:0.4rem;">도보 약 4km · 숙박: 에어비앤비 시오 (2박째)</div>
   </div>
@@ -162,11 +168,11 @@
     
     <div class="day">
       <div class="date"><span class="k">07:30</span> <a href="https://maps.google.com/?q=Fushimi+Inari+Taisha" target="_blank" rel="noopener">후시미 이나리 신사</a></div>
-      <div class="sub">이른 시간 인파 회피. 정상까지 안 가도 OK</div>
+      <div class="sub">이른 시간 인파 회피. 정상까지 안 가도 OK</div><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Torii_gates%E2%80%94Fushimi_Inari_Shrine_%289977683204%29.jpg?width=480" alt="후시미 이나리 신사" class="place-img" loading="lazy"><div class="img-credit">Wikimedia Commons</div>
     </div>
     <div class="day">
       <div class="date"><span class="k">09:30</span> <a href="https://maps.google.com/?q=Tofuku-ji" target="_blank" rel="noopener">토후쿠지 정원</a></div>
-      
+      <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Sand_Garden_at_Tofukuji_Temple.jpg?width=480" alt="토후쿠지 정원" class="place-img" loading="lazy"><div class="img-credit">Wikimedia Commons</div>
     </div>
     <div class="day">
       <div class="date"><span class="k">11:30</span> <a href="https://maps.google.com/?q=Kyoto+Station" target="_blank" rel="noopener">교토역 라멘코지 점심</a></div>
@@ -545,6 +551,7 @@
 
 <div class="links">
   <a href="../index.html">← 결정 요약으로</a>
+  <a href="itinerary-table.html">시간표 뷰</a>
   <a href="https://github.com/ywkim/japan-trip/blob/main/docs/kyoto-itinerary-may31-jun3-2026.md" target="_blank" rel="noopener">사람용 마크다운</a>
   <a href="checklist.html">예약 체크리스트</a>
 </div>

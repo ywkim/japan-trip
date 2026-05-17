@@ -83,6 +83,12 @@
     font-size: 0.75rem; border: 1px solid currentColor;
   }
   footer { color: var(--muted); font-size: 0.75rem; margin-top: 1.5rem; text-align: center; }
+  .place-img {
+    width: 100%; aspect-ratio: 16/9; object-fit: cover;
+    border-radius: 4px; display: block; margin-top: 0.35rem;
+    max-height: 200px;
+  }
+  .img-credit { color: var(--muted); font-size: 0.65rem; text-align: right; }
 </style>
 </head>
 <body>
@@ -306,7 +312,7 @@
 <!-- SYNC: data/itinerary.json · docs/kyoto-itinerary-may31-jun3-2026.md -->
 <section id="itinerary" class="card">
   <h2>일자별 일정</h2>
-  <div class="sub" style="margin-bottom:0.5rem;">장소 탭 → 구글맵. 상세: <a href="viz/itinerary.html">전체 일정 화면 ↗</a></div>
+  <div class="sub" style="margin-bottom:0.5rem;">장소 탭 → 구글맵. 상세: <a href="viz/itinerary.html">카드 뷰 ↗</a> · <a href="viz/itinerary-table.html">시간표 뷰 ↗</a></div>
   
   <div class="subcard">
     <div class="subtitle">5/31 (일) — 도착 + 동산 지구</div>
@@ -315,7 +321,7 @@
       <div class="date"><span class="k">09:05</span> <a href="https://maps.google.com/?q=Kansai+International+Airport" target="_blank" rel="noopener">간사이공항 도착 → JR 하루카 → 교토역</a></div>
     </div>
     <div class="day">
-      <div class="date"><span class="k">11:30</span> <a href="https://maps.google.com/?q=Kyoto+Station" target="_blank" rel="noopener">시오 짐 보관 + 점심</a></div>
+      <div class="date"><span class="k">11:30</span> <a href="https://maps.google.com/?q=Nijo+Station+Kyoto" target="_blank" rel="noopener">니조역 → 시오 짐 보관 후 점심</a></div>
     </div>
     <div class="day">
       <div class="date"><span class="k">13:30</span> <a href="https://maps.google.com/?q=Kiyomizu-dera" target="_blank" rel="noopener">키요미즈데라 (清水寺)</a></div>

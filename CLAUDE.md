@@ -16,7 +16,7 @@
 - 한국어
 - 의사결정 데이터는 `data/decision.json`에 단일 출처
 - 사람이 읽는 비교표·일지는 `docs/*.md`
-- 모바일/상세 화면은 `index.html`·`viz/itinerary.html`·`viz/checklist.html` — 모두 `scripts/build_index.py` 산출물 (직접 편집 금지)
+- 모바일/상세 화면은 `index.html`·`viz/itinerary.html`·`viz/itinerary-table.html`·`viz/checklist.html` — 모두 `scripts/build_index.py` 산출물 (직접 편집 금지)
 - 보고서는 `reports/final-report.md` → PDF
 
 ## 정량 의사결정 워크플로우 (MCDA)
@@ -56,12 +56,13 @@ japan-trip/
 │   ├── airbnb-kyoto-may31-jun2-2026.md    # 에어비앤비 5개 매물 비교
 │   └── jejuair-icn-kobe-june-2026.md      # 제주항공 인천-고베 신규 노선·가격 리서치
 ├── viz/
-│   ├── itinerary.html   # 일자별 상세 일정 화면 (build_index.py 산출물 — 직접 편집 금지)
-│   └── checklist.html   # 예약 체크리스트 화면 (build_index.py 산출물 — 직접 편집 금지)
+│   ├── itinerary.html         # 일자별 카드 뷰 (build_index.py 산출물 — 직접 편집 금지)
+│   ├── itinerary-table.html   # 4일 시간표 뷰 (build_index.py 산출물 — 직접 편집 금지)
+│   └── checklist.html         # 예약 체크리스트 화면 (build_index.py 산출물 — 직접 편집 금지)
 ├── scripts/
 │   ├── score.py         # 종합 점수 계산 (--json 지원)
 │   ├── budget.py        # 3M 예산 시나리오 평가 (--json 지원)
-│   ├── build_index.py   # index.html + viz/itinerary.html + viz/checklist.html 빌드 (공통 토큰 주입, --check)
+│   ├── build_index.py   # index.html + viz/itinerary.html + viz/itinerary-table.html + viz/checklist.html 빌드 (공통 토큰 주입, --check)
 │   ├── validate.py      # 가격 필드·묵은 가격·SYNC 주석·MD↔JSON·DESIGN 동기화 검사
 │   └── render-pdf.sh    # PDF 생성
 ├── tests/               # unittest (validate·build_index·design_tokens·score·budget)
@@ -80,8 +81,8 @@ japan-trip/
   - `data/flights.json` — 후보지×출발지 항공권 시세 스냅샷 (시점 스냅샷, snapshot_date 명시)
   - `data/itinerary.json` — 교토 3박4일 일정 (`days`: 확정 코스, `route_candidates`: 대안 코스 3개 — 여유형·서북 사찰 집중형·미식+문화 체험형)
   - `data/booking-checklist.json` — 예약 진행 상태
-  - `data/design-tokens.json` — 색·타이포·간격·반경 (DESIGN.md §2~§6과 동기화). `build_index.py`의 `render_css(tokens)`가 3개 산출물(`index.html`·`viz/itinerary.html`·`viz/checklist.html`)의 인라인 CSS를 공통 생성
-- **`index.html`·`viz/itinerary.html`·`viz/checklist.html`는 `scripts/build_index.py` 산출물 — 직접 편집 금지**. 데이터(`data/*.json`)·스크립트 변경 후 `python scripts/build_index.py` 실행. CI(`build_index.py --check`)가 3개 산출물의 drift를 PR 단계에서 차단
+  - `data/design-tokens.json` — 색·타이포·간격·반경 (DESIGN.md §2~§6과 동기화). `build_index.py`의 `render_css(tokens)`가 4개 산출물(`index.html`·`viz/itinerary.html`·`viz/itinerary-table.html`·`viz/checklist.html`)의 인라인 CSS를 공통 생성
+- **`index.html`·`viz/itinerary.html`·`viz/itinerary-table.html`·`viz/checklist.html`는 `scripts/build_index.py` 산출물 — 직접 편집 금지**. 데이터(`data/*.json`)·스크립트 변경 후 `python scripts/build_index.py` 실행. CI(`build_index.py --check`)가 4개 산출물의 drift를 PR 단계에서 차단
 - `docs/weather.md`·`docs/flights.md`의 표는 각각 `data/weather.json`·`data/flights.json`의 사람용 사본 — JSON 수정 시 함께 갱신 (CI 게이트: `scripts/validate.py` E·F가 도시·시기 수치, snapshot_date, 시세 표기의 drift를 PR 단계에서 차단)
 - `docs/kyoto-itinerary-may31-jun3-2026.md`는 `data/itinerary.json`의 사람용 마크다운 사본 (JSON이 정본). 일정 변경 시 JSON을 먼저 수정 → 마크다운 함께 갱신
 - `data/flights.json`은 **시점 스냅샷**. 시세 재조회 시 새 스냅샷으로 덮어쓰지 말고 snapshot_date 갱신 + 변경 사유를 `docs/decision-log/`에 새 일지로 기록
@@ -103,15 +104,15 @@ japan-trip/
 | weather MD↔JSON 동기화 | `scripts/validate.py` (E) | `docs/weather.md`의 도시·시기 수치가 `data/weather.json`과 일치하지 않음 |
 | flights MD↔JSON 동기화 | `scripts/validate.py` (F) | `docs/flights.md`의 snapshot_date·시세 수치가 `data/flights.json`과 일치하지 않음 |
 | DESIGN MD↔JSON 동기화 | `scripts/validate.py` (G) | `DESIGN.md`의 hex가 `data/design-tokens.json`에 없거나 그 반대, theme_name·version drift |
-| 빌드 산출물 drift | `scripts/build_index.py --check` | `index.html`·`viz/itinerary.html`·`viz/checklist.html` 중 하나라도 빌드 결과와 다름 |
+| 빌드 산출물 drift | `scripts/build_index.py --check` | `index.html`·`viz/itinerary.html`·`viz/itinerary-table.html`·`viz/checklist.html` 중 하나라도 빌드 결과와 다름 |
 
 ## 디자인 워크플로우
 
-3개 산출물(`index.html`·`viz/itinerary.html`·`viz/checklist.html`)의 시각 변경 시:
+4개 산출물(`index.html`·`viz/itinerary.html`·`viz/itinerary-table.html`·`viz/checklist.html`)의 시각 변경 시:
 
 1. `DESIGN.md` 편집 (의도·규칙 먼저).
 2. `data/design-tokens.json` 동기화 (DESIGN.md §2~§6의 모든 hex·치수가 토큰에 반영되어야 함).
-3. `python scripts/build_index.py` 실행 → 3개 산출물이 공통 `render_css(tokens)`로 재생성.
+3. `python scripts/build_index.py` 실행 → 4개 산출물이 공통 `render_css(tokens)`로 재생성.
 4. `python scripts/validate.py` (G 통과) + `python scripts/build_index.py --check` (drift 없음) 확인.
 5. `data/design-tokens.json`이 단일 출처. 인라인 hex 추가 금지 — 새 색은 반드시 토큰 키 추가 후 `var(--키)`로 참조.
 
