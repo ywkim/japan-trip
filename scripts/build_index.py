@@ -159,12 +159,16 @@ CSS = """
   }
   footer { color: var(--muted); font-size: 0.75rem; margin-top: 1.5rem; text-align: center; }
   /* ── 하단 탭바 ── */
-  body { padding-bottom: calc(3.8rem + env(safe-area-inset-bottom, 0px)); }
+  body { padding-bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px)); }
   .tab-bar {
     position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
     width: 100%; max-width: 640px;
     display: flex; background: var(--card); border-top: 1px solid var(--border);
     z-index: 200; padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .tab-bar::after {
+    content: ''; position: absolute; top: 100%; left: 0; right: 0;
+    height: 80px; background: var(--card);
   }
   .tab-bar a {
     flex: 1; display: flex; flex-direction: column; align-items: center;
