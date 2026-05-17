@@ -136,6 +136,24 @@ CSS = """
     font-size: 0.75rem; border: 1px solid currentColor;
   }
   footer { color: var(--muted); font-size: 0.75rem; margin-top: 1.5rem; text-align: center; }
+  .photo-strip {
+    display: flex; gap: 6px; overflow-x: auto; padding: 8px 0 4px;
+    scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;
+    margin: 0.5rem 0 0; scrollbar-width: none;
+  }
+  .photo-strip::-webkit-scrollbar { display: none; }
+  .photo-strip img {
+    height: 160px; width: 240px; min-width: 240px;
+    border-radius: 8px; object-fit: cover;
+    scroll-snap-align: start; flex-shrink: 0;
+    background: var(--border);
+  }
+  .blog-comment {
+    font-size: 0.85rem; color: var(--fg); line-height: 1.65;
+    margin: 0.45rem 0 0.2rem; padding: 0.55rem 0.75rem;
+    border-left: 3px solid var(--accent);
+    background: var(--subcard); border-radius: 0 6px 6px 0;
+  }
 """
 
 
@@ -461,6 +479,26 @@ def build_index(d) -> str:
 
 # ─── viz/itinerary.html ────────────────────────────────────────────────────
 
+def _render_blog_reviews(reviews: list) -> str:
+    if not reviews:
+        return ""
+    parts = []
+    for rev in reviews:
+        photos = rev.get("photos") or []
+        comment = rev.get("comment", "")
+        strip_html = ""
+        if photos:
+            imgs = "".join(
+                f'<img src="{esc(p)}" alt="" loading="lazy">'
+                for p in photos
+            )
+            strip_html = f'<div class="photo-strip">{imgs}</div>'
+        comment_html = f'<div class="blog-comment">{esc(comment)}</div>' if comment else ""
+        if strip_html or comment_html:
+            parts.append(strip_html + comment_html)
+    return "".join(parts)
+
+
 def build_itinerary(d) -> str:
     itin = d["itinerary"]
     trip = itin["trip"]
@@ -476,10 +514,11 @@ def build_itinerary(d) -> str:
         for it in day["items"]:
             link = maps_link(it["maps_query"], it["title"]) if it.get("maps_query") else esc(it["title"])
             note_html = f'<div class="sub">{esc(it["note"])}</div>' if it.get("note") else ""
+            reviews_html = _render_blog_reviews(it.get("blog_reviews") or [])
             item_rows.append(f"""
     <div class="day">
       <div class="date"><span class="k">{esc(it['time'])}</span> {link}</div>
-      {note_html}
+      {note_html}{reviews_html}
     </div>""")
         day_cards.append(f"""
   <div class="subcard">

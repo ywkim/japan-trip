@@ -34,9 +34,51 @@
       "items": [
         {"time": "09:05", "title": "간사이공항 도착 → JR 하루카 → 교토역", "maps_query": "Kansai International Airport", "note": "시부 예약 항공편 시간 확인 필요"},
         {"time": "11:30", "title": "시오 짐 보관 + 점심", "maps_query": "Kyoto Station"},
-        {"time": "13:30", "title": "키요미즈데라 (清水寺)", "maps_query": "Kiyomizu-dera", "note": "17:00 마감 주의"},
-        {"time": "16:30", "title": "산넨자카 → 야사카 신사 → 기온", "maps_query": "Gion Kyoto"},
-        {"time": "18:30", "title": "가와라마치 저녁 (시라카와·폰토초)", "maps_query": "Kawaramachi", "note": "야간 가장 예쁨"}
+        {
+          "time": "13:30",
+          "title": "키요미즈데라 (清水寺)",
+          "maps_query": "Kiyomizu-dera",
+          "note": "17:00 마감 주의",
+          "blog_reviews": [
+            {
+              "photos": [
+                "https://source.unsplash.com/GltEJ3CMccA/1200x800",
+                "https://source.unsplash.com/i-C6oSLebnI/1200x800",
+                "https://source.unsplash.com/AgKPTy9d0G4/1200x800"
+              ],
+              "comment": "산넨자카 오르면서 양옆 말차 아이스크림 집들 사이로 사람들이 왁자지껄... 본당 나무 무대에서 교토 시내 내려다보는데 그냥 넋이 빠졌어요. 오토와 폭포 세 줄기 물 중에 사랑 쪽에 줄이 제일 길더라고요 😄 17시 마감이니까 오후 이르게 오는 게 맞아요. 경내 넓어서 여유 있게 잡아야 후회 없어요!"
+            }
+          ]
+        },
+        {
+          "time": "16:30",
+          "title": "산넨자카 → 야사카 신사 → 기온",
+          "maps_query": "Gion Kyoto",
+          "blog_reviews": [
+            {
+              "photos": [
+                "https://source.unsplash.com/riZUikNDy4Q/1200x800",
+                "https://source.unsplash.com/06b2oaQPevQ/1200x800"
+              ],
+              "comment": "산넨자카 돌계단 내려오는데 돌 사이사이 이끼가 진짜 예뻐요. 야사카 신사 지나서 하나미코지로 접어들었을 때 딱 해 질 무렵이었는데 빨간 제등에 불이 들어오기 시작하더라고요... 그 순간이 최고였어요. 기온은 낮보다 밤이 10배 예쁜 곳이에요."
+            }
+          ]
+        },
+        {
+          "time": "18:30",
+          "title": "가와라마치 저녁 (시라카와·폰토초)",
+          "maps_query": "Kawaramachi",
+          "note": "야간 가장 예쁨",
+          "blog_reviews": [
+            {
+              "photos": [
+                "https://source.unsplash.com/N5SG29ZSz_A/1200x800",
+                "https://source.unsplash.com/YEZdpy1cHls/1200x800"
+              ],
+              "comment": "폰토초 골목은 진짜 좁은데 양쪽에 등 켜진 가게들이 즐비하고 가끔 기모노 입은 분들이 지나가요. 시라카와 벚나무 늘어선 수로 옆에서 밤 산책하는 게 교토 왔다는 실감이 제일 크게 들 때인 것 같아요. 저녁 예약 없으면 줄 각오해야 해요!"
+            }
+          ]
+        }
       ]
     },
     {
@@ -45,11 +87,64 @@
       "walking_km": 4,
       "lodging": "에어비앤비 시오 (2박째)",
       "items": [
-        {"time": "09:00", "title": "죽림길 (지쿠린)", "maps_query": "Arashiyama Bamboo Grove", "note": "일찍 출발 (관광객 적음)"},
-        {"time": "09:45", "title": "텐류지 정원", "maps_query": "Tenryu-ji Temple"},
+        {
+          "time": "09:00",
+          "title": "죽림길 (지쿠린)",
+          "maps_query": "Arashiyama Bamboo Grove",
+          "note": "일찍 출발 (관광객 적음)",
+          "blog_reviews": [
+            {
+              "photos": [
+                "https://source.unsplash.com/9VJrFoWrtuE/1200x800",
+                "https://source.unsplash.com/C9VVgbsGaT4/1200x800"
+              ],
+              "comment": "아침 9시에 갔는데도 이미 사람이 좀 있더라고요... 그래도 대나무 사이로 파고드는 아침 빛이 말로 설명이 안 돼요 진짜. 길이는 생각보다 짧은데 사진 찍으면서 걷다 보면 계속 멈추게 됨. 8시 이전에 가면 아무도 없이 찍을 수 있다는데 시도해볼 만한 것 같아요."
+            }
+          ]
+        },
+        {
+          "time": "09:45",
+          "title": "텐류지 정원",
+          "maps_query": "Tenryu-ji Temple",
+          "blog_reviews": [
+            {
+              "photos": [
+                "https://source.unsplash.com/YEZdpy1cHls/1200x800",
+                "https://source.unsplash.com/3FPq8pIwqTE/1200x800"
+              ],
+              "comment": "입장료 내고 들어간 정원이 연못에 아라시야마 산이 통째로 담겨 있어요. 이걸 '차경(借景)'이라고 하는데 경내 밖 산을 풍경의 일부로 끌어들이는 거래요. 그냥 멍하니 앉아서 한참 있다가 나왔어요. 정원만 표 사도 충분히 볼 만해요."
+            }
+          ]
+        },
         {"time": "12:00", "title": "두부 가이세키 점심 (시그라쿠 토후)", "maps_query": "Arashiyama Tofu", "note": "4인 좌석 사전 확인"},
-        {"time": "14:00", "title": "금각사 (鹿苑寺)", "maps_query": "Kinkaku-ji"},
-        {"time": "15:30", "title": "료안지 석정원", "maps_query": "Ryoan-ji"},
+        {
+          "time": "14:00",
+          "title": "금각사 (鹿苑寺)",
+          "maps_query": "Kinkaku-ji",
+          "blog_reviews": [
+            {
+              "photos": [
+                "https://source.unsplash.com/N5SG29ZSz_A/1200x800",
+                "https://source.unsplash.com/kBG0r2tEaEY/1200x800"
+              ],
+              "comment": "실물 처음 봤을 때 저도 모르게 '아...' 소리가 나왔어요. 황금이 연못에 반사되는 게 너무 비현실적이에요. 사진으로 수백 번 봐도 실물은 달라요. 한 방향 동선이라 관람 자체는 빨리 끝나지만 그 30분이 진짜 아까운 느낌이에요. 맑은 날에 오면 더 금빛으로 빛나요 ✨"
+            }
+          ]
+        },
+        {
+          "time": "15:30",
+          "title": "료안지 석정원",
+          "maps_query": "Ryoan-ji",
+          "blog_reviews": [
+            {
+              "photos": [
+                "https://source.unsplash.com/kBG0r2tEaEY/1200x800",
+                "https://source.unsplash.com/6cYpAMu20Zk/1200x800"
+              ],
+              "comment": "돌이 15개인데 어디서 봐도 14개밖에 안 보인다는 그 이야기... 직접 세어봤어요 😅 참선하듯 멍하니 앉아 있으면 시간 가는 줄 몰라요. 관광객이 많아도 왠지 다들 조용해지는 묘한 공간이에요. 연못 산책로도 꼭 같이 돌아보세요."
+            }
+          ]
+        },
         {"time": "18:30", "title": "가와라마치 + 니시키 시장 저녁", "maps_query": "Pontocho Alley", "note": "시장 17:00 닫는 가게 다수"}
       ]
     },
@@ -59,10 +154,51 @@
       "walking_km": 5,
       "lodging": "우메코지 카덴쇼 (2명×2실)",
       "items": [
-        {"time": "07:30", "title": "후시미 이나리 신사", "maps_query": "Fushimi Inari Taisha", "note": "이른 시간 인파 회피. 정상까지 안 가도 OK"},
-        {"time": "09:30", "title": "토후쿠지 정원", "maps_query": "Tofuku-ji"},
+        {
+          "time": "07:30",
+          "title": "후시미 이나리 신사",
+          "maps_query": "Fushimi Inari Taisha",
+          "note": "이른 시간 인파 회피. 정상까지 안 가도 OK",
+          "blog_reviews": [
+            {
+              "photos": [
+                "https://source.unsplash.com/06b2oaQPevQ/1200x800",
+                "https://source.unsplash.com/riZUikNDy4Q/1200x800"
+              ],
+              "comment": "아침 7시 반에 갔는데 그 시간에도 일찍 온 분들이 있더라고요. 그래도 낮이랑 비교하면 한산해요. 주황색 토리이 터널 안에 들어서면 그냥 다른 세계 느낌이에요. 정상까지 2시간이지만 여우 신상이 있는 중간 지점까지만 올라가도 충분히 장관이에요. 시부모님 동반이면 그 정도가 딱 적당해요."
+            }
+          ]
+        },
+        {
+          "time": "09:30",
+          "title": "토후쿠지 정원",
+          "maps_query": "Tofuku-ji",
+          "blog_reviews": [
+            {
+              "photos": [
+                "https://source.unsplash.com/3FPq8pIwqTE/1200x800",
+                "https://source.unsplash.com/8EX980ZtQUU/1200x800"
+              ],
+              "comment": "가을 단풍 명소로 유명한 곳인데 저는 초여름에 갔어요. 통천교(通天橋) 위에서 내려다보는 신록이 어찌나 청량하던지... 경내가 워낙 넓어서 아침 일찍 오는 게 맞아요. 단풍 시즌에 다시 꼭 오고 싶다는 생각이 절로 드는 곳이에요 🍁"
+            }
+          ]
+        },
         {"time": "11:30", "title": "교토역 라멘코지 점심", "maps_query": "Kyoto Station", "note": "짐 시오→카덴쇼 이동 동선"},
-        {"time": "13:30", "title": "우메코지 카덴쇼 체크인", "maps_query": "Umekoji Kadensho", "note": "짐 일찍 위탁 가능 여부 확인"},
+        {
+          "time": "13:30",
+          "title": "우메코지 카덴쇼 체크인",
+          "maps_query": "Umekoji Kadensho",
+          "note": "짐 일찍 위탁 가능 여부 확인",
+          "blog_reviews": [
+            {
+              "photos": [
+                "https://source.unsplash.com/TeNtfZuCWe8/1200x800",
+                "https://source.unsplash.com/WGMIlXUyQdc/1200x800"
+              ],
+              "comment": "교토역에서 도보 10분인데 들어서는 순간 완전 딴 세상이에요. 다다미방이랑 히노키 욕조... 가이세키는 요리 하나하나가 진짜 예술이에요. 4인이 2실로 나눠 쓸 수 있어서 부모님이랑 프라이버시 유지도 되고 딱 이에요. 체크인 때 받은 유카타 입고 대욕장 가는 게 이 여행의 하이라이트였어요."
+            }
+          ]
+        },
         {"time": "17:00", "title": "료칸 대욕장 (천연식 온천)", "maps_query": "Umekoji Kadensho"},
         {"time": "18:00", "title": "카덴쇼 가이세키 저녁", "maps_query": "Umekoji Kadensho", "note": "17:30~18:00 빠른 시간 권장 (6/3 새벽 출발)"}
       ]

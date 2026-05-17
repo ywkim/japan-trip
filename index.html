@@ -73,6 +73,24 @@
     font-size: 0.75rem; border: 1px solid currentColor;
   }
   footer { color: var(--muted); font-size: 0.75rem; margin-top: 1.5rem; text-align: center; }
+  .photo-strip {
+    display: flex; gap: 6px; overflow-x: auto; padding: 8px 0 4px;
+    scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;
+    margin: 0.5rem 0 0; scrollbar-width: none;
+  }
+  .photo-strip::-webkit-scrollbar { display: none; }
+  .photo-strip img {
+    height: 160px; width: 240px; min-width: 240px;
+    border-radius: 8px; object-fit: cover;
+    scroll-snap-align: start; flex-shrink: 0;
+    background: var(--border);
+  }
+  .blog-comment {
+    font-size: 0.85rem; color: var(--fg); line-height: 1.65;
+    margin: 0.45rem 0 0.2rem; padding: 0.55rem 0.75rem;
+    border-left: 3px solid var(--accent);
+    background: var(--subcard); border-radius: 0 6px 6px 0;
+  }
 </style>
 </head>
 <body>
