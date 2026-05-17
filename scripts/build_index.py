@@ -36,7 +36,7 @@ _TABS = [
     ("home",      "🏠", "홈",      "index.html",         "../index.html"),
     ("itinerary", "📅", "일정",    "viz/itinerary.html",  "itinerary.html"),
     ("lodging",   "✈️", "숙박·항공","viz/lodging.html",    "lodging.html"),
-    ("checklist", "✅", "예약",    "viz/checklist.html",  "checklist.html"),
+    ("checklist", "☑", "예약",    "viz/checklist.html",  "checklist.html"),
 ]
 
 
@@ -163,7 +163,7 @@ CSS = """
   .tab-bar {
     position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
     width: 100%; max-width: 640px;
-    display: flex; background: var(--card); border-top: 1px solid var(--border);
+    display: flex; background: var(--card); border-top: 2px solid var(--border);
     z-index: 200; padding-bottom: env(safe-area-inset-bottom, 0px);
   }
   .tab-bar::after {
@@ -172,13 +172,18 @@ CSS = """
   }
   .tab-bar a {
     flex: 1; display: flex; flex-direction: column; align-items: center;
-    padding: 0.7rem 0.25rem 0.4rem; text-decoration: none;
+    padding: 0.65rem 0.25rem 0.4rem; text-decoration: none;
     color: var(--muted); font-size: 0.68rem; gap: 0.15rem; line-height: 1.2;
     -webkit-tap-highlight-color: transparent;
+    border-right: 1px solid var(--border);
   }
-  .tab-bar a.active { color: var(--accent); }
+  .tab-bar a:last-child { border-right: none; }
+  .tab-bar a.active {
+    color: var(--accent);
+    box-shadow: inset 0 3px 0 var(--accent);
+  }
   .tab-bar a:active { opacity: 0.7; }
-  .tab-bar .tab-icon { font-size: 1.3rem; line-height: 1; }
+  .tab-bar .tab-icon { font-size: 1.25rem; line-height: 1; }
   /* ── 이미지 ── */
   .place-img {
     width: 100%; aspect-ratio: 16/9; object-fit: cover;
