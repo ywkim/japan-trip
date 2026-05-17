@@ -72,6 +72,13 @@ class BuildIndexTests(unittest.TestCase):
         cl = CHECKLIST.read_text(encoding="utf-8")
         self.assertIn("data/booking-checklist.json", cl)
 
+    def test_route_candidates_rendered_in_itinerary(self):
+        run()
+        itin = ITINERARY.read_text(encoding="utf-8")
+        self.assertIn("후보 코스", itin, "route candidates section missing in itinerary.html")
+        for candidate_name in ("여유형", "서북 사찰 집중형", "미식+문화 체험형"):
+            self.assertIn(candidate_name, itin, f"candidate '{candidate_name}' missing in itinerary.html")
+
 
 class ItineraryTableTests(unittest.TestCase):
     def test_table_file_is_generated(self):
