@@ -137,8 +137,9 @@ CSS = """
   }
   footer { color: var(--muted); font-size: 0.75rem; margin-top: 1.5rem; text-align: center; }
   .place-img {
-    width: 100%; aspect-ratio: 4/3; object-fit: cover;
+    width: 100%; aspect-ratio: 16/9; object-fit: cover;
     border-radius: 4px; display: block; margin-top: 0.35rem;
+    max-height: 200px;
   }
   .img-credit { color: var(--muted); font-size: 0.65rem; text-align: right; }
 """
@@ -591,7 +592,14 @@ def build_checklist(d) -> str:
 # ─── viz/itinerary-table.html ─────────────────────────────────────────────
 
 TABLE_CSS = """
-  .tbl-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 0.5rem 0; }
+  /* 모바일: 카드 뷰 표시, 테이블 숨김 */
+  .tbl-wrap { display: none; }
+  .mobile-days { display: block; }
+  /* 데스크탑(600px+): 테이블 표시, 모바일 카드 숨김 */
+  @media (min-width: 600px) {
+    .tbl-wrap { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 0.5rem 0; }
+    .mobile-days { display: none; }
+  }
   table.timetable {
     border-collapse: collapse; width: 100%; min-width: 560px;
     font-size: 0.82rem; table-layout: fixed;
@@ -623,8 +631,8 @@ TABLE_CSS = """
   .timetable tr:nth-child(even) td { background: var(--subcard); }
   .timetable tr:nth-child(even) td:empty { background: var(--bg); }
   .timetable .place-img {
-    width: 100%; aspect-ratio: 4/3; object-fit: cover;
-    border-radius: 3px; display: block; margin-top: 0.3rem;
+    width: 100%; aspect-ratio: 16/9; object-fit: cover;
+    border-radius: 3px; display: block; margin-top: 0.3rem; max-height: 160px;
   }
   .timetable .img-credit { color: var(--muted); font-size: 0.62rem; }
 """
@@ -670,6 +678,33 @@ def build_itinerary_table(d) -> str:
                 cells.append("<td></td>")
         rows_html.append(f"<tr>{''.join(cells)}</tr>")
 
+    # 모바일용 카드 뷰 (600px 미만)
+    mobile_cards = []
+    for day in days:
+        item_rows = []
+        for it in day["items"]:
+            link = maps_link(it["maps_query"], it["title"]) if it.get("maps_query") else esc(it["title"])
+            note_html = f'<div class="sub">{esc(it["note"])}</div>' if it.get("note") else ""
+            if it.get("image_url"):
+                img_html = (
+                    f'<img src="{esc(it["image_url"])}" alt="{esc(it["title"])}" '
+                    f'class="place-img" loading="lazy">'
+                    f'<div class="img-credit">{esc(it.get("image_credit",""))}</div>'
+                )
+            else:
+                img_html = ""
+            item_rows.append(f"""
+    <div class="day">
+      <div class="date"><span class="k">{esc(it["time"])}</span> {link}</div>
+      {note_html}{img_html}
+    </div>""")
+        mobile_cards.append(f"""
+  <div class="subcard">
+    <div class="subtitle">{esc(day["day_label"])}</div>
+    {''.join(item_rows)}
+    <div class="sub" style="margin-top:0.4rem;">도보 약 {day["walking_km"]}km · 숙박: {esc(day["lodging"])}</div>
+  </div>""")
+
     pending_items = "".join(f"<li>{esc(p)}</li>" for p in itin.get("pending", []))
 
     body = f"""<h1>교토 3박4일 · 시간표 뷰</h1>
@@ -678,7 +713,10 @@ def build_itinerary_table(d) -> str:
 <!-- SYNC: data/itinerary.json -->
 <div class="card">
   <h2>4일 한눈에 보기 — 장소 탭 → 구글맵</h2>
-  <div class="sub" style="margin-bottom:0.5rem;">가로 스크롤로 전체 열 확인 가능.</div>
+  <div class="sub" style="margin-bottom:0.5rem;">모바일: 일자별 카드 뷰 · 데스크탑: 4열 시간표</div>
+
+  <div class="mobile-days">{''.join(mobile_cards)}</div>
+
   <div class="tbl-wrap">
     <table class="timetable">
       <thead><tr>{''.join(headers)}</tr></thead>
