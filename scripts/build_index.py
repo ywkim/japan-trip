@@ -172,8 +172,8 @@ CSS = """
   }
   .tab-bar a {
     flex: 1; display: flex; flex-direction: column; align-items: center;
-    padding: 0.45rem 0.25rem 0.35rem; text-decoration: none;
-    color: var(--muted); font-size: 0.68rem; gap: 0.1rem; line-height: 1.2;
+    padding: 0.7rem 0.25rem 0.4rem; text-decoration: none;
+    color: var(--muted); font-size: 0.68rem; gap: 0.15rem; line-height: 1.2;
     -webkit-tap-highlight-color: transparent;
   }
   .tab-bar a.active { color: var(--accent); }
