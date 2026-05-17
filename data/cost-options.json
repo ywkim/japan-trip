@@ -9,7 +9,7 @@
       {
         "id": "flight",
         "label": "항공",
-        "pct": 0.40,
+        "pct": 0.4,
         "max_krw": 1200000,
         "rationale": "한일 4인 왕복 직항 평균 ₩1.1~1.2M (확정값). 더 줄이기 어려움."
       },
@@ -80,16 +80,20 @@
     {
       "id": "rs_kix_may31_jun3",
       "label": "ICN↔KIX (5/31~6/3, 3박) — 가족 일정(5/28~29) 회피 후보",
-      "carrier": "TBD (Skyscanner 추천순 직항 최저가)",
+      "carrier": "에어서울 (RS)",
       "route": "ICN→KIX→ICN",
       "depart_date": "2026-05-31",
       "return_date": "2026-06-03",
       "nights": 3,
       "pax": 4,
       "total_krw": 1012000,
-      "source": "Skyscanner 4인 직항 일반석 2026-05-11 (₩253,000/인 × 4)",
-      "data_quality": "researched_market_rate",
-      "notes": "변경가능 날짜 비교: 5/27~30 ₩940K(가족 일정 충돌), 5/30~6/2 ₩1,130K, 5/31~6/3 ₩1,012K(선택). 발권사 평점 미확인 → 영욱 직접 재조회 권장."
+      "source": "에어서울 직항 예약확정 A8YW58, 2026-05-17",
+      "data_quality": "confirmed_booking",
+      "depart_time": "13:15",
+      "arrive_time_inbound": "15:15",
+      "return_depart_time": "10:05",
+      "return_arrive_time": "12:05",
+      "notes": "A8YW58 · ICN 13:15→KIX 15:15 / KIX 10:05→ICN 12:05 · 4인 확정"
     }
   ],
   "lodging": [
@@ -193,6 +197,17 @@
       "notes": "동선이 아라시야마 쪽이라 일정 재구성 필요"
     },
     {
+      "id": "kadensho_confirmed_2026jun2",
+      "city": "교토",
+      "name": "우메코지 카덴쇼 (2명×2실, 조식 불포함, 환불 불가, 2026-06-02→06-03 1박) — 확정",
+      "pax": 4,
+      "rooms": 2,
+      "per_night_krw": 354065,
+      "source": "Trip.com 예약확정 2026-05-17 · 예약번호 1400825991981904 · JPY 37,270 (FX 100엔=950원) · 현장 결제",
+      "data_quality": "confirmed_booking",
+      "notes": "확정번호 2459200416·2459200417 · 조식 불포함 (조식 원하면 현장에서 ¥3,995/인 선택가능) · 환불 불가 · 투숙객: KIM BYUNG NAM, KIM YOUNGWOOK"
+    },
+    {
       "id": "kyoto_ryokan_sakanoue",
       "city": "교토",
       "name": "료칸 사카노우에 (기온, 야사카신사 도보 3분)",
@@ -242,10 +257,10 @@
       "name": "교토 에어비앤비 #3 — 시오(Shio) 100년 마치야 (중교구·니조역 7분, 5/31~6/2 2박)",
       "pax": 4,
       "rooms": 1,
-      "per_night_krw": 365186,
-      "source": "Airbnb 매물 1373928005681941061, 4명 직접 조회 2026-05-11 (2박 총액 ₩730,371)",
+      "per_night_krw": 370477,
+      "source": "Airbnb 매물 1373928005681941061, 4명 직접 조회 2026-05-17 (2박 총액 ₩740,954)",
       "data_quality": "confirmed_booking",
-      "notes": "후기 59·★4.95(최고)·침실 3/욕실 2/화장실 2·78㎡ 2층·시부모-부부 완전 분리 가능. 슈퍼호스트 2년."
+      "notes": "후기 59·★4.95(최고)·침실 3/욕실 2/화장실 2·78㎡ 2층·시부모-부부 완전 분리 가능. 슈퍼호스트 2년. 확정가 ₩740,954"
     },
     {
       "id": "airbnb_sei_higashiyama_sanjo",
@@ -461,15 +476,27 @@
       "label": "[원안] 교토 3박4일 (카덴쇼 조식 포함 + 에어비앤비 2박)",
       "flight": "rs_kix_may24_27",
       "lodging_plan": [
-        {"lodging": "kyoto_airbnb_4pax", "nights": 2},
-        {"lodging": "kadensho_with_breakfast", "nights": 1}
+        {
+          "lodging": "kyoto_airbnb_4pax",
+          "nights": 2
+        },
+        {
+          "lodging": "kadensho_with_breakfast",
+          "nights": 1
+        }
       ],
       "fixed_days": [
-        {"daily_fixed": "food_kyoto_mid", "days": 4}
+        {
+          "daily_fixed": "food_kyoto_mid",
+          "days": 4
+        }
       ],
       "one_time": [
-        "haruka_rt_4pax", "kyoto_local_3day_4pax", "kyoto_temples_4pax",
-        "kyoto_lodging_tax_2nights_4pax", "airbnb_cleaning_fee"
+        "haruka_rt_4pax",
+        "kyoto_local_3day_4pax",
+        "kyoto_temples_4pax",
+        "kyoto_lodging_tax_2nights_4pax",
+        "airbnb_cleaning_fee"
       ]
     },
     {
@@ -477,15 +504,27 @@
       "label": "[추천] 교토 3박4일 (마츠바야 료칸 1박 + 에어비앤비 2박, 중간 식비)",
       "flight": "rs_kix_may24_27",
       "lodging_plan": [
-        {"lodging": "kyoto_airbnb_4pax", "nights": 2},
-        {"lodging": "kyoto_matsubaya_ryokan", "nights": 1}
+        {
+          "lodging": "kyoto_airbnb_4pax",
+          "nights": 2
+        },
+        {
+          "lodging": "kyoto_matsubaya_ryokan",
+          "nights": 1
+        }
       ],
       "fixed_days": [
-        {"daily_fixed": "food_kyoto_mid", "days": 4}
+        {
+          "daily_fixed": "food_kyoto_mid",
+          "days": 4
+        }
       ],
       "one_time": [
-        "haruka_rt_4pax", "kyoto_local_3day_4pax", "kyoto_temples_4pax",
-        "kyoto_lodging_tax_2nights_4pax", "airbnb_cleaning_fee"
+        "haruka_rt_4pax",
+        "kyoto_local_3day_4pax",
+        "kyoto_temples_4pax",
+        "kyoto_lodging_tax_2nights_4pax",
+        "airbnb_cleaning_fee"
       ]
     },
     {
@@ -493,15 +532,27 @@
       "label": "교토 3박4일 (마츠바야 료칸 + 에어비앤비, 절약 식비)",
       "flight": "rs_kix_may24_27",
       "lodging_plan": [
-        {"lodging": "kyoto_airbnb_4pax", "nights": 2},
-        {"lodging": "kyoto_matsubaya_ryokan", "nights": 1}
+        {
+          "lodging": "kyoto_airbnb_4pax",
+          "nights": 2
+        },
+        {
+          "lodging": "kyoto_matsubaya_ryokan",
+          "nights": 1
+        }
       ],
       "fixed_days": [
-        {"daily_fixed": "food_kyoto_budget", "days": 4}
+        {
+          "daily_fixed": "food_kyoto_budget",
+          "days": 4
+        }
       ],
       "one_time": [
-        "haruka_rt_4pax", "kyoto_local_3day_4pax", "kyoto_temples_4pax",
-        "kyoto_lodging_tax_2nights_4pax", "airbnb_cleaning_fee"
+        "haruka_rt_4pax",
+        "kyoto_local_3day_4pax",
+        "kyoto_temples_4pax",
+        "kyoto_lodging_tax_2nights_4pax",
+        "airbnb_cleaning_fee"
       ]
     },
     {
@@ -509,15 +560,27 @@
       "label": "교토 3박4일 (카덴쇼 5월 평일 최저가 + 에어비앤비, 절약 식비)",
       "flight": "rs_kix_may24_27",
       "lodging_plan": [
-        {"lodging": "kyoto_airbnb_4pax", "nights": 2},
-        {"lodging": "kadensho_may_weekday_min", "nights": 1}
+        {
+          "lodging": "kyoto_airbnb_4pax",
+          "nights": 2
+        },
+        {
+          "lodging": "kadensho_may_weekday_min",
+          "nights": 1
+        }
       ],
       "fixed_days": [
-        {"daily_fixed": "food_kyoto_budget", "days": 4}
+        {
+          "daily_fixed": "food_kyoto_budget",
+          "days": 4
+        }
       ],
       "one_time": [
-        "haruka_rt_4pax", "kyoto_local_3day_4pax", "kyoto_temples_4pax",
-        "kyoto_lodging_tax_2nights_4pax", "airbnb_cleaning_fee"
+        "haruka_rt_4pax",
+        "kyoto_local_3day_4pax",
+        "kyoto_temples_4pax",
+        "kyoto_lodging_tax_2nights_4pax",
+        "airbnb_cleaning_fee"
       ]
     },
     {
@@ -525,48 +588,83 @@
       "label": "교토 3박4일 (전 박 에어비앤비, 료칸 제외, 중간 식비)",
       "flight": "rs_kix_may24_27",
       "lodging_plan": [
-        {"lodging": "kyoto_airbnb_4pax", "nights": 3}
+        {
+          "lodging": "kyoto_airbnb_4pax",
+          "nights": 3
+        }
       ],
       "fixed_days": [
-        {"daily_fixed": "food_kyoto_mid", "days": 4}
+        {
+          "daily_fixed": "food_kyoto_mid",
+          "days": 4
+        }
       ],
       "one_time": [
-        "haruka_rt_4pax", "kyoto_local_3day_4pax", "kyoto_temples_4pax",
-        "kyoto_lodging_tax_2nights_4pax", "airbnb_cleaning_fee"
+        "haruka_rt_4pax",
+        "kyoto_local_3day_4pax",
+        "kyoto_temples_4pax",
+        "kyoto_lodging_tax_2nights_4pax",
+        "airbnb_cleaning_fee"
       ]
     },
     {
       "id": "kyoto_may31_kadensho_early_bird",
-      "label": "[확정] 교토 3박4일 5/31~6/3 (시오 2박 + 카덴쇼 조기할인 조식 1박)",
+      "label": "[확정] 교토 3박4일 5/31~6/3 (시오 2박 + 카덴쇼 조식없음 1박)",
       "flight": "rs_kix_may31_jun3",
       "lodging_plan": [
-        {"lodging": "airbnb_shio_machiya", "nights": 2},
-        {"lodging": "kadensho_early_bird_with_breakfast_2026jun2", "nights": 1}
+        {
+          "lodging": "airbnb_shio_machiya",
+          "nights": 2
+        },
+        {
+          "lodging": "kadensho_confirmed_2026jun2",
+          "nights": 1
+        }
       ],
       "fixed_days": [
-        {"daily_fixed": "food_kyoto_mid", "days": 4}
+        {
+          "daily_fixed": "food_kyoto_mid",
+          "days": 4
+        }
       ],
       "one_time": [
-        "haruka_rt_4pax", "kyoto_local_3day_4pax", "kyoto_temples_4pax",
-        "kyoto_lodging_tax_2nights_4pax", "airbnb_cleaning_fee"
+        "haruka_rt_4pax",
+        "kyoto_local_3day_4pax",
+        "kyoto_temples_4pax",
+        "kyoto_lodging_tax_2nights_4pax",
+        "airbnb_cleaning_fee"
       ],
-      "notes": "에어비앤비 1·2박은 PR #16 소연 추천 #3 시오(Shio) 100년 마치야 채택 — ★4.95, 침실 3·욕실 2·화장실 2로 시부모·부부 완전 분리 가능. 합계 약 ₩3.42M (3M 초과, 5M 옵션 적용)."
+      "notes": "에어비앤비 시오 2박 ₩740,954 + 카덴쇼 2실 1박 JPY 37,270(₩354K) · 조식 불포함 · A8YW58 항공 확정."
     },
     {
       "id": "nagasaki_forest_villa_mid",
       "label": "나가사키·HTB 4박5일 (시내 호텔 3박 + Forest Villa 1박, 중간 식비, JR)",
       "flight": "ke_ngs_may12_16",
       "lodging_plan": [
-        {"lodging": "nagasaki_business_hotel_2rooms", "nights": 2},
-        {"lodging": "htb_forest_villa_4pax", "nights": 1},
-        {"lodging": "nagasaki_business_hotel_2rooms", "nights": 1}
+        {
+          "lodging": "nagasaki_business_hotel_2rooms",
+          "nights": 2
+        },
+        {
+          "lodging": "htb_forest_villa_4pax",
+          "nights": 1
+        },
+        {
+          "lodging": "nagasaki_business_hotel_2rooms",
+          "nights": 1
+        }
       ],
       "fixed_days": [
-        {"daily_fixed": "food_nagasaki_mid", "days": 5}
+        {
+          "daily_fixed": "food_nagasaki_mid",
+          "days": 5
+        }
       ],
       "one_time": [
-        "htb_1day_4pax", "ngs_limousine_rt_4pax",
-        "ngs_jr_to_sasebo_rt_4pax", "gunkanjima_cruise_4pax"
+        "htb_1day_4pax",
+        "ngs_limousine_rt_4pax",
+        "ngs_jr_to_sasebo_rt_4pax",
+        "gunkanjima_cruise_4pax"
       ]
     },
     {
@@ -574,15 +672,26 @@
       "label": "[가성비] 나가사키·HTB 4박5일 (사세보 비즈니스 1박, 절약 식비, 고속버스)",
       "flight": "ke_ngs_may12_16",
       "lodging_plan": [
-        {"lodging": "nagasaki_business_hotel_2rooms", "nights": 3},
-        {"lodging": "sasebo_business_hotel_2rooms", "nights": 1}
+        {
+          "lodging": "nagasaki_business_hotel_2rooms",
+          "nights": 3
+        },
+        {
+          "lodging": "sasebo_business_hotel_2rooms",
+          "nights": 1
+        }
       ],
       "fixed_days": [
-        {"daily_fixed": "food_nagasaki_budget", "days": 5}
+        {
+          "daily_fixed": "food_nagasaki_budget",
+          "days": 5
+        }
       ],
       "one_time": [
-        "htb_1day_4pax", "ngs_limousine_rt_4pax",
-        "ngs_bus_to_sasebo_rt_4pax", "gunkanjima_cruise_4pax"
+        "htb_1day_4pax",
+        "ngs_limousine_rt_4pax",
+        "ngs_bus_to_sasebo_rt_4pax",
+        "gunkanjima_cruise_4pax"
       ]
     }
   ]
