@@ -136,6 +136,11 @@ CSS = """
     font-size: 0.75rem; border: 1px solid currentColor;
   }
   footer { color: var(--muted); font-size: 0.75rem; margin-top: 1.5rem; text-align: center; }
+  .place-img {
+    width: 100%; aspect-ratio: 4/3; object-fit: cover;
+    border-radius: 4px; display: block; margin-top: 0.35rem;
+  }
+  .img-credit { color: var(--muted); font-size: 0.65rem; text-align: right; }
 """
 
 
@@ -476,10 +481,18 @@ def build_itinerary(d) -> str:
         for it in day["items"]:
             link = maps_link(it["maps_query"], it["title"]) if it.get("maps_query") else esc(it["title"])
             note_html = f'<div class="sub">{esc(it["note"])}</div>' if it.get("note") else ""
+            if it.get("image_url"):
+                img_html = (
+                    f'<img src="{esc(it["image_url"])}" alt="{esc(it["title"])}" '
+                    f'class="place-img" loading="lazy">'
+                    f'<div class="img-credit">{esc(it.get("image_credit",""))}</div>'
+                )
+            else:
+                img_html = ""
             item_rows.append(f"""
     <div class="day">
       <div class="date"><span class="k">{esc(it['time'])}</span> {link}</div>
-      {note_html}
+      {note_html}{img_html}
     </div>""")
         day_cards.append(f"""
   <div class="subcard">
@@ -609,6 +622,11 @@ TABLE_CSS = """
   }
   .timetable tr:nth-child(even) td { background: var(--subcard); }
   .timetable tr:nth-child(even) td:empty { background: var(--bg); }
+  .timetable .place-img {
+    width: 100%; aspect-ratio: 4/3; object-fit: cover;
+    border-radius: 3px; display: block; margin-top: 0.3rem;
+  }
+  .timetable .img-credit { color: var(--muted); font-size: 0.62rem; }
 """
 
 
@@ -636,9 +654,17 @@ def build_itinerary_table(d) -> str:
                 it = col[i]
                 link = maps_link(it["maps_query"], it["title"]) if it.get("maps_query") else esc(it["title"])
                 note_html = f'<span class="t-note">{esc(it["note"])}</span>' if it.get("note") else ""
+                if it.get("image_url"):
+                    img_html = (
+                        f'<img src="{esc(it["image_url"])}" alt="{esc(it["title"])}" '
+                        f'class="place-img" loading="lazy">'
+                        f'<span class="img-credit">{esc(it.get("image_credit",""))}</span>'
+                    )
+                else:
+                    img_html = ""
                 cells.append(
                     f'<td><span class="t-time">{esc(it["time"])}</span>'
-                    f'<span class="t-title">{link}</span>{note_html}</td>'
+                    f'<span class="t-title">{link}</span>{note_html}{img_html}</td>'
                 )
             else:
                 cells.append("<td></td>")
