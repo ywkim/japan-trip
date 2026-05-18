@@ -1,40 +1,26 @@
 # 일본 여행 협업
 
-영욱·소연이 함께 일본 여행을 정량적으로 결정하기 위한 공간.
+영욱·소연 부부의 **2026-05-31(일)~06-03(수) 교토 4인 가족 여행 (부부 + 시부모) 실행** 협업 공간.
+
+> 정량 비교를 통한 목적지·시기·동반 의사결정은 2026-05-12에 종료. 본 레포는 이제 발권·예약·일정·체크리스트·현지 운영 정보를 누적·갱신한다. 과거 의사결정 자료(MCDA·후보 비교·시기 비교)는 보존되며 `docs/decision-log/`·`data/`에서 그대로 조회 가능.
+
+## 확정 사항
+
+| 항목 | 확정 내용 |
+|---|---|
+| 목적지 | 교토 (관서) |
+| 시기 | 2026-05-31(일) ~ 06-03(수) 3박 4일 |
+| 동반 | 부부 2인 + 시부모 2인 (4인) |
+| 항공 | 에어서울 인천↔간사이 4인 발권 |
+| 1·2박 (5/31·6/1) | 시오(Shio) 100년 마치야 에어비앤비 |
+| 3박 (6/2) | 우메코지 카덴쇼 조기할인 조식포함 |
+
+상세는 `docs/kyoto-itinerary-may31-jun3-2026.md` (사람용 일정), `docs/decision-log/` (의사결정 시계열).
 
 ## 사용법
 
-### 1. 후보·기준 함께 정하기
-- `data/decision.json` 열기
-- `candidates`에 후보지 추가/삭제
-- `criteria`의 가중치 함께 조정 (합계 1.0)
+### 1. 확정 정보 보기 (모바일·웹)
 
-### 2. 점수 매기기
-- 각자 후보별로 1~10 점수 입력
-- 의견이 다르면 `notes`에 이유 적기
-
-### 3. 결과 보기
-- 터미널에서 `python scripts/score.py` 실행 (의사결정 확정 후 회귀 가드)
-
-### 3-1. 예산 (3M 하드캡) 통과 여부 확인
-- `data/cost-options.json`에 항공·숙박·고정비·일회성 단가와 시나리오 입력
-- `python scripts/budget.py` 실행 → 시나리오별 확정 합계·여유·TBD 항목 출력
-- 상세: `docs/budget-options.md`
-
-### 4. 결정 기록
-- `docs/decision-log/` 디렉토리에 **새 파일** 추가 (`YYYY-MM-DD-slug.md`). 기존 파일은 편집하지 않음.
-- 컨벤션: `docs/decision-log/README.md`
-- 최종 결정 후 `reports/final-report.md` 작성 → `bash scripts/render-pdf.sh`로 PDF
-
-### 5. 보조 데이터 활용
-- `data/weather.json` — 후보지 × 시기 기후 데이터 (JMA 평년값) + `tsuyu_normals`(긴키 매우입·매우명 평년 + 최근 8년 실적 + `sokuhou_2026` 2026 속보 스냅샷) + `cities.kyoto.sub_monthly_precip`(순계열 강수)·`trip_window_daily_precip`(5/31~6/3 일별 평년)
-- `docs/weather.md` — 시기별 쾌적도 순위, `seasonality`/`physical_burden` 점수 제안. §5에 교토 5/31~6/3 장마 정량 분석 (평년 입림 6/6, 여행 4일 합계 ~16mm, 최근 8년 기준 조기 입림 확률 ~25%, 2026-05-14 시점 긴키 미발표)
-- `docs/screenshots/jma-sokuhou-2026-05-14-*.png` — JMA 2026 매우 속보 페이지 검증 캡처 (Playwright)
-- `data/flights.json` — 후보지 × 출발지(ICN/GMP) 항공권 시세 스냅샷
-- `docs/flights.md` — 4인 총액 비교, GMP 가용성, `cost` 점수 환산 가이드
-- **`seasonality` 점수는 현재 2026-05 시기 고정** — 각 후보의 `weather.json` 2026-05 `comfort_score`를 `decision.json`에 그대로 입력. 다른 시기로 비교하려면 `weather.json`에서 해당 월 `comfort_score`로 수동 교체 (스키마 확장은 미실시). 상세: `docs/decision-log/2026-05-11-seasonality-scoring.md`
-
-### 6. 모바일에서 결정 보기
 - `index.html` — 🏠 홈 탭 (요약·장마·예산·점수·일정 미리보기). 하단 고정 4탭 내비게이션 포함. 인라인 데이터로 자기완결, 더블클릭 동작
 - `viz/itinerary.html` — 📅 일정 탭: 일자별 상세 일정 카드 뷰 (시간대·동선·메모·이미지). `data/itinerary.json` 단일 출처
 - `viz/itinerary-table.html` — 📅 일정 탭: 3박4일 **시간표 뷰** (4일 열 × 시간대 행, 모바일 카드/데스크탑 테이블 자동 전환). `data/itinerary.json` 단일 출처
@@ -43,51 +29,71 @@
 - **5개 모두 `scripts/build_index.py` 빌드 산출물 — 직접 편집 금지**. 데이터(`data/*.json`)·스크립트 변경 후 `python scripts/build_index.py` 실행. CI(`build_index.py --check`)가 모든 산출물의 drift를 차단
 - 각 섹션 위 `<!-- SYNC: ... -->` 주석이 데이터 출처를 명시. CI(`scripts/validate.py`)가 경로 유효성과 §N 절 번호를 검증
 
-### 7. 검증 (CI)
-- `python -m unittest discover tests` — 단위 테스트 (validate·build_index·score·budget 24개)
+### 2. 발권·예약 갱신
+
+- `data/booking-checklist.json`의 항목별 `status`·`reference`(예약번호)·`confirmed_at`(확정일) 갱신
+- 확정 금액은 `data/cost-options.json`에 반영 — `researched_market_rate` 라벨을 `confirmed_booking`으로 승격하고 `source`에 예약 사이트·확정일 기록
+- 변경 사유는 `docs/decision-log/`에 새 파일 추가 (`YYYY-MM-DD-slug.md`)
+- 점검: `python -m unittest discover tests` + `python scripts/validate.py` + `python scripts/build_index.py --check`
+
+### 3. 일정 갱신
+
+- `data/itinerary.json`의 해당 day(`days[*]`)에 시간대·동선·메모 갱신
+- `docs/kyoto-itinerary-may31-jun3-2026.md`(사람용 사본) 함께 갱신
+- `python scripts/build_index.py` 재빌드 → `viz/itinerary.html`·`viz/itinerary-table.html`·`index.html` 재생성
+
+### 4. 현지 운영 (예정)
+
+- 출국 전·현지·귀국 체크리스트, 한국어 가능 병원·영사관·교통 패스 등은 별도 산출물로 추가 예정 (`docs/checklist.md`·`docs/local-info.md` — 별도 PR)
+
+### 5. 결정 기록 (모든 변경 공통)
+
+- `docs/decision-log/` 디렉토리에 **새 파일** 추가 (`YYYY-MM-DD-slug.md`). 기존 파일은 편집하지 않음
+- 컨벤션: `docs/decision-log/README.md`
+
+### 6. 검증 (CI)
+
+- `python -m unittest discover tests` — 단위 테스트 (validate·build_index·score·budget)
 - `python scripts/validate.py` — 가격 필드 무결성(source·data_quality), 30/60일 묵은 가격 경고/실패, SYNC 주석 경로·절 번호 검증, `docs/weather.md`↔`data/weather.json` 및 `docs/flights.md`↔`data/flights.json` 동기화 검증
-- `python scripts/build_index.py --check` — `index.html`이 데이터와 동기화 상태인지 (drift 시 exit 1)
-- `.github/workflows/validate.yml`이 PR마다 unittest + 위 4개 실행
+- `python scripts/build_index.py --check` — 빌드 산출물이 데이터와 동기화 상태인지 (drift 시 exit 1)
+- `.github/workflows/validate.yml`이 PR마다 위를 실행
 
-## 평가 기준 (초안 — 함께 조정)
+## 아카이브 (참조용)
 
-| 기준 | 의미 | 초기 가중치 |
-|---|---|---|
-| cost | 비용 부담 (낮을수록 좋음) | 0.20 |
-| schedule_fit | 일정 적합성 | 0.15 |
-| physical_burden | 신체 부담 (낮을수록 좋음) | 0.15 |
-| experience | 경험 가치 | 0.20 |
-| family_fit | 가족 동반 적합성 | 0.10 |
-| medical_access | 의료 접근성 | 0.10 |
-| seasonality | 계절성 | 0.10 |
+> 2026-05-12에 종료된 정량 의사결정의 입력·산출물. 다음 여행이나 시기 변경 시 재참조 가능하도록 보존.
 
-## 후보지 (초안 — 함께 추가/삭제)
+- `data/decision.json` — MCDA criteria·candidates·scores (입력)
+- `data/weather.json` — 후보지×시기 기후 + 긴키 매우(梅雨) 평년·실적 + 교토 5/31~6/3 일별 강수 평년
+- `data/flights.json` — 후보지×출발지 항공권 시세 스냅샷
+- `docs/candidates.md` — 후보지 상세 비교
+- `docs/weather.md` — 시기별 쾌적도 순위, `seasonality`/`physical_burden` 점수 제안 + §5 교토 5/31~6/3 장마 정량 분석
+- `docs/flights.md` — 4인 총액 비교, GMP 가용성
+- `reports/final-report.md` — 최종 권고 (교토·5/31~6/3·4인)
+- `scripts/score.py`·`scripts/budget.py` — 회귀 가드용
 
-도쿄, 오사카, 교토, 홋카이도(삿포로), 오키나와, 후쿠오카, 고베
-
-> **고베**: 2026-06-11 제주항공(7C) 인천-고베(ICN-UKB) 직항 신규 취항 + 취항 기념 프로모션을 계기로 후보 추가. 노선·가격·날씨 상세는 `docs/jejuair-icn-kobe-june-2026.md`
+> 평가 기준(cost·schedule_fit·physical_burden·experience·family_fit·medical_access·seasonality·가중치)과 후보지 목록(도쿄·오사카·교토·삿포로·오키나와·후쿠오카·고베)의 상세는 `data/decision.json` + `docs/candidates.md`.
 
 ## 디렉토리
 
 ```
-data/        # decision·cost-options·weather·flights·itinerary·booking-checklist (단일 출처 JSON)
-docs/        # 비교표, 날씨·항공권 분석, 의사결정 일지(decision-log/)
+data/        # itinerary·booking-checklist·cost-options (실행 단일 출처) + decision·weather·flights (아카이브)
+docs/        # 일정·후보·날씨·항공 분석, 의사결정 일지(decision-log/)
 viz/         # itinerary.html·itinerary-table.html·lodging.html·checklist.html (build_index.py 산출물)
-scripts/     # score·budget·build_index·validate·render-pdf
+scripts/     # build_index·validate·score·budget·render-pdf
 tests/       # unittest (validate·build_index·score·budget)
-reports/     # 최종 보고서
+reports/     # 최종 보고서 (아카이브)
 index.html   # 모바일 8섹션 카드 (build_index.py 산출물)
 ```
 
 ## 환경 요구
 
-- Python 3 (점수 계산·빌드)
+- Python 3 (빌드·점수·예산)
 - pandoc 또는 Chrome (PDF 변환, 선택)
-- 브라우저 (index.html·viz/itinerary.html·viz/checklist.html 더블클릭)
+- 브라우저 (`index.html`·`viz/*.html` 더블클릭)
 
 ## 변경 규칙 (모든 PR 공통)
 
-이 레포는 **누적되는 의사결정 자산**을 목표로 하므로, 어떤 변경이든 다음 메타 문서를 함께 갱신한다.
+이 레포는 **누적되는 여행 실행 자산**을 목표로 하므로, 어떤 변경이든 다음 메타 문서를 함께 갱신한다.
 
 | 갱신 대상 | 무엇을 적나 |
 |---|---|
