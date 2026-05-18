@@ -386,6 +386,7 @@ def transit_line(af) -> str:
 
 def card_itinerary(d) -> str:
     itin = d["itinerary"]
+    trip = itin.get("trip", {})
     days = []
     for day in itin["days"]:
         items_html = []
@@ -402,13 +403,25 @@ def card_itinerary(d) -> str:
     <div class="subtitle">{esc(day['day_label'])}</div>
     {''.join(items_html)}
     <div class="sub" style="margin-top:0.4rem;">도보 약 {day['walking_km']}km · 숙박: {esc(day['lodging'])}</div>
+    {f'<div class="sub" style="margin-top:0.25rem;">🎫 {esc(day["pass_recommendation"])}</div>' if day.get("pass_recommendation") else ""}
   </div>""")
+
+    pass_sources = trip.get("transit_pass_sources", [])
+    pass_sources_html = ""
+    if pass_sources:
+        links = " · ".join(
+            f'<a href="{esc(s["url"])}" target="_blank" rel="noopener">{esc(s["label"])}</a>'
+            for s in pass_sources
+        )
+        pass_sources_html = f'<div class="sub" style="margin-top:0.6rem;">📚 교통 출처: {links}</div>'
+
     return f"""
 <!-- SYNC: data/itinerary.json · docs/kyoto-itinerary-may31-jun3-2026.md -->
 <section id="itinerary" class="card">
   <h2>일자별 일정</h2>
   <div class="sub" style="margin-bottom:0.5rem;">장소 탭 → 구글맵. 상세: <a href="viz/itinerary.html">카드 뷰 ↗</a> · <a href="viz/itinerary-table.html">시간표 뷰 ↗</a></div>
   {''.join(days)}
+  {pass_sources_html}
 </section>
 """
 
@@ -546,6 +559,15 @@ def build_itinerary(d) -> str:
 
     pending_items = "".join(f"<li>{esc(p)}</li>" for p in itin.get("pending", []))
 
+    pass_sources = trip.get("transit_pass_sources", [])
+    pass_sources_html = ""
+    if pass_sources:
+        links = " · ".join(
+            f'<a href="{esc(s["url"])}" target="_blank" rel="noopener">{esc(s["label"])}</a>'
+            for s in pass_sources
+        )
+        pass_sources_html = f'<div class="sub" style="margin-top:0.6rem;">📚 교통 출처: {links}</div>'
+
     candidate_cards = []
     for cand in itin.get("route_candidates", []):
         cand_day_cards = []
@@ -597,6 +619,7 @@ def build_itinerary(d) -> str:
 <section class="card">
   <h2>일자별 코스</h2>
   {''.join(day_cards)}
+  {pass_sources_html}
 </section>
 {candidates_section}
 <section class="card">
