@@ -43,6 +43,36 @@
         "label": "¥700 시버스 1일권 폐지 (SoraNews24)",
         "url": "https://soranews24.com/2023/03/30/kyoto-will-abolish-one-day-bus-passes-to-combat-tourism-overcrowding/"
       }
+    ],
+    "transit_pass_playbook": [
+      {
+        "when": "출국 전 (5/30 이전)",
+        "action": "4인 각자 iPhone Wallet → '+' → 교통카드 → ICOCA 추가. Apple Pay로 ¥3,000/인 초기 충전. iPhone 8 이상·iOS 최신·Apple Account 2단계 인증 필수 (시부모 폰 사양 사전 확인)."
+      },
+      {
+        "when": "5/31 KIX 도착",
+        "action": "JR 하루카는 별도 왕복권(¥2,400/인 × 4)으로 탑승 — ICOCA 미사용. 교토역→니조 환승 시 ICOCA 탭."
+      },
+      {
+        "when": "5/31 시오 → 키요미즈",
+        "action": "시버스 균일 ¥230. 뒷문 승차 → 앞문 하차 시 운전석 옆 IC 리더에 탭."
+      },
+      {
+        "when": "6/1 시버스 3회",
+        "action": "텐류지→금각 ¥460·금각→료안 ¥230·료안→가와라마치 ¥230 모두 ICOCA 탭. 통합 1일권(¥1,100) 채택 안 함 — ¥720 비효율."
+      },
+      {
+        "when": "6/2 JR 나라선 3 leg",
+        "action": "시오→이나리·이나리→토후쿠지·토후쿠지→교토역 모두 개찰구 입·출 탭. 시영 미사용."
+      },
+      {
+        "when": "잔액 부족 시",
+        "action": "역 발권기·세븐일레븐·로손에서 현금 ¥1,000 단위 충전. 차내 충전 불가."
+      },
+      {
+        "when": "귀국 6/3 이후",
+        "action": "ICOCA 카드는 보관(다음 일본 여행 재사용) 또는 JR 서일본 미도리노마도구치에서 환불(수수료 ¥220)."
+      }
     ]
   },
   "days": [
