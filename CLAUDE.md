@@ -52,7 +52,8 @@ japan-trip/
 │   ├── kyoto-itinerary-may-2026.md        # 교토 5월 시나리오 (5/24~27 구버전 — 사람용 사본)
 │   ├── kyoto-itinerary-may31-jun3-2026.md # 교토 5/31~6/3 확정 시나리오 (사람용 사본)
 │   ├── airbnb-kyoto-may31-jun2-2026.md    # 에어비앤비 5개 매물 비교
-│   └── jejuair-icn-kobe-june-2026.md      # 제주항공 인천-고베 신규 노선·가격 리서치
+│   ├── jejuair-icn-kobe-june-2026.md      # 제주항공 인천-고베 신규 노선·가격 리서치
+│   └── transit-mcp-handoff.md             # 후속 세션(Playwright MCP) 위임 가이드 (tbd_needs_browser_mcp leg 측정)
 ├── viz/
 │   ├── itinerary.html   # 일자별 상세 일정 화면 (build_index.py 산출물 — 직접 편집 금지)
 │   └── checklist.html   # 예약 체크리스트 화면 (build_index.py 산출물 — 직접 편집 금지)

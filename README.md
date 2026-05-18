@@ -32,6 +32,7 @@
 - `docs/screenshots/jma-sokuhou-2026-05-14-*.png` — JMA 2026 매우 속보 페이지 검증 캡처 (Playwright)
 - `data/flights.json` — 후보지 × 출발지(ICN/GMP) 항공권 시세 스냅샷
 - `docs/flights.md` — 4인 총액 비교, GMP 가용성, `cost` 점수 환산 가이드
+- `docs/transit-mcp-handoff.md` — 후속 세션(Playwright MCP) 위임 가이드. `data/itinerary.json`의 `tbd_needs_browser_mcp` 라벨 leg를 Maps Directions로 측정해 `researched_market_rate`로 승격하는 자기완결 인계 문서
 - **`seasonality` 점수는 현재 2026-05 시기 고정** — 각 후보의 `weather.json` 2026-05 `comfort_score`를 `decision.json`에 그대로 입력. 다른 시기로 비교하려면 `weather.json`에서 해당 월 `comfort_score`로 수동 교체 (스키마 확장은 미실시). 상세: `docs/decision-log/2026-05-11-seasonality-scoring.md`
 
 ### 6. 모바일에서 결정 보기
