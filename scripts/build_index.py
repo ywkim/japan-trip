@@ -136,6 +136,12 @@ CSS = """
     font-size: 0.75rem; border: 1px solid currentColor;
   }
   footer { color: var(--muted); font-size: 0.75rem; margin-top: 1.5rem; text-align: center; }
+  .place-img {
+    width: 100%; aspect-ratio: 16/9; object-fit: cover;
+    border-radius: 4px; display: block; margin-top: 0.35rem;
+    max-height: 200px;
+  }
+  .img-credit { color: var(--muted); font-size: 0.65rem; text-align: right; }
 """
 
 
@@ -395,7 +401,7 @@ def card_itinerary(d) -> str:
 <!-- SYNC: data/itinerary.json · docs/kyoto-itinerary-may31-jun3-2026.md -->
 <section id="itinerary" class="card">
   <h2>일자별 일정</h2>
-  <div class="sub" style="margin-bottom:0.5rem;">장소 탭 → 구글맵. 상세: <a href="viz/itinerary.html">전체 일정 화면 ↗</a></div>
+  <div class="sub" style="margin-bottom:0.5rem;">장소 탭 → 구글맵. 상세: <a href="viz/itinerary.html">카드 뷰 ↗</a> · <a href="viz/itinerary-table.html">시간표 뷰 ↗</a></div>
   {''.join(days)}
 </section>
 """
@@ -510,11 +516,19 @@ def build_itinerary(d) -> str:
             link = maps_link(it["maps_query"], it["title"]) if it.get("maps_query") else esc(it["title"])
             note_html = f'<div class="sub">{esc(it["note"])}</div>' if it.get("note") else ""
             transit = transit_line(it.get("arrive_from"))
+            if it.get("image_url"):
+                img_html = (
+                    f'<img src="{esc(it["image_url"])}" alt="{esc(it["title"])}" '
+                    f'class="place-img" loading="lazy">'
+                    f'<div class="img-credit">{esc(it.get("image_credit",""))}</div>'
+                )
+            else:
+                img_html = ""
             item_rows.append(f"""
     <div class="day">
       {transit}
       <div class="date"><span class="k">{esc(it['time'])}</span> {link}</div>
-      {note_html}
+      {note_html}{img_html}
     </div>""")
         day_cards.append(f"""
   <div class="subcard">
@@ -524,6 +538,42 @@ def build_itinerary(d) -> str:
   </div>""")
 
     pending_items = "".join(f"<li>{esc(p)}</li>" for p in itin.get("pending", []))
+
+    candidate_cards = []
+    for cand in itin.get("route_candidates", []):
+        cand_day_cards = []
+        for day in cand["days"]:
+            item_rows = []
+            for it in day["items"]:
+                link = maps_link(it["maps_query"], it["title"]) if it.get("maps_query") else esc(it["title"])
+                note_html = f'<div class="sub">{esc(it["note"])}</div>' if it.get("note") else ""
+                item_rows.append(f"""
+    <div class="day">
+      <div class="date"><span class="k">{esc(it['time'])}</span> {link}</div>
+      {note_html}
+    </div>""")
+            cand_day_cards.append(f"""
+  <div class="subcard">
+    <div class="subtitle">{esc(day['day_label'])}</div>
+    {''.join(item_rows)}
+    <div class="sub" style="margin-top:0.4rem;">도보 약 {day['walking_km']}km · 숙박: {esc(day['lodging'])}</div>
+  </div>""")
+        candidate_cards.append(f"""
+<details>
+  <summary style="cursor:pointer;font-weight:600;padding:0.5rem 0;font-size:0.95rem;">{esc(cand['name'])}</summary>
+  <div class="sub" style="margin:0.25rem 0 0.5rem;">{esc(cand.get('theme',''))} · 총 도보 약 {cand.get('walking_km_total','—')}km</div>
+  {''.join(cand_day_cards)}
+</details>""")
+
+    candidates_section = ""
+    if candidate_cards:
+        candidates_section = f"""
+<section class="card">
+  <h2>후보 코스</h2>
+  <div class="sub" style="margin-bottom:0.5rem;">숙소·날짜(5/31~6/3) 동일. 동선만 다른 대안 코스. 제목 탭하면 펼쳐짐.</div>
+  {''.join(candidate_cards)}
+</section>
+"""
 
     body = f"""<h1>교토 3박4일 일정</h1>
 <div class="status">{esc(trip['dates'])} · {trip['nights']}박 · {trip['travelers']}인 · {esc(trip.get('composition',''))}</div>
@@ -541,7 +591,7 @@ def build_itinerary(d) -> str:
   <h2>일자별 코스</h2>
   {''.join(day_cards)}
 </section>
-
+{candidates_section}
 <section class="card">
   <h2>보류·확인 필요</h2>
   <ul>{pending_items}</ul>
@@ -549,6 +599,7 @@ def build_itinerary(d) -> str:
 
 <div class="links">
   <a href="../index.html">← 결정 요약으로</a>
+  <a href="itinerary-table.html">시간표 뷰</a>
   <a href="{GH_BLOB}/{esc(itin.get('source_doc',''))}" target="_blank" rel="noopener">사람용 마크다운</a>
   <a href="checklist.html">예약 체크리스트</a>
 </div>
@@ -609,12 +660,181 @@ def build_checklist(d) -> str:
     return html_doc("예약 체크리스트", body)
 
 
+# ─── viz/itinerary-table.html ─────────────────────────────────────────────
+
+TABLE_CSS = """
+  /* 모바일: 카드 뷰 표시, 테이블 숨김 */
+  .tbl-wrap { display: none; }
+  .mobile-days { display: block; }
+  /* 데스크탑(600px+): 테이블 표시, 모바일 카드 숨김 */
+  @media (min-width: 600px) {
+    .tbl-wrap { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 0.5rem 0; }
+    .mobile-days { display: none; }
+  }
+  table.timetable {
+    border-collapse: collapse; width: 100%; min-width: 560px;
+    font-size: 0.82rem; table-layout: fixed;
+  }
+  .timetable th {
+    background: var(--subcard); border: 1px solid var(--border);
+    padding: 0.45rem 0.5rem; text-align: center; font-weight: 600;
+    font-size: 0.85rem; position: sticky; top: 0; z-index: 1;
+  }
+  .timetable th .day-meta {
+    font-weight: 400; color: var(--muted); font-size: 0.75rem;
+    display: block; margin-top: 0.15rem;
+  }
+  .timetable td {
+    border: 1px solid var(--border); padding: 0.4rem 0.5rem;
+    vertical-align: top; width: 25%;
+  }
+  .timetable td:empty { background: var(--subcard); }
+  .timetable .t-time {
+    color: var(--muted); font-size: 0.75rem; display: block;
+    margin-bottom: 0.2rem; font-variant-numeric: tabular-nums;
+  }
+  .timetable .t-title { line-height: 1.35; }
+  .timetable .t-title a { color: var(--fg); text-decoration: underline; text-decoration-color: var(--border); }
+  .timetable .t-note {
+    color: var(--muted); font-size: 0.75rem; margin-top: 0.2rem;
+    display: block; line-height: 1.3;
+  }
+  .timetable tr:nth-child(even) td { background: var(--subcard); }
+  .timetable tr:nth-child(even) td:empty { background: var(--bg); }
+  .timetable .place-img {
+    width: 100%; aspect-ratio: 16/9; object-fit: cover;
+    border-radius: 3px; display: block; margin-top: 0.3rem; max-height: 160px;
+  }
+  .timetable .img-credit { color: var(--muted); font-size: 0.62rem; }
+"""
+
+
+def build_itinerary_table(d) -> str:
+    itin = d["itinerary"]
+    trip = itin["trip"]
+    days = itin["days"]
+
+    # 열 헤더 (4일)
+    headers = []
+    for day in days:
+        label = day["day_label"]
+        meta = f"도보 {day['walking_km']}km · {day['lodging']}"
+        headers.append(f'<th>{esc(label)}<span class="day-meta">{esc(meta)}</span></th>')
+
+    # 각 일자의 항목 목록 (최대 길이만큼 패딩)
+    col_items = [day["items"] for day in days]
+    max_rows = max(len(col) for col in col_items)
+
+    rows_html = []
+    for i in range(max_rows):
+        cells = []
+        for col in col_items:
+            if i < len(col):
+                it = col[i]
+                link = maps_link(it["maps_query"], it["title"]) if it.get("maps_query") else esc(it["title"])
+                note_html = f'<span class="t-note">{esc(it["note"])}</span>' if it.get("note") else ""
+                if it.get("image_url"):
+                    img_html = (
+                        f'<img src="{esc(it["image_url"])}" alt="{esc(it["title"])}" '
+                        f'class="place-img" loading="lazy">'
+                        f'<span class="img-credit">{esc(it.get("image_credit",""))}</span>'
+                    )
+                else:
+                    img_html = ""
+                cells.append(
+                    f'<td><span class="t-time">{esc(it["time"])}</span>'
+                    f'<span class="t-title">{link}</span>{note_html}{img_html}</td>'
+                )
+            else:
+                cells.append("<td></td>")
+        rows_html.append(f"<tr>{''.join(cells)}</tr>")
+
+    # 모바일용 카드 뷰 (600px 미만)
+    mobile_cards = []
+    for day in days:
+        item_rows = []
+        for it in day["items"]:
+            link = maps_link(it["maps_query"], it["title"]) if it.get("maps_query") else esc(it["title"])
+            note_html = f'<div class="sub">{esc(it["note"])}</div>' if it.get("note") else ""
+            if it.get("image_url"):
+                img_html = (
+                    f'<img src="{esc(it["image_url"])}" alt="{esc(it["title"])}" '
+                    f'class="place-img" loading="lazy">'
+                    f'<div class="img-credit">{esc(it.get("image_credit",""))}</div>'
+                )
+            else:
+                img_html = ""
+            item_rows.append(f"""
+    <div class="day">
+      <div class="date"><span class="k">{esc(it["time"])}</span> {link}</div>
+      {note_html}{img_html}
+    </div>""")
+        mobile_cards.append(f"""
+  <div class="subcard">
+    <div class="subtitle">{esc(day["day_label"])}</div>
+    {''.join(item_rows)}
+    <div class="sub" style="margin-top:0.4rem;">도보 약 {day["walking_km"]}km · 숙박: {esc(day["lodging"])}</div>
+  </div>""")
+
+    pending_items = "".join(f"<li>{esc(p)}</li>" for p in itin.get("pending", []))
+
+    body = f"""<h1>교토 3박4일 · 시간표 뷰</h1>
+<div class="status">{esc(trip['dates'])} · {trip['nights']}박 · {trip['travelers']}인 · {esc(trip.get('composition',''))}</div>
+
+<!-- SYNC: data/itinerary.json -->
+<div class="card">
+  <h2>4일 한눈에 보기 — 장소 탭 → 구글맵</h2>
+  <div class="sub" style="margin-bottom:0.5rem;">모바일: 일자별 카드 뷰 · 데스크탑: 4열 시간표</div>
+
+  <div class="mobile-days">{''.join(mobile_cards)}</div>
+
+  <div class="tbl-wrap">
+    <table class="timetable">
+      <thead><tr>{''.join(headers)}</tr></thead>
+      <tbody>{''.join(rows_html)}</tbody>
+    </table>
+  </div>
+</div>
+
+<section class="card">
+  <h2>보류·확인 필요</h2>
+  <ul>{pending_items}</ul>
+</section>
+
+<div class="links">
+  <a href="../index.html">← 결정 요약으로</a>
+  <a href="itinerary.html">카드 뷰</a>
+  <a href="checklist.html">예약 체크리스트</a>
+</div>
+
+<footer>data/itinerary.json 단일 출처 · scripts/build_index.py 산출 — 직접 편집 금지</footer>
+"""
+    # TABLE_CSS를 공통 CSS에 추가해 단독 페이지로 렌더
+    combined_css = CSS + TABLE_CSS
+    return f"""<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1a1a1a" media="(prefers-color-scheme: dark)">
+<title>교토 3박4일 시간표</title>
+<style>{combined_css}</style>
+</head>
+<body>
+{body}
+</body>
+</html>
+"""
+
+
 # ─── 메인 ──────────────────────────────────────────────────────────────────
 
 OUTPUTS = (
     ("index.html", lambda p: p / "index.html", build_index),
     ("viz/itinerary.html", lambda p: p / "viz" / "itinerary.html", build_itinerary),
     ("viz/checklist.html", lambda p: p / "viz" / "checklist.html", build_checklist),
+    ("viz/itinerary-table.html", lambda p: p / "viz" / "itinerary-table.html", build_itinerary_table),
 )
 
 

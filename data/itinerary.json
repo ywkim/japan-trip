@@ -1,14 +1,5 @@
 {
   "_doc": "교토 3박4일 일정 단일 출처. scripts/build_index.py가 index.html (#itinerary 카드)와 viz/itinerary.html (상세) 둘 다 이 파일에서 생성. docs/kyoto-itinerary-may31-jun3-2026.md는 사람용 마크다운 사본. days[].items[].arrive_from은 직전 item에서 이 item으로 오는 이동 메타 (mode·duration_min·distance_km·route·source·source_fetched_at·data_quality). 첫 item에는 arrive_from 없음.",
-  "_arrive_from_schema": {
-    "mode": "walk|bus|subway|train|jr|airport_express|taxi",
-    "duration_min": "정수 (이동 소요시간)",
-    "distance_km": "실수 (이동 거리. mode=walk일 때 days[].walking_km 산정 입력)",
-    "route": "노선·정거장 표기 (예: 市バス 59 (金閣寺前→竜安寺前))",
-    "source": "검증 가능한 URL 또는 출처 인용",
-    "source_fetched_at": "YYYY-MM-DD",
-    "data_quality": "official_fare|researched_market_rate|tbd_needs_browser_mcp"
-  },
   "trip": {
     "destination": "교토",
     "dates": "2026-05-31 → 2026-06-03",
@@ -40,7 +31,6 @@
       "date": "2026-05-31",
       "day_label": "5/31 (일) — 도착 + 동산 지구",
       "walking_km": 3,
-      "walking_km_source": "items[].arrive_from[mode=walk] 합(~1.9km) + 키요미즈 경내·기온·폰토초 산책 추정(~1.1km)",
       "lodging": "에어비앤비 시오",
       "items": [
         {
@@ -51,15 +41,16 @@
         },
         {
           "time": "11:30",
-          "title": "시오 짐 보관 + 점심",
-          "maps_query": "Kyoto Station",
+          "title": "니조역 → 시오 짐 보관 후 점심",
+          "maps_query": "Nijo Station Kyoto",
+          "note": "에어비앤비 체크인 전 짐 맡기기 (시오 도보 7분). 코인락커 불필요",
           "arrive_from": {
             "mode": "airport_express",
-            "duration_min": 75,
+            "duration_min": 87,
             "distance_km": 99,
-            "route": "JR 하루카 (KIX → 교토역)",
-            "source": "JR 서일본 공식 (haruka_rt_4pax cost-options 인용)",
-            "source_fetched_at": "2026-05-09",
+            "route": "JR 하루카 KIX→교토역 75분 + JR 산인본선 교토→니조 5분 + 도보 니조역→시오 7분 0.5km",
+            "source": "JR 서일본 공식 (haruka_rt_4pax cost-options 인용) + 5/31 동선 수정 PR #26",
+            "source_fetched_at": "2026-05-17",
             "data_quality": "official_fare"
           }
         },
@@ -68,14 +59,16 @@
           "title": "키요미즈데라 (清水寺)",
           "maps_query": "Kiyomizu-dera",
           "note": "17:00 마감 주의",
+          "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Kyoto-Kiyomizu_Temple-2.JPG?width=480",
+          "image_credit": "Wikimedia Commons",
           "arrive_from": {
             "mode": "bus",
-            "duration_min": 28,
-            "distance_km": 4.2,
-            "route": "市バス 206 (京都駅前 → 清水道) 8정거장 16분 ¥230 + 도보 12분 (650m)",
-            "source": "https://www.google.com/maps/dir/Kyoto+Station/Kiyomizu-dera/@34.9889475,135.7478576,14z/data=!4m14!4m13!1m5!1m1!1s0x600108ae918b02ef:0xb61a446e74a21c08!2m2!1d135.7587667!2d34.985849!1m5!1m1!1s0x600108d385dcfb07:0x62af658650c434ba!2m2!1d135.784661!2d34.9946662!3e3",
+            "duration_min": 35,
+            "distance_km": 5.5,
+            "route": "시오 → 니조역 도보 7분 + JR/시버스 → 키요미즈 (니조 출발 시 약 35분. 교토역 출발 28분 대비 7분 가산)",
+            "source": "https://www.google.com/maps/dir/Shio+Machiya+Kyoto/Kiyomizu-dera",
             "source_fetched_at": "2026-05-18",
-            "data_quality": "researched_market_rate"
+            "data_quality": "tbd_needs_browser_mcp"
           }
         },
         {
@@ -97,23 +90,25 @@
           "title": "가와라마치 저녁 (시라카와·폰토초)",
           "maps_query": "Kawaramachi",
           "note": "야간 가장 예쁨",
+          "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/JP-Kyoto-Gion-Area-Traditional-House-Night-View.JPG?width=480",
+          "image_credit": "Wikimedia Commons",
           "arrive_from": {
             "mode": "walk",
             "duration_min": 9,
             "distance_km": 0.6,
             "route": "기온 → 시조대교 → 폰토초 (四条通/市道186号 경유, 600m)",
-            "source": "https://www.google.com/maps/dir/Gion,+Higashiyama+Ward,+Kyoto/Pontocho+Alley,+Kyoto/@35.003794,135.7690752,16z/data=!3m1!4b1!4m13!4m12!1m5!1m1!1s0x600108c3c1c67b67:0xdcb04aa1398efb4!2m2!1d135.777245!2d35.0037816!1m5!1m1!1s0x6001091894db603f:0xaa4fd64b17e50202!2m2!1d135.7710439!2d35.0039339",
+            "source": "https://www.google.com/maps/dir/Gion,+Higashiyama+Ward,+Kyoto/Pontocho+Alley,+Kyoto",
             "source_fetched_at": "2026-05-18",
             "data_quality": "researched_market_rate"
           }
         }
-      ]
+      ],
+      "walking_km_source": "items[].arrive_from[mode=walk] 합(~1.9km) + 키요미즈 경내·기온·폰토초 산책 추정(~1.1km)"
     },
     {
       "date": "2026-06-01",
       "day_label": "6/1 (월) — 아라시야마 + 북서쪽",
       "walking_km": 4,
-      "walking_km_source": "items[].arrive_from[mode=walk] 합(~0.6km) + 죽림길·텐류지 정원·니시키 시장 산책 추정(~3.4km)",
       "lodging": "에어비앤비 시오 (2박째)",
       "items": [
         {
@@ -121,6 +116,8 @@
           "title": "죽림길 (지쿠린)",
           "maps_query": "Arashiyama Bamboo Grove",
           "note": "일찍 출발 (관광객 적음)",
+          "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Sagano_Bamboo_forest%2C_Arashiyama%2C_Kyoto.jpg?width=480",
+          "image_credit": "Wikimedia Commons",
           "arrive_from": {
             "mode": "jr",
             "duration_min": 12,
@@ -135,27 +132,31 @@
           "time": "09:45",
           "title": "텐류지 정원",
           "maps_query": "Tenryu-ji Temple",
+          "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Tenryuji%2C_Kyoto-_DSC06041.JPG?width=480",
+          "image_credit": "Wikimedia Commons",
           "arrive_from": {
             "mode": "walk",
             "duration_min": 3,
             "distance_km": 0.1,
             "route": "죽림길 → 텐류지 북문 (竹林の小径 경유 7m, Maps 1분; 정원 경내 진입 도보 ~3분 가산)",
-            "source": "https://www.google.com/maps/dir/Arashiyama+Bamboo+Grove/Tenryu-ji/@35.01657,135.6699584,17z/data=!3m1!4b1!4m13!4m12!1m5!1m1!1s0x6001abebbf5c8bad:0xfb9ffc7bbdd67cdd!2m2!1d135.6713013!2d35.0168187!1m5!1m1!1s0x6001aa01b80f9e93:0xcd9c3edaff3348c0!2m2!1d135.6737654!2d35.0158379",
+            "source": "https://www.google.com/maps/dir/Arashiyama+Bamboo+Grove/Tenryu-ji",
             "source_fetched_at": "2026-05-18",
             "data_quality": "researched_market_rate"
           }
         },
         {
           "time": "12:00",
-          "title": "두부 가이세키 점심 (松籟庵 쇼라이안)",
-          "maps_query": "松籟庵 Arashiyama",
-          "note": "4인 좌석 사전 예약 필수 · 전 좌석 좌식 (시부모 부담 확인) · 가쓰라강변 경관 · 마쓰 코스 ¥4,200~",
+          "title": "두부 가이세키 점심 (쇼라이안 松籟庵)",
+          "maps_query": "Arashiyama Tofu",
+          "note": "4인 좌석 사전 확인",
+          "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Japanese_SilkyTofu_%28Kinugoshi_Tofu%29.JPG?width=480",
+          "image_credit": "Wikimedia Commons",
           "arrive_from": {
             "mode": "walk",
             "duration_min": 7,
             "distance_km": 0.5,
             "route": "텐류지 정문 → 도게쓰교 건너 가쓰라강 거슬러 → 쇼라이안(松籟庵, 아라시야마 공원 내) 도보 7분 500m",
-            "source": "https://www.google.com/maps/dir/Tenryu-ji+Temple,+Kyoto/松籟庵+Arashiyama/@35.0145509,135.6696304,17z/data=!3m1!4b1!4m13!4m12!1m5!1m1!1s0x6001aa01b80f9e93:0xcd9c3edaff3348c0!2m2!1d135.6737654!2d35.0158379!1m5!1m1!1s0x6001aa06c66d0acf:0x35b590f68ae42ef2!2m2!1d135.6701322!2d35.0144476",
+            "source": "https://www.google.com/maps/dir/Tenryu-ji+Temple,+Kyoto/松籟庵+Arashiyama",
             "source_fetched_at": "2026-05-18",
             "data_quality": "researched_market_rate"
           }
@@ -164,12 +165,14 @@
           "time": "14:00",
           "title": "금각사 (鹿苑寺)",
           "maps_query": "Kinkaku-ji",
+          "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Kinkaku-ji_the_Golden_Temple_in_Kyoto_overlooking_the_lake_-_high_rez.JPG?width=480",
+          "image_credit": "Wikimedia Commons",
           "arrive_from": {
             "mode": "bus",
             "duration_min": 38,
             "distance_km": 7.5,
             "route": "市バス 11(嵐山天龍寺前→山越中町) 11분 + 환승도보 6분 + 市バス 59(山越中町→金閣寺道) 18분 + 도보 2분 ¥460. 단 11번 40분 간격 · 놓치면 택시 22분(7.1km) 대안",
-            "source": "https://www.google.com/maps/dir/Tenryu-ji+Temple,+Kyoto/Kinkaku-ji+Temple,+Kyoto/@35.0265621,135.6623859,13z/am=t/data=!3m1!4b1!4m14!4m13!1m5!1m1!1s0x6001aa01b80f9e93:0xcd9c3edaff3348c0!2m2!1d135.6737654!2d35.0158379!1m5!1m1!1s0x6001a820c0eb46bd:0xee4272b1c22645f!2m2!1d135.7292431!2d35.03937!5i2",
+            "source": "https://www.google.com/maps/dir/Tenryu-ji+Temple,+Kyoto/Kinkaku-ji+Temple,+Kyoto",
             "source_fetched_at": "2026-05-18",
             "data_quality": "researched_market_rate"
           }
@@ -178,12 +181,14 @@
           "time": "15:30",
           "title": "료안지 석정원",
           "maps_query": "Ryoan-ji",
+          "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/RyoanJi-Dry_garden.jpg?width=480",
+          "image_credit": "Wikimedia Commons",
           "arrive_from": {
             "mode": "bus",
             "duration_min": 4,
             "distance_km": 1.6,
             "route": "市バス 59 (金閣寺道 → 竜安寺前). 12~15분 간격 운행",
-            "source": "https://kinukake.com/en/day-tour.html · https://www.tripadvisor.com/ShowTopic-g298564-i2712-k6637145-Kyoto_Bus_no_59_and_no_12-Kyoto_Kyoto_Prefecture_Kinki.html",
+            "source": "https://kinukake.com/en/day-tour.html · https://www.tripadvisor.com/ShowTopic-g298564-i2712-k6637145",
             "source_fetched_at": "2026-05-17",
             "data_quality": "researched_market_rate"
           }
@@ -193,23 +198,25 @@
           "title": "가와라마치 + 니시키 시장 저녁",
           "maps_query": "Pontocho Alley",
           "note": "시장 17:00 닫는 가게 다수",
+          "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Nishiki_ichiba_kyoto.jpg?width=480",
+          "image_credit": "Wikimedia Commons",
           "arrive_from": {
             "mode": "bus",
             "duration_min": 42,
             "distance_km": 8.1,
-            "route": "市バス 59 (竜安寺前 → 四条河原町) 직행 + 도보 2분 ¥230 (15분 간격)",
-            "source": "https://www.google.com/maps/dir/Ryoan-ji+Temple,+Kyoto/Shijo+Kawaramachi,+Kyoto/@35.0223439,135.7027707,13z/data=!4m14!4m13!1m5!1m1!1s0x6001a82a301cbaa7:0xe1ab173e46d78542!2m2!1d135.7182634!2d35.0344943!1m5!1m1!1s0x600108956d7044cd:0x896ed2a309e1e669!2m2!1d135.769309!2d35.0037747!5i2",
+            "route": "市バス 59 (竜安寺前 → 四条河原町). 직행 + 도보 2분 ¥230",
+            "source": "https://www.google.com/maps/dir/Ryoan-ji/Kawaramachi",
             "source_fetched_at": "2026-05-18",
             "data_quality": "researched_market_rate"
           }
         }
-      ]
+      ],
+      "walking_km_source": "items[].arrive_from[mode=walk] 합(~0.6km) + 죽림길·텐류지 정원·니시키 시장 산책 추정(~3.4km)"
     },
     {
       "date": "2026-06-02",
       "day_label": "6/2 (화) — 후시미 + 료칸 체크인",
       "walking_km": 5,
-      "walking_km_source": "items[].arrive_from[mode=walk] 합(~0.6km) + 후시미이나리 도리이길·토후쿠지·산주산겐도 경내 산책 추정(~4.4km)",
       "lodging": "우메코지 카덴쇼 (2명×2실)",
       "items": [
         {
@@ -217,12 +224,14 @@
           "title": "후시미 이나리 신사",
           "maps_query": "Fushimi Inari Taisha",
           "note": "이른 시간 인파 회피. 정상까지 안 가도 OK",
+          "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Torii_gates%E2%80%94Fushimi_Inari_Shrine_%289977683204%29.jpg?width=480",
+          "image_credit": "Wikimedia Commons",
           "arrive_from": {
             "mode": "jr",
             "duration_min": 20,
             "distance_km": 10.0,
-            "route": "JR 산인본선 (니조→교토) → JR 나라선 (교토→이나리) ¥200 + 도보 5분. (기존 지하철 도자이→게이한 30분 대비 빠름)",
-            "source": "https://www.google.com/maps/dir/Nijo+Station,+Kyoto/Fushimi+Inari+Taisha,+Kyoto/@34.9857916,135.7191561,13z/data=!3m1!4b1!4m13!4m12!1m5!1m1!1s0x600107cd9402bed9:0xef2a8e7659cd4a8e!2m2!1d135.7417118!2d35.0109722!1m5!1m1!1s0x60010f153d2e6d21:0x7b1aca1c753ae2e9!2m2!1d135.7791876!2d34.9676945",
+            "route": "니조역 JR 산인본선(니조→교토) + JR 나라선(교토→이나리) 20분 ¥200 + 도보 5분",
+            "source": "https://www.kyotostation.com/jr-nara-line-for-tofukuji-inari-uji-nara/",
             "source_fetched_at": "2026-05-18",
             "data_quality": "researched_market_rate"
           }
@@ -231,6 +240,8 @@
           "time": "09:30",
           "title": "토후쿠지 정원",
           "maps_query": "Tofuku-ji",
+          "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Sand_Garden_at_Tofukuji_Temple.jpg?width=480",
+          "image_credit": "Wikimedia Commons",
           "arrive_from": {
             "mode": "jr",
             "duration_min": 2,
@@ -282,13 +293,13 @@
           "maps_query": "Umekoji Kadensho",
           "note": "17:30~18:00 빠른 시간 권장 (6/3 새벽 출발)"
         }
-      ]
+      ],
+      "walking_km_source": "items[].arrive_from[mode=walk] 합(~0.6km) + 후시미이나리 도리이길·토후쿠지·산주산겐도 경내 산책 추정(~4.4km)"
     },
     {
       "date": "2026-06-03",
       "day_label": "6/3 (수) — 출국 (아침 일찍)",
       "walking_km": 1,
-      "walking_km_source": "items[].arrive_from[mode=walk] 합(~1.0km). 출국 시간에 따라 토지 산책 생략 가능",
       "lodging": "—",
       "items": [
         {
@@ -336,16 +347,477 @@
             "data_quality": "official_fare"
           }
         }
+      ],
+      "walking_km_source": "items[].arrive_from[mode=walk] 합(~1.8km). 출국 시간에 따라 토지 산책 생략 가능"
+    }
+  ],
+  "route_candidates": [
+    {
+      "id": "relaxed",
+      "name": "여유형",
+      "theme": "시부모 부담 최소화 — 하루 2~3 방문지, 카페 휴식 포함",
+      "walking_km_total": 9,
+      "days": [
+        {
+          "date": "2026-05-31",
+          "day_label": "5/31 (일) — 도착 + 기요미즈 (여유)",
+          "walking_km": 2,
+          "lodging": "에어비앤비 시오",
+          "items": [
+            {
+              "time": "09:05",
+              "title": "간사이공항 도착 → JR 하루카 → 교토역",
+              "maps_query": "Kansai International Airport",
+              "note": "시부 예약 항공편 시간 확인 필요"
+            },
+            {
+              "time": "11:30",
+              "title": "시오 짐 보관 + 점심",
+              "maps_query": "Kyoto Station"
+            },
+            {
+              "time": "14:00",
+              "title": "기요미즈데라 + 산넨자카 카페 휴식",
+              "maps_query": "Kiyomizu-dera",
+              "note": "니넨자카 카페에서 30~40분 여유"
+            },
+            {
+              "time": "17:00",
+              "title": "야사카 신사 → 기온 산책 (가볍게)",
+              "maps_query": "Yasaka Shrine"
+            },
+            {
+              "time": "18:30",
+              "title": "가와라마치 저녁",
+              "maps_query": "Kawaramachi"
+            }
+          ]
+        },
+        {
+          "date": "2026-06-01",
+          "day_label": "6/1 (월) — 아라시야마 여유 코스",
+          "walking_km": 3,
+          "lodging": "에어비앤비 시오 (2박째)",
+          "items": [
+            {
+              "time": "09:30",
+              "title": "죽림길 (느긋하게 출발)",
+              "maps_query": "Arashiyama Bamboo Grove"
+            },
+            {
+              "time": "10:30",
+              "title": "텐류지 정원",
+              "maps_query": "Tenryu-ji Temple"
+            },
+            {
+              "time": "12:30",
+              "title": "두부 가이세키 점심 (시그라쿠 토후)",
+              "maps_query": "Arashiyama Tofu",
+              "note": "4인 좌석 사전 확인"
+            },
+            {
+              "time": "14:30",
+              "title": "아라시야마 강변 카페 휴식 + 자유시간",
+              "maps_query": "Arashiyama"
+            },
+            {
+              "time": "17:00",
+              "title": "교토역 귀환"
+            },
+            {
+              "time": "18:30",
+              "title": "가와라마치 저녁",
+              "maps_query": "Pontocho Alley"
+            }
+          ]
+        },
+        {
+          "date": "2026-06-02",
+          "day_label": "6/2 (화) — 후시미 + 카덴쇼 (이른 체크인)",
+          "walking_km": 3,
+          "lodging": "우메코지 카덴쇼 (2명×2실)",
+          "items": [
+            {
+              "time": "08:00",
+              "title": "후시미이나리 신사 입구 (1구간만)",
+              "maps_query": "Fushimi Inari Taisha",
+              "note": "시부모 부담 없는 수준 — 천문 도리이 구간까지만"
+            },
+            {
+              "time": "10:00",
+              "title": "도후쿠지 정원 (앉아서 쉬기 좋음)",
+              "maps_query": "Tofuku-ji"
+            },
+            {
+              "time": "11:30",
+              "title": "교토역 라멘코지 점심",
+              "maps_query": "Kyoto Station"
+            },
+            {
+              "time": "13:00",
+              "title": "우메코지 카덴쇼 체크인 + 정원 산책",
+              "maps_query": "Umekoji Kadensho"
+            },
+            {
+              "time": "15:00",
+              "title": "료칸 대욕장 (충분한 휴식)",
+              "maps_query": "Umekoji Kadensho"
+            },
+            {
+              "time": "18:30",
+              "title": "카덴쇼 가이세키 저녁",
+              "maps_query": "Umekoji Kadensho"
+            }
+          ]
+        },
+        {
+          "date": "2026-06-03",
+          "day_label": "6/3 (수) — 출국",
+          "walking_km": 1,
+          "lodging": "—",
+          "items": [
+            {
+              "time": "이른 아침",
+              "title": "카덴쇼 체크아웃 → 교토역",
+              "maps_query": "Kyoto Station"
+            },
+            {
+              "time": "시간 여유 시",
+              "title": "교토역 이세탄 쇼핑",
+              "maps_query": "Kyoto Station Isetan",
+              "note": "출국 시간 빠르면 생략"
+            },
+            {
+              "time": "출국",
+              "title": "JR 하루카 → 간사이공항 → 인천",
+              "maps_query": "Kansai International Airport"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "northwest_temples",
+      "name": "서북 사찰 집중형",
+      "theme": "금각사·료안지·묘신지·닌나지 서북쪽 + 우지 세계유산",
+      "walking_km_total": 14,
+      "days": [
+        {
+          "date": "2026-05-31",
+          "day_label": "5/31 (일) — 도착 + 동산 지구",
+          "walking_km": 3,
+          "lodging": "에어비앤비 시오",
+          "items": [
+            {
+              "time": "09:05",
+              "title": "간사이공항 도착 → JR 하루카 → 교토역",
+              "maps_query": "Kansai International Airport",
+              "note": "시부 예약 항공편 시간 확인 필요"
+            },
+            {
+              "time": "11:30",
+              "title": "시오 짐 보관 + 점심",
+              "maps_query": "Kyoto Station"
+            },
+            {
+              "time": "13:30",
+              "title": "기요미즈데라",
+              "maps_query": "Kiyomizu-dera"
+            },
+            {
+              "time": "16:00",
+              "title": "산넨자카 → 야사카 신사 → 기온",
+              "maps_query": "Gion Kyoto"
+            },
+            {
+              "time": "18:30",
+              "title": "가와라마치 저녁 (폰토초)",
+              "maps_query": "Pontocho Alley"
+            }
+          ]
+        },
+        {
+          "date": "2026-06-01",
+          "day_label": "6/1 (월) — 서북 사찰 집중 (금각사·료안지·닌나지·묘신지)",
+          "walking_km": 5,
+          "lodging": "에어비앤비 시오 (2박째)",
+          "items": [
+            {
+              "time": "09:00",
+              "title": "금각사 (鹿苑寺)",
+              "maps_query": "Kinkaku-ji"
+            },
+            {
+              "time": "10:30",
+              "title": "료안지 석정원",
+              "maps_query": "Ryoan-ji"
+            },
+            {
+              "time": "12:00",
+              "title": "닌나지 (仁和寺) 세계유산 + 오무로 우동 점심",
+              "maps_query": "Ninna-ji"
+            },
+            {
+              "time": "14:00",
+              "title": "묘신지 (妙心寺) 법당 공개 구역 산책 — 대규모 선종 사찰",
+              "maps_query": "Myoshin-ji"
+            },
+            {
+              "time": "16:30",
+              "title": "란덴 전차 귀환 → 가와라마치",
+              "maps_query": "Randen Kitano Line"
+            },
+            {
+              "time": "18:30",
+              "title": "가와라마치 저녁",
+              "maps_query": "Kawaramachi"
+            }
+          ]
+        },
+        {
+          "date": "2026-06-02",
+          "day_label": "6/2 (화) — 우지 세계유산 + 카덴쇼",
+          "walking_km": 5,
+          "lodging": "우메코지 카덴쇼 (2명×2실)",
+          "items": [
+            {
+              "time": "07:30",
+              "title": "후시미이나리 신사 (이른 방문, 1~2구간)",
+              "maps_query": "Fushimi Inari Taisha"
+            },
+            {
+              "time": "09:30",
+              "title": "JR 나라선 → 우지 뵤도인 (平等院) 세계유산",
+              "maps_query": "Byodoin Temple Uji",
+              "note": "10엔 동전 사찰. 입장권 사전 구매 권장"
+            },
+            {
+              "time": "11:00",
+              "title": "우지 말차 카페 (말차 소프트 아이스크림)",
+              "maps_query": "Uji Matcha"
+            },
+            {
+              "time": "12:30",
+              "title": "교토역 귀환 점심",
+              "maps_query": "Kyoto Station"
+            },
+            {
+              "time": "13:30",
+              "title": "우메코지 카덴쇼 체크인",
+              "maps_query": "Umekoji Kadensho"
+            },
+            {
+              "time": "17:00",
+              "title": "료칸 대욕장",
+              "maps_query": "Umekoji Kadensho"
+            },
+            {
+              "time": "18:00",
+              "title": "카덴쇼 가이세키 저녁",
+              "maps_query": "Umekoji Kadensho"
+            }
+          ]
+        },
+        {
+          "date": "2026-06-03",
+          "day_label": "6/3 (수) — 출국",
+          "walking_km": 1,
+          "lodging": "—",
+          "items": [
+            {
+              "time": "이른 아침",
+              "title": "카덴쇼 체크아웃 → 교토역",
+              "maps_query": "Kyoto Station"
+            },
+            {
+              "time": "시간 여유 시",
+              "title": "도지(東寺) 오층탑 또는 교토역 이세탄",
+              "maps_query": "To-ji Temple",
+              "note": "출국 시간 빠르면 생략"
+            },
+            {
+              "time": "출국",
+              "title": "JR 하루카 → 간사이공항 → 인천",
+              "maps_query": "Kansai International Airport"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "food_culture",
+      "name": "미식+문화 체험형",
+      "theme": "니시키 시장·교토 전통 요리·도예 체험·폰토초 골목 중심",
+      "walking_km_total": 12,
+      "days": [
+        {
+          "date": "2026-05-31",
+          "day_label": "5/31 (일) — 도착 + 니시키 + 기온",
+          "walking_km": 3,
+          "lodging": "에어비앤비 시오",
+          "items": [
+            {
+              "time": "09:05",
+              "title": "간사이공항 도착 → JR 하루카 → 교토역",
+              "maps_query": "Kansai International Airport",
+              "note": "시부 예약 항공편 시간 확인 필요"
+            },
+            {
+              "time": "11:30",
+              "title": "시오 짐 보관",
+              "maps_query": "Kyoto Station"
+            },
+            {
+              "time": "12:30",
+              "title": "니시키 시장 점심 — 교토 길거리 음식 (두부 꼬치·교토 절임·말차)",
+              "maps_query": "Nishiki Market Kyoto"
+            },
+            {
+              "time": "14:30",
+              "title": "기요미즈데라 + 기요미즈 도자기 거리 쇼핑",
+              "maps_query": "Kiyomizu-dera"
+            },
+            {
+              "time": "17:00",
+              "title": "야사카 신사",
+              "maps_query": "Yasaka Shrine"
+            },
+            {
+              "time": "19:00",
+              "title": "폰토초 골목 이자카야 저녁",
+              "maps_query": "Pontocho Alley"
+            }
+          ]
+        },
+        {
+          "date": "2026-06-01",
+          "day_label": "6/1 (월) — 아라시야마 + 도예 체험",
+          "walking_km": 4,
+          "lodging": "에어비앤비 시오 (2박째)",
+          "items": [
+            {
+              "time": "09:00",
+              "title": "죽림길",
+              "maps_query": "Arashiyama Bamboo Grove"
+            },
+            {
+              "time": "09:45",
+              "title": "텐류지 정원",
+              "maps_query": "Tenryu-ji Temple"
+            },
+            {
+              "time": "12:00",
+              "title": "두부 가이세키 점심 (시그라쿠 토후)",
+              "maps_query": "Arashiyama Tofu",
+              "note": "4인 좌석 사전 확인"
+            },
+            {
+              "time": "13:30",
+              "title": "아라시야마 도예 공방 체험 (사가 도예 기념관)",
+              "maps_query": "Sagano Craft Museum Kyoto"
+            },
+            {
+              "time": "15:30",
+              "title": "교토역 귀환 + 니시키 시장 재방문 (식재료·기념품)",
+              "maps_query": "Nishiki Market Kyoto"
+            },
+            {
+              "time": "18:30",
+              "title": "가와라마치 오반자이 (京野菜 정식) 저녁",
+              "maps_query": "Kawaramachi"
+            }
+          ]
+        },
+        {
+          "date": "2026-06-02",
+          "day_label": "6/2 (화) — 후시미 + 도지 + 카덴쇼",
+          "walking_km": 4,
+          "lodging": "우메코지 카덴쇼 (2명×2실)",
+          "items": [
+            {
+              "time": "07:30",
+              "title": "후시미이나리 신사 (이른 방문)",
+              "maps_query": "Fushimi Inari Taisha",
+              "note": "이른 시간 인파 회피"
+            },
+            {
+              "time": "09:30",
+              "title": "도지(東寺) 오층탑 + 경내 관람",
+              "maps_query": "To-ji Temple"
+            },
+            {
+              "time": "11:30",
+              "title": "교토역 이세탄 식품관 점심 또는 라멘코지",
+              "maps_query": "Kyoto Station Isetan"
+            },
+            {
+              "time": "13:30",
+              "title": "우메코지 카덴쇼 체크인",
+              "maps_query": "Umekoji Kadensho"
+            },
+            {
+              "time": "15:00",
+              "title": "우메코지 공원 산책 또는 교토 철도박물관 (시부모 흥미 시)",
+              "maps_query": "Umekoji Park",
+              "note": "교토 철도박물관은 별도 입장료 (성인 1,200엔)"
+            },
+            {
+              "time": "17:00",
+              "title": "료칸 대욕장",
+              "maps_query": "Umekoji Kadensho"
+            },
+            {
+              "time": "18:00",
+              "title": "카덴쇼 가이세키 저녁",
+              "maps_query": "Umekoji Kadensho",
+              "note": "17:30~18:00 빠른 시간 권장"
+            }
+          ]
+        },
+        {
+          "date": "2026-06-03",
+          "day_label": "6/3 (수) — 출국",
+          "walking_km": 1,
+          "lodging": "—",
+          "items": [
+            {
+              "time": "이른 아침",
+              "title": "카덴쇼 체크아웃 → 교토역",
+              "maps_query": "Kyoto Station"
+            },
+            {
+              "time": "시간 여유 시",
+              "title": "교토역 포르타 식품관 기념품 쇼핑",
+              "maps_query": "Kyoto Station Porta",
+              "note": "출국 시간 빠르면 생략"
+            },
+            {
+              "time": "출국",
+              "title": "JR 하루카 → 간사이공항 → 인천",
+              "maps_query": "Kansai International Airport"
+            }
+          ]
+        }
       ]
     }
   ],
   "pending": [
     "항공편 시간 (시부 예약 완료) — 5/31 오전·6/3 출국일 미세 조정",
-    "쇼라이안(松籟庵) 4인 좌석 사전 예약 — 전 좌석 좌식 (시부모 부담 확인)",
+    "쇼라이안(松籟庵) 4인 좌석 사전 예약",
     "카덴쇼 가이세키 시간 (17:30~18:00 권장)",
     "카덴쇼 짐 위탁 (6/2 오전 시오 체크아웃 후 일찍 맡길 수 있는지)",
     "후시미이나리 정상은 시부모 동반이라 X — 입구 ~5분 사진 충분",
-    "6/3 출국 시간에 따라 토지 산책·교토역 식사 가능 여부 결정"
+    "6/3 출국 시간에 따라 토지 산책·교토역 식사 가능 여부 결정",
+    "tbd_needs_browser_mcp 라벨 leg (시오→키요미즈) — Playwright MCP 보유 세션에서 Google Maps Directions로 분·거리·노선 확정 필요"
   ],
-  "source_doc": "docs/kyoto-itinerary-may31-jun3-2026.md"
+  "source_doc": "docs/kyoto-itinerary-may31-jun3-2026.md",
+  "_arrive_from_schema": {
+    "mode": "walk|bus|subway|train|jr|airport_express|taxi",
+    "duration_min": "정수 (이동 소요시간)",
+    "distance_km": "실수 (이동 거리. mode=walk일 때 days[].walking_km 산정 입력)",
+    "route": "노선·정거장 표기 (예: 市バス 59 (金閣寺前→竜安寺前))",
+    "source": "검증 가능한 URL 또는 출처 인용",
+    "source_fetched_at": "YYYY-MM-DD",
+    "data_quality": "official_fare|researched_market_rate|tbd_needs_browser_mcp"
+  }
 }
