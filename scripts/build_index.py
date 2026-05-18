@@ -494,15 +494,15 @@ def card_score(d) -> str:
     return f"""
 <!-- SYNC: scripts/score.py --json · data/decision.json (criteria·candidates) -->
 <section id="score" class="card">
-  <h2>후보지 종합 점수</h2>
-  <div class="sub" style="margin-bottom:0.5rem;">교토만 7기준 모두 입력. 나머지는 seasonality(2026-05)만.</div>
+  <h2>후보지 평가 점수 (아카이브 · 의사결정 종료)</h2>
+  <div class="sub" style="margin-bottom:0.5rem;">MCDA 2026-05-12 종료. 교토 7기준 입력, 나머지는 seasonality(2026-05)만. 회귀 가드용.</div>
   {''.join(rows)}
 </section>
 """
 
 
-INDEX_HEAD = """<h1>일본 여행 최종 결정</h1>
-<div class="status">교토 5/31~6/3 · 시부모 4인 확정</div>
+INDEX_HEAD = """<h1>교토 5/31~6/3 실행 (4인)</h1>
+<div class="status">2026-05-12 의사결정 종료 · 발권·예약·일정 갱신 공간</div>
 
 <nav>
   <a href="#summary">요약</a>
@@ -534,7 +534,7 @@ def build_index(d) -> str:
         card_score(d),
     ]
     body = INDEX_HEAD + "\n".join(sections) + INDEX_FOOTER + tab_bar("home", in_viz=False)
-    return html_doc("일본 여행 최종 결정", body)
+    return html_doc("교토 5/31~6/3 실행 (4인)", body)
 
 
 # ─── viz/lodging.html ──────────────────────────────────────────────────────
