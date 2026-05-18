@@ -541,6 +541,7 @@ def build_itinerary(d) -> str:
     <div class="subtitle">{esc(day['day_label'])}</div>
     {''.join(item_rows)}
     <div class="sub" style="margin-top:0.4rem;">도보 약 {day['walking_km']}km · 숙박: {esc(day['lodging'])}</div>
+    {f'<div class="sub" style="margin-top:0.25rem;">🎫 {esc(day["pass_recommendation"])}</div>' if day.get("pass_recommendation") else ""}
   </div>""")
 
     pending_items = "".join(f"<li>{esc(p)}</li>" for p in itin.get("pending", []))
