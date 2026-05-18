@@ -362,6 +362,10 @@ def transit_line(af) -> str:
     if not af:
         return ""
     icon = MODE_ICONS.get(af.get("mode"), "·")
+    # source 필드의 첫 토큰이 http(s) URL이면 클릭 가능 링크로 감싼다 (Maps Directions 등).
+    src = (af.get("source") or "").strip()
+    first_token = src.split()[0] if src else ""
+    href = first_token if first_token.startswith(("http://", "https://")) else ""
     if af.get("data_quality") == "tbd_needs_browser_mcp":
         route = af.get("route") or af.get("mode", "")
         body = f"{icon} {esc(route)} · 소요시간 미확정 — Maps 확인 필요"
@@ -375,6 +379,8 @@ def transit_line(af) -> str:
         if isinstance(dist, (int, float)) and dist < 50:
             bits.append(f"{dist}km")
         body = " · ".join(bits)
+    if href:
+        body = f'<a href="{esc(href)}" target="_blank" rel="noopener" style="color:inherit;">{body}</a>'
     return f'<div class="sub" style="opacity:0.75;font-size:0.85em;">{body}</div>'
 
 
@@ -733,6 +739,7 @@ def build_itinerary_table(d) -> str:
                 it = col[i]
                 link = maps_link(it["maps_query"], it["title"]) if it.get("maps_query") else esc(it["title"])
                 note_html = f'<span class="t-note">{esc(it["note"])}</span>' if it.get("note") else ""
+                transit = transit_line(it.get("arrive_from"))
                 if it.get("image_url"):
                     img_html = (
                         f'<img src="{esc(it["image_url"])}" alt="{esc(it["title"])}" '
@@ -742,7 +749,7 @@ def build_itinerary_table(d) -> str:
                 else:
                     img_html = ""
                 cells.append(
-                    f'<td><span class="t-time">{esc(it["time"])}</span>'
+                    f'<td>{transit}<span class="t-time">{esc(it["time"])}</span>'
                     f'<span class="t-title">{link}</span>{note_html}{img_html}</td>'
                 )
             else:
@@ -756,6 +763,7 @@ def build_itinerary_table(d) -> str:
         for it in day["items"]:
             link = maps_link(it["maps_query"], it["title"]) if it.get("maps_query") else esc(it["title"])
             note_html = f'<div class="sub">{esc(it["note"])}</div>' if it.get("note") else ""
+            transit = transit_line(it.get("arrive_from"))
             if it.get("image_url"):
                 img_html = (
                     f'<img src="{esc(it["image_url"])}" alt="{esc(it["title"])}" '
@@ -766,6 +774,7 @@ def build_itinerary_table(d) -> str:
                 img_html = ""
             item_rows.append(f"""
     <div class="day">
+      {transit}
       <div class="date"><span class="k">{esc(it["time"])}</span> {link}</div>
       {note_html}{img_html}
     </div>""")
