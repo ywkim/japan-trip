@@ -40,7 +40,7 @@
       "date": "2026-05-31",
       "day_label": "5/31 (일) — 도착 + 동산 지구",
       "walking_km": 3,
-      "walking_km_source": "items[].arrive_from[mode=walk] 합(~1.6km) + 키요미즈 경내·기온·폰토초 산책 추정(~1.4km)",
+      "walking_km_source": "items[].arrive_from[mode=walk] 합(~1.9km) + 키요미즈 경내·기온·폰토초 산책 추정(~1.1km)",
       "lodging": "에어비앤비 시오",
       "items": [
         {
@@ -70,12 +70,12 @@
           "note": "17:00 마감 주의",
           "arrive_from": {
             "mode": "bus",
-            "duration_min": 35,
-            "distance_km": 5.5,
-            "route": "市バス 206 (교토역前→五条坂) + 도보 10분",
-            "source": "https://www.google.com/maps/dir/Kyoto+Station/Kiyomizu-dera",
-            "source_fetched_at": "2026-05-17",
-            "data_quality": "tbd_needs_browser_mcp"
+            "duration_min": 28,
+            "distance_km": 4.2,
+            "route": "市バス 206 (京都駅前 → 清水道) 8정거장 16분 ¥230 + 도보 12분 (650m)",
+            "source": "https://www.google.com/maps/dir/Kyoto+Station/Kiyomizu-dera/@34.9889475,135.7478576,14z/data=!4m14!4m13!1m5!1m1!1s0x600108ae918b02ef:0xb61a446e74a21c08!2m2!1d135.7587667!2d34.985849!1m5!1m1!1s0x600108d385dcfb07:0x62af658650c434ba!2m2!1d135.784661!2d34.9946662!3e3",
+            "source_fetched_at": "2026-05-18",
+            "data_quality": "researched_market_rate"
           }
         },
         {
@@ -99,12 +99,12 @@
           "note": "야간 가장 예쁨",
           "arrive_from": {
             "mode": "walk",
-            "duration_min": 10,
-            "distance_km": 0.7,
-            "route": "기온 → 시조대교 → 폰토초·가와라마치 (가모강 도보)",
-            "source": "https://www.google.com/maps/dir/Gion/Pontocho",
-            "source_fetched_at": "2026-05-17",
-            "data_quality": "tbd_needs_browser_mcp"
+            "duration_min": 9,
+            "distance_km": 0.6,
+            "route": "기온 → 시조대교 → 폰토초 (四条通/市道186号 경유, 600m)",
+            "source": "https://www.google.com/maps/dir/Gion,+Higashiyama+Ward,+Kyoto/Pontocho+Alley,+Kyoto/@35.003794,135.7690752,16z/data=!3m1!4b1!4m13!4m12!1m5!1m1!1s0x600108c3c1c67b67:0xdcb04aa1398efb4!2m2!1d135.777245!2d35.0037816!1m5!1m1!1s0x6001091894db603f:0xaa4fd64b17e50202!2m2!1d135.7710439!2d35.0039339",
+            "source_fetched_at": "2026-05-18",
+            "data_quality": "researched_market_rate"
           }
         }
       ]
@@ -113,7 +113,7 @@
       "date": "2026-06-01",
       "day_label": "6/1 (월) — 아라시야마 + 북서쪽",
       "walking_km": 4,
-      "walking_km_source": "items[].arrive_from[mode=walk] 합(~1.0km) + 죽림길·텐류지 정원·니시키 시장 산책 추정(~3.0km)",
+      "walking_km_source": "items[].arrive_from[mode=walk] 합(~0.6km) + 죽림길·텐류지 정원·니시키 시장 산책 추정(~3.4km)",
       "lodging": "에어비앤비 시오 (2박째)",
       "items": [
         {
@@ -137,12 +137,12 @@
           "maps_query": "Tenryu-ji Temple",
           "arrive_from": {
             "mode": "walk",
-            "duration_min": 5,
-            "distance_km": 0.3,
-            "route": "죽림길 남문 → 텐류지 북문 (인접)",
-            "source": "https://www.google.com/maps/dir/Arashiyama+Bamboo+Grove/Tenryu-ji",
-            "source_fetched_at": "2026-05-17",
-            "data_quality": "tbd_needs_browser_mcp"
+            "duration_min": 3,
+            "distance_km": 0.1,
+            "route": "죽림길 → 텐류지 북문 (竹林の小径 경유 7m, Maps 1분; 정원 경내 진입 도보 ~3분 가산)",
+            "source": "https://www.google.com/maps/dir/Arashiyama+Bamboo+Grove/Tenryu-ji/@35.01657,135.6699584,17z/data=!3m1!4b1!4m13!4m12!1m5!1m1!1s0x6001abebbf5c8bad:0xfb9ffc7bbdd67cdd!2m2!1d135.6713013!2d35.0168187!1m5!1m1!1s0x6001aa01b80f9e93:0xcd9c3edaff3348c0!2m2!1d135.6737654!2d35.0158379",
+            "source_fetched_at": "2026-05-18",
+            "data_quality": "researched_market_rate"
           }
         },
         {
@@ -152,12 +152,12 @@
           "note": "4인 좌석 사전 확인",
           "arrive_from": {
             "mode": "walk",
-            "duration_min": 5,
-            "distance_km": 0.3,
-            "route": "텐류지 정문 → 시그라쿠 토후 (아라시야마 본거리)",
-            "source": "https://www.google.com/maps/dir/Tenryu-ji/Shoraku+Tofu",
-            "source_fetched_at": "2026-05-17",
-            "data_quality": "tbd_needs_browser_mcp"
+            "duration_min": 7,
+            "distance_km": 0.5,
+            "route": "텐류지 → 쇼라이안(松籟庵) 도보 7분 500m (사가카메노오쵸 경유)",
+            "source": "https://www.google.com/maps/dir/Tenryu-ji+Temple,+Kyoto/松籟庵+Arashiyama/@35.0145509,135.6696304,17z/data=!3m1!4b1!4m13!4m12!1m5!1m1!1s0x6001aa01b80f9e93:0xcd9c3edaff3348c0!2m2!1d135.6737654!2d35.0158379!1m5!1m1!1s0x6001aa06c66d0acf:0x35b590f68ae42ef2!2m2!1d135.6701322!2d35.0144476",
+            "source_fetched_at": "2026-05-18",
+            "data_quality": "researched_market_rate"
           }
         },
         {
@@ -166,12 +166,12 @@
           "maps_query": "Kinkaku-ji",
           "arrive_from": {
             "mode": "bus",
-            "duration_min": 40,
-            "distance_km": 9.0,
-            "route": "市バス 11 또는 택시 (아라시야마天龍寺前 → 金閣寺道). 11번 약 40분",
-            "source": "https://www2.city.kyoto.lg.jp/kotsu/webguide/ko/comm/route_and_time.html",
-            "source_fetched_at": "2026-05-17",
-            "data_quality": "tbd_needs_browser_mcp"
+            "duration_min": 38,
+            "distance_km": 7.5,
+            "route": "市バス 11(嵐山天龍寺前→山越中町) 11분 + 환승도보 6분 + 市バス 59(山越中町→金閣寺道) 18분 + 도보 2분 ¥460. 단 11번 40분 간격 · 놓치면 택시 22분(7.1km) 대안",
+            "source": "https://www.google.com/maps/dir/Tenryu-ji+Temple,+Kyoto/Kinkaku-ji+Temple,+Kyoto/@35.0265621,135.6623859,13z/am=t/data=!3m1!4b1!4m14!4m13!1m5!1m1!1s0x6001aa01b80f9e93:0xcd9c3edaff3348c0!2m2!1d135.6737654!2d35.0158379!1m5!1m1!1s0x6001a820c0eb46bd:0xee4272b1c22645f!2m2!1d135.7292431!2d35.03937!5i2",
+            "source_fetched_at": "2026-05-18",
+            "data_quality": "researched_market_rate"
           }
         },
         {
@@ -195,12 +195,12 @@
           "note": "시장 17:00 닫는 가게 다수",
           "arrive_from": {
             "mode": "bus",
-            "duration_min": 35,
-            "distance_km": 6.5,
-            "route": "市バス 59 (竜安寺前 → 四条河原町)",
-            "source": "https://www2.city.kyoto.lg.jp/kotsu/webguide/ko/comm/routemap.html",
-            "source_fetched_at": "2026-05-17",
-            "data_quality": "tbd_needs_browser_mcp"
+            "duration_min": 42,
+            "distance_km": 8.1,
+            "route": "市バス 59 (竜安寺前 → 四条河原町) 직행 + 도보 2분 ¥230 (15분 간격)",
+            "source": "https://www.google.com/maps/dir/Ryoan-ji+Temple,+Kyoto/Shijo+Kawaramachi,+Kyoto/@35.0223439,135.7027707,13z/data=!4m14!4m13!1m5!1m1!1s0x6001a82a301cbaa7:0xe1ab173e46d78542!2m2!1d135.7182634!2d35.0344943!1m5!1m1!1s0x600108956d7044cd:0x896ed2a309e1e669!2m2!1d135.769309!2d35.0037747!5i2",
+            "source_fetched_at": "2026-05-18",
+            "data_quality": "researched_market_rate"
           }
         }
       ]
@@ -209,7 +209,7 @@
       "date": "2026-06-02",
       "day_label": "6/2 (화) — 후시미 + 료칸 체크인",
       "walking_km": 5,
-      "walking_km_source": "items[].arrive_from[mode=walk] 합(~0.8km) + 후시미이나리 도리이길·토후쿠지·산주산겐도 경내 산책 추정(~4.2km)",
+      "walking_km_source": "items[].arrive_from[mode=walk] 합(~0.6km) + 후시미이나리 도리이길·토후쿠지·산주산겐도 경내 산책 추정(~4.4km)",
       "lodging": "우메코지 카덴쇼 (2명×2실)",
       "items": [
         {
@@ -218,13 +218,13 @@
           "maps_query": "Fushimi Inari Taisha",
           "note": "이른 시간 인파 회피. 정상까지 안 가도 OK",
           "arrive_from": {
-            "mode": "subway",
-            "duration_min": 25,
-            "distance_km": 7.0,
-            "route": "교토 시영 지하철 도자이선 (니조→교토시청전) → 가라스마선 → JR 나라선 (교토→이나리). 또는 택시 약 15분",
-            "source": "https://www2.city.kyoto.lg.jp/kotsu/webguide/ko/comm/route_and_time.html",
-            "source_fetched_at": "2026-05-17",
-            "data_quality": "tbd_needs_browser_mcp"
+            "mode": "jr",
+            "duration_min": 20,
+            "distance_km": 10.0,
+            "route": "JR 산인본선 (니조→교토) → JR 나라선 (교토→이나리) ¥200 + 도보 5분. (기존 지하철 도자이→게이한 30분 대비 빠름)",
+            "source": "https://www.google.com/maps/dir/Nijo+Station,+Kyoto/Fushimi+Inari+Taisha,+Kyoto/@34.9857916,135.7191561,13z/data=!3m1!4b1!4m13!4m12!1m5!1m1!1s0x600107cd9402bed9:0xef2a8e7659cd4a8e!2m2!1d135.7417118!2d35.0109722!1m5!1m1!1s0x60010f153d2e6d21:0x7b1aca1c753ae2e9!2m2!1d135.7791876!2d34.9676945",
+            "source_fetched_at": "2026-05-18",
+            "data_quality": "researched_market_rate"
           }
         },
         {
@@ -345,8 +345,7 @@
     "카덴쇼 가이세키 시간 (17:30~18:00 권장)",
     "카덴쇼 짐 위탁 (6/2 오전 시오 체크아웃 후 일찍 맡길 수 있는지)",
     "후시미이나리 정상은 시부모 동반이라 X — 입구 ~5분 사진 충분",
-    "6/3 출국 시간에 따라 토지 산책·교토역 식사 가능 여부 결정",
-    "tbd_needs_browser_mcp 라벨 8개 leg (시오→키요미즈, 기온→가와라마치, 죽림→텐류지, 텐류지→시그라쿠, 시그라쿠→금각사, 료안지→가와라마치, 시오→후시미) — Playwright MCP 보유 세션에서 Google Maps Directions로 분·거리·노선 확정 필요"
+    "6/3 출국 시간에 따라 토지 산책·교토역 식사 가능 여부 결정"
   ],
   "source_doc": "docs/kyoto-itinerary-may31-jun3-2026.md"
 }
