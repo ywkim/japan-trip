@@ -25,6 +25,7 @@ def make_fixture(
     flights_md: str | None = None,
     design_tokens: dict | None = None,
     design_md: str | None = None,
+    itinerary: dict | None = None,
 ) -> Path:
     (tmp / "data").mkdir()
     (tmp / "reports").mkdir()
@@ -47,6 +48,8 @@ def make_fixture(
         )
     if design_md is not None:
         (tmp / "DESIGN.md").write_text(design_md, encoding="utf-8")
+    if itinerary is not None:
+        (tmp / "data" / "itinerary.json").write_text(json.dumps(itinerary, ensure_ascii=False), encoding="utf-8")
     return tmp
 
 
@@ -292,6 +295,121 @@ class FlightsSyncTests(unittest.TestCase):
             self.assertTrue(any(e.startswith("[F]") and "median" in e for e in errs), errs)
 
 
+def _itin(items_day0, walking_km=1):
+    return {
+        "trip": {"destination": "교토", "dates": "2026-05-31 → 2026-06-03", "nights": 3, "travelers": 4, "walking_km_total": walking_km},
+        "days": [
+            {"date": "2026-05-31", "day_label": "D1", "walking_km": walking_km, "lodging": "—", "items": items_day0}
+        ],
+    }
+
+
+VALID_ARRIVE_FROM = {
+    "mode": "bus",
+    "duration_min": 4,
+    "distance_km": 1.6,
+    "route": "市バス 59",
+    "source": "https://example.com",
+    "source_fetched_at": "2026-05-17",
+    "data_quality": "researched_market_rate",
+}
+
+
+class ItineraryTransitTests(unittest.TestCase):
+    """검사 G: data/itinerary.json arrive_from 무결성 + walking_km 정합성."""
+
+    def _base(self, td, itin):
+        return make_fixture(Path(td), cost=VALID_COST, index_html="<html></html>", itinerary=itin)
+
+    def test_valid_arrive_from_passes(self):
+        itin = _itin([
+            {"time": "09:00", "title": "A", "maps_query": "A"},
+            {"time": "10:00", "title": "B", "maps_query": "B", "arrive_from": VALID_ARRIVE_FROM},
+        ])
+        with tempfile.TemporaryDirectory() as td:
+            base = self._base(td, itin)
+            errs, _ = validate.run(base, date(2026, 5, 17))
+            self.assertEqual(errs, [], errs)
+
+    def test_missing_source_fails(self):
+        af = dict(VALID_ARRIVE_FROM); del af["source"]
+        itin = _itin([
+            {"time": "09:00", "title": "A", "maps_query": "A"},
+            {"time": "10:00", "title": "B", "maps_query": "B", "arrive_from": af},
+        ])
+        with tempfile.TemporaryDirectory() as td:
+            base = self._base(td, itin)
+            errs, _ = validate.run(base, date(2026, 5, 17))
+            self.assertTrue(any(e.startswith("[G]") and "source" in e for e in errs), errs)
+
+    def test_invalid_data_quality_fails(self):
+        af = dict(VALID_ARRIVE_FROM); af["data_quality"] = "guess"
+        itin = _itin([
+            {"time": "09:00", "title": "A", "maps_query": "A"},
+            {"time": "10:00", "title": "B", "maps_query": "B", "arrive_from": af},
+        ])
+        with tempfile.TemporaryDirectory() as td:
+            base = self._base(td, itin)
+            errs, _ = validate.run(base, date(2026, 5, 17))
+            self.assertTrue(any(e.startswith("[G]") and "data_quality" in e for e in errs), errs)
+
+    def test_tbd_quality_accepted(self):
+        af = dict(VALID_ARRIVE_FROM); af["data_quality"] = "tbd_needs_browser_mcp"
+        af["source_fetched_at"] = "2020-01-01"  # tbd는 stale 검사 면제
+        itin = _itin([
+            {"time": "09:00", "title": "A", "maps_query": "A"},
+            {"time": "10:00", "title": "B", "maps_query": "B", "arrive_from": af},
+        ])
+        with tempfile.TemporaryDirectory() as td:
+            base = self._base(td, itin)
+            errs, _ = validate.run(base, date(2026, 5, 17))
+            self.assertEqual(errs, [], errs)
+
+    def test_stale_source_fetched_at_fails(self):
+        af = dict(VALID_ARRIVE_FROM); af["source_fetched_at"] = "2026-01-01"  # 136d
+        itin = _itin([
+            {"time": "09:00", "title": "A", "maps_query": "A"},
+            {"time": "10:00", "title": "B", "maps_query": "B", "arrive_from": af},
+        ])
+        with tempfile.TemporaryDirectory() as td:
+            base = self._base(td, itin)
+            errs, _ = validate.run(base, date(2026, 5, 17))
+            self.assertTrue(any(e.startswith("[G]") and "stale" in e for e in errs), errs)
+
+    def test_walk_sum_exceeds_declared_fails(self):
+        # declared walking_km=1, leg walk distance 5km — sum exceeds declared by 4km > 2km tolerance
+        af_walk = {**VALID_ARRIVE_FROM, "mode": "walk", "distance_km": 5.0}
+        itin = _itin([
+            {"time": "09:00", "title": "A", "maps_query": "A"},
+            {"time": "10:00", "title": "B", "maps_query": "B", "arrive_from": af_walk},
+        ], walking_km=1)
+        with tempfile.TemporaryDirectory() as td:
+            base = self._base(td, itin)
+            errs, _ = validate.run(base, date(2026, 5, 17))
+            self.assertTrue(any(e.startswith("[G]") and "exceeds" in e for e in errs), errs)
+
+    def test_walk_sum_under_declared_ok(self):
+        # declared walking_km=5 (경내 산책 포함), leg walk 0.6km — OK
+        af_walk = {**VALID_ARRIVE_FROM, "mode": "walk", "distance_km": 0.6}
+        itin = _itin([
+            {"time": "09:00", "title": "A", "maps_query": "A"},
+            {"time": "10:00", "title": "B", "maps_query": "B", "arrive_from": af_walk},
+        ], walking_km=5)
+        with tempfile.TemporaryDirectory() as td:
+            base = self._base(td, itin)
+            errs, _ = validate.run(base, date(2026, 5, 17))
+            self.assertEqual(errs, [], errs)
+
+    def test_invalid_mode_fails(self):
+        af = dict(VALID_ARRIVE_FROM); af["mode"] = "teleport"
+        itin = _itin([
+            {"time": "09:00", "title": "A", "maps_query": "A"},
+            {"time": "10:00", "title": "B", "maps_query": "B", "arrive_from": af},
+        ])
+        with tempfile.TemporaryDirectory() as td:
+            base = self._base(td, itin)
+            errs, _ = validate.run(base, date(2026, 5, 17))
+            self.assertTrue(any(e.startswith("[G]") and "mode" in e for e in errs), errs)
 VALID_TOKENS = {
     "theme_name": "Quiet Ledger",
     "version": "1.0.0",
@@ -309,7 +427,7 @@ Colors used: `#F7F6F2`, `#1B1D24`, `#3E5C76`, `#161821`, `#E8E6DE`, `#8AA8C7`.
 """
 
 class DesignSyncTests(unittest.TestCase):
-    """검사 G: DESIGN.md ↔ data/design-tokens.json hex 양방향 + theme_name·version."""
+    """검사 H: DESIGN.md ↔ data/design-tokens.json hex 양방향 + theme_name·version."""
 
     def _fixture(self, td, *, design_md=VALID_DESIGN_MD, tokens=None):
         return make_fixture(
@@ -324,7 +442,7 @@ class DesignSyncTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as td:
             base = self._fixture(td)
             errs, _ = validate.run(base, date(2026, 5, 14))
-            self.assertEqual([e for e in errs if e.startswith("[G]")], [], errs)
+            self.assertEqual([e for e in errs if e.startswith("[H]")], [], errs)
 
     def test_hex_in_md_not_in_tokens_fails(self):
         bad_md = VALID_DESIGN_MD + "\nstray color: #ABCDEF\n"
@@ -332,7 +450,7 @@ class DesignSyncTests(unittest.TestCase):
             base = self._fixture(td, design_md=bad_md)
             errs, _ = validate.run(base, date(2026, 5, 14))
             self.assertTrue(
-                any(e.startswith("[G]") and "not in design-tokens.json" in e for e in errs),
+                any(e.startswith("[H]") and "not in design-tokens.json" in e for e in errs),
                 errs,
             )
 
@@ -343,7 +461,7 @@ class DesignSyncTests(unittest.TestCase):
             base = self._fixture(td, tokens=bad_tokens)
             errs, _ = validate.run(base, date(2026, 5, 14))
             self.assertTrue(
-                any(e.startswith("[G]") and "not documented in DESIGN.md" in e for e in errs),
+                any(e.startswith("[H]") and "not documented in DESIGN.md" in e for e in errs),
                 errs,
             )
 
@@ -354,7 +472,7 @@ class DesignSyncTests(unittest.TestCase):
             base = self._fixture(td, tokens=bad_tokens)
             errs, _ = validate.run(base, date(2026, 5, 14))
             self.assertTrue(
-                any(e.startswith("[G]") and "theme_name" in e for e in errs), errs
+                any(e.startswith("[H]") and "theme_name" in e for e in errs), errs
             )
 
     def test_version_drift_fails(self):
@@ -364,7 +482,7 @@ class DesignSyncTests(unittest.TestCase):
             base = self._fixture(td, tokens=bad_tokens)
             errs, _ = validate.run(base, date(2026, 5, 14))
             self.assertTrue(
-                any(e.startswith("[G]") and "version" in e for e in errs), errs
+                any(e.startswith("[H]") and "version" in e for e in errs), errs
             )
 
 

@@ -98,7 +98,8 @@ japan-trip/
 │   ├── kyoto-itinerary-may-2026.md        # 교토 5월 시나리오 (5/24~27 구버전 — 사람용 사본)
 │   ├── kyoto-itinerary-may31-jun3-2026.md # 교토 5/31~6/3 확정 시나리오 (사람용 사본)
 │   ├── airbnb-kyoto-may31-jun2-2026.md    # 에어비앤비 5개 매물 비교
-│   └── jejuair-icn-kobe-june-2026.md      # 제주항공 인천-고베 신규 노선·가격 리서치
+│   ├── jejuair-icn-kobe-june-2026.md      # 제주항공 인천-고베 신규 노선·가격 리서치
+│   └── transit-mcp-handoff.md             # 후속 세션(Playwright MCP) 위임 가이드 (tbd_needs_browser_mcp leg 측정)
 ├── viz/
 │   ├── itinerary.html         # 일자별 카드 뷰 (build_index.py 산출물 — 직접 편집 금지)
 │   ├── itinerary-table.html   # 4일 시간표 뷰 (build_index.py 산출물 — 직접 편집 금지)
@@ -119,7 +120,7 @@ japan-trip/
 ## 데이터 동기화 규칙
 
 - **실행 단일 출처(정본)** — 본 레포의 현재 1차 데이터:
-  - `data/itinerary.json` — 교토 3박4일 일정 (`days`: 확정 코스, `route_candidates`: 대안 코스 3개 — 여유형·서북 사찰 집중형·미식+문화 체험형)
+  - `data/itinerary.json` — 교토 3박4일 일정. `days`: 확정 코스 (일자·시간대·동선·메모·도보거리·보류). `route_candidates`: 대안 코스 3개 (여유형·서북 사찰 집중형·미식+문화 체험형). days[].items[].`arrive_from`(mode/duration_min/distance_km/route/source/source_fetched_at/data_quality)으로 장소 간 이동 출처 명시. data_quality는 `official_fare`/`researched_market_rate`/`tbd_needs_browser_mcp`(Playwright MCP 후속 세션 위임)
   - `data/booking-checklist.json` — 예약 진행 상태
   - `data/cost-options.json` — 항공·숙박·고정비·일회성·시나리오 (확정 금액은 `confirmed_booking` 라벨로 승격)
   - `data/design-tokens.json` — 색·타이포·간격·반경 (DESIGN.md §2~§6과 동기화). `build_index.py`의 `render_css(tokens)`가 4개 산출물(`index.html`·`viz/itinerary.html`·`viz/itinerary-table.html`·`viz/checklist.html`)의 인라인 CSS를 공통 생성
@@ -148,7 +149,8 @@ japan-trip/
 | SYNC 주석 무결성 | `scripts/validate.py` (D) | `index.html`의 SYNC 주석에 명시된 path가 존재하지 않음, §N이 final-report 절 수보다 큼 |
 | weather MD↔JSON 동기화 | `scripts/validate.py` (E) | `docs/weather.md`의 도시·시기 수치가 `data/weather.json`과 일치하지 않음 |
 | flights MD↔JSON 동기화 | `scripts/validate.py` (F) | `docs/flights.md`의 snapshot_date·시세 수치가 `data/flights.json`과 일치하지 않음 |
-| DESIGN MD↔JSON 동기화 | `scripts/validate.py` (G) | `DESIGN.md`의 hex가 `data/design-tokens.json`에 없거나 그 반대, theme_name·version drift |
+| itinerary arrive_from 무결성 | `scripts/validate.py` (G) | `data/itinerary.json` arrive_from에 mode/source/source_fetched_at/data_quality 누락, mode·data_quality 화이트리스트 외, source_fetched_at > 60d(tbd_needs_browser_mcp 제외), days[].walking_km보다 도보 leg 합이 2km 이상 초과 |
+| DESIGN MD↔JSON 동기화 | `scripts/validate.py` (H) | `DESIGN.md`의 hex가 `data/design-tokens.json`에 없거나 그 반대, theme_name·version drift |
 | 빌드 산출물 drift | `scripts/build_index.py --check` | `index.html`·`viz/itinerary.html`·`viz/itinerary-table.html`·`viz/checklist.html` 중 하나라도 빌드 결과와 다름 |
 
 ## 디자인 워크플로우
@@ -158,7 +160,7 @@ japan-trip/
 1. `DESIGN.md` 편집 (의도·규칙 먼저).
 2. `data/design-tokens.json` 동기화 (DESIGN.md §2~§6의 모든 hex·치수가 토큰에 반영되어야 함).
 3. `python scripts/build_index.py` 실행 → 4개 산출물이 공통 `render_css(tokens)`로 재생성.
-4. `python scripts/validate.py` (G 통과) + `python scripts/build_index.py --check` (drift 없음) 확인.
+4. `python scripts/validate.py` (H 통과) + `python scripts/build_index.py --check` (drift 없음) 확인.
 5. `data/design-tokens.json`이 단일 출처. 인라인 hex 추가 금지 — 새 색은 반드시 토큰 키 추가 후 `var(--키)`로 참조.
 
 상세 가이드: `DESIGN.md` §9 (Agent Prompt Guide).
