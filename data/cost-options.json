@@ -381,10 +381,10 @@
     },
     {
       "id": "kyoto_local_transit_4pax",
-      "label": "교토 시내 교통 4인 (6/1만 1일권 + 5/31·6/2 단권)",
+      "label": "교토 시내 교통 4인 (4일 모두 단권, iPhone Apple Wallet ICOCA 통일)",
       "category": "transport",
-      "krw": 47000,
-      "source": "교토시 공식 6/1 1일권 ¥700×4=¥2,800 + 5/31 시버스 ¥230×4=¥920 + 6/2 JR 나라선 단권 ¥200×4=¥800. 총 ¥4,520 ≈ ₩47,000 (¥1=₩10.4). 일자별 패스 본전 분석: docs/decision-log/2026-05-18-03-transit-pass-rightsizing.md",
+      "krw": 56000,
+      "source": "교토시·JR 서일본 공식. 5/31 시버스 ¥230×4=¥920 + 6/1 시버스 3회(¥460+¥230+¥230)×4=¥3,680 + 6/2 JR 나라선 ¥200×4=¥800(leg×3 정확액 후속 측정 보류) + 6/3 도보. 총 ¥5,400 ≈ ₩56,000(FX ¥1=₩10.4). 4인 iPhone Apple Wallet ICOCA 통일. ¥700 시버스 1일권은 2023-09 판매 종료/2024-03-31 만료, 현 통합 1일권 ¥1,100×4=¥4,400은 6/1 단권 ¥3,680 대비 ¥720 비효율. 분석: docs/decision-log/2026-05-18-04-transit-pass-correction-icoca.md",
       "data_quality": "official_fare"
     },
     {

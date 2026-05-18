@@ -25,7 +25,7 @@
     ],
     "walking_km_total": 13,
     "walking_km_source": "items[].arrive_from[mode=walk].distance_km 합 + 사찰·시장 내부 산책 추정",
-    "transit_pass_source": "일자별 days[].pass_recommendation. 4일 합계 ¥4,520 (≈₩47,000). 상세: docs/decision-log/2026-05-18-03-transit-pass-rightsizing.md. cost-options.json의 kyoto_local_transit_4pax 항목과 동기화."
+    "transit_pass_source": "4인 iPhone Apple Wallet ICOCA 통일, 4일 모두 단권. 일자별 근거: days[].pass_recommendation. 4일 합계 ¥5,400 ≈ ₩56,000. 통합 1일권 ¥1,100은 ¥700 시버스 단독 1일권(2023-09 폐지) 대체이나 본전 미달. 분석: docs/decision-log/2026-05-18-04-transit-pass-correction-icoca.md. cost-options.json의 kyoto_local_transit_4pax 항목과 동기화."
   },
   "days": [
     {
@@ -105,7 +105,7 @@
         }
       ],
       "walking_km_source": "items[].arrive_from[mode=walk] 합(~1.9km) + 키요미즈 경내·기온·폰토초 산책 추정(~1.1km)",
-      "pass_recommendation": "단권 권장 — 시영 사용 1회(시오→키요미즈 시버스 ¥230×4=¥920). 시영 1일권 ¥700/인×4=¥2,800 본전 미달."
+      "pass_recommendation": "iPhone Apple Wallet ICOCA 단권 — 시버스 1회(시오→키요미즈) ¥230×4=¥920. 통합 1일권 ¥1,100/인 본전 미달."
     },
     {
       "date": "2026-06-01",
@@ -214,7 +214,7 @@
         }
       ],
       "walking_km_source": "items[].arrive_from[mode=walk] 합(~0.6km) + 죽림길·텐류지 정원·니시키 시장 산책 추정(~3.4km)",
-      "pass_recommendation": "시영 1일권 권장 (¥700/인×4=¥2,800) — 시버스 3회 사용(텐류지→금각사 ¥460+금각→료안 ¥230+료안→가와라마치 ¥230=¥920×4=¥3,680 단권 대비 ¥880 절약). JR 산인본선(니조→사가아라시야마)은 미적용."
+      "pass_recommendation": "iPhone Apple Wallet ICOCA 단권 — 시버스 3회(텐류지→금각 ¥460 + 금각→료안 ¥230 + 료안→가와라마치 ¥230) ¥920/인×4=¥3,680. 통합 1일권 ¥1,100×4=¥4,400 대비 ¥720 절약(¥700 시버스 단독 1일권은 2023-09 폐지)."
     },
     {
       "date": "2026-06-02",
@@ -298,7 +298,7 @@
         }
       ],
       "walking_km_source": "items[].arrive_from[mode=walk] 합(~0.6km) + 후시미이나리 도리이길·토후쿠지·산주산겐도 경내 산책 추정(~4.4km)",
-      "pass_recommendation": "단권 권장 — JR만 사용(시오→후시미·이나리→토후쿠지·토후쿠지→교토역). 시영 미사용. JR 나라선 ¥200×4=¥800."
+      "pass_recommendation": "iPhone Apple Wallet ICOCA 단권 — JR 나라선 leg 합산 잠정 ¥800/4인(정확액은 후속 측정 보류). 시영 미사용."
     },
     {
       "date": "2026-06-03",
@@ -353,7 +353,7 @@
         }
       ],
       "walking_km_source": "items[].arrive_from[mode=walk] 합(~1.8km). 출국 시간에 따라 토지 산책 생략 가능",
-      "pass_recommendation": "패스 불요 — 도보 + JR 하루카(별도 왕복권)만 사용."
+      "pass_recommendation": "패스 불요 — 도보 + JR 하루카(별도 왕복권)."
     }
   ],
   "route_candidates": [

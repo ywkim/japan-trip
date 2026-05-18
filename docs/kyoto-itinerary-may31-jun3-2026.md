@@ -80,18 +80,22 @@
 ### 2.4 6/3 출국
 - **토지(東寺) 오층탑** — [네이버 블로그 후기 검색](https://search.naver.com/search.naver?where=blog&query=%EA%B5%90%ED%86%A0%20%ED%86%A0%EC%A7%80%20%EB%8F%99%EC%82%AC%20%EC%98%A4%EC%B8%B5%ED%83%91)
 
-## 2.5 교통패스 권장 (일자별)
+## 2.5 교통패스 권장 (일자별) — iPhone Apple Wallet ICOCA 단권 통일
 
-> 출처: `data/cost-options.json` `kyoto_local_transit_4pax` + `data/itinerary.json` days[].pass_recommendation. 분석 일지: [2026-05-18-03-transit-pass-rightsizing](./decision-log/2026-05-18-03-transit-pass-rightsizing.md).
+> 출처: `data/cost-options.json` `kyoto_local_transit_4pax` + `data/itinerary.json` days[].pass_recommendation. 분석·정정 일지: [2026-05-18-04-transit-pass-correction-icoca](./decision-log/2026-05-18-04-transit-pass-correction-icoca.md) (직전 [03 일지](./decision-log/2026-05-18-03-transit-pass-rightsizing.md)는 ¥700 시버스 1일권 기준 — 폐지 반영 전).
 
-| 일자 | 시영 사용 | 단권 합 | 1일권 본전 | 채택 |
+**결제 채널**: 4인 모두 iPhone Apple Wallet에 **ICOCA(또는 Suica/PASMO) 1장**씩 추가 → 시버스·시영지하철·JR(산인·나라선) 모두 탭. 종이·발권기·앱 발권 없음. iPhone 8 이상·iOS 최신·Apple Account 2단계 인증 필요. 출국 전 초기 충전 권장 1인당 ¥3,000.
+
+| 일자 | 사용 | 단권 합 (4인) | 통합 1일권 ¥1,100×4=¥4,400 | 채택 |
 |---|---|---|---|---|
-| 5/31 | 시버스 1회 | ¥920 | ¥2,800 | **단권** (1일권 비효율) |
-| 6/1 | 시버스 3회 | ¥3,680 | ¥2,800 | **1일권** (¥880 절약) |
-| 6/2 | JR만 | ¥800 | — | **단권 JR** (시영 미사용) |
+| 5/31 | 시버스 1회 | ¥920 | ❌ 비효율 | **단권 ICOCA** |
+| 6/1 | 시버스 3회 | ¥3,680 | ❌ ¥720 비효율 | **단권 ICOCA** |
+| 6/2 | JR 3 leg (잠정) | ¥800 | 시영 미사용 | **단권 ICOCA** |
 | 6/3 | 도보 + 하루카 | ¥0 | — | **패스 불요** |
 
-**합계**: ¥4,520 ≈ ₩47,000. 이전 3일 일괄 1일권(₩84,000) 대비 ₩37,000 절감 → 8% 지역 교통 가이드 한도(₩240K) 정확히 통과.
+**합계**: ¥5,400 ≈ ₩56,000 (FX ¥1=₩10.4). 이전 3일 일괄 1일권(₩84,000) 대비 ₩28,000 절감.
+
+> ⚠️ **¥700 시버스 단독 1일권은 2023-09 판매 종료 / 2024-03-31 사용 만료** (교토시 오버투어리즘 대책). 현 통합 1일권 ¥1,100/인은 본전 미달이라 본 트립에선 채택 안 함.
 
 ## 3. 보류·확인 필요
 
