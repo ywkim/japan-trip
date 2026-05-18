@@ -119,5 +119,43 @@ class ItineraryTableTests(unittest.TestCase):
             TABLE.write_text(original, encoding="utf-8")
 
 
+class BlogReviewsTests(unittest.TestCase):
+    def test_blog_reviews_css_present(self):
+        run()
+        itin = ITINERARY.read_text(encoding="utf-8")
+        for cls in (".blog-strip", ".blog-card", ".blog-thumb", ".blog-comment"):
+            self.assertIn(cls, itin, f"CSS class '{cls}' missing in itinerary.html")
+
+    def test_blog_reviews_rendered_for_key_places(self):
+        run()
+        itin = ITINERARY.read_text(encoding="utf-8")
+        self.assertGreaterEqual(itin.count('class="blog-reviews"'), 1, "no blog-reviews sections rendered")
+        self.assertGreaterEqual(itin.count('class="blog-card"'), 3, "expected at least 3 blog cards")
+        # Key places should have reviews
+        for place in ("키요미즈데라", "죽림길", "후시미"):
+            self.assertIn(place, itin, f"'{place}' missing from itinerary.html")
+
+    def test_blog_reviews_link_to_naver(self):
+        run()
+        itin = ITINERARY.read_text(encoding="utf-8")
+        self.assertIn("blog.naver.com", itin, "no Naver blog links found in itinerary.html")
+
+    def test_blog_reviews_have_images(self):
+        run()
+        itin = ITINERARY.read_text(encoding="utf-8")
+        self.assertIn('class="blog-thumb"', itin, "blog thumbnail images missing")
+        self.assertIn("pstatic.net", itin, "expected pstatic.net image URLs in blog reviews")
+
+    def test_blog_reviews_standalone(self):
+        run()
+        itin = ITINERARY.read_text(encoding="utf-8")
+        self.assertNotIn("fetch(", itin, "itinerary.html must remain standalone (no fetch)")
+
+    def test_blog_reviews_in_table_mobile_view(self):
+        run()
+        html = TABLE.read_text(encoding="utf-8")
+        self.assertIn('class="blog-reviews"', html, "blog-reviews missing from itinerary-table.html mobile view")
+
+
 if __name__ == "__main__":
     unittest.main()
