@@ -72,6 +72,29 @@ class BuildIndexTests(unittest.TestCase):
         cl = CHECKLIST.read_text(encoding="utf-8")
         self.assertIn("data/booking-checklist.json", cl)
 
+    def test_arrive_from_route_is_clickable_link_when_source_is_url(self):
+        """모든 mode(bus·subway·jr·taxi·walk·airport_express)의 arrive_from에서
+        source가 http URL이면 route 텍스트가 <a href> 링크로 렌더돼야 한다.
+        """
+        run()
+        import json as _json
+        data = _json.loads((BASE / "data" / "itinerary.json").read_text(encoding="utf-8"))
+        url_legs = []
+        for day in data["days"]:
+            for it in day["items"]:
+                af = it.get("arrive_from")
+                if not af:
+                    continue
+                src = af.get("source", "")
+                if src.startswith("http"):
+                    url_legs.append((af["mode"], src.split()[0]))
+        self.assertGreater(len(url_legs), 0, "fixture must have at least one URL-sourced leg")
+        for path in (INDEX, ITINERARY):
+            with self.subTest(path=path.name):
+                html = path.read_text(encoding="utf-8")
+                for mode, url in url_legs[:5]:
+                    self.assertIn(url, html, f"{mode} leg URL {url!r} not linked in {path.name}")
+
     def test_route_candidates_rendered_in_itinerary(self):
         run()
         itin = ITINERARY.read_text(encoding="utf-8")

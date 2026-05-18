@@ -14,6 +14,13 @@
   F. flights MD↔JSON 동기화: data/flights.json의 snapshot_date·version이
      docs/flights.md 본문에 등장하고, 핵심 시세(4인 median 천만원 표기) 중
      적어도 1개가 일치하는지 검증.
+  G. itinerary arrive_from 무결성: data/itinerary.json의 모든
+     days[].items[].arrive_from 항목에 mode·source·source_fetched_at·
+     data_quality 존재. data_quality는 ALLOWED_QUALITY ∪
+     {'tbd_needs_browser_mcp'}. source_fetched_at > 60d 이고
+     data_quality != tbd_needs_browser_mcp 면 stale fail. mode=walk leg의
+     distance_km 합과 days[].walking_km 차이가 2km 초과면 fail (정수 반올림
+     오차 + 시장·사찰 내부 산책 추정 여유 포함).
 
 exit 0 = 모두 통과 또는 경고만, exit 1 = 실패.
 
@@ -33,6 +40,9 @@ from datetime import date
 from pathlib import Path
 
 ALLOWED_QUALITY = {"confirmed_booking", "official_fare", "researched_market_rate"}
+ITINERARY_QUALITY = ALLOWED_QUALITY | {"tbd_needs_browser_mcp"}
+ITINERARY_MODES = {"walk", "bus", "subway", "train", "jr", "airport_express", "taxi"}
+WALKING_KM_TOLERANCE = 2.0
 PRICE_SECTIONS = ("flights", "lodging", "daily_fixed", "one_time")
 DATE_RE = re.compile(r"(20\d{2})[-/.](\d{1,2})[-/.](\d{1,2})")
 SYNC_RE = re.compile(r"<!--\s*SYNC:\s*(.+?)\s*-->")
@@ -173,6 +183,56 @@ def check_flights_sync(base: Path) -> list[str]:
     return errors
 
 
+def check_itinerary_transit(base: Path, today: date) -> tuple[list[str], list[str]]:
+    """검사 G: data/itinerary.json arrive_from 무결성 + walking_km 합 정합성."""
+    errors: list[str] = []
+    warnings: list[str] = []
+    itin_path = base / "data" / "itinerary.json"
+    if not itin_path.exists():
+        return errors, warnings
+    data = json.loads(itin_path.read_text(encoding="utf-8"))
+    for day in data.get("days", []):
+        day_label = day.get("date") or day.get("day_label", "?")
+        walk_sum = 0.0
+        for idx, item in enumerate(day.get("items", [])):
+            af = item.get("arrive_from")
+            if af is None:
+                continue
+            loc = f"{day_label}.items[{idx}].arrive_from ({item.get('title','?')})"
+            for field in ("mode", "source", "source_fetched_at", "data_quality"):
+                if not af.get(field):
+                    errors.append(f"[G] {loc}: missing '{field}'")
+            mode = af.get("mode")
+            if mode and mode not in ITINERARY_MODES:
+                errors.append(f"[G] {loc}: mode {mode!r} not in {sorted(ITINERARY_MODES)}")
+            qual = af.get("data_quality")
+            if qual and qual not in ITINERARY_QUALITY:
+                errors.append(f"[G] {loc}: data_quality {qual!r} not in {sorted(ITINERARY_QUALITY)}")
+            fetched = af.get("source_fetched_at")
+            if fetched and qual and qual != "tbd_needs_browser_mcp":
+                d = extract_date(fetched)
+                if d:
+                    age = (today - d).days
+                    if age > 60:
+                        errors.append(f"[G] {loc}: source_fetched_at stale {age}d — re-research required")
+                    elif age > 30:
+                        warnings.append(f"[G] {loc}: source_fetched_at aging {age}d")
+            if mode == "walk":
+                dist = af.get("distance_km")
+                if isinstance(dist, (int, float)):
+                    walk_sum += dist
+        declared = day.get("walking_km")
+        if isinstance(declared, (int, float)) and walk_sum > 0:
+            # leg 합은 경내·시장 내부 산책 미포함이므로 declared의 하한.
+            # leg 합이 declared를 초과(+ tolerance)할 때만 부정합으로 본다.
+            if walk_sum - declared > WALKING_KM_TOLERANCE:
+                errors.append(
+                    f"[G] {day_label}: items[].arrive_from[mode=walk] sum {walk_sum:.1f}km "
+                    f"exceeds declared walking_km {declared} + {WALKING_KM_TOLERANCE}km tolerance"
+                )
+    return errors, warnings
+
+
 def run(base: Path, today: date) -> tuple[list[str], list[str]]:
     errors: list[str] = []
     warnings: list[str] = []
@@ -182,6 +242,9 @@ def run(base: Path, today: date) -> tuple[list[str], list[str]]:
     errors.extend(check_sync_comments(base))
     errors.extend(check_weather_sync(base))
     errors.extend(check_flights_sync(base))
+    e, w = check_itinerary_transit(base, today)
+    errors.extend(e)
+    warnings.extend(w)
     return errors, warnings
 
 
