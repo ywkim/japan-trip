@@ -21,6 +21,7 @@
 
 ### 1. 확정 정보 보기 (모바일·웹)
 
+- 배포: https://nihon-trip.vercel.app (Vercel, main 브랜치 자동 배포)
 - `index.html` — 🏠 홈 탭 (요약·장마·예산·점수·일정 미리보기). 하단 고정 4탭 내비게이션 포함. 인라인 데이터로 자기완결, 더블클릭 동작
 - `viz/itinerary.html` — 📅 일정 탭: 일자별 상세 일정 카드 뷰 (시간대·동선·메모·이미지). `data/itinerary.json` 단일 출처
 - `viz/itinerary-table.html` — 📅 일정 탭: 3박4일 **시간표 뷰** (4일 열 × 시간대 행, 모바일 카드/데스크탑 테이블 자동 전환). `data/itinerary.json` 단일 출처
