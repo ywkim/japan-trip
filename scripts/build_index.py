@@ -93,13 +93,13 @@ def load_data():
 
 CSS = """
   :root {
-    --bg: #fafafa; --fg: #222; --muted: #666; --border: #ddd;
-    --accent: #d33; --card: #fff; --subcard: #fafafa;
+    --bg: #fff; --fg: #111; --muted: #888; --border: #eaeaea;
+    --accent: #111; --card: #fff; --subcard: #fafafa;
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --bg: #1a1a1a; --fg: #eee; --muted: #999; --border: #333;
-      --accent: #ff6464; --card: #232323; --subcard: #1e1e1e;
+      --bg: #000; --fg: #ededed; --muted: #888; --border: #333;
+      --accent: #ededed; --card: #0a0a0a; --subcard: #111;
     }
   }
   * { box-sizing: border-box; }
@@ -163,7 +163,7 @@ CSS = """
   .tab-bar {
     position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
     width: 100%; max-width: 640px;
-    display: flex; background: var(--card); border-top: 2px solid var(--border);
+    display: flex; background: var(--card); border-top: 1px solid var(--border);
     z-index: 200; padding-bottom: env(safe-area-inset-bottom, 0px);
   }
   .tab-bar::after {
@@ -172,17 +172,14 @@ CSS = """
   }
   .tab-bar a {
     flex: 1; display: flex; flex-direction: column; align-items: center;
-    padding: 0.65rem 0.25rem 0.4rem; text-decoration: none;
-    color: var(--muted); font-size: 0.68rem; gap: 0.15rem; line-height: 1.2;
+    padding: 0.6rem 0.25rem 0.45rem; text-decoration: none;
+    color: var(--muted); font-size: 0.68rem; gap: 0.2rem; line-height: 1.2;
     -webkit-tap-highlight-color: transparent;
-    border-right: 1px solid var(--border);
   }
-  .tab-bar a:last-child { border-right: none; }
   .tab-bar a.active {
-    color: var(--accent);
-    box-shadow: inset 0 3px 0 var(--accent);
+    color: var(--fg); font-weight: 600;
   }
-  .tab-bar a:active { opacity: 0.7; }
+  .tab-bar a:active { opacity: 0.6; }
   .tab-bar .tab-icon { font-size: 1.25rem; line-height: 1; }
   /* ── 이미지 ── */
   .place-img {
@@ -221,7 +218,7 @@ def card_summary(d) -> str:
     kyoto = next(c for c in decision["candidates"] if c["id"] == "kyoto")
     kyoto_score = next((s for s in score["scored"] if s["id"] == "kyoto"), None)
     scn = next((s for s in budget["scenarios"] if s["id"] == SCENARIO_ID), None)
-    pass_marker = "✅ 통과" if scn and scn["passes_cap"] else f"❌ {won(-scn['headroom_krw'])} 초과" if scn else "—"
+    pass_marker = "통과" if scn and scn["passes_cap"] else f"{won(-scn['headroom_krw'])} 초과" if scn else "—"
     score_str = f"{kyoto_score['score']:.2f} / 10" if kyoto_score else "N/A"
     total_str = won(scn["confirmed_total_krw"]) if scn else "—"
 
@@ -278,7 +275,7 @@ def card_tsuyu(d) -> str:
   <div class="subcard">
     <div class="subtitle">최근 8년 시나리오 확률</div>
     <div class="row"><span class="k">평년형 (6/4~6/10)</span><span class="v">50%</span></div>
-    <div class="row"><span class="k">조기 입림 (6/3 이전)</span><span class="v" style="color:#c80">25%</span></div>
+    <div class="row"><span class="k">조기 입림 (6/3 이전)</span><span class="v" style="font-weight:600">25%</span></div>
     <div class="row"><span class="k">6/10 이전 입림</span><span class="v">50%</span></div>
     <div class="sub">조기 입림 사례: 2023(5/29) · 2025(5/17). 평년 직전 평탄 구간 — 본격 강수 상승은 6월 둘째 주부터.</div>
   </div>
@@ -367,13 +364,13 @@ def card_budget(d) -> str:
     budget = d["budget"]
     rows = []
     for s in budget["scenarios"]:
-        marker = "✅" if s["passes_cap"] else "❌"
+        marker = "통과" if s["passes_cap"] else "초과"
         head = won(s["headroom_krw"]) if s["headroom_krw"] >= 0 else f"−{won(-s['headroom_krw'])}"
-        highlight = ' style="border-color: var(--accent);"' if s["id"] == SCENARIO_ID else ""
+        highlight = ' style="border-color: var(--accent); border-width: 2px;"' if s["id"] == SCENARIO_ID else ""
         cats = []
         for c in s["categories"]:
-            color = {"ok": "#2a7", "near": "#c80", "over": "#c33"}[c["status"]]
-            cats.append(f'<div class="row"><span class="k">{esc(c["label"])}</span><span class="v" style="color:{color}">{esc(won(c["actual_krw"]))} ({c["actual_pct"]}%)</span></div>')
+            dim = ' style="color:var(--muted)"' if c["status"] == "ok" else (' style="font-weight:600"' if c["status"] == "over" else "")
+            cats.append(f'<div class="row"><span class="k">{esc(c["label"])}</span><span class="v"{dim}>{esc(won(c["actual_krw"]))} ({c["actual_pct"]}%)</span></div>')
         rows.append(f"""
   <div class="subcard"{highlight}>
     <div class="subtitle">{marker} {esc(s['label'])}</div>
@@ -460,13 +457,13 @@ def card_itinerary(d) -> str:
 def card_checklist(d) -> str:
     items = d["checklist"]["items"]
     rows = []
-    color_map = {"확정": "#2a7", "예약중": "#c80", "미정": "#c33"}
     for it in items:
-        color = color_map.get(it["status"], "#666")
+        st = it["status"]
+        dim = "" if st == "확정" else ' style="color:var(--muted)"'
         rows.append(f"""
   <div class="subcard">
     <div class="subtitle">{esc(it['label'])}</div>
-    <div class="row"><span class="k">상태</span><span class="v" style="color:{color}">{esc(it['status'])}</span></div>
+    <div class="row"><span class="k">상태</span><span class="v"{dim}>{esc(it['status'])}</span></div>
     <div class="row"><span class="k">기한</span><span class="v">{esc(it['due_date'])}</span></div>
     <div class="sub">{esc(it.get('note', ''))}</div>
   </div>""")
@@ -670,24 +667,24 @@ def build_itinerary(d) -> str:
 def build_checklist(d) -> str:
     cl = d["checklist"]
     items = cl["items"]
-    color_map = {"확정": "#2a7", "예약중": "#c80", "미정": "#c33"}
     counts = {"확정": 0, "예약중": 0, "미정": 0}
     for it in items:
         counts[it.get("status", "미정")] = counts.get(it.get("status", "미정"), 0) + 1
 
     summary_rows = "".join(
-        f'<div class="row"><span class="k" style="color:{color_map[k]}">● {k}</span><span class="v">{counts[k]}개</span></div>'
+        f'<div class="row"><span class="k">{k}</span><span class="v">{counts[k]}개</span></div>'
         for k in ("확정", "예약중", "미정")
     )
 
     sorted_items = sorted(items, key=lambda it: it.get("due_date", "9999-99-99"))
     item_cards = []
     for it in sorted_items:
-        color = color_map.get(it["status"], "#666")
+        st = it["status"]
+        badge_style = "" if st == "확정" else ' style="color:var(--muted)"'
         item_cards.append(f"""
   <div class="subcard">
     <div class="subtitle">{esc(it['label'])}</div>
-    <div class="row"><span class="k">상태</span><span class="v"><span class="badge" style="color:{color}">{esc(it['status'])}</span></span></div>
+    <div class="row"><span class="k">상태</span><span class="v"><span class="badge"{badge_style}>{esc(it['status'])}</span></span></div>
     <div class="row"><span class="k">기한</span><span class="v">{esc(it.get('due_date',''))}</span></div>
     <div class="sub">{esc(it.get('note',''))}</div>
   </div>""")

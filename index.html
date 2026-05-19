@@ -8,13 +8,13 @@
 <title>일본 여행 최종 결정</title>
 <style>
   :root {
-    --bg: #fafafa; --fg: #222; --muted: #666; --border: #ddd;
-    --accent: #d33; --card: #fff; --subcard: #fafafa;
+    --bg: #fff; --fg: #111; --muted: #888; --border: #eaeaea;
+    --accent: #111; --card: #fff; --subcard: #fafafa;
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --bg: #1a1a1a; --fg: #eee; --muted: #999; --border: #333;
-      --accent: #ff6464; --card: #232323; --subcard: #1e1e1e;
+      --bg: #000; --fg: #ededed; --muted: #888; --border: #333;
+      --accent: #ededed; --card: #0a0a0a; --subcard: #111;
     }
   }
   * { box-sizing: border-box; }
@@ -78,7 +78,7 @@
   .tab-bar {
     position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
     width: 100%; max-width: 640px;
-    display: flex; background: var(--card); border-top: 2px solid var(--border);
+    display: flex; background: var(--card); border-top: 1px solid var(--border);
     z-index: 200; padding-bottom: env(safe-area-inset-bottom, 0px);
   }
   .tab-bar::after {
@@ -87,17 +87,14 @@
   }
   .tab-bar a {
     flex: 1; display: flex; flex-direction: column; align-items: center;
-    padding: 0.65rem 0.25rem 0.4rem; text-decoration: none;
-    color: var(--muted); font-size: 0.68rem; gap: 0.15rem; line-height: 1.2;
+    padding: 0.6rem 0.25rem 0.45rem; text-decoration: none;
+    color: var(--muted); font-size: 0.68rem; gap: 0.2rem; line-height: 1.2;
     -webkit-tap-highlight-color: transparent;
-    border-right: 1px solid var(--border);
   }
-  .tab-bar a:last-child { border-right: none; }
   .tab-bar a.active {
-    color: var(--accent);
-    box-shadow: inset 0 3px 0 var(--accent);
+    color: var(--fg); font-weight: 600;
   }
-  .tab-bar a:active { opacity: 0.7; }
+  .tab-bar a:active { opacity: 0.6; }
   .tab-bar .tab-icon { font-size: 1.25rem; line-height: 1; }
   /* ── 이미지 ── */
   .place-img {
@@ -129,7 +126,7 @@
   <div class="row"><span class="k">동반</span><span class="v">영욱·소연 + 시부모 (4인)</span></div>
   <div class="row"><span class="k">숙박</span><span class="v">에어비앤비 2박 + 카덴쇼 료칸 1박 (2명×2실)</span></div>
   <div class="row"><span class="k">예상 비용</span><span class="v">₩3,392,522</span></div>
-  <div class="row"><span class="k">3M 캡</span><span class="v">❌ ₩392,522 초과</span></div>
+  <div class="row"><span class="k">3M 캡</span><span class="v">₩392,522 초과</span></div>
   <div class="row"><span class="k">종합 점수</span><span class="v">7.60 / 10</span></div>
   <div class="sub" style="margin-top:0.5rem;">2026-05-31~06-03 시나리오 (4인 시부모 동반 확정). 1·2박 에어비앤비(5/31~6/2), 마지막 박 우메코지 카덴쇼 료칸 2명×2실 조기할인 조식 포함(6/2~6/3). seasonality: weather.json kyoto 2026-05 comfort_score=9. 상세: docs/kyoto-itinerary-may-2026.md, docs/airbnb-kyoto-may31-jun2-2026.md, docs/decision-log/2026-05-11-may31-jun3-kyoto-update.md</div>
 </section>
@@ -148,7 +145,7 @@
   <div class="subcard">
     <div class="subtitle">최근 8년 시나리오 확률</div>
     <div class="row"><span class="k">평년형 (6/4~6/10)</span><span class="v">50%</span></div>
-    <div class="row"><span class="k">조기 입림 (6/3 이전)</span><span class="v" style="color:#c80">25%</span></div>
+    <div class="row"><span class="k">조기 입림 (6/3 이전)</span><span class="v" style="font-weight:600">25%</span></div>
     <div class="row"><span class="k">6/10 이전 입림</span><span class="v">50%</span></div>
     <div class="sub">조기 입림 사례: 2023(5/29) · 2025(5/17). 평년 직전 평탄 구간 — 본격 강수 상승은 6월 둘째 주부터.</div>
   </div>
@@ -169,52 +166,52 @@
   <div class="sub" style="margin-bottom:0.5rem;">확정 항목만 기준. 굵은 테두리 = 현재 선택 시나리오.</div>
   
   <div class="subcard">
-    <div class="subtitle">❌ [원안] 교토 3박4일 (카덴쇼 조식 포함 + 에어비앤비 2박)</div>
+    <div class="subtitle">초과 [원안] 교토 3박4일 (카덴쇼 조식 포함 + 에어비앤비 2박)</div>
     <div class="row"><span class="k">확정 합계</span><span class="v">₩4,053,964</span></div>
     <div class="row"><span class="k">3M 여유</span><span class="v">−₩1,053,964</span></div>
-    <div class="row"><span class="k">항공</span><span class="v" style="color:#2a7">₩1,170,638 (39.0%)</span></div><div class="row"><span class="k">숙박</span><span class="v" style="color:#c33">₩1,959,926 (65.3%)</span></div><div class="row"><span class="k">식비</span><span class="v" style="color:#c80">₩456,000 (15.2%)</span></div><div class="row"><span class="k">지역 교통</span><span class="v" style="color:#c80">₩248,000 (8.3%)</span></div><div class="row"><span class="k">활동·입장</span><span class="v" style="color:#2a7">₩124,000 (4.1%)</span></div><div class="row"><span class="k">기타 (세금·청소비·예비)</span><span class="v" style="color:#c80">₩95,400 (3.2%)</span></div>
+    <div class="row"><span class="k">항공</span><span class="v" style="color:var(--muted)">₩1,170,638 (39.0%)</span></div><div class="row"><span class="k">숙박</span><span class="v" style="font-weight:600">₩1,959,926 (65.3%)</span></div><div class="row"><span class="k">식비</span><span class="v">₩456,000 (15.2%)</span></div><div class="row"><span class="k">지역 교통</span><span class="v">₩248,000 (8.3%)</span></div><div class="row"><span class="k">활동·입장</span><span class="v" style="color:var(--muted)">₩124,000 (4.1%)</span></div><div class="row"><span class="k">기타 (세금·청소비·예비)</span><span class="v">₩95,400 (3.2%)</span></div>
   </div>
   <div class="subcard">
-    <div class="subtitle">✅ [추천] 교토 3박4일 (마츠바야 료칸 1박 + 에어비앤비 2박, 중간 식비)</div>
+    <div class="subtitle">통과 [추천] 교토 3박4일 (마츠바야 료칸 1박 + 에어비앤비 2박, 중간 식비)</div>
     <div class="row"><span class="k">확정 합계</span><span class="v">₩2,804,038</span></div>
     <div class="row"><span class="k">3M 여유</span><span class="v">₩195,962</span></div>
-    <div class="row"><span class="k">항공</span><span class="v" style="color:#2a7">₩1,170,638 (39.0%)</span></div><div class="row"><span class="k">숙박</span><span class="v" style="color:#2a7">₩710,000 (23.7%)</span></div><div class="row"><span class="k">식비</span><span class="v" style="color:#c80">₩456,000 (15.2%)</span></div><div class="row"><span class="k">지역 교통</span><span class="v" style="color:#c80">₩248,000 (8.3%)</span></div><div class="row"><span class="k">활동·입장</span><span class="v" style="color:#2a7">₩124,000 (4.1%)</span></div><div class="row"><span class="k">기타 (세금·청소비·예비)</span><span class="v" style="color:#c80">₩95,400 (3.2%)</span></div>
+    <div class="row"><span class="k">항공</span><span class="v" style="color:var(--muted)">₩1,170,638 (39.0%)</span></div><div class="row"><span class="k">숙박</span><span class="v" style="color:var(--muted)">₩710,000 (23.7%)</span></div><div class="row"><span class="k">식비</span><span class="v">₩456,000 (15.2%)</span></div><div class="row"><span class="k">지역 교통</span><span class="v">₩248,000 (8.3%)</span></div><div class="row"><span class="k">활동·입장</span><span class="v" style="color:var(--muted)">₩124,000 (4.1%)</span></div><div class="row"><span class="k">기타 (세금·청소비·예비)</span><span class="v">₩95,400 (3.2%)</span></div>
   </div>
   <div class="subcard">
-    <div class="subtitle">✅ 교토 3박4일 (마츠바야 료칸 + 에어비앤비, 절약 식비)</div>
+    <div class="subtitle">통과 교토 3박4일 (마츠바야 료칸 + 에어비앤비, 절약 식비)</div>
     <div class="row"><span class="k">확정 합계</span><span class="v">₩2,612,038</span></div>
     <div class="row"><span class="k">3M 여유</span><span class="v">₩387,962</span></div>
-    <div class="row"><span class="k">항공</span><span class="v" style="color:#2a7">₩1,170,638 (39.0%)</span></div><div class="row"><span class="k">숙박</span><span class="v" style="color:#2a7">₩710,000 (23.7%)</span></div><div class="row"><span class="k">식비</span><span class="v" style="color:#2a7">₩264,000 (8.8%)</span></div><div class="row"><span class="k">지역 교통</span><span class="v" style="color:#c80">₩248,000 (8.3%)</span></div><div class="row"><span class="k">활동·입장</span><span class="v" style="color:#2a7">₩124,000 (4.1%)</span></div><div class="row"><span class="k">기타 (세금·청소비·예비)</span><span class="v" style="color:#c80">₩95,400 (3.2%)</span></div>
+    <div class="row"><span class="k">항공</span><span class="v" style="color:var(--muted)">₩1,170,638 (39.0%)</span></div><div class="row"><span class="k">숙박</span><span class="v" style="color:var(--muted)">₩710,000 (23.7%)</span></div><div class="row"><span class="k">식비</span><span class="v" style="color:var(--muted)">₩264,000 (8.8%)</span></div><div class="row"><span class="k">지역 교통</span><span class="v">₩248,000 (8.3%)</span></div><div class="row"><span class="k">활동·입장</span><span class="v" style="color:var(--muted)">₩124,000 (4.1%)</span></div><div class="row"><span class="k">기타 (세금·청소비·예비)</span><span class="v">₩95,400 (3.2%)</span></div>
   </div>
   <div class="subcard">
-    <div class="subtitle">✅ 교토 3박4일 (카덴쇼 5월 평일 최저가 + 에어비앤비, 절약 식비)</div>
+    <div class="subtitle">통과 교토 3박4일 (카덴쇼 5월 평일 최저가 + 에어비앤비, 절약 식비)</div>
     <div class="row"><span class="k">확정 합계</span><span class="v">₩2,764,038</span></div>
     <div class="row"><span class="k">3M 여유</span><span class="v">₩235,962</span></div>
-    <div class="row"><span class="k">항공</span><span class="v" style="color:#2a7">₩1,170,638 (39.0%)</span></div><div class="row"><span class="k">숙박</span><span class="v" style="color:#c80">₩862,000 (28.7%)</span></div><div class="row"><span class="k">식비</span><span class="v" style="color:#2a7">₩264,000 (8.8%)</span></div><div class="row"><span class="k">지역 교통</span><span class="v" style="color:#c80">₩248,000 (8.3%)</span></div><div class="row"><span class="k">활동·입장</span><span class="v" style="color:#2a7">₩124,000 (4.1%)</span></div><div class="row"><span class="k">기타 (세금·청소비·예비)</span><span class="v" style="color:#c80">₩95,400 (3.2%)</span></div>
+    <div class="row"><span class="k">항공</span><span class="v" style="color:var(--muted)">₩1,170,638 (39.0%)</span></div><div class="row"><span class="k">숙박</span><span class="v">₩862,000 (28.7%)</span></div><div class="row"><span class="k">식비</span><span class="v" style="color:var(--muted)">₩264,000 (8.8%)</span></div><div class="row"><span class="k">지역 교통</span><span class="v">₩248,000 (8.3%)</span></div><div class="row"><span class="k">활동·입장</span><span class="v" style="color:var(--muted)">₩124,000 (4.1%)</span></div><div class="row"><span class="k">기타 (세금·청소비·예비)</span><span class="v">₩95,400 (3.2%)</span></div>
   </div>
   <div class="subcard">
-    <div class="subtitle">✅ 교토 3박4일 (전 박 에어비앤비, 료칸 제외, 중간 식비)</div>
+    <div class="subtitle">통과 교토 3박4일 (전 박 에어비앤비, 료칸 제외, 중간 식비)</div>
     <div class="row"><span class="k">확정 합계</span><span class="v">₩2,634,038</span></div>
     <div class="row"><span class="k">3M 여유</span><span class="v">₩365,962</span></div>
-    <div class="row"><span class="k">항공</span><span class="v" style="color:#2a7">₩1,170,638 (39.0%)</span></div><div class="row"><span class="k">숙박</span><span class="v" style="color:#2a7">₩540,000 (18.0%)</span></div><div class="row"><span class="k">식비</span><span class="v" style="color:#c80">₩456,000 (15.2%)</span></div><div class="row"><span class="k">지역 교통</span><span class="v" style="color:#c80">₩248,000 (8.3%)</span></div><div class="row"><span class="k">활동·입장</span><span class="v" style="color:#2a7">₩124,000 (4.1%)</span></div><div class="row"><span class="k">기타 (세금·청소비·예비)</span><span class="v" style="color:#c80">₩95,400 (3.2%)</span></div>
+    <div class="row"><span class="k">항공</span><span class="v" style="color:var(--muted)">₩1,170,638 (39.0%)</span></div><div class="row"><span class="k">숙박</span><span class="v" style="color:var(--muted)">₩540,000 (18.0%)</span></div><div class="row"><span class="k">식비</span><span class="v">₩456,000 (15.2%)</span></div><div class="row"><span class="k">지역 교통</span><span class="v">₩248,000 (8.3%)</span></div><div class="row"><span class="k">활동·입장</span><span class="v" style="color:var(--muted)">₩124,000 (4.1%)</span></div><div class="row"><span class="k">기타 (세금·청소비·예비)</span><span class="v">₩95,400 (3.2%)</span></div>
   </div>
-  <div class="subcard" style="border-color: var(--accent);">
-    <div class="subtitle">❌ [확정] 교토 3박4일 5/31~6/3 (시오 2박 + 카덴쇼 조기할인 조식 1박)</div>
+  <div class="subcard" style="border-color: var(--accent); border-width: 2px;">
+    <div class="subtitle">초과 [확정] 교토 3박4일 5/31~6/3 (시오 2박 + 카덴쇼 조기할인 조식 1박)</div>
     <div class="row"><span class="k">확정 합계</span><span class="v">₩3,392,522</span></div>
     <div class="row"><span class="k">3M 여유</span><span class="v">−₩392,522</span></div>
-    <div class="row"><span class="k">항공</span><span class="v" style="color:#2a7">₩1,012,000 (33.7%)</span></div><div class="row"><span class="k">숙박</span><span class="v" style="color:#c33">₩1,457,122 (48.6%)</span></div><div class="row"><span class="k">식비</span><span class="v" style="color:#c80">₩456,000 (15.2%)</span></div><div class="row"><span class="k">지역 교통</span><span class="v" style="color:#c80">₩248,000 (8.3%)</span></div><div class="row"><span class="k">활동·입장</span><span class="v" style="color:#2a7">₩124,000 (4.1%)</span></div><div class="row"><span class="k">기타 (세금·청소비·예비)</span><span class="v" style="color:#c80">₩95,400 (3.2%)</span></div>
+    <div class="row"><span class="k">항공</span><span class="v" style="color:var(--muted)">₩1,012,000 (33.7%)</span></div><div class="row"><span class="k">숙박</span><span class="v" style="font-weight:600">₩1,457,122 (48.6%)</span></div><div class="row"><span class="k">식비</span><span class="v">₩456,000 (15.2%)</span></div><div class="row"><span class="k">지역 교통</span><span class="v">₩248,000 (8.3%)</span></div><div class="row"><span class="k">활동·입장</span><span class="v" style="color:var(--muted)">₩124,000 (4.1%)</span></div><div class="row"><span class="k">기타 (세금·청소비·예비)</span><span class="v">₩95,400 (3.2%)</span></div>
   </div>
   <div class="subcard">
-    <div class="subtitle">❌ 나가사키·HTB 4박5일 (시내 호텔 3박 + Forest Villa 1박, 중간 식비, JR)</div>
+    <div class="subtitle">초과 나가사키·HTB 4박5일 (시내 호텔 3박 + Forest Villa 1박, 중간 식비, JR)</div>
     <div class="row"><span class="k">확정 합계</span><span class="v">₩3,202,405</span></div>
     <div class="row"><span class="k">3M 여유</span><span class="v">−₩202,405</span></div>
-    <div class="row"><span class="k">항공</span><span class="v" style="color:#2a7">₩1,147,025 (38.2%)</span></div><div class="row"><span class="k">숙박</span><span class="v" style="color:#c80">₩840,000 (28.0%)</span></div><div class="row"><span class="k">식비</span><span class="v" style="color:#c33">₩570,000 (19.0%)</span></div><div class="row"><span class="k">지역 교통</span><span class="v" style="color:#c80">₩258,000 (8.6%)</span></div><div class="row"><span class="k">활동·입장</span><span class="v" style="color:#c33">₩387,380 (12.9%)</span></div><div class="row"><span class="k">기타 (세금·청소비·예비)</span><span class="v" style="color:#2a7">₩0 (0.0%)</span></div>
+    <div class="row"><span class="k">항공</span><span class="v" style="color:var(--muted)">₩1,147,025 (38.2%)</span></div><div class="row"><span class="k">숙박</span><span class="v">₩840,000 (28.0%)</span></div><div class="row"><span class="k">식비</span><span class="v" style="font-weight:600">₩570,000 (19.0%)</span></div><div class="row"><span class="k">지역 교통</span><span class="v">₩258,000 (8.6%)</span></div><div class="row"><span class="k">활동·입장</span><span class="v" style="font-weight:600">₩387,380 (12.9%)</span></div><div class="row"><span class="k">기타 (세금·청소비·예비)</span><span class="v" style="color:var(--muted)">₩0 (0.0%)</span></div>
   </div>
   <div class="subcard">
-    <div class="subtitle">✅ [가성비] 나가사키·HTB 4박5일 (사세보 비즈니스 1박, 절약 식비, 고속버스)</div>
+    <div class="subtitle">통과 [가성비] 나가사키·HTB 4박5일 (사세보 비즈니스 1박, 절약 식비, 고속버스)</div>
     <div class="row"><span class="k">확정 합계</span><span class="v">₩2,794,405</span></div>
     <div class="row"><span class="k">3M 여유</span><span class="v">₩205,595</span></div>
-    <div class="row"><span class="k">항공</span><span class="v" style="color:#2a7">₩1,147,025 (38.2%)</span></div><div class="row"><span class="k">숙박</span><span class="v" style="color:#2a7">₩710,000 (23.7%)</span></div><div class="row"><span class="k">식비</span><span class="v" style="color:#2a7">₩330,000 (11.0%)</span></div><div class="row"><span class="k">지역 교통</span><span class="v" style="color:#2a7">₩220,000 (7.3%)</span></div><div class="row"><span class="k">활동·입장</span><span class="v" style="color:#c33">₩387,380 (12.9%)</span></div><div class="row"><span class="k">기타 (세금·청소비·예비)</span><span class="v" style="color:#2a7">₩0 (0.0%)</span></div>
+    <div class="row"><span class="k">항공</span><span class="v" style="color:var(--muted)">₩1,147,025 (38.2%)</span></div><div class="row"><span class="k">숙박</span><span class="v" style="color:var(--muted)">₩710,000 (23.7%)</span></div><div class="row"><span class="k">식비</span><span class="v" style="color:var(--muted)">₩330,000 (11.0%)</span></div><div class="row"><span class="k">지역 교통</span><span class="v" style="color:var(--muted)">₩220,000 (7.3%)</span></div><div class="row"><span class="k">활동·입장</span><span class="v" style="font-weight:600">₩387,380 (12.9%)</span></div><div class="row"><span class="k">기타 (세금·청소비·예비)</span><span class="v" style="color:var(--muted)">₩0 (0.0%)</span></div>
   </div>
 </section>
 
