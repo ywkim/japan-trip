@@ -1,5 +1,5 @@
 {
-  "_doc": "단일 출처: 시각 디자인 토큰 (색·타이포·간격·반경). DESIGN.md §2~§6과 동기화. scripts/build_index.py의 render_css(tokens)가 4개 산출물(index.html·viz/itinerary.html·viz/itinerary-table.html·viz/checklist.html)의 인라인 CSS를 공통 생성. scripts/validate.py (G)가 DESIGN.md ↔ 본 JSON의 drift를 차단.",
+  "_doc": "단일 출처: 시각 디자인 토큰 (색·타이포·간격·반경). DESIGN.md §2~§6과 동기화. scripts/build_index.py의 render_css(tokens)가 5개 산출물(index.html·viz/itinerary.html·viz/itinerary-table.html·viz/lodging.html·viz/checklist.html)의 인라인 CSS를 공통 생성. scripts/validate.py (H)가 DESIGN.md ↔ 본 JSON의 drift를 차단.",
   "version": "1.0.0",
   "theme_name": "Quiet Ledger",
   "color": {

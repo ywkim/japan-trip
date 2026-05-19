@@ -1,6 +1,6 @@
 # DESIGN.md — Quiet Ledger
 
-> `voltagent/awesome-design-md` 컨벤션. AI 에이전트가 UI 변경 시 본 문서를 1차 출처로 읽고, 정확한 토큰 값은 `data/design-tokens.json`을 참조한다. 두 문서의 drift는 `scripts/validate.py` (G)가 차단한다.
+> `voltagent/awesome-design-md` 컨벤션. AI 에이전트가 UI 변경 시 본 문서를 1차 출처로 읽고, 정확한 토큰 값은 `data/design-tokens.json`을 참조한다. 두 문서의 drift는 `scripts/validate.py` (H)가 차단한다.
 
 **Theme**: Quiet Ledger · **Version**: 1.0.0
 
@@ -82,7 +82,7 @@
 
 ## 5. Layout Principles
 
-- **Mobile-first**. 4개 산출물(`index.html`·`viz/itinerary.html`·`viz/itinerary-table.html`·`viz/checklist.html`) 모두 단일 컬럼 기본 (`itinerary-table`은 600px+ 가로 4열 시간표).
+- **Mobile-first**. 5개 산출물(`index.html`·`viz/itinerary.html`·`viz/itinerary-table.html`·`viz/lodging.html`·`viz/checklist.html`) 모두 단일 컬럼 기본 (`itinerary-table`은 600px+ 가로 4열 시간표).
 - 모든 요소는 `box-sizing: border-box`.
 - 세로 리듬: 카드 간 `0.75rem (md)`, 서브카드 간 `0.5rem (sm)`.
 - 좌우 여백: 본문 `padding: 1rem (base)`.
@@ -106,7 +106,7 @@
 - 레거시 빨강 accent(이전 `#d3`+`3` 톤) 재도입 금지. danger 외 모든 강조는 slate-indigo accent.
 - 인라인 hex code 금지. 반드시 CSS 변수(`var(--accent)`, `var(--ok)`)로.
 - 그림자 남용 금지. 평면 우선.
-- Web font 추가 금지 (HTML 더블클릭 자체완결 보장 — 4개 산출물 공통 제약).
+- Web font 추가 금지 (HTML 더블클릭 자체완결 보장 — 5개 산출물 공통 제약).
 - 일본 모티브 장식(torii·sakura·후지산) 금지. 본 레포는 의사결정 도구.
 
 ## 8. Responsive Behavior
@@ -127,7 +127,7 @@
 4. 새 컴포넌트인가? → §4의 기존 컴포넌트(Card·Subcard·Row·Pill·Bar·Button)로 조합 가능한지 먼저 확인.
 
 **구현 규칙**
-- `index.html`·`viz/itinerary.html`·`viz/itinerary-table.html`·`viz/checklist.html`은 모두 `scripts/build_index.py` 산출물. 직접 편집 금지. CSS는 공통 `render_css(tokens)` 함수가 design-tokens.json에서 생성 → `html_doc(title, body, tokens)`이 주입.
+- `index.html`·`viz/itinerary.html`·`viz/itinerary-table.html`·`viz/lodging.html`·`viz/checklist.html`은 모두 `scripts/build_index.py` 산출물. 직접 편집 금지. CSS는 공통 `render_css(tokens)` 함수가 design-tokens.json에서 생성 → `html_doc(title, body, tokens)`이 주입.
 - 새 색·간격·반경을 도입할 때: (1) tokens.json에 키 추가 → (2) DESIGN.md §2~§6 갱신 → (3) `render_css`가 var()로 노출 → (4) 사용처에서 `var(--키)` 참조.
 
 **금지 패턴 (자동 거부)**

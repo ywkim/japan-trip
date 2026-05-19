@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#F7F6F2" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#161821" media="(prefers-color-scheme: dark)">
 <title>교토 3박4일 일정</title>
@@ -83,6 +83,30 @@
     font-size: 0.75rem; border: 1px solid currentColor;
   }
   footer { color: var(--muted); font-size: 0.75rem; margin-top: 1.5rem; text-align: center; }
+  /* ── 하단 탭바 ── */
+  body { padding-bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px)); }
+  .tab-bar {
+    position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+    width: 100%; max-width: 640px;
+    display: flex; background: var(--card); border-top: 1px solid var(--border);
+    z-index: 200; padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .tab-bar::after {
+    content: ''; position: absolute; top: 100%; left: 0; right: 0;
+    height: 80px; background: var(--card);
+  }
+  .tab-bar a {
+    flex: 1; display: flex; flex-direction: column; align-items: center;
+    padding: 0.6rem 0.25rem 0.45rem; text-decoration: none;
+    color: var(--muted); font-size: 0.68rem; gap: 0.2rem; line-height: 1.2;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .tab-bar a.active {
+    color: var(--fg); font-weight: 600;
+  }
+  .tab-bar a:active { opacity: 0.6; }
+  .tab-bar .tab-icon { font-size: 1.25rem; line-height: 1; }
+  /* ── 이미지 ── */
   .place-img {
     width: 100%; aspect-ratio: 16/9; object-fit: cover;
     border-radius: 4px; display: block; margin-top: 0.35rem;
@@ -574,13 +598,12 @@
 </section>
 
 <div class="links">
-  <a href="../index.html">← 결정 요약으로</a>
   <a href="itinerary-table.html">시간표 뷰</a>
-  <a href="https://github.com/ywkim/japan-trip/blob/main/docs/kyoto-itinerary-may31-jun3-2026.md" target="_blank" rel="noopener">사람용 마크다운</a>
-  <a href="checklist.html">예약 체크리스트</a>
+  <a href="https://github.com/ywkim/japan-trip/blob/main/docs/kyoto-itinerary-may31-jun3-2026.md" target="_blank" rel="noopener">마크다운</a>
 </div>
 
 <footer>data/itinerary.json 단일 출처 · scripts/build_index.py 산출 — 직접 편집 금지</footer>
+<nav class="tab-bar" aria-label="하단 탭"><a href="../index.html" data-tab="home"><span class="tab-icon">🏠</span><span>홈</span></a><a href="itinerary.html" class="active" data-tab="itinerary"><span class="tab-icon">📅</span><span>일정</span></a><a href="lodging.html" data-tab="lodging"><span class="tab-icon">✈️</span><span>숙박·항공</span></a><a href="checklist.html" data-tab="checklist"><span class="tab-icon">☑</span><span>예약</span></a></nav>
 
 </body>
 </html>

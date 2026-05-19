@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#F7F6F2" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#161821" media="(prefers-color-scheme: dark)">
-<title>예약 체크리스트</title>
+<title>숙박·항공</title>
 <style>
   :root {
     --bg: #F7F6F2; --fg: #1B1D24; --muted: #5B6070; --border: #D9D6CC;
@@ -116,64 +116,82 @@
 </style>
 </head>
 <body>
-<h1>예약 체크리스트</h1>
-<div class="status">시나리오: kyoto_may31_kadensho_early_bird · 7개 항목</div>
+<h1>숙박 · 항공</h1>
+<div class="status">에어비앤비 2박 + 카덴쇼 료칸 1박 · 항공 옵션</div>
 
-<!-- SYNC: data/booking-checklist.json -->
-<section class="card">
-  <h2>상태 요약</h2>
-  <div class="row"><span class="k">확정</span><span class="v">3개</span></div><div class="row"><span class="k">예약중</span><span class="v">0개</span></div><div class="row"><span class="k">미정</span><span class="v">4개</span></div>
+<!-- SYNC: data/cost-options.json (lodging.airbnb_shio_machiya) · docs/airbnb-kyoto-may31-jun2-2026.md -->
+<section id="airbnb" class="card">
+  <h2>에어비앤비 · 시오(Shio) 100년 마치야 <span class="badge">확정</span></h2>
+  <div class="row"><span class="k">일정</span><span class="v">5/31~6/2 · 2박</span></div>
+  <div class="row"><span class="k">위치</span><span class="v">중교구 · 니조역 도보 7분</span></div>
+  <div class="row"><span class="k">2박 총액</span><span class="v">₩730,372</span></div>
+  <div class="row"><span class="k">1인 1박</span><span class="v">₩91,296</span></div>
+  <div class="sub" style="margin-top:0.4rem;">후기 59·★4.95(최고)·침실 3/욕실 2/화장실 2·78㎡ 2층·시부모-부부 완전 분리 가능. 슈퍼호스트 2년.</div>
+  <div class="links"></div>
 </section>
 
-<section class="card">
-  <h2>항목 (기한 이른 순)</h2>
+
+<!-- SYNC: data/cost-options.json (lodging.kadensho_*_2026jun2) · docs/decision-log/2026-05-11-may31-jun3-kyoto-update.md -->
+<section id="kadensho" class="card">
+  <h2>우메코지 카덴쇼 4 플랜 (6/2 1박, 2명×2실)</h2>
+  <div class="sub" style="margin-bottom:0.5rem;">dormy-hotels.com 공식 검색 2026-05-11. 환불 정책 사전 확인 후 결제.</div>
   
   <div class="subcard">
-    <div class="subtitle">항공 (ICN↔KIX 5/31~6/3, 4인)</div>
-    <div class="row"><span class="k">상태</span><span class="v"><span class="badge">확정</span></span></div>
-    <div class="row"><span class="k">기한</span><span class="v">2026-05-18</span></div>
-    <div class="sub">에어서울 RS · 예약번호 A8YW58 · ICN 13:15→KIX 15:15 / KIX 10:05→ICN 12:05 · 탑승객: KIM/BYUNGNAM, WANG/HAEJA, KIM/YOUNGWOOK, LEE/SOYEON</div>
+    <div class="subtitle">우메코지 카덴쇼 (2명×2실, 조식 포함, 조기할인 15% OFF, 2026-06-02→06-03 1박)</div>
+    <div class="row"><span class="k">1박 (4인)</span><span class="v">₩726,750</span></div>
+    <div class="row"><span class="k">출처</span><span class="v">confirmed_booking</span></div>
+    <div class="sub">원안 4인 1실은 카덴쇼 객실 정원 한계로 가격 노출 0건 → 2명×2실 분리 시 18개 플랜 모두 가용. 공식 사이트(Kyoritsu Resort) 직판 = OTA 대비 일반 저렴 + 쿠폰. 환불 불가 조건 사전 확인 필요.</div>
   </div>
   <div class="subcard">
-    <div class="subtitle">에어비앤비 #3 시오(Shio) 5/31~6/2 (2박, 4명)</div>
-    <div class="row"><span class="k">상태</span><span class="v"><span class="badge">확정</span></span></div>
-    <div class="row"><span class="k">기한</span><span class="v">2026-05-18</span></div>
-    <div class="sub">에어비앤비 확정 · 총 ₩740,954 (2박) · 매물 1373928005681941061</div>
+    <div class="subtitle">우메코지 카덴쇼 (2명×2실, 조식 포함, 꽃전초 세일 10% OFF, 2026-06-02→06-03 1박)</div>
+    <div class="row"><span class="k">1박 (4인)</span><span class="v">₩769,500</span></div>
+    <div class="row"><span class="k">출처</span><span class="v">official_fare</span></div>
+    <div class="sub">조기할인(15%) 다음 가격대. 6월 강가 마루석 시즌 사이드 프로모션.</div>
   </div>
   <div class="subcard">
-    <div class="subtitle">우메코지 카덴쇼 6/2 (1박, 2명×2실 조기할인 조식)</div>
-    <div class="row"><span class="k">상태</span><span class="v"><span class="badge">확정</span></span></div>
-    <div class="row"><span class="k">기한</span><span class="v">2026-05-18</span></div>
-    <div class="sub">예약 확정. dormy-hotels.com 직판 조기할인 조식 포함. 4인 ¥76,500 ≈ ₩726,750</div>
+    <div class="subtitle">우메코지 카덴쇼 (2명×2실, 조식 포함, 스탠다드, 2026-06-02→06-03 1박)</div>
+    <div class="row"><span class="k">1박 (4인)</span><span class="v">₩855,000</span></div>
+    <div class="row"><span class="k">출처</span><span class="v">official_fare</span></div>
+    <div class="sub">기준 가격. 환불 정책 가장 유연.</div>
   </div>
   <div class="subcard">
-    <div class="subtitle">여행자보험 (4인, 시부모 포함)</div>
-    <div class="row"><span class="k">상태</span><span class="v"><span class="badge" style="color:var(--muted)">미정</span></span></div>
-    <div class="row"><span class="k">기한</span><span class="v">2026-05-25</span></div>
-    <div class="sub">시부모 보험·상비약, 한국어 가능 의료기관 위치 사전 저장</div>
-  </div>
-  <div class="subcard">
-    <div class="subtitle">교통패스 (ICOCA &amp; HARUKA + 교토 시영 1일권)</div>
-    <div class="row"><span class="k">상태</span><span class="v"><span class="badge" style="color:var(--muted)">미정</span></span></div>
-    <div class="row"><span class="k">기한</span><span class="v">2026-05-25</span></div>
-    <div class="sub">JR 하루카 KIX↔교토 왕복 ¥2,400 × 4 × 2 = ₩192K, 교토 시영 1일권 ¥700 × 4 × 3 = ₩84K</div>
-  </div>
-  <div class="subcard">
-    <div class="subtitle">eSIM / 데이터 (4인)</div>
-    <div class="row"><span class="k">상태</span><span class="v"><span class="badge" style="color:var(--muted)">미정</span></span></div>
-    <div class="row"><span class="k">기한</span><span class="v">2026-05-28</span></div>
-    <div class="sub">Klook·Trip.com 4일권 시세 ₩5~10K/인</div>
-  </div>
-  <div class="subcard">
-    <div class="subtitle">환전 / 트래블카드</div>
-    <div class="row"><span class="k">상태</span><span class="v"><span class="badge" style="color:var(--muted)">미정</span></span></div>
-    <div class="row"><span class="k">기한</span><span class="v">2026-05-28</span></div>
-    <div class="sub">1인 ¥30,000 가정 (현금 식비·신사 새전·잔돈). 트래블월렛/하나비바X 등 무환전료 카드 권장</div>
+    <div class="subtitle">우메코지 카덴쇼 (2명×2실, 강가룸 가이세키+조식, 가오슝×꽃전초, 2026-06-02→06-03 1박)</div>
+    <div class="row"><span class="k">1박 (4인)</span><span class="v">₩1,235,000</span></div>
+    <div class="row"><span class="k">출처</span><span class="v">official_fare</span></div>
+    <div class="sub">강가 마루석 + 가이세키 풀코스. 6월 한정 시즌 플랜.</div>
   </div>
 </section>
 
-<footer>data/booking-checklist.json 단일 출처 · scripts/build_index.py 산출 — 직접 편집 금지</footer>
-<nav class="tab-bar" aria-label="하단 탭"><a href="../index.html" data-tab="home"><span class="tab-icon">🏠</span><span>홈</span></a><a href="itinerary.html" data-tab="itinerary"><span class="tab-icon">📅</span><span>일정</span></a><a href="lodging.html" data-tab="lodging"><span class="tab-icon">✈️</span><span>숙박·항공</span></a><a href="checklist.html" class="active" data-tab="checklist"><span class="tab-icon">☑</span><span>예약</span></a></nav>
+
+<!-- SYNC: data/cost-options.json (flights) -->
+<section id="flights" class="card">
+  <h2>항공 옵션</h2>
+  
+  <div class="subcard">
+    <div class="subtitle">에어서울 ICN↔KIX (5/24~27, 3박)</div>
+    <div class="row"><span class="k">일자</span><span class="v">2026-05-24 → 2026-05-27</span></div>
+    <div class="row"><span class="k">4인 총액</span><span class="v">₩1,170,638</span></div>
+    <div class="row"><span class="k">출처</span><span class="v">Skyscanner Gotogate 2026-05-09</span></div>
+    <div class="sub"></div>
+  </div>
+  <div class="subcard">
+    <div class="subtitle">대한항공 ICN↔NGS (5/12~16, 4박)</div>
+    <div class="row"><span class="k">일자</span><span class="v">2026-05-12 → 2026-05-16</span></div>
+    <div class="row"><span class="k">4인 총액</span><span class="v">₩1,147,025</span></div>
+    <div class="row"><span class="k">출처</span><span class="v">Skyscanner Gotogate 2026-05-09</span></div>
+    <div class="sub"></div>
+  </div>
+  <div class="subcard">
+    <div class="subtitle">ICN↔KIX (5/31~6/3, 3박) — 가족 일정(5/28~29) 회피 후보</div>
+    <div class="row"><span class="k">일자</span><span class="v">2026-05-31 → 2026-06-03</span></div>
+    <div class="row"><span class="k">4인 총액</span><span class="v">₩1,012,000</span></div>
+    <div class="row"><span class="k">출처</span><span class="v">Skyscanner 4인 직항 일반석 2026-05-11 (₩253,000/인 × 4)</span></div>
+    <div class="sub">변경가능 날짜 비교: 5/27~30 ₩940K(가족 일정 충돌), 5/30~6/2 ₩1,130K, 5/31~6/3 ₩1,012K(선택). 발권사 평점 미확인 → 영욱 직접 재조회 권장.</div>
+  </div>
+</section>
+
+<footer>data/cost-options.json 단일 출처 · scripts/build_index.py 산출 — 직접 편집 금지</footer>
+<nav class="tab-bar" aria-label="하단 탭"><a href="../index.html" data-tab="home"><span class="tab-icon">🏠</span><span>홈</span></a><a href="itinerary.html" data-tab="itinerary"><span class="tab-icon">📅</span><span>일정</span></a><a href="lodging.html" class="active" data-tab="lodging"><span class="tab-icon">✈️</span><span>숙박·항공</span></a><a href="checklist.html" data-tab="checklist"><span class="tab-icon">☑</span><span>예약</span></a></nav>
 
 </body>
 </html>

@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
-"""index.html + viz/itinerary.html + viz/checklist.html 빌드.
+"""index.html + viz/itinerary.html + viz/itinerary-table.html + viz/lodging.html + viz/checklist.html 빌드.
 
 data/decision.json·data/cost-options.json·data/weather.json·data/itinerary.json
-·data/booking-checklist.json을 읽고 scripts/score.py·scripts/budget.py를
---json으로 호출해 인라인 데이터로 3개 정적 HTML을 생성한다. 모든 산출물은
+·data/booking-checklist.json·data/design-tokens.json을 읽고 scripts/score.py·
+scripts/budget.py를 --json으로 호출해 인라인 데이터로 5개 정적 HTML을 생성한다.
+시각 토큰은 render_css(tokens)가 5개 산출물 공통 인라인 CSS로 주입. 모든 산출물은
 "브라우저 더블클릭 동작"을 위해 외부 fetch 없음.
 
 용법:
-  python scripts/build_index.py            # 3개 파일 갱신
+  python scripts/build_index.py            # 5개 파일 갱신
   python scripts/build_index.py --check    # 빌드 결과와 디스크 diff (CI용, exit 1 if drift)
 """
 
@@ -30,6 +31,28 @@ OUT_CHECKLIST = BASE / "viz" / "checklist.html"
 
 GH_BLOB = "https://github.com/ywkim/japan-trip/blob/main"
 SCENARIO_ID = "kyoto_may31_kadensho_early_bird"
+
+# 탭바 정의: (탭 키, 아이콘, 레이블, 루트 기준 경로, viz/ 기준 경로)
+_TABS = [
+    ("home",      "🏠", "홈",      "index.html",         "../index.html"),
+    ("itinerary", "📅", "일정",    "viz/itinerary.html",  "itinerary.html"),
+    ("lodging",   "✈️", "숙박·항공","viz/lodging.html",    "lodging.html"),
+    ("checklist", "☑", "예약",    "viz/checklist.html",  "checklist.html"),
+]
+
+
+def tab_bar(active: str, in_viz: bool = False) -> str:
+    idx = 4 if in_viz else 3
+    items = []
+    for key, icon, label, root_href, viz_href in _TABS:
+        href = viz_href if in_viz else root_href
+        active_attr = f' class="active" data-tab="{key}"' if key == active else f' data-tab="{key}"'
+        items.append(
+            f'<a href="{esc(href)}"{active_attr}>'
+            f'<span class="tab-icon">{icon}</span>'
+            f'<span>{esc(label)}</span></a>'
+        )
+    return f'<nav class="tab-bar" aria-label="하단 탭">{"".join(items)}</nav>'
 
 
 def esc(s) -> str:
@@ -70,9 +93,8 @@ def load_data():
 
 # ─── 공통 스타일 ───────────────────────────────────────────────────────────
 
-
 def render_css(tokens: dict) -> str:
-    """data/design-tokens.json → <style> 본문. 4개 산출물(index·itinerary·itinerary-table·checklist) 공통."""
+    """data/design-tokens.json → <style> 본문. 5개 산출물(index·itinerary·itinerary-table·checklist·lodging) 공통."""
     cl = tokens["color"]["light"]
     cd = tokens["color"]["dark"]
     fs = tokens["typography"]["font_family_sans"]
@@ -153,6 +175,30 @@ def render_css(tokens: dict) -> str:
     font-size: 0.75rem; border: 1px solid currentColor;
   }}
   footer {{ color: var(--muted); font-size: 0.75rem; margin-top: 1.5rem; text-align: center; }}
+  /* ── 하단 탭바 ── */
+  body {{ padding-bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px)); }}
+  .tab-bar {{
+    position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+    width: 100%; max-width: 640px;
+    display: flex; background: var(--card); border-top: 1px solid var(--border);
+    z-index: 200; padding-bottom: env(safe-area-inset-bottom, 0px);
+  }}
+  .tab-bar::after {{
+    content: ''; position: absolute; top: 100%; left: 0; right: 0;
+    height: 80px; background: var(--card);
+  }}
+  .tab-bar a {{
+    flex: 1; display: flex; flex-direction: column; align-items: center;
+    padding: 0.6rem 0.25rem 0.45rem; text-decoration: none;
+    color: var(--muted); font-size: 0.68rem; gap: 0.2rem; line-height: 1.2;
+    -webkit-tap-highlight-color: transparent;
+  }}
+  .tab-bar a.active {{
+    color: var(--fg); font-weight: 600;
+  }}
+  .tab-bar a:active {{ opacity: 0.6; }}
+  .tab-bar .tab-icon {{ font-size: 1.25rem; line-height: 1; }}
+  /* ── 이미지 ── */
   .place-img {{
     width: 100%; aspect-ratio: 16/9; object-fit: cover;
     border-radius: 4px; display: block; margin-top: 0.35rem;
@@ -169,7 +215,7 @@ def html_doc(title: str, body: str, tokens: dict) -> str:
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="{bg_light}" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="{bg_dark}" media="(prefers-color-scheme: dark)">
 <title>{esc(title)}</title>
@@ -191,7 +237,7 @@ def card_summary(d) -> str:
     kyoto = next(c for c in decision["candidates"] if c["id"] == "kyoto")
     kyoto_score = next((s for s in score["scored"] if s["id"] == "kyoto"), None)
     scn = next((s for s in budget["scenarios"] if s["id"] == SCENARIO_ID), None)
-    pass_marker = "✅ 통과" if scn and scn["passes_cap"] else f"❌ {won(-scn['headroom_krw'])} 초과" if scn else "—"
+    pass_marker = "통과" if scn and scn["passes_cap"] else f"{won(-scn['headroom_krw'])} 초과" if scn else "—"
     score_str = f"{kyoto_score['score']:.2f} / 10" if kyoto_score else "N/A"
     total_str = won(scn["confirmed_total_krw"]) if scn else "—"
 
@@ -248,7 +294,7 @@ def card_tsuyu(d) -> str:
   <div class="subcard">
     <div class="subtitle">최근 8년 시나리오 확률</div>
     <div class="row"><span class="k">평년형 (6/4~6/10)</span><span class="v">50%</span></div>
-    <div class="row"><span class="k">조기 입림 (6/3 이전)</span><span class="v" style="color:var(--warn)">25%</span></div>
+    <div class="row"><span class="k">조기 입림 (6/3 이전)</span><span class="v" style="font-weight:600">25%</span></div>
     <div class="row"><span class="k">6/10 이전 입림</span><span class="v">50%</span></div>
     <div class="sub">조기 입림 사례: 2023(5/29) · 2025(5/17). 평년 직전 평탄 구간 — 본격 강수 상승은 6월 둘째 주부터.</div>
   </div>
@@ -265,33 +311,28 @@ def card_tsuyu(d) -> str:
 
 
 def card_airbnb(d) -> str:
-    items = [l for l in d["cost"]["lodging"] if l["id"].startswith("airbnb_") and l["id"] != "kyoto_airbnb_4pax"]
-    cards = []
-    for l in items:
-        src = l.get("source", "")
-        airbnb_id = ""
-        for tok in src.split():
-            if tok.isdigit() and len(tok) > 6:
-                airbnb_id = tok.rstrip(",")
-                break
-        link = f"https://www.airbnb.co.kr/rooms/{airbnb_id}" if airbnb_id else ""
-        per_night = l["per_night_krw"]
-        two_night = per_night * 2
-        link_html = f'<a href="{esc(link)}" target="_blank" rel="noopener">매물 열기 ↗</a>' if link else ""
-        cards.append(f"""
-  <div class="subcard">
-    <div class="subtitle">{esc(l['name'])}</div>
-    <div class="row"><span class="k">2박 총액</span><span class="v">{esc(won(two_night))}</span></div>
-    <div class="row"><span class="k">1인 1박</span><span class="v">{esc(won(per_night // 4))}</span></div>
-    <div class="sub">{esc(l.get('notes', ''))}</div>
-    <div class="links">{link_html}</div>
-  </div>""")
+    l = next((x for x in d["cost"]["lodging"] if x["id"] == "airbnb_shio_machiya"), None)
+    if not l:
+        return ""
+    src = l.get("source", "")
+    airbnb_id = ""
+    for tok in src.split():
+        if tok.isdigit() and len(tok) > 6:
+            airbnb_id = tok.rstrip(",")
+            break
+    link = f"https://www.airbnb.co.kr/rooms/{airbnb_id}" if airbnb_id else ""
+    link_html = f'<a href="{esc(link)}" target="_blank" rel="noopener">매물 열기 ↗</a>' if link else ""
+    two_night = l["per_night_krw"] * 2
     return f"""
-<!-- SYNC: data/cost-options.json (lodging.airbnb_*) · docs/airbnb-kyoto-may31-jun2-2026.md -->
+<!-- SYNC: data/cost-options.json (lodging.airbnb_shio_machiya) · docs/airbnb-kyoto-may31-jun2-2026.md -->
 <section id="airbnb" class="card">
-  <h2>에어비앤비 5개 후보 (5/31~6/2 2박)</h2>
-  <div class="sub" style="margin-bottom:0.5rem;">매물 결정 후 시나리오 분기 추가 예정. 가격은 4명 직접 조회 2026-05-11.</div>
-  {''.join(cards)}
+  <h2>에어비앤비 · 시오(Shio) 100년 마치야 <span class="badge">확정</span></h2>
+  <div class="row"><span class="k">일정</span><span class="v">5/31~6/2 · 2박</span></div>
+  <div class="row"><span class="k">위치</span><span class="v">중교구 · 니조역 도보 7분</span></div>
+  <div class="row"><span class="k">2박 총액</span><span class="v">{esc(won(two_night))}</span></div>
+  <div class="row"><span class="k">1인 1박</span><span class="v">{esc(won(l['per_night_krw'] // 4))}</span></div>
+  <div class="sub" style="margin-top:0.4rem;">{esc(l.get('notes', ''))}</div>
+  <div class="links">{link_html}</div>
 </section>
 """
 
@@ -342,13 +383,13 @@ def card_budget(d) -> str:
     budget = d["budget"]
     rows = []
     for s in budget["scenarios"]:
-        marker = "✅" if s["passes_cap"] else "❌"
+        marker = "통과" if s["passes_cap"] else "초과"
         head = won(s["headroom_krw"]) if s["headroom_krw"] >= 0 else f"−{won(-s['headroom_krw'])}"
-        highlight = ' style="border-color: var(--accent);"' if s["id"] == SCENARIO_ID else ""
+        highlight = ' style="border-color: var(--accent); border-width: 2px;"' if s["id"] == SCENARIO_ID else ""
         cats = []
         for c in s["categories"]:
-            color = {"ok": "var(--ok)", "near": "var(--warn)", "over": "var(--danger)"}[c["status"]]
-            cats.append(f'<div class="row"><span class="k">{esc(c["label"])}</span><span class="v" style="color:{color}">{esc(won(c["actual_krw"]))} ({c["actual_pct"]}%)</span></div>')
+            dim = ' style="color:var(--muted)"' if c["status"] == "ok" else (' style="font-weight:600"' if c["status"] == "over" else "")
+            cats.append(f'<div class="row"><span class="k">{esc(c["label"])}</span><span class="v"{dim}>{esc(won(c["actual_krw"]))} ({c["actual_pct"]}%)</span></div>')
         rows.append(f"""
   <div class="subcard"{highlight}>
     <div class="subtitle">{marker} {esc(s['label'])}</div>
@@ -435,13 +476,13 @@ def card_itinerary(d) -> str:
 def card_checklist(d) -> str:
     items = d["checklist"]["items"]
     rows = []
-    color_map = {"확정": "var(--ok)", "예약중": "var(--warn)", "미정": "var(--danger)"}
     for it in items:
-        color = color_map.get(it["status"], "var(--muted)")
+        st = it["status"]
+        dim = "" if st == "확정" else ' style="color:var(--muted)"'
         rows.append(f"""
   <div class="subcard">
     <div class="subtitle">{esc(it['label'])}</div>
-    <div class="row"><span class="k">상태</span><span class="v" style="color:{color}">{esc(it['status'])}</span></div>
+    <div class="row"><span class="k">상태</span><span class="v"{dim}>{esc(it['status'])}</span></div>
     <div class="row"><span class="k">기한</span><span class="v">{esc(it['due_date'])}</span></div>
     <div class="sub">{esc(it.get('note', ''))}</div>
   </div>""")
@@ -480,17 +521,13 @@ def card_score(d) -> str:
 
 
 INDEX_HEAD = """<h1>일본 여행 최종 결정</h1>
-<div class="status">교토 5/31~6/3 시나리오 (시부모 4인 확정). 본 페이지는 <code>scripts/build_index.py</code> 산출물 — 직접 편집 금지.</div>
+<div class="status">교토 5/31~6/3 · 시부모 4인 확정</div>
 
 <nav>
   <a href="#summary">요약</a>
   <a href="#tsuyu">장마</a>
-  <a href="#airbnb">에어비앤비</a>
-  <a href="#kadensho">카덴쇼</a>
-  <a href="#flights">항공</a>
   <a href="#budget">예산</a>
   <a href="#itinerary">일정</a>
-  <a href="#checklist">체크리스트</a>
   <a href="#score">점수</a>
 </nav>
 """
@@ -511,16 +548,26 @@ def build_index(d) -> str:
     sections = [
         card_summary(d),
         card_tsuyu(d),
-        card_airbnb(d),
-        card_kadensho(d),
-        card_flights(d),
         card_budget(d),
         card_itinerary(d),
-        card_checklist(d),
         card_score(d),
     ]
-    body = INDEX_HEAD + "\n".join(sections) + INDEX_FOOTER
+    body = INDEX_HEAD + "\n".join(sections) + INDEX_FOOTER + tab_bar("home", in_viz=False)
     return html_doc("일본 여행 최종 결정", body, d["tokens"])
+
+
+# ─── viz/lodging.html ──────────────────────────────────────────────────────
+
+def build_lodging(d) -> str:
+    body = f"""<h1>숙박 · 항공</h1>
+<div class="status">에어비앤비 2박 + 카덴쇼 료칸 1박 · 항공 옵션</div>
+{card_airbnb(d)}
+{card_kadensho(d)}
+{card_flights(d)}
+<footer>data/cost-options.json 단일 출처 · scripts/build_index.py 산출 — 직접 편집 금지</footer>
+{tab_bar("lodging", in_viz=True)}
+"""
+    return html_doc("숙박·항공", body, d["tokens"])
 
 
 # ─── viz/itinerary.html ────────────────────────────────────────────────────
@@ -624,13 +671,12 @@ def build_itinerary(d) -> str:
 </section>
 
 <div class="links">
-  <a href="../index.html">← 결정 요약으로</a>
   <a href="itinerary-table.html">시간표 뷰</a>
-  <a href="{GH_BLOB}/{esc(itin.get('source_doc',''))}" target="_blank" rel="noopener">사람용 마크다운</a>
-  <a href="checklist.html">예약 체크리스트</a>
+  <a href="{GH_BLOB}/{esc(itin.get('source_doc',''))}" target="_blank" rel="noopener">마크다운</a>
 </div>
 
 <footer>data/itinerary.json 단일 출처 · scripts/build_index.py 산출 — 직접 편집 금지</footer>
+{tab_bar("itinerary", in_viz=True)}
 """
     return html_doc("교토 3박4일 일정", body, d["tokens"])
 
@@ -640,24 +686,24 @@ def build_itinerary(d) -> str:
 def build_checklist(d) -> str:
     cl = d["checklist"]
     items = cl["items"]
-    color_map = {"확정": "var(--ok)", "예약중": "var(--warn)", "미정": "var(--danger)"}
     counts = {"확정": 0, "예약중": 0, "미정": 0}
     for it in items:
         counts[it.get("status", "미정")] = counts.get(it.get("status", "미정"), 0) + 1
 
     summary_rows = "".join(
-        f'<div class="row"><span class="k" style="color:{color_map[k]}">● {k}</span><span class="v">{counts[k]}개</span></div>'
+        f'<div class="row"><span class="k">{k}</span><span class="v">{counts[k]}개</span></div>'
         for k in ("확정", "예약중", "미정")
     )
 
     sorted_items = sorted(items, key=lambda it: it.get("due_date", "9999-99-99"))
     item_cards = []
     for it in sorted_items:
-        color = color_map.get(it["status"], "var(--muted)")
+        st = it["status"]
+        badge_style = "" if st == "확정" else ' style="color:var(--muted)"'
         item_cards.append(f"""
   <div class="subcard">
     <div class="subtitle">{esc(it['label'])}</div>
-    <div class="row"><span class="k">상태</span><span class="v"><span class="badge" style="color:{color}">{esc(it['status'])}</span></span></div>
+    <div class="row"><span class="k">상태</span><span class="v"><span class="badge"{badge_style}>{esc(it['status'])}</span></span></div>
     <div class="row"><span class="k">기한</span><span class="v">{esc(it.get('due_date',''))}</span></div>
     <div class="sub">{esc(it.get('note',''))}</div>
   </div>""")
@@ -676,12 +722,8 @@ def build_checklist(d) -> str:
   {''.join(item_cards)}
 </section>
 
-<div class="links">
-  <a href="../index.html">← 결정 요약으로</a>
-  <a href="itinerary.html">일자별 일정</a>
-</div>
-
 <footer>data/booking-checklist.json 단일 출처 · scripts/build_index.py 산출 — 직접 편집 금지</footer>
+{tab_bar("checklist", in_viz=True)}
 """
     return html_doc("예약 체크리스트", body, d["tokens"])
 
@@ -831,12 +873,11 @@ def build_itinerary_table(d) -> str:
 </section>
 
 <div class="links">
-  <a href="../index.html">← 결정 요약으로</a>
   <a href="itinerary.html">카드 뷰</a>
-  <a href="checklist.html">예약 체크리스트</a>
 </div>
 
 <footer>data/itinerary.json 단일 출처 · scripts/build_index.py 산출 — 직접 편집 금지</footer>
+{tab_bar("itinerary", in_viz=True)}
 """
     # 토큰 기반 공통 CSS + 시간표 전용 TABLE_CSS를 결합
     tokens = d["tokens"]
@@ -847,7 +888,7 @@ def build_itinerary_table(d) -> str:
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="{bg_light}" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="{bg_dark}" media="(prefers-color-scheme: dark)">
 <title>교토 3박4일 시간표</title>
@@ -863,10 +904,11 @@ def build_itinerary_table(d) -> str:
 # ─── 메인 ──────────────────────────────────────────────────────────────────
 
 OUTPUTS = (
-    ("index.html", lambda p: p / "index.html", build_index),
-    ("viz/itinerary.html", lambda p: p / "viz" / "itinerary.html", build_itinerary),
-    ("viz/checklist.html", lambda p: p / "viz" / "checklist.html", build_checklist),
+    ("index.html",               lambda p: p / "index.html",                  build_index),
+    ("viz/itinerary.html",       lambda p: p / "viz" / "itinerary.html",       build_itinerary),
+    ("viz/checklist.html",       lambda p: p / "viz" / "checklist.html",       build_checklist),
     ("viz/itinerary-table.html", lambda p: p / "viz" / "itinerary-table.html", build_itinerary_table),
+    ("viz/lodging.html",         lambda p: p / "viz" / "lodging.html",         build_lodging),
 )
 
 
