@@ -15,7 +15,7 @@
 | 동반 | 부부 2인 + 시부모 2인 (4인) | 같음 |
 | 항공 | 에어서울 인천↔간사이 4인 발권 | 별도 PR (발권 기록) |
 | 1·2박 (5/31·6/1) | 시오(Shio) 100년 마치야 에어비앤비 | `docs/decision-log/2026-05-12-04-airbnb-shio-selected.md` |
-| 3박 (6/2) | 우메코지 카덴쇼 조기할인 조식포함 | `data/booking-checklist.json` |
+| 3박 (6/2) | 우메코지 카덴쇼 트립닷컴 (객실 2개, 식사 불포함) | `data/booking-checklist.json` |
 
 ## 작업 범위
 
