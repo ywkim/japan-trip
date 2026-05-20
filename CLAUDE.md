@@ -30,7 +30,7 @@
 - 일정·예약 데이터는 `data/itinerary.json`·`data/booking-checklist.json`에 단일 출처
 - 시각 디자인 토큰은 `data/design-tokens.json`에 단일 출처 (DESIGN.md §2~§6과 동기화)
 - 사람이 읽는 일지·상세 시나리오는 `docs/*.md`
-- 모바일/상세 화면은 `index.html`·`viz/itinerary.html`·`viz/itinerary-table.html`·`viz/lodging.html`·`viz/checklist.html` — 모두 `scripts/build_index.py` 산출물 (직접 편집 금지)
+- 모바일/상세 화면은 `index.html`·`viz/itinerary.html`·`viz/itinerary-table.html`·`viz/lodging.html`·`viz/checklist.html`·`viz/archive.html` — 모두 `scripts/build_index.py` 산출물 (직접 편집 금지)
 - 과거 의사결정 보고서는 `reports/final-report.md` → PDF (아카이브)
 
 ## 실행 워크플로우
@@ -81,7 +81,9 @@ japan-trip/
 ├── README.md            # 사람용 안내
 ├── CLAUDE.md            # AI 세션 지시
 ├── DESIGN.md            # 시각 디자인 단일 출처 (awesome-design-md 9섹션, Quiet Ledger 테마)
-├── index.html           # 모바일 8섹션 카드 (build_index.py 산출물 — 직접 편집 금지)
+├── index.html           # 메인 운영 페이지 — 요약·일자별 일정 (build_index.py 산출물 — 직접 편집 금지)
+├── assets/
+│   └── og-*.svg                 # OG/Twitter 카드 이미지 6장 (1200×630 SVG, build_index.py 산출물 — 직접 편집 금지)
 ├── data/
 │   ├── decision.json          # 단일 출처 (criteria + candidates + scores)
 │   ├── cost-options.json      # 단일 출처 (flights/lodging/daily_fixed/one_time/scenarios)
@@ -104,11 +106,12 @@ japan-trip/
 │   ├── itinerary.html         # 일자별 카드 뷰 (build_index.py 산출물 — 직접 편집 금지)
 │   ├── itinerary-table.html   # 4일 시간표 뷰 (build_index.py 산출물 — 직접 편집 금지)
 │   ├── checklist.html         # 예약 체크리스트 화면 (build_index.py 산출물 — 직접 편집 금지)
-│   └── lodging.html           # 숙박·항공 탭 화면 (build_index.py 산출물 — 직접 편집 금지)
+│   ├── lodging.html           # 숙박·항공 탭 화면 (build_index.py 산출물 — 직접 편집 금지)
+│   └── archive.html           # 의사결정 아카이브 (장마 확률·9 예산 시나리오·7 후보지 점수 — build_index.py 산출물 — 직접 편집 금지)
 ├── scripts/
 │   ├── score.py         # 종합 점수 계산 (--json 지원)
 │   ├── budget.py        # 3M 예산 시나리오 평가 (--json 지원)
-│   ├── build_index.py   # index.html + viz/itinerary.html + viz/itinerary-table.html + viz/lodging.html + viz/checklist.html 빌드 (공통 토큰 주입, --check)
+│   ├── build_index.py   # index.html + viz/*.html(5개: itinerary·itinerary-table·lodging·checklist·archive) + assets/og-*.svg(6장) 빌드 (공통 토큰 주입, --check)
 │   ├── validate.py      # 가격 필드·묵은 가격·SYNC 주석·MD↔JSON·DESIGN 동기화 검사
 │   └── render-pdf.sh    # PDF 생성
 ├── tests/               # unittest (validate·build_index·design_tokens·score·budget)
@@ -124,12 +127,13 @@ japan-trip/
   - `data/itinerary.json` — 교토 3박4일 일정. `days`: 확정 코스 (일자·시간대·동선·메모·도보거리·보류). `route_candidates`: 대안 코스 3개 (여유형·서북 사찰 집중형·미식+문화 체험형). days[].items[].`arrive_from`(mode/duration_min/distance_km/route/source/source_fetched_at/data_quality)으로 장소 간 이동 출처 명시. data_quality는 `official_fare`/`researched_market_rate`/`tbd_needs_browser_mcp`(Playwright MCP 후속 세션 위임)
   - `data/booking-checklist.json` — 예약 진행 상태
   - `data/cost-options.json` — 항공·숙박·고정비·일회성·시나리오 (확정 금액은 `confirmed_booking` 라벨로 승격)
-  - `data/design-tokens.json` — 색·타이포·간격·반경 (DESIGN.md §2~§6과 동기화). `build_index.py`의 `render_css(tokens)`가 5개 산출물(`index.html`·`viz/itinerary.html`·`viz/itinerary-table.html`·`viz/lodging.html`·`viz/checklist.html`)의 인라인 CSS를 공통 생성
+  - `data/design-tokens.json` — 색·타이포·간격·반경 (DESIGN.md §2~§6과 동기화). `build_index.py`의 `render_css(tokens)`가 6개 산출물(`index.html`·`viz/itinerary.html`·`viz/itinerary-table.html`·`viz/lodging.html`·`viz/checklist.html`·`viz/archive.html`)의 인라인 CSS를 공통 생성
 - **아카이브 단일 출처(참조용)** — 의사결정 종료(2026-05-12) 시점의 입력 데이터. 신규 비교가 필요해질 때만 갱신:
   - `data/decision.json` — criteria·candidates·scores (MCDA 입력. 교토 확정 후 회귀 가드)
   - `data/weather.json` — 후보지×시기 기후 + `tsuyu_normals`(긴키 매우입·매우명 평년 + 최근 7년 실적) + `cities.kyoto.sub_monthly_precip`(순계열)·`trip_window_daily_precip`(5/31~6/3 일별). 원자료: JMA 매우 평년값·京都(47759) 일별 평년값 1991–2020. `docs/weather.md` §5와 동기화. 5/31~6/3 실측 기상 추적이 필요해지면 본 파일의 `cities.kyoto`에 새 키로 추가
   - `data/flights.json` — 후보지×출발지 항공권 시세 스냅샷 (시점 스냅샷, snapshot_date 명시). 발권은 별도 PR로 `data/booking-checklist.json`·`data/cost-options.json`에 기록
-- **`index.html`·`viz/itinerary.html`·`viz/itinerary-table.html`·`viz/checklist.html`·`viz/lodging.html`는 `scripts/build_index.py` 산출물 — 직접 편집 금지**. 데이터(`data/*.json`)·스크립트 변경 후 `python scripts/build_index.py` 실행. CI(`build_index.py --check`)가 5개 산출물의 drift를 PR 단계에서 차단
+- **`index.html`·`viz/itinerary.html`·`viz/itinerary-table.html`·`viz/checklist.html`·`viz/lodging.html`·`viz/archive.html`·`assets/og-*.svg`(6장)는 `scripts/build_index.py` 산출물 — 직접 편집 금지**. 데이터(`data/*.json`)·스크립트 변경 후 `python scripts/build_index.py` 실행. CI(`build_index.py --check`)가 6 HTML + 6 SVG = 12개 산출물의 drift를 PR 단계에서 차단
+- 메인 페이지(`index.html`)는 **운영 모드** — 요약·일자별 일정만. 분석·결정 자료(장마 확률·9 예산 시나리오·7 후보지 점수)는 `viz/archive.html`로 분리. 받는 사람에게 "아직 결정 중"으로 읽히는 콘텐츠는 메인에서 제외
 - `docs/weather.md`·`docs/flights.md`의 표는 각각 `data/weather.json`·`data/flights.json`의 사람용 사본 — JSON 수정 시 함께 갱신 (CI 게이트: `scripts/validate.py` E·F가 도시·시기 수치, snapshot_date, 시세 표기의 drift를 PR 단계에서 차단)
 - `docs/kyoto-itinerary-may31-jun3-2026.md`는 `data/itinerary.json`의 사람용 마크다운 사본 (JSON이 정본). 일정 변경 시 JSON을 먼저 수정 → 마크다운 함께 갱신
 - `data/flights.json`은 **시점 스냅샷**. 시세 재조회 시 새 스냅샷으로 덮어쓰지 말고 snapshot_date 갱신 + 변경 사유를 `docs/decision-log/`에 새 일지로 기록
@@ -156,11 +160,11 @@ japan-trip/
 
 ## 디자인 워크플로우
 
-5개 산출물(`index.html`·`viz/itinerary.html`·`viz/itinerary-table.html`·`viz/lodging.html`·`viz/checklist.html`)의 시각 변경 시:
+6개 산출물(`index.html`·`viz/itinerary.html`·`viz/itinerary-table.html`·`viz/lodging.html`·`viz/checklist.html`·`viz/archive.html`)의 시각 변경 시:
 
 1. `DESIGN.md` 편집 (의도·규칙 먼저).
 2. `data/design-tokens.json` 동기화 (DESIGN.md §2~§6의 모든 hex·치수가 토큰에 반영되어야 함).
-3. `python scripts/build_index.py` 실행 → 5개 산출물이 공통 `render_css(tokens)`로 재생성.
+3. `python scripts/build_index.py` 실행 → 6개 산출물이 공통 `render_css(tokens)`로 재생성.
 4. `python scripts/validate.py` (H 통과) + `python scripts/build_index.py --check` (drift 없음) 확인.
 5. `data/design-tokens.json`이 단일 출처. 인라인 hex 추가 금지 — 새 색은 반드시 토큰 키 추가 후 `var(--키)`로 참조.
 
