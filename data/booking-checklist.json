@@ -5,23 +5,23 @@
     {
       "id": "flight",
       "label": "항공 (ICN↔KIX 5/31~6/3, 4인)",
-      "status": "미정",
+      "status": "확정",
       "due_date": "2026-05-18",
-      "note": "Skyscanner 추정 ₩1,012K. 영욱 직접 재조회 후 발권사 평점 확인 → Booking.com 또는 항공사 직판 권장"
+      "note": "에어서울 RS · 예약번호 A8YW58 · ICN 13:15→KIX 15:15 / KIX 10:05→ICN 12:05 · 탑승객: KIM/BYUNGNAM, WANG/HAEJA, KIM/YOUNGWOOK, LEE/SOYEON"
     },
     {
       "id": "lodging_night1",
       "label": "에어비앤비 #3 시오(Shio) 5/31~6/2 (2박, 4명)",
-      "status": "미정",
+      "status": "확정",
       "due_date": "2026-05-18",
-      "note": "PR #16 소연 추천으로 채택. 매물 1373928005681941061, ★4.95, 침실 3·욕실 2. 2박 ₩730,372. 후기 59개·운영 2년 → 호스트 응답성 사전 확인 + 환불 정책 검토"
+      "note": "에어비앤비 확정 · 총 ₩740,954 (2박) · 매물 1373928005681941061"
     },
     {
       "id": "ryokan",
       "label": "우메코지 카덴쇼 6/2 (1박, 2명×2실 조기할인 조식)",
-      "status": "미정",
+      "status": "확정",
       "due_date": "2026-05-18",
-      "note": "dormy-hotels.com 직판. 환불 정책 사전 확인 후 결제. 4인 ¥76,500 ≈ ₩726,750"
+      "note": "예약 확정. dormy-hotels.com 직판 조기할인 조식 포함. 4인 ¥76,500 ≈ ₩726,750"
     },
     {
       "id": "insurance",

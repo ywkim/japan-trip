@@ -12,7 +12,8 @@ INDEX = BASE / "index.html"
 ITINERARY = BASE / "viz" / "itinerary.html"
 CHECKLIST = BASE / "viz" / "checklist.html"
 TABLE = BASE / "viz" / "itinerary-table.html"
-ALL_OUTPUTS = (INDEX, ITINERARY, CHECKLIST, TABLE)
+LODGING = BASE / "viz" / "lodging.html"
+ALL_OUTPUTS = (INDEX, ITINERARY, CHECKLIST, TABLE, LODGING)
 SCRIPT = BASE / "scripts" / "build_index.py"
 
 
@@ -48,14 +49,19 @@ class BuildIndexTests(unittest.TestCase):
 
     def test_all_sections_rendered(self):
         run()
+        # 홈 탭: 요약·장마·예산·점수
         html = INDEX.read_text(encoding="utf-8")
-        for section_id in ("summary", "tsuyu", "airbnb", "kadensho", "flights", "budget", "itinerary", "checklist", "score"):
-            self.assertIn(f'id="{section_id}"', html, f"section #{section_id} missing")
+        for section_id in ("summary", "tsuyu", "budget", "score"):
+            self.assertIn(f'id="{section_id}"', html, f"index.html section #{section_id} missing")
+        # 숙박·항공 탭: lodging.html에 분리
+        lodging = LODGING.read_text(encoding="utf-8")
+        for section_id in ("airbnb", "kadensho", "flights"):
+            self.assertIn(f'id="{section_id}"', lodging, f"lodging.html section #{section_id} missing")
 
     def test_sync_comments_present(self):
         run()
-        html = INDEX.read_text(encoding="utf-8")
-        self.assertGreaterEqual(html.count("<!-- SYNC:"), 9, "expected at least 9 SYNC comments (one per section)")
+        total = sum(p.read_text(encoding="utf-8").count("<!-- SYNC:") for p in ALL_OUTPUTS)
+        self.assertGreaterEqual(total, 9, "expected at least 9 SYNC comments across all outputs (one per section)")
 
     def test_viz_outputs_have_no_external_fetch(self):
         run()
@@ -140,6 +146,42 @@ class ItineraryTableTests(unittest.TestCase):
             self.assertEqual(r.returncode, 1, "--check should fail when itinerary-table.html drifts")
         finally:
             TABLE.write_text(original, encoding="utf-8")
+
+
+class TabBarTests(unittest.TestCase):
+    TAB_PAGES = (INDEX, ITINERARY, TABLE, CHECKLIST, LODGING)
+
+    def test_tab_bar_present_on_all_pages(self):
+        run()
+        for path in self.TAB_PAGES:
+            with self.subTest(path=path.name):
+                self.assertIn('class="tab-bar"', path.read_text(encoding="utf-8"),
+                              f"{path.name} is missing the bottom tab bar")
+
+    def test_each_page_has_correct_active_tab(self):
+        run()
+        cases = {
+            INDEX:    "home",
+            ITINERARY: "itinerary",
+            TABLE:    "itinerary",
+            CHECKLIST: "checklist",
+            LODGING:  "lodging",
+        }
+        for path, expected in cases.items():
+            with self.subTest(path=path.name):
+                html = path.read_text(encoding="utf-8")
+                self.assertIn(f'data-tab="{expected}"', html,
+                              f"{path.name} should have active tab '{expected}'")
+
+    def test_lodging_file_is_generated(self):
+        run()
+        self.assertTrue(LODGING.exists(), "viz/lodging.html should be generated")
+
+    def test_lodging_has_key_content(self):
+        run()
+        html = LODGING.read_text(encoding="utf-8")
+        for keyword in ("에어비앤비", "카덴쇼", "항공"):
+            self.assertIn(keyword, html, f"lodging.html missing '{keyword}'")
 
 
 if __name__ == "__main__":
