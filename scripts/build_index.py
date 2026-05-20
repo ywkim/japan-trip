@@ -71,6 +71,20 @@ def maps_link(query: str, label: str) -> str:
     return f'<a href="https://maps.google.com/?q={q}" target="_blank" rel="noopener">{esc(label)}</a>'
 
 
+def blog_reviews_html(reviews: list) -> str:
+    """Render a scrollable photo strip of Naver blog reviews."""
+    if not reviews:
+        return ""
+    cards = "".join(
+        f'<a href="{esc(r["url"])}" target="_blank" rel="noopener" class="blog-card">'
+        f'<img src="{esc(r["img"])}" class="blog-thumb" loading="lazy" alt="">'
+        f'<p class="blog-comment">{esc(r["comment"])}</p>'
+        f'</a>'
+        for r in reviews
+    )
+    return f'<div class="blog-reviews"><div class="blog-strip">{cards}</div></div>'
+
+
 def run_json(script: str) -> dict:
     res = subprocess.run(
         [sys.executable, str(SCRIPTS / script), "--json"],
@@ -190,6 +204,11 @@ CSS = """
     max-height: 200px;
   }
   .img-credit { color: var(--muted); font-size: 0.65rem; text-align: right; }
+  .blog-reviews { margin-top: 0.5rem; }
+  .blog-strip { display: flex; gap: 0.5rem; overflow-x: auto; padding-bottom: 0.3rem; -webkit-overflow-scrolling: touch; }
+  .blog-card { flex: 0 0 140px; text-decoration: none; color: var(--fg); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+  .blog-thumb { width: 140px; height: 100px; object-fit: cover; display: block; }
+  .blog-comment { font-size: 0.7rem; padding: 0.3rem; margin: 0; color: var(--muted); line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 """
 
 
@@ -684,11 +703,12 @@ def build_itinerary(d) -> str:
                 )
             else:
                 img_html = ""
+            reviews_html = blog_reviews_html(it.get("blog_reviews", []))
             item_rows.append(f"""
     <div class="day">
       {transit}
       <div class="date"><span class="k">{esc(it['time'])}</span> {link}</div>
-      {note_html}{img_html}
+      {note_html}{img_html}{reviews_html}
     </div>""")
         day_cards.append(f"""
   <div class="subcard">
@@ -958,11 +978,12 @@ def build_itinerary_table(d) -> str:
                 )
             else:
                 img_html = ""
+            reviews_html = blog_reviews_html(it.get("blog_reviews", []))
             item_rows.append(f"""
     <div class="day">
       {transit}
       <div class="date"><span class="k">{esc(it["time"])}</span> {link}</div>
-      {note_html}{img_html}
+      {note_html}{img_html}{reviews_html}
     </div>""")
         mobile_cards.append(f"""
   <div class="subcard">
