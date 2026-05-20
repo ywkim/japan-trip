@@ -116,15 +116,15 @@
       "notes": "환불 불가, 1박당"
     },
     {
-      "id": "kadensho_early_bird_with_breakfast_2026jun2",
+      "id": "kadensho_tripcom_no_meal_2026jun2",
       "city": "교토",
-      "name": "우메코지 카덴쇼 (2명×2실, 조식 포함, 조기할인 15% OFF, 2026-06-02→06-03 1박)",
+      "name": "우메코지 카덴쇼 (객실 2개, 식사 불포함, 트립닷컴 확정, 2026-06-02→06-03 1박)",
       "pax": 4,
       "rooms": 2,
-      "per_night_krw": 726750,
-      "source": "dormy-hotels.com 공식 검색 2026-05-11 (¥19,125/인 × 4 = ¥76,500/박, FX 100엔=950원)",
+      "per_night_krw": 354065,
+      "source": "트립닷컴 예약 확정 2026-05-13 (예약번호 1400825991981904, JPY 37,270, FX 100엔=950원)",
       "data_quality": "confirmed_booking",
-      "notes": "원안 4인 1실은 카덴쇼 객실 정원 한계로 가격 노출 0건 → 2명×2실 분리 시 18개 플랜 모두 가용. 공식 사이트(Kyoritsu Resort) 직판 = OTA 대비 일반 저렴 + 쿠폰. 환불 불가 조건 사전 확인 필요."
+      "notes": "객실 2개 1박, 식사 불포함, 숙소 현지결제. 조식 미포함은 6/3 새벽 출국 동선 우선(시부 2026-05-13 결정). 가이세키 저녁은 현장 별도 주문. 환불 불가. 숙소 확정번호: 20260513170241828, 20260513170241823 · PIN 5647."
     },
     {
       "id": "kadensho_hwajeoncho_with_breakfast_2026jun2",
@@ -458,7 +458,7 @@
   "scenarios": [
     {
       "id": "kyoto_kadensho_with_bf_original",
-      "label": "[원안] 교토 3박4일 (카덴쇼 조식 포함 + 에어비앤비 2박)",
+      "label": "[아카이브·원안 5/24~27] 교토 3박4일 (카덴쇼 조식 포함 + 에어비앤비 2박)",
       "flight": "rs_kix_may24_27",
       "lodging_plan": [
         {"lodging": "kyoto_airbnb_4pax", "nights": 2},
@@ -474,7 +474,7 @@
     },
     {
       "id": "kyoto_matsubaya_mid",
-      "label": "[추천] 교토 3박4일 (마츠바야 료칸 1박 + 에어비앤비 2박, 중간 식비)",
+      "label": "[아카이브·원안 추천 5/24~27] 교토 3박4일 (마츠바야 료칸 1박 + 에어비앤비 2박, 중간 식비)",
       "flight": "rs_kix_may24_27",
       "lodging_plan": [
         {"lodging": "kyoto_airbnb_4pax", "nights": 2},
@@ -490,7 +490,7 @@
     },
     {
       "id": "kyoto_matsubaya_budget",
-      "label": "교토 3박4일 (마츠바야 료칸 + 에어비앤비, 절약 식비)",
+      "label": "[아카이브 5/24~27] 교토 3박4일 (마츠바야 료칸 + 에어비앤비, 절약 식비)",
       "flight": "rs_kix_may24_27",
       "lodging_plan": [
         {"lodging": "kyoto_airbnb_4pax", "nights": 2},
@@ -506,7 +506,7 @@
     },
     {
       "id": "kyoto_kadensho_min_budget",
-      "label": "교토 3박4일 (카덴쇼 5월 평일 최저가 + 에어비앤비, 절약 식비)",
+      "label": "[아카이브 5/24~27] 교토 3박4일 (카덴쇼 5월 평일 최저가 + 에어비앤비, 절약 식비)",
       "flight": "rs_kix_may24_27",
       "lodging_plan": [
         {"lodging": "kyoto_airbnb_4pax", "nights": 2},
@@ -522,7 +522,7 @@
     },
     {
       "id": "kyoto_no_ryokan_all_airbnb",
-      "label": "교토 3박4일 (전 박 에어비앤비, 료칸 제외, 중간 식비)",
+      "label": "[아카이브 5/24~27] 교토 3박4일 (전 박 에어비앤비, 료칸 제외, 중간 식비)",
       "flight": "rs_kix_may24_27",
       "lodging_plan": [
         {"lodging": "kyoto_airbnb_4pax", "nights": 3}
@@ -537,11 +537,11 @@
     },
     {
       "id": "kyoto_may31_kadensho_early_bird",
-      "label": "[확정] 교토 3박4일 5/31~6/3 (시오 2박 + 카덴쇼 조기할인 조식 1박)",
+      "label": "[확정] 교토 3박4일 5/31~6/3 (시오 2박 + 카덴쇼 식사 불포함 1박)",
       "flight": "rs_kix_may31_jun3",
       "lodging_plan": [
         {"lodging": "airbnb_shio_machiya", "nights": 2},
-        {"lodging": "kadensho_early_bird_with_breakfast_2026jun2", "nights": 1}
+        {"lodging": "kadensho_tripcom_no_meal_2026jun2", "nights": 1}
       ],
       "fixed_days": [
         {"daily_fixed": "food_kyoto_mid", "days": 4}
@@ -550,11 +550,11 @@
         "haruka_rt_4pax", "kyoto_local_transit_4pax", "kyoto_temples_4pax",
         "kyoto_lodging_tax_2nights_4pax", "airbnb_cleaning_fee"
       ],
-      "notes": "에어비앤비 1·2박은 PR #16 소연 추천 #3 시오(Shio) 100년 마치야 채택 — ★4.95, 침실 3·욕실 2·화장실 2로 시부모·부부 완전 분리 가능. 합계 약 ₩3.42M (3M 초과, 5M 옵션 적용)."
+      "notes": "에어비앤비 1·2박은 PR #16 소연 추천 #3 시오(Shio) 100년 마치야 채택 — ★4.95, 침실 3·욕실 2·화장실 2로 시부모·부부 완전 분리 가능. 카덴쇼는 트립닷컴 확정 식사 불포함(JPY 37,270, 2026-05-13) — 분석시 가정 ¥76,500(조기할인 조식 포함) 대비 ¥39,230 절감. 합계 약 ₩3.05M (3M 초과 최소화 — 자세한 차이는 docs/decision-log/2026-05-20-kakaotalk-sync-kadensho-booking.md)."
     },
     {
       "id": "nagasaki_forest_villa_mid",
-      "label": "나가사키·HTB 4박5일 (시내 호텔 3박 + Forest Villa 1박, 중간 식비, JR)",
+      "label": "[아카이브·나가사키 후보] 4박5일 (시내 호텔 3박 + Forest Villa 1박, 중간 식비, JR)",
       "flight": "ke_ngs_may12_16",
       "lodging_plan": [
         {"lodging": "nagasaki_business_hotel_2rooms", "nights": 2},
@@ -571,7 +571,7 @@
     },
     {
       "id": "nagasaki_sasebo_budget_bus",
-      "label": "[가성비] 나가사키·HTB 4박5일 (사세보 비즈니스 1박, 절약 식비, 고속버스)",
+      "label": "[아카이브·나가사키 가성비] 4박5일 (사세보 비즈니스 1박, 절약 식비, 고속버스)",
       "flight": "ke_ngs_may12_16",
       "lodging_plan": [
         {"lodging": "nagasaki_business_hotel_2rooms", "nights": 3},
