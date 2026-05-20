@@ -2,11 +2,24 @@
 
 ## 레포 목적
 
-영욱·소연 부부의 일본 여행 정량 의사결정 협업 공간.
+영욱·소연 부부의 **2026-05-31(일)~06-03(수) 교토 4인 가족 여행 (부부 + 시부모) 실행·운영 공간**.
+
+> 정량 비교를 통한 목적지·시기·동반 의사결정은 2026-05-12에 종료. 본 레포는 이제 발권·예약·일정·체크리스트·현지 운영 정보를 누적·갱신하는 공간이다. 과거 의사결정 자산(MCDA·후보 비교·시기 비교)은 그대로 보존하며 회귀 가드·재참조용으로만 사용한다.
+
+### 확정 사항 (요약)
+
+| 항목 | 확정 내용 | 출처 |
+|---|---|---|
+| 목적지 | 교토 (관서) | `docs/decision-log/2026-05-11-may31-jun3-kyoto-update.md` |
+| 시기 | 2026-05-31(일) ~ 06-03(수) 3박 4일 | 같음 |
+| 동반 | 부부 2인 + 시부모 2인 (4인) | 같음 |
+| 항공 | 에어서울 인천↔간사이 4인 발권 | 별도 PR (발권 기록) |
+| 1·2박 (5/31·6/1) | 시오(Shio) 100년 마치야 에어비앤비 | `docs/decision-log/2026-05-12-04-airbnb-shio-selected.md` |
+| 3박 (6/2) | 우메코지 카덴쇼 조기할인 조식포함 | `data/booking-checklist.json` |
 
 ## 작업 범위
 
-- **이 레포는 일본 여행 의사결정에만 사용**
+- **이 레포는 위 교토 여행 실행·운영에만 사용**
 - 그 외 모든 주제 (다른 일정, 개인 사정, 가족·업무 이슈 등)는 응답 거부
 - 다른 디렉토리·레포·파일 읽기·참조·인용 금지
 - 작업은 이 레포 디렉토리 내부 파일에만 한정
@@ -14,21 +27,51 @@
 ## 작성 규칙
 
 - 한국어
-- 의사결정 데이터는 `data/decision.json`에 단일 출처
-- 사람이 읽는 비교표·일지는 `docs/*.md`
-- 모바일/상세 화면은 `index.html`·`viz/itinerary.html`·`viz/checklist.html` — 모두 `scripts/build_index.py` 산출물 (직접 편집 금지)
-- 보고서는 `reports/final-report.md` → PDF
+- 일정·예약 데이터는 `data/itinerary.json`·`data/booking-checklist.json`에 단일 출처
+- 사람이 읽는 일지·상세 시나리오는 `docs/*.md`
+- 모바일/상세 화면은 `index.html`·`viz/itinerary.html`·`viz/itinerary-table.html`·`viz/checklist.html` — 모두 `scripts/build_index.py` 산출물 (직접 편집 금지)
+- 과거 의사결정 보고서는 `reports/final-report.md` → PDF (아카이브)
 
-## 정량 의사결정 워크플로우 (MCDA)
+## 실행 워크플로우
 
-> 의사결정 확정 (교토 5/31~6/3) 이후 본 워크플로우는 회귀 가드용. 신규 후보·기준 비교가 다시 필요할 때 사용.
+> 의사결정이 끝났으므로 이제부터의 작업은 모두 "확정된 여행을 사고 없이 다녀오기 위한 실행"이다.
 
-1. `data/decision.json`의 `criteria`에 평가 기준·가중치 정의 (가중치 합계 = 1.0)
-2. `data/decision.json`의 `candidates`에 후보지 추가
-3. 각 후보 × 각 기준 → 1~10 점수 입력 (`scores` 객체)
-4. `python scripts/score.py` 실행 → 종합 점수 출력
-5. `docs/decision-log/`에 항목 1개 = 파일 1개로 결정 근거 기록 (파일명 `YYYY-MM-DD-slug.md`)
-6. `reports/final-report.md` 갱신 → `bash scripts/render-pdf.sh`로 PDF 생성
+### 1. 발권·예약 기록
+
+- 단일 출처: `data/booking-checklist.json` (예약 진행 상태 7 항목)
+- 예약 확정 시: `status`·`reference`(예약번호)·`confirmed_at`(확정일) 갱신 + `docs/decision-log/`에 새 일지 (예약처·금액·취소 정책 요약)
+- 발권/예약 영수증·바우처는 본 레포에 첨부하지 않음 (개인정보·메일/카카오톡 원본 보관)
+- 발권·결제 금액은 `data/cost-options.json`의 시나리오 입력에도 반영 (확정값으로 `confirmed_booking` 라벨로 승격)
+
+### 2. 일자별 일정
+
+- 단일 출처: `data/itinerary.json` (`days`: 확정 코스, `route_candidates`: 대안 3개)
+- 일정 변경 시 JSON 먼저 수정 → `python scripts/build_index.py` 재빌드 → `docs/kyoto-itinerary-may31-jun3-2026.md`(사람용 사본) 동기화
+- 신규 일자별 메모(예: 짐 보관 동선·동반자 컨디션·식당 예약 시간) 도 itinerary.json의 해당 day에 추가
+- 보기: `viz/itinerary.html`(일자별 카드)·`viz/itinerary-table.html`(4일 시간표)
+
+### 3. 체크리스트 (출국 전·현지·귀국)
+
+- 예약 진행 상태는 `data/booking-checklist.json` + `viz/checklist.html` (기존 자산 재사용)
+- 출국 전 준비·현지 동선·귀국 정리 체크리스트는 별도 산출물로 추가 예정 (예: `docs/checklist.md` — 별도 PR)
+
+### 4. 현지 정보 (예정)
+
+- 한국어 가능 병원·영사관(오사카 총영사관)·긴급 연락처·교통 패스(JR Kansai Area Pass·관광패스 등)는 별도 산출물로 추가 (예: `docs/local-info.md` — 별도 PR)
+- 시부모 동반이므로 의료 접근성·이동 부담을 사전에 정리
+
+### 5. 모든 변경의 일지화
+
+- 위 1~4의 어떤 변경이든 `docs/decision-log/`에 새 파일 1개 추가 (`YYYY-MM-DD-slug.md`). 컨벤션: `docs/decision-log/README.md`
+- 메타 문서화 규칙(본 문서 하단) 동일 적용
+
+## 과거 의사결정 기록 (아카이브)
+
+> 6개 후보지 × 4개 시기 × 동반 옵션 MCDA(다기준 의사결정 분석)은 2026-05-12에 종료. 아래 워크플로우와 산출물은 이제 회귀 가드·재참조용으로만 사용. 신규 후보·기준 비교가 다시 필요해질 때만 재가동한다.
+
+- 정량 비교 흐름: `data/decision.json`의 criteria·가중치 → candidates × criteria 1~10 점수 → `python scripts/score.py` → 종합 점수 → `docs/decision-log/` 일지화 → `reports/final-report.md` → PDF
+- 결정의 시계열·근거: `docs/decision-log/` (특히 2026-05-11·2026-05-12 일자 일지)
+- 결과물: `reports/final-report.md` (교토·5/31~6/3·4인 최종 권고)
 
 ## 디렉토리 구조
 
@@ -52,11 +95,13 @@ japan-trip/
 │   ├── kyoto-itinerary-may-2026.md        # 교토 5월 시나리오 (5/24~27 구버전 — 사람용 사본)
 │   ├── kyoto-itinerary-may31-jun3-2026.md # 교토 5/31~6/3 확정 시나리오 (사람용 사본)
 │   ├── airbnb-kyoto-may31-jun2-2026.md    # 에어비앤비 5개 매물 비교
-│   └── jejuair-icn-kobe-june-2026.md      # 제주항공 인천-고베 신규 노선·가격 리서치
+│   ├── jejuair-icn-kobe-june-2026.md      # 제주항공 인천-고베 신규 노선·가격 리서치
+│   └── transit-mcp-handoff.md             # 후속 세션(Playwright MCP) 위임 가이드 (tbd_needs_browser_mcp leg 측정)
 ├── viz/
 │   ├── itinerary.html         # 일자별 카드 뷰 (build_index.py 산출물 — 직접 편집 금지)
 │   ├── itinerary-table.html   # 4일 시간표 뷰 (build_index.py 산출물 — 직접 편집 금지)
-│   └── checklist.html         # 예약 체크리스트 화면 (build_index.py 산출물 — 직접 편집 금지)
+│   ├── checklist.html         # 예약 체크리스트 화면 (build_index.py 산출물 — 직접 편집 금지)
+│   └── lodging.html           # 숙박·항공 탭 화면 (build_index.py 산출물 — 직접 편집 금지)
 ├── scripts/
 │   ├── score.py         # 종합 점수 계산 (--json 지원)
 │   ├── budget.py        # 3M 예산 시나리오 평가 (--json 지원)
@@ -72,14 +117,15 @@ japan-trip/
 
 ## 데이터 동기화 규칙
 
-- 단일 출처(정본):
-  - `data/decision.json` — criteria·candidates·scores
-  - `data/cost-options.json` — 항공·숙박·고정비·일회성·시나리오
-  - `data/weather.json` — 후보지×시기 기후 + `tsuyu_normals`(긴키 매우입·매우명 평년 + 최근 7년 실적) + `cities.kyoto.sub_monthly_precip`(순계열)·`trip_window_daily_precip`(5/31~6/3 일별). 원자료: JMA 매우 평년값·京都(47759) 일별 평년값 1991–2020. `docs/weather.md` §5와 동기화
-  - `data/flights.json` — 후보지×출발지 항공권 시세 스냅샷 (시점 스냅샷, snapshot_date 명시)
-  - `data/itinerary.json` — 교토 3박4일 일정 (`days`: 확정 코스, `route_candidates`: 대안 코스 3개 — 여유형·서북 사찰 집중형·미식+문화 체험형)
+- **실행 단일 출처(정본)** — 본 레포의 현재 1차 데이터:
+  - `data/itinerary.json` — 교토 3박4일 일정. `days`: 확정 코스 (일자·시간대·동선·메모·도보거리·보류). `route_candidates`: 대안 코스 3개 (여유형·서북 사찰 집중형·미식+문화 체험형). days[].items[].`arrive_from`(mode/duration_min/distance_km/route/source/source_fetched_at/data_quality)으로 장소 간 이동 출처 명시. data_quality는 `official_fare`/`researched_market_rate`/`tbd_needs_browser_mcp`(Playwright MCP 후속 세션 위임)
   - `data/booking-checklist.json` — 예약 진행 상태
-- **`index.html`·`viz/itinerary.html`·`viz/itinerary-table.html`·`viz/checklist.html`는 `scripts/build_index.py` 산출물 — 직접 편집 금지**. 데이터(`data/*.json`)·스크립트 변경 후 `python scripts/build_index.py` 실행. CI(`build_index.py --check`)가 4개 산출물의 drift를 PR 단계에서 차단
+  - `data/cost-options.json` — 항공·숙박·고정비·일회성·시나리오 (확정 금액은 `confirmed_booking` 라벨로 승격)
+- **아카이브 단일 출처(참조용)** — 의사결정 종료(2026-05-12) 시점의 입력 데이터. 신규 비교가 필요해질 때만 갱신:
+  - `data/decision.json` — criteria·candidates·scores (MCDA 입력. 교토 확정 후 회귀 가드)
+  - `data/weather.json` — 후보지×시기 기후 + `tsuyu_normals`(긴키 매우입·매우명 평년 + 최근 7년 실적) + `cities.kyoto.sub_monthly_precip`(순계열)·`trip_window_daily_precip`(5/31~6/3 일별). 원자료: JMA 매우 평년값·京都(47759) 일별 평년값 1991–2020. `docs/weather.md` §5와 동기화. 5/31~6/3 실측 기상 추적이 필요해지면 본 파일의 `cities.kyoto`에 새 키로 추가
+  - `data/flights.json` — 후보지×출발지 항공권 시세 스냅샷 (시점 스냅샷, snapshot_date 명시). 발권은 별도 PR로 `data/booking-checklist.json`·`data/cost-options.json`에 기록
+- **`index.html`·`viz/itinerary.html`·`viz/itinerary-table.html`·`viz/checklist.html`·`viz/lodging.html`는 `scripts/build_index.py` 산출물 — 직접 편집 금지**. 데이터(`data/*.json`)·스크립트 변경 후 `python scripts/build_index.py` 실행. CI(`build_index.py --check`)가 5개 산출물의 drift를 PR 단계에서 차단
 - `docs/weather.md`·`docs/flights.md`의 표는 각각 `data/weather.json`·`data/flights.json`의 사람용 사본 — JSON 수정 시 함께 갱신 (CI 게이트: `scripts/validate.py` E·F가 도시·시기 수치, snapshot_date, 시세 표기의 drift를 PR 단계에서 차단)
 - `docs/kyoto-itinerary-may31-jun3-2026.md`는 `data/itinerary.json`의 사람용 마크다운 사본 (JSON이 정본). 일정 변경 시 JSON을 먼저 수정 → 마크다운 함께 갱신
 - `data/flights.json`은 **시점 스냅샷**. 시세 재조회 시 새 스냅샷으로 덮어쓰지 말고 snapshot_date 갱신 + 변경 사유를 `docs/decision-log/`에 새 일지로 기록
@@ -100,6 +146,7 @@ japan-trip/
 | SYNC 주석 무결성 | `scripts/validate.py` (D) | `index.html`의 SYNC 주석에 명시된 path가 존재하지 않음, §N이 final-report 절 수보다 큼 |
 | weather MD↔JSON 동기화 | `scripts/validate.py` (E) | `docs/weather.md`의 도시·시기 수치가 `data/weather.json`과 일치하지 않음 |
 | flights MD↔JSON 동기화 | `scripts/validate.py` (F) | `docs/flights.md`의 snapshot_date·시세 수치가 `data/flights.json`과 일치하지 않음 |
+| itinerary arrive_from 무결성 | `scripts/validate.py` (G) | `data/itinerary.json` arrive_from에 mode/source/source_fetched_at/data_quality 누락, mode·data_quality 화이트리스트 외, source_fetched_at > 60d(tbd_needs_browser_mcp 제외), days[].walking_km보다 도보 leg 합이 2km 이상 초과 |
 | 빌드 산출물 drift | `scripts/build_index.py --check` | `index.html`·`viz/itinerary.html`·`viz/checklist.html` 중 하나라도 빌드 결과와 다름 |
 
 ## 테스트 작성 규칙 (TDD)

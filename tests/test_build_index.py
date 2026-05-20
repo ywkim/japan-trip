@@ -12,7 +12,8 @@ INDEX = BASE / "index.html"
 ITINERARY = BASE / "viz" / "itinerary.html"
 CHECKLIST = BASE / "viz" / "checklist.html"
 TABLE = BASE / "viz" / "itinerary-table.html"
-ALL_OUTPUTS = (INDEX, ITINERARY, CHECKLIST, TABLE)
+LODGING = BASE / "viz" / "lodging.html"
+ALL_OUTPUTS = (INDEX, ITINERARY, CHECKLIST, TABLE, LODGING)
 SCRIPT = BASE / "scripts" / "build_index.py"
 
 
@@ -48,14 +49,19 @@ class BuildIndexTests(unittest.TestCase):
 
     def test_all_sections_rendered(self):
         run()
+        # 홈 탭: 요약·장마·예산·점수
         html = INDEX.read_text(encoding="utf-8")
-        for section_id in ("summary", "tsuyu", "airbnb", "kadensho", "flights", "budget", "itinerary", "checklist", "score"):
-            self.assertIn(f'id="{section_id}"', html, f"section #{section_id} missing")
+        for section_id in ("summary", "tsuyu", "budget", "score"):
+            self.assertIn(f'id="{section_id}"', html, f"index.html section #{section_id} missing")
+        # 숙박·항공 탭: lodging.html에 분리
+        lodging = LODGING.read_text(encoding="utf-8")
+        for section_id in ("airbnb", "kadensho", "flights"):
+            self.assertIn(f'id="{section_id}"', lodging, f"lodging.html section #{section_id} missing")
 
     def test_sync_comments_present(self):
         run()
-        html = INDEX.read_text(encoding="utf-8")
-        self.assertGreaterEqual(html.count("<!-- SYNC:"), 9, "expected at least 9 SYNC comments (one per section)")
+        total = sum(p.read_text(encoding="utf-8").count("<!-- SYNC:") for p in ALL_OUTPUTS)
+        self.assertGreaterEqual(total, 9, "expected at least 9 SYNC comments across all outputs (one per section)")
 
     def test_viz_outputs_have_no_external_fetch(self):
         run()
@@ -71,6 +77,29 @@ class BuildIndexTests(unittest.TestCase):
         self.assertIn("data/itinerary.json", itin)
         cl = CHECKLIST.read_text(encoding="utf-8")
         self.assertIn("data/booking-checklist.json", cl)
+
+    def test_arrive_from_route_is_clickable_link_when_source_is_url(self):
+        """모든 mode(bus·subway·jr·taxi·walk·airport_express)의 arrive_from에서
+        source가 http URL이면 route 텍스트가 <a href> 링크로 렌더돼야 한다.
+        """
+        run()
+        import json as _json
+        data = _json.loads((BASE / "data" / "itinerary.json").read_text(encoding="utf-8"))
+        url_legs = []
+        for day in data["days"]:
+            for it in day["items"]:
+                af = it.get("arrive_from")
+                if not af:
+                    continue
+                src = af.get("source", "")
+                if src.startswith("http"):
+                    url_legs.append((af["mode"], src.split()[0]))
+        self.assertGreater(len(url_legs), 0, "fixture must have at least one URL-sourced leg")
+        for path in (INDEX, ITINERARY):
+            with self.subTest(path=path.name):
+                html = path.read_text(encoding="utf-8")
+                for mode, url in url_legs[:5]:
+                    self.assertIn(url, html, f"{mode} leg URL {url!r} not linked in {path.name}")
 
     def test_route_candidates_rendered_in_itinerary(self):
         run()
@@ -155,6 +184,42 @@ class BlogReviewsTests(unittest.TestCase):
         run()
         html = TABLE.read_text(encoding="utf-8")
         self.assertIn('class="blog-reviews"', html, "blog-reviews missing from itinerary-table.html mobile view")
+
+
+class TabBarTests(unittest.TestCase):
+    TAB_PAGES = (INDEX, ITINERARY, TABLE, CHECKLIST, LODGING)
+
+    def test_tab_bar_present_on_all_pages(self):
+        run()
+        for path in self.TAB_PAGES:
+            with self.subTest(path=path.name):
+                self.assertIn('class="tab-bar"', path.read_text(encoding="utf-8"),
+                              f"{path.name} is missing the bottom tab bar")
+
+    def test_each_page_has_correct_active_tab(self):
+        run()
+        cases = {
+            INDEX:    "home",
+            ITINERARY: "itinerary",
+            TABLE:    "itinerary",
+            CHECKLIST: "checklist",
+            LODGING:  "lodging",
+        }
+        for path, expected in cases.items():
+            with self.subTest(path=path.name):
+                html = path.read_text(encoding="utf-8")
+                self.assertIn(f'data-tab="{expected}"', html,
+                              f"{path.name} should have active tab '{expected}'")
+
+    def test_lodging_file_is_generated(self):
+        run()
+        self.assertTrue(LODGING.exists(), "viz/lodging.html should be generated")
+
+    def test_lodging_has_key_content(self):
+        run()
+        html = LODGING.read_text(encoding="utf-8")
+        for keyword in ("에어비앤비", "카덴쇼", "항공"):
+            self.assertIn(keyword, html, f"lodging.html missing '{keyword}'")
 
 
 if __name__ == "__main__":

@@ -2,19 +2,19 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#1a1a1a" media="(prefers-color-scheme: dark)">
 <title>일본 여행 최종 결정</title>
 <style>
   :root {
-    --bg: #fafafa; --fg: #222; --muted: #666; --border: #ddd;
-    --accent: #d33; --card: #fff; --subcard: #fafafa;
+    --bg: #fff; --fg: #111; --muted: #888; --border: #eaeaea;
+    --accent: #111; --card: #fff; --subcard: #fafafa;
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --bg: #1a1a1a; --fg: #eee; --muted: #999; --border: #333;
-      --accent: #ff6464; --card: #232323; --subcard: #1e1e1e;
+      --bg: #000; --fg: #ededed; --muted: #888; --border: #333;
+      --accent: #ededed; --card: #0a0a0a; --subcard: #111;
     }
   }
   * { box-sizing: border-box; }
@@ -73,6 +73,30 @@
     font-size: 0.75rem; border: 1px solid currentColor;
   }
   footer { color: var(--muted); font-size: 0.75rem; margin-top: 1.5rem; text-align: center; }
+  /* ── 하단 탭바 ── */
+  body { padding-bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px)); }
+  .tab-bar {
+    position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+    width: 100%; max-width: 640px;
+    display: flex; background: var(--card); border-top: 1px solid var(--border);
+    z-index: 200; padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .tab-bar::after {
+    content: ''; position: absolute; top: 100%; left: 0; right: 0;
+    height: 80px; background: var(--card);
+  }
+  .tab-bar a {
+    flex: 1; display: flex; flex-direction: column; align-items: center;
+    padding: 0.6rem 0.25rem 0.45rem; text-decoration: none;
+    color: var(--muted); font-size: 0.68rem; gap: 0.2rem; line-height: 1.2;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .tab-bar a.active {
+    color: var(--fg); font-weight: 600;
+  }
+  .tab-bar a:active { opacity: 0.6; }
+  .tab-bar .tab-icon { font-size: 1.25rem; line-height: 1; }
+  /* ── 이미지 ── */
   .place-img {
     width: 100%; aspect-ratio: 16/9; object-fit: cover;
     border-radius: 4px; display: block; margin-top: 0.35rem;
@@ -88,17 +112,13 @@
 </head>
 <body>
 <h1>일본 여행 최종 결정</h1>
-<div class="status">교토 5/31~6/3 시나리오 (시부모 4인 확정). 본 페이지는 <code>scripts/build_index.py</code> 산출물 — 직접 편집 금지.</div>
+<div class="status">교토 5/31~6/3 · 시부모 4인 확정</div>
 
 <nav>
   <a href="#summary">요약</a>
   <a href="#tsuyu">장마</a>
-  <a href="#airbnb">에어비앤비</a>
-  <a href="#kadensho">카덴쇼</a>
-  <a href="#flights">항공</a>
   <a href="#budget">예산</a>
   <a href="#itinerary">일정</a>
-  <a href="#checklist">체크리스트</a>
   <a href="#score">점수</a>
 </nav>
 
@@ -110,8 +130,8 @@
   <div class="row"><span class="k">시기</span><span class="v">2026-05-31 (일) ~ 06-03 (수)</span></div>
   <div class="row"><span class="k">동반</span><span class="v">영욱·소연 + 시부모 (4인)</span></div>
   <div class="row"><span class="k">숙박</span><span class="v">에어비앤비 2박 + 카덴쇼 료칸 1박 (2명×2실)</span></div>
-  <div class="row"><span class="k">예상 비용</span><span class="v">₩3,420,522</span></div>
-  <div class="row"><span class="k">3M 캡</span><span class="v">❌ ₩420,522 초과</span></div>
+  <div class="row"><span class="k">예상 비용</span><span class="v">₩3,392,522</span></div>
+  <div class="row"><span class="k">3M 캡</span><span class="v">₩392,522 초과</span></div>
   <div class="row"><span class="k">종합 점수</span><span class="v">7.60 / 10</span></div>
   <div class="sub" style="margin-top:0.5rem;">2026-05-31~06-03 시나리오 (4인 시부모 동반 확정). 1·2박 에어비앤비(5/31~6/2), 마지막 박 우메코지 카덴쇼 료칸 2명×2실 조기할인 조식 포함(6/2~6/3). seasonality: weather.json kyoto 2026-05 comfort_score=9. 상세: docs/kyoto-itinerary-may-2026.md, docs/airbnb-kyoto-may31-jun2-2026.md, docs/decision-log/2026-05-11-may31-jun3-kyoto-update.md</div>
 </section>
@@ -130,7 +150,7 @@
   <div class="subcard">
     <div class="subtitle">최근 8년 시나리오 확률</div>
     <div class="row"><span class="k">평년형 (6/4~6/10)</span><span class="v">50%</span></div>
-    <div class="row"><span class="k">조기 입림 (6/3 이전)</span><span class="v" style="color:#c80">25%</span></div>
+    <div class="row"><span class="k">조기 입림 (6/3 이전)</span><span class="v" style="font-weight:600">25%</span></div>
     <div class="row"><span class="k">6/10 이전 입림</span><span class="v">50%</span></div>
     <div class="sub">조기 입림 사례: 2023(5/29) · 2025(5/17). 평년 직전 평탄 구간 — 본격 강수 상승은 6월 둘째 주부터.</div>
   </div>
@@ -145,161 +165,58 @@
 </section>
 
 
-<!-- SYNC: data/cost-options.json (lodging.airbnb_*) · docs/airbnb-kyoto-may31-jun2-2026.md -->
-<section id="airbnb" class="card">
-  <h2>에어비앤비 5개 후보 (5/31~6/2 2박)</h2>
-  <div class="sub" style="margin-bottom:0.5rem;">매물 결정 후 시나리오 분기 추가 예정. 가격은 4명 직접 조회 2026-05-11.</div>
-  
-  <div class="subcard">
-    <div class="subtitle">교토 에어비앤비 #1 — Sukei &amp; Kyoto Inn (동산구·기요미즈고조 5분, 5/31~6/2 2박)</div>
-    <div class="row"><span class="k">2박 총액</span><span class="v">₩714,574</span></div>
-    <div class="row"><span class="k">1인 1박</span><span class="v">₩89,321</span></div>
-    <div class="sub">후기 232·★4.89·슈퍼호스트 11년·셀프체크인·정식 료칸업 등록. 호스트 룰: 한국식 김치/피클 숙소 내 섭취 금지.</div>
-    <div class="links"></div>
-  </div>
-  <div class="subcard">
-    <div class="subtitle">교토 에어비앤비 #2 — 교토역 8분 마치야 (미나미구·쿠조역 2분, 5/31~6/2 2박)</div>
-    <div class="row"><span class="k">2박 총액</span><span class="v">₩693,846</span></div>
-    <div class="row"><span class="k">1인 1박</span><span class="v">₩86,730</span></div>
-    <div class="sub">후기 116·★4.93·65㎡ 2LDK·1F 킹+2F 싱글3·풀주방·바닥난방·디즈니+넷플릭스·정원. 1일 1조 프라이빗.</div>
-    <div class="links"></div>
-  </div>
-  <div class="subcard">
-    <div class="subtitle">교토 에어비앤비 #3 — 시오(Shio) 100년 마치야 (중교구·니조역 7분, 5/31~6/2 2박)</div>
-    <div class="row"><span class="k">2박 총액</span><span class="v">₩730,372</span></div>
-    <div class="row"><span class="k">1인 1박</span><span class="v">₩91,296</span></div>
-    <div class="sub">후기 59·★4.95(최고)·침실 3/욕실 2/화장실 2·78㎡ 2층·시부모-부부 완전 분리 가능. 슈퍼호스트 2년.</div>
-    <div class="links"></div>
-  </div>
-  <div class="subcard">
-    <div class="subtitle">교토 에어비앤비 #4 — 세이 히가시야마 산조 (가모강 동쪽·산조케이한 5분, 5/31~6/2 2박)</div>
-    <div class="row"><span class="k">2박 총액</span><span class="v">₩550,458</span></div>
-    <div class="row"><span class="k">1인 1박</span><span class="v">₩68,807</span></div>
-    <div class="sub">후기 106·★4.87·5개 후보 중 최저가·폰토초·기야마치·가와라마치 도보권·헤이안 신사 도보. 욕실 1개(아침 동선 빡빡 가능).</div>
-    <div class="links"></div>
-  </div>
-  <div class="subcard">
-    <div class="subtitle">교토 에어비앤비 #5 — New Open 반노천탕 한동 (시치조역·교토역 8분, 5/31~6/2 2박)</div>
-    <div class="row"><span class="k">2박 총액</span><span class="v">₩583,036</span></div>
-    <div class="row"><span class="k">1인 1박</span><span class="v">₩72,879</span></div>
-    <div class="sub">후기 66·★4.85·슈퍼호스트 10년·반노천탕+정원·풀키친·바닥난방·드럼식 세탁건조기. 정원 4명 정확(침대 3개).</div>
-    <div class="links"></div>
-  </div>
-</section>
-
-
-<!-- SYNC: data/cost-options.json (lodging.kadensho_*_2026jun2) · docs/decision-log/2026-05-11-may31-jun3-kyoto-update.md -->
-<section id="kadensho" class="card">
-  <h2>우메코지 카덴쇼 4 플랜 (6/2 1박, 2명×2실)</h2>
-  <div class="sub" style="margin-bottom:0.5rem;">dormy-hotels.com 공식 검색 2026-05-11. 환불 정책 사전 확인 후 결제.</div>
-  
-  <div class="subcard">
-    <div class="subtitle">우메코지 카덴쇼 (2명×2실, 조식 포함, 조기할인 15% OFF, 2026-06-02→06-03 1박)</div>
-    <div class="row"><span class="k">1박 (4인)</span><span class="v">₩726,750</span></div>
-    <div class="row"><span class="k">출처</span><span class="v">confirmed_booking</span></div>
-    <div class="sub">원안 4인 1실은 카덴쇼 객실 정원 한계로 가격 노출 0건 → 2명×2실 분리 시 18개 플랜 모두 가용. 공식 사이트(Kyoritsu Resort) 직판 = OTA 대비 일반 저렴 + 쿠폰. 환불 불가 조건 사전 확인 필요.</div>
-  </div>
-  <div class="subcard">
-    <div class="subtitle">우메코지 카덴쇼 (2명×2실, 조식 포함, 꽃전초 세일 10% OFF, 2026-06-02→06-03 1박)</div>
-    <div class="row"><span class="k">1박 (4인)</span><span class="v">₩769,500</span></div>
-    <div class="row"><span class="k">출처</span><span class="v">official_fare</span></div>
-    <div class="sub">조기할인(15%) 다음 가격대. 6월 강가 마루석 시즌 사이드 프로모션.</div>
-  </div>
-  <div class="subcard">
-    <div class="subtitle">우메코지 카덴쇼 (2명×2실, 조식 포함, 스탠다드, 2026-06-02→06-03 1박)</div>
-    <div class="row"><span class="k">1박 (4인)</span><span class="v">₩855,000</span></div>
-    <div class="row"><span class="k">출처</span><span class="v">official_fare</span></div>
-    <div class="sub">기준 가격. 환불 정책 가장 유연.</div>
-  </div>
-  <div class="subcard">
-    <div class="subtitle">우메코지 카덴쇼 (2명×2실, 강가룸 가이세키+조식, 가오슝×꽃전초, 2026-06-02→06-03 1박)</div>
-    <div class="row"><span class="k">1박 (4인)</span><span class="v">₩1,235,000</span></div>
-    <div class="row"><span class="k">출처</span><span class="v">official_fare</span></div>
-    <div class="sub">강가 마루석 + 가이세키 풀코스. 6월 한정 시즌 플랜.</div>
-  </div>
-</section>
-
-
-<!-- SYNC: data/cost-options.json (flights) -->
-<section id="flights" class="card">
-  <h2>항공 옵션</h2>
-  
-  <div class="subcard">
-    <div class="subtitle">에어서울 ICN↔KIX (5/24~27, 3박)</div>
-    <div class="row"><span class="k">일자</span><span class="v">2026-05-24 → 2026-05-27</span></div>
-    <div class="row"><span class="k">4인 총액</span><span class="v">₩1,170,638</span></div>
-    <div class="row"><span class="k">출처</span><span class="v">Skyscanner Gotogate 2026-05-09</span></div>
-    <div class="sub"></div>
-  </div>
-  <div class="subcard">
-    <div class="subtitle">대한항공 ICN↔NGS (5/12~16, 4박)</div>
-    <div class="row"><span class="k">일자</span><span class="v">2026-05-12 → 2026-05-16</span></div>
-    <div class="row"><span class="k">4인 총액</span><span class="v">₩1,147,025</span></div>
-    <div class="row"><span class="k">출처</span><span class="v">Skyscanner Gotogate 2026-05-09</span></div>
-    <div class="sub"></div>
-  </div>
-  <div class="subcard">
-    <div class="subtitle">ICN↔KIX (5/31~6/3, 3박) — 가족 일정(5/28~29) 회피 후보</div>
-    <div class="row"><span class="k">일자</span><span class="v">2026-05-31 → 2026-06-03</span></div>
-    <div class="row"><span class="k">4인 총액</span><span class="v">₩1,012,000</span></div>
-    <div class="row"><span class="k">출처</span><span class="v">Skyscanner 4인 직항 일반석 2026-05-11 (₩253,000/인 × 4)</span></div>
-    <div class="sub">변경가능 날짜 비교: 5/27~30 ₩940K(가족 일정 충돌), 5/30~6/2 ₩1,130K, 5/31~6/3 ₩1,012K(선택). 발권사 평점 미확인 → 영욱 직접 재조회 권장.</div>
-  </div>
-</section>
-
-
 <!-- SYNC: scripts/budget.py --json · data/cost-options.json (scenarios) -->
 <section id="budget" class="card">
   <h2>예산 시뮬 (3M 캡 = ₩3,000,000)</h2>
   <div class="sub" style="margin-bottom:0.5rem;">확정 항목만 기준. 굵은 테두리 = 현재 선택 시나리오.</div>
   
   <div class="subcard">
-    <div class="subtitle">❌ [원안] 교토 3박4일 (카덴쇼 조식 포함 + 에어비앤비 2박)</div>
-    <div class="row"><span class="k">확정 합계</span><span class="v">₩4,081,964</span></div>
-    <div class="row"><span class="k">3M 여유</span><span class="v">−₩1,081,964</span></div>
-    <div class="row"><span class="k">항공</span><span class="v" style="color:#2a7">₩1,170,638 (39.0%)</span></div><div class="row"><span class="k">숙박</span><span class="v" style="color:#c33">₩1,959,926 (65.3%)</span></div><div class="row"><span class="k">식비</span><span class="v" style="color:#c80">₩456,000 (15.2%)</span></div><div class="row"><span class="k">지역 교통</span><span class="v" style="color:#c33">₩276,000 (9.2%)</span></div><div class="row"><span class="k">활동·입장</span><span class="v" style="color:#2a7">₩124,000 (4.1%)</span></div><div class="row"><span class="k">기타 (세금·청소비·예비)</span><span class="v" style="color:#c80">₩95,400 (3.2%)</span></div>
+    <div class="subtitle">초과 [원안] 교토 3박4일 (카덴쇼 조식 포함 + 에어비앤비 2박)</div>
+    <div class="row"><span class="k">확정 합계</span><span class="v">₩4,053,964</span></div>
+    <div class="row"><span class="k">3M 여유</span><span class="v">−₩1,053,964</span></div>
+    <div class="row"><span class="k">항공</span><span class="v" style="color:var(--muted)">₩1,170,638 (39.0%)</span></div><div class="row"><span class="k">숙박</span><span class="v" style="font-weight:600">₩1,959,926 (65.3%)</span></div><div class="row"><span class="k">식비</span><span class="v">₩456,000 (15.2%)</span></div><div class="row"><span class="k">지역 교통</span><span class="v">₩248,000 (8.3%)</span></div><div class="row"><span class="k">활동·입장</span><span class="v" style="color:var(--muted)">₩124,000 (4.1%)</span></div><div class="row"><span class="k">기타 (세금·청소비·예비)</span><span class="v">₩95,400 (3.2%)</span></div>
   </div>
   <div class="subcard">
-    <div class="subtitle">✅ [추천] 교토 3박4일 (마츠바야 료칸 1박 + 에어비앤비 2박, 중간 식비)</div>
-    <div class="row"><span class="k">확정 합계</span><span class="v">₩2,832,038</span></div>
-    <div class="row"><span class="k">3M 여유</span><span class="v">₩167,962</span></div>
-    <div class="row"><span class="k">항공</span><span class="v" style="color:#2a7">₩1,170,638 (39.0%)</span></div><div class="row"><span class="k">숙박</span><span class="v" style="color:#2a7">₩710,000 (23.7%)</span></div><div class="row"><span class="k">식비</span><span class="v" style="color:#c80">₩456,000 (15.2%)</span></div><div class="row"><span class="k">지역 교통</span><span class="v" style="color:#c33">₩276,000 (9.2%)</span></div><div class="row"><span class="k">활동·입장</span><span class="v" style="color:#2a7">₩124,000 (4.1%)</span></div><div class="row"><span class="k">기타 (세금·청소비·예비)</span><span class="v" style="color:#c80">₩95,400 (3.2%)</span></div>
+    <div class="subtitle">통과 [추천] 교토 3박4일 (마츠바야 료칸 1박 + 에어비앤비 2박, 중간 식비)</div>
+    <div class="row"><span class="k">확정 합계</span><span class="v">₩2,804,038</span></div>
+    <div class="row"><span class="k">3M 여유</span><span class="v">₩195,962</span></div>
+    <div class="row"><span class="k">항공</span><span class="v" style="color:var(--muted)">₩1,170,638 (39.0%)</span></div><div class="row"><span class="k">숙박</span><span class="v" style="color:var(--muted)">₩710,000 (23.7%)</span></div><div class="row"><span class="k">식비</span><span class="v">₩456,000 (15.2%)</span></div><div class="row"><span class="k">지역 교통</span><span class="v">₩248,000 (8.3%)</span></div><div class="row"><span class="k">활동·입장</span><span class="v" style="color:var(--muted)">₩124,000 (4.1%)</span></div><div class="row"><span class="k">기타 (세금·청소비·예비)</span><span class="v">₩95,400 (3.2%)</span></div>
   </div>
   <div class="subcard">
-    <div class="subtitle">✅ 교토 3박4일 (마츠바야 료칸 + 에어비앤비, 절약 식비)</div>
-    <div class="row"><span class="k">확정 합계</span><span class="v">₩2,640,038</span></div>
-    <div class="row"><span class="k">3M 여유</span><span class="v">₩359,962</span></div>
-    <div class="row"><span class="k">항공</span><span class="v" style="color:#2a7">₩1,170,638 (39.0%)</span></div><div class="row"><span class="k">숙박</span><span class="v" style="color:#2a7">₩710,000 (23.7%)</span></div><div class="row"><span class="k">식비</span><span class="v" style="color:#2a7">₩264,000 (8.8%)</span></div><div class="row"><span class="k">지역 교통</span><span class="v" style="color:#c33">₩276,000 (9.2%)</span></div><div class="row"><span class="k">활동·입장</span><span class="v" style="color:#2a7">₩124,000 (4.1%)</span></div><div class="row"><span class="k">기타 (세금·청소비·예비)</span><span class="v" style="color:#c80">₩95,400 (3.2%)</span></div>
+    <div class="subtitle">통과 교토 3박4일 (마츠바야 료칸 + 에어비앤비, 절약 식비)</div>
+    <div class="row"><span class="k">확정 합계</span><span class="v">₩2,612,038</span></div>
+    <div class="row"><span class="k">3M 여유</span><span class="v">₩387,962</span></div>
+    <div class="row"><span class="k">항공</span><span class="v" style="color:var(--muted)">₩1,170,638 (39.0%)</span></div><div class="row"><span class="k">숙박</span><span class="v" style="color:var(--muted)">₩710,000 (23.7%)</span></div><div class="row"><span class="k">식비</span><span class="v" style="color:var(--muted)">₩264,000 (8.8%)</span></div><div class="row"><span class="k">지역 교통</span><span class="v">₩248,000 (8.3%)</span></div><div class="row"><span class="k">활동·입장</span><span class="v" style="color:var(--muted)">₩124,000 (4.1%)</span></div><div class="row"><span class="k">기타 (세금·청소비·예비)</span><span class="v">₩95,400 (3.2%)</span></div>
   </div>
   <div class="subcard">
-    <div class="subtitle">✅ 교토 3박4일 (카덴쇼 5월 평일 최저가 + 에어비앤비, 절약 식비)</div>
-    <div class="row"><span class="k">확정 합계</span><span class="v">₩2,792,038</span></div>
-    <div class="row"><span class="k">3M 여유</span><span class="v">₩207,962</span></div>
-    <div class="row"><span class="k">항공</span><span class="v" style="color:#2a7">₩1,170,638 (39.0%)</span></div><div class="row"><span class="k">숙박</span><span class="v" style="color:#c80">₩862,000 (28.7%)</span></div><div class="row"><span class="k">식비</span><span class="v" style="color:#2a7">₩264,000 (8.8%)</span></div><div class="row"><span class="k">지역 교통</span><span class="v" style="color:#c33">₩276,000 (9.2%)</span></div><div class="row"><span class="k">활동·입장</span><span class="v" style="color:#2a7">₩124,000 (4.1%)</span></div><div class="row"><span class="k">기타 (세금·청소비·예비)</span><span class="v" style="color:#c80">₩95,400 (3.2%)</span></div>
+    <div class="subtitle">통과 교토 3박4일 (카덴쇼 5월 평일 최저가 + 에어비앤비, 절약 식비)</div>
+    <div class="row"><span class="k">확정 합계</span><span class="v">₩2,764,038</span></div>
+    <div class="row"><span class="k">3M 여유</span><span class="v">₩235,962</span></div>
+    <div class="row"><span class="k">항공</span><span class="v" style="color:var(--muted)">₩1,170,638 (39.0%)</span></div><div class="row"><span class="k">숙박</span><span class="v">₩862,000 (28.7%)</span></div><div class="row"><span class="k">식비</span><span class="v" style="color:var(--muted)">₩264,000 (8.8%)</span></div><div class="row"><span class="k">지역 교통</span><span class="v">₩248,000 (8.3%)</span></div><div class="row"><span class="k">활동·입장</span><span class="v" style="color:var(--muted)">₩124,000 (4.1%)</span></div><div class="row"><span class="k">기타 (세금·청소비·예비)</span><span class="v">₩95,400 (3.2%)</span></div>
   </div>
   <div class="subcard">
-    <div class="subtitle">✅ 교토 3박4일 (전 박 에어비앤비, 료칸 제외, 중간 식비)</div>
-    <div class="row"><span class="k">확정 합계</span><span class="v">₩2,662,038</span></div>
-    <div class="row"><span class="k">3M 여유</span><span class="v">₩337,962</span></div>
-    <div class="row"><span class="k">항공</span><span class="v" style="color:#2a7">₩1,170,638 (39.0%)</span></div><div class="row"><span class="k">숙박</span><span class="v" style="color:#2a7">₩540,000 (18.0%)</span></div><div class="row"><span class="k">식비</span><span class="v" style="color:#c80">₩456,000 (15.2%)</span></div><div class="row"><span class="k">지역 교통</span><span class="v" style="color:#c33">₩276,000 (9.2%)</span></div><div class="row"><span class="k">활동·입장</span><span class="v" style="color:#2a7">₩124,000 (4.1%)</span></div><div class="row"><span class="k">기타 (세금·청소비·예비)</span><span class="v" style="color:#c80">₩95,400 (3.2%)</span></div>
+    <div class="subtitle">통과 교토 3박4일 (전 박 에어비앤비, 료칸 제외, 중간 식비)</div>
+    <div class="row"><span class="k">확정 합계</span><span class="v">₩2,634,038</span></div>
+    <div class="row"><span class="k">3M 여유</span><span class="v">₩365,962</span></div>
+    <div class="row"><span class="k">항공</span><span class="v" style="color:var(--muted)">₩1,170,638 (39.0%)</span></div><div class="row"><span class="k">숙박</span><span class="v" style="color:var(--muted)">₩540,000 (18.0%)</span></div><div class="row"><span class="k">식비</span><span class="v">₩456,000 (15.2%)</span></div><div class="row"><span class="k">지역 교통</span><span class="v">₩248,000 (8.3%)</span></div><div class="row"><span class="k">활동·입장</span><span class="v" style="color:var(--muted)">₩124,000 (4.1%)</span></div><div class="row"><span class="k">기타 (세금·청소비·예비)</span><span class="v">₩95,400 (3.2%)</span></div>
   </div>
-  <div class="subcard" style="border-color: var(--accent);">
-    <div class="subtitle">❌ [확정] 교토 3박4일 5/31~6/3 (시오 2박 + 카덴쇼 조기할인 조식 1박)</div>
-    <div class="row"><span class="k">확정 합계</span><span class="v">₩3,420,522</span></div>
-    <div class="row"><span class="k">3M 여유</span><span class="v">−₩420,522</span></div>
-    <div class="row"><span class="k">항공</span><span class="v" style="color:#2a7">₩1,012,000 (33.7%)</span></div><div class="row"><span class="k">숙박</span><span class="v" style="color:#c33">₩1,457,122 (48.6%)</span></div><div class="row"><span class="k">식비</span><span class="v" style="color:#c80">₩456,000 (15.2%)</span></div><div class="row"><span class="k">지역 교통</span><span class="v" style="color:#c33">₩276,000 (9.2%)</span></div><div class="row"><span class="k">활동·입장</span><span class="v" style="color:#2a7">₩124,000 (4.1%)</span></div><div class="row"><span class="k">기타 (세금·청소비·예비)</span><span class="v" style="color:#c80">₩95,400 (3.2%)</span></div>
+  <div class="subcard" style="border-color: var(--accent); border-width: 2px;">
+    <div class="subtitle">초과 [확정] 교토 3박4일 5/31~6/3 (시오 2박 + 카덴쇼 조기할인 조식 1박)</div>
+    <div class="row"><span class="k">확정 합계</span><span class="v">₩3,392,522</span></div>
+    <div class="row"><span class="k">3M 여유</span><span class="v">−₩392,522</span></div>
+    <div class="row"><span class="k">항공</span><span class="v" style="color:var(--muted)">₩1,012,000 (33.7%)</span></div><div class="row"><span class="k">숙박</span><span class="v" style="font-weight:600">₩1,457,122 (48.6%)</span></div><div class="row"><span class="k">식비</span><span class="v">₩456,000 (15.2%)</span></div><div class="row"><span class="k">지역 교통</span><span class="v">₩248,000 (8.3%)</span></div><div class="row"><span class="k">활동·입장</span><span class="v" style="color:var(--muted)">₩124,000 (4.1%)</span></div><div class="row"><span class="k">기타 (세금·청소비·예비)</span><span class="v">₩95,400 (3.2%)</span></div>
   </div>
   <div class="subcard">
-    <div class="subtitle">❌ 나가사키·HTB 4박5일 (시내 호텔 3박 + Forest Villa 1박, 중간 식비, JR)</div>
+    <div class="subtitle">초과 나가사키·HTB 4박5일 (시내 호텔 3박 + Forest Villa 1박, 중간 식비, JR)</div>
     <div class="row"><span class="k">확정 합계</span><span class="v">₩3,202,405</span></div>
     <div class="row"><span class="k">3M 여유</span><span class="v">−₩202,405</span></div>
-    <div class="row"><span class="k">항공</span><span class="v" style="color:#2a7">₩1,147,025 (38.2%)</span></div><div class="row"><span class="k">숙박</span><span class="v" style="color:#c80">₩840,000 (28.0%)</span></div><div class="row"><span class="k">식비</span><span class="v" style="color:#c33">₩570,000 (19.0%)</span></div><div class="row"><span class="k">지역 교통</span><span class="v" style="color:#c80">₩258,000 (8.6%)</span></div><div class="row"><span class="k">활동·입장</span><span class="v" style="color:#c33">₩387,380 (12.9%)</span></div><div class="row"><span class="k">기타 (세금·청소비·예비)</span><span class="v" style="color:#2a7">₩0 (0.0%)</span></div>
+    <div class="row"><span class="k">항공</span><span class="v" style="color:var(--muted)">₩1,147,025 (38.2%)</span></div><div class="row"><span class="k">숙박</span><span class="v">₩840,000 (28.0%)</span></div><div class="row"><span class="k">식비</span><span class="v" style="font-weight:600">₩570,000 (19.0%)</span></div><div class="row"><span class="k">지역 교통</span><span class="v">₩258,000 (8.6%)</span></div><div class="row"><span class="k">활동·입장</span><span class="v" style="font-weight:600">₩387,380 (12.9%)</span></div><div class="row"><span class="k">기타 (세금·청소비·예비)</span><span class="v" style="color:var(--muted)">₩0 (0.0%)</span></div>
   </div>
   <div class="subcard">
-    <div class="subtitle">✅ [가성비] 나가사키·HTB 4박5일 (사세보 비즈니스 1박, 절약 식비, 고속버스)</div>
+    <div class="subtitle">통과 [가성비] 나가사키·HTB 4박5일 (사세보 비즈니스 1박, 절약 식비, 고속버스)</div>
     <div class="row"><span class="k">확정 합계</span><span class="v">₩2,794,405</span></div>
     <div class="row"><span class="k">3M 여유</span><span class="v">₩205,595</span></div>
-    <div class="row"><span class="k">항공</span><span class="v" style="color:#2a7">₩1,147,025 (38.2%)</span></div><div class="row"><span class="k">숙박</span><span class="v" style="color:#2a7">₩710,000 (23.7%)</span></div><div class="row"><span class="k">식비</span><span class="v" style="color:#2a7">₩330,000 (11.0%)</span></div><div class="row"><span class="k">지역 교통</span><span class="v" style="color:#2a7">₩220,000 (7.3%)</span></div><div class="row"><span class="k">활동·입장</span><span class="v" style="color:#c33">₩387,380 (12.9%)</span></div><div class="row"><span class="k">기타 (세금·청소비·예비)</span><span class="v" style="color:#2a7">₩0 (0.0%)</span></div>
+    <div class="row"><span class="k">항공</span><span class="v" style="color:var(--muted)">₩1,147,025 (38.2%)</span></div><div class="row"><span class="k">숙박</span><span class="v" style="color:var(--muted)">₩710,000 (23.7%)</span></div><div class="row"><span class="k">식비</span><span class="v" style="color:var(--muted)">₩330,000 (11.0%)</span></div><div class="row"><span class="k">지역 교통</span><span class="v" style="color:var(--muted)">₩220,000 (7.3%)</span></div><div class="row"><span class="k">활동·입장</span><span class="v" style="font-weight:600">₩387,380 (12.9%)</span></div><div class="row"><span class="k">기타 (세금·청소비·예비)</span><span class="v" style="color:var(--muted)">₩0 (0.0%)</span></div>
   </div>
 </section>
 
@@ -313,18 +230,23 @@
     <div class="subtitle">5/31 (일) — 도착 + 동산 지구</div>
     
     <div class="day">
+      
       <div class="date"><span class="k">09:05</span> <a href="https://maps.google.com/?q=Kansai+International+Airport" target="_blank" rel="noopener">간사이공항 도착 → JR 하루카 → 교토역</a></div>
     </div>
     <div class="day">
+      <div class="sub" style="opacity:0.75;font-size:0.85em;">✈️ · JR 하루카 KIX→교토역 75분 + JR 산인본선 교토→니조 5분 + 도보 니조역→시오 7분 0.5km · 87분</div>
       <div class="date"><span class="k">11:30</span> <a href="https://maps.google.com/?q=Nijo+Station+Kyoto" target="_blank" rel="noopener">니조역 → 시오 짐 보관 후 점심</a></div>
     </div>
     <div class="day">
+      <div class="sub" style="opacity:0.75;font-size:0.85em;"><a href="https://www.google.com/maps/dir/Shio+Machiya+Kyoto/Kiyomizu-dera" target="_blank" rel="noopener" style="color:inherit;">🚌 시오 → 니조역 도보 7분 + JR/시버스 → 키요미즈 (니조 출발 시 약 35분. 교토역 출발 28분 대비 7분 가산) · 소요시간 미확정 — Maps 확인 필요</a></div>
       <div class="date"><span class="k">13:30</span> <a href="https://maps.google.com/?q=Kiyomizu-dera" target="_blank" rel="noopener">키요미즈데라 (清水寺)</a></div>
     </div>
     <div class="day">
+      <div class="sub" style="opacity:0.75;font-size:0.85em;"><a href="https://en.kyotokk.com/course2.html" target="_blank" rel="noopener" style="color:inherit;">🚶 · 키요미즈→니넨자카·산넨자카→야사카신사 (1.3km, 20~26분, 경사 완만) · 25분 · 1.3km</a></div>
       <div class="date"><span class="k">16:30</span> <a href="https://maps.google.com/?q=Gion+Kyoto" target="_blank" rel="noopener">산넨자카 → 야사카 신사 → 기온</a></div>
     </div>
     <div class="day">
+      <div class="sub" style="opacity:0.75;font-size:0.85em;"><a href="https://www.google.com/maps/dir/Gion,+Higashiyama+Ward,+Kyoto/Pontocho+Alley,+Kyoto" target="_blank" rel="noopener" style="color:inherit;">🚶 · 기온 → 시조대교 → 폰토초 (四条通/市道186号 경유, 600m) · 9분 · 0.6km</a></div>
       <div class="date"><span class="k">18:30</span> <a href="https://maps.google.com/?q=Kawaramachi" target="_blank" rel="noopener">가와라마치 저녁 (시라카와·폰토초)</a></div>
     </div>
     <div class="sub" style="margin-top:0.4rem;">도보 약 3km · 숙박: 에어비앤비 시오</div>
@@ -333,21 +255,27 @@
     <div class="subtitle">6/1 (월) — 아라시야마 + 북서쪽</div>
     
     <div class="day">
+      <div class="sub" style="opacity:0.75;font-size:0.85em;"><a href="https://www.kyotostation.com/jr-sagano-line-for-nijo-uzumasa-saga-arashiyama/" target="_blank" rel="noopener" style="color:inherit;">🚆 · JR 산인본선 (니조역 → 사가아라시야마역). 교토역→사가아라시야마 17분 기준 5분 차감 · 12분 · 8.5km</a></div>
       <div class="date"><span class="k">09:00</span> <a href="https://maps.google.com/?q=Arashiyama+Bamboo+Grove" target="_blank" rel="noopener">죽림길 (지쿠린)</a></div>
     </div>
     <div class="day">
+      <div class="sub" style="opacity:0.75;font-size:0.85em;"><a href="https://www.google.com/maps/dir/Arashiyama+Bamboo+Grove/Tenryu-ji" target="_blank" rel="noopener" style="color:inherit;">🚶 · 죽림길 → 텐류지 북문 (竹林の小径 경유 7m, Maps 1분; 정원 경내 진입 도보 ~3분 가산) · 3분 · 0.1km</a></div>
       <div class="date"><span class="k">09:45</span> <a href="https://maps.google.com/?q=Tenryu-ji+Temple" target="_blank" rel="noopener">텐류지 정원</a></div>
     </div>
     <div class="day">
-      <div class="date"><span class="k">12:00</span> <a href="https://maps.google.com/?q=Arashiyama+Tofu" target="_blank" rel="noopener">두부 가이세키 점심 (시그라쿠 토후)</a></div>
+      <div class="sub" style="opacity:0.75;font-size:0.85em;"><a href="https://www.google.com/maps/dir/Tenryu-ji+Temple,+Kyoto/松籟庵+Arashiyama" target="_blank" rel="noopener" style="color:inherit;">🚶 · 텐류지 정문 → 도게쓰교 건너 가쓰라강 거슬러 → 쇼라이안(松籟庵, 아라시야마 공원 내) 도보 7분 500m · 7분 · 0.5km</a></div>
+      <div class="date"><span class="k">12:00</span> <a href="https://maps.google.com/?q=Arashiyama+Tofu" target="_blank" rel="noopener">두부 가이세키 점심 (쇼라이안 松籟庵)</a></div>
     </div>
     <div class="day">
+      <div class="sub" style="opacity:0.75;font-size:0.85em;"><a href="https://www.google.com/maps/dir/Tenryu-ji+Temple,+Kyoto/Kinkaku-ji+Temple,+Kyoto" target="_blank" rel="noopener" style="color:inherit;">🚌 · 市バス 11(嵐山天龍寺前→山越中町) 11분 + 환승도보 6분 + 市バス 59(山越中町→金閣寺道) 18분 + 도보 2분 ¥460. 단 11번 40분 간격 · 놓치면 택시 22분(7.1km) 대안 · 38분 · 7.5km</a></div>
       <div class="date"><span class="k">14:00</span> <a href="https://maps.google.com/?q=Kinkaku-ji" target="_blank" rel="noopener">금각사 (鹿苑寺)</a></div>
     </div>
     <div class="day">
+      <div class="sub" style="opacity:0.75;font-size:0.85em;"><a href="https://kinukake.com/en/day-tour.html" target="_blank" rel="noopener" style="color:inherit;">🚌 · 市バス 59 (金閣寺道 → 竜安寺前). 12~15분 간격 운행 · 4분 · 1.6km</a></div>
       <div class="date"><span class="k">15:30</span> <a href="https://maps.google.com/?q=Ryoan-ji" target="_blank" rel="noopener">료안지 석정원</a></div>
     </div>
     <div class="day">
+      <div class="sub" style="opacity:0.75;font-size:0.85em;"><a href="https://www.google.com/maps/dir/Ryoan-ji/Kawaramachi" target="_blank" rel="noopener" style="color:inherit;">🚌 · 市バス 59 (竜安寺前 → 四条河原町). 직행 + 도보 2분 ¥230 · 42분 · 8.1km</a></div>
       <div class="date"><span class="k">18:30</span> <a href="https://maps.google.com/?q=Pontocho+Alley" target="_blank" rel="noopener">가와라마치 + 니시키 시장 저녁</a></div>
     </div>
     <div class="sub" style="margin-top:0.4rem;">도보 약 4km · 숙박: 에어비앤비 시오 (2박째)</div>
@@ -356,21 +284,27 @@
     <div class="subtitle">6/2 (화) — 후시미 + 료칸 체크인</div>
     
     <div class="day">
+      <div class="sub" style="opacity:0.75;font-size:0.85em;"><a href="https://www.kyotostation.com/jr-nara-line-for-tofukuji-inari-uji-nara/" target="_blank" rel="noopener" style="color:inherit;">🚆 · 니조역 JR 산인본선(니조→교토) + JR 나라선(교토→이나리) 20분 ¥200 + 도보 5분 · 20분 · 10.0km</a></div>
       <div class="date"><span class="k">07:30</span> <a href="https://maps.google.com/?q=Fushimi+Inari+Taisha" target="_blank" rel="noopener">후시미 이나리 신사</a></div>
     </div>
     <div class="day">
+      <div class="sub" style="opacity:0.75;font-size:0.85em;"><a href="https://www.kyotostation.com/jr-nara-line-for-tofukuji-inari-uji-nara/" target="_blank" rel="noopener" style="color:inherit;">🚆 · JR 나라선 (이나리역 → 토후쿠지역). 1정거장 + 토후쿠지역 도보 10분 · 2분 · 1.0km</a></div>
       <div class="date"><span class="k">09:30</span> <a href="https://maps.google.com/?q=Tofuku-ji" target="_blank" rel="noopener">토후쿠지 정원</a></div>
     </div>
     <div class="day">
+      <div class="sub" style="opacity:0.75;font-size:0.85em;"><a href="https://www.kyotostation.com/jr-nara-line-for-tofukuji-inari-uji-nara/" target="_blank" rel="noopener" style="color:inherit;">🚆 · JR 나라선 (토후쿠지역 → 교토역). 1정거장 · 5분 · 2.5km</a></div>
       <div class="date"><span class="k">11:30</span> <a href="https://maps.google.com/?q=Kyoto+Station" target="_blank" rel="noopener">교토역 라멘코지 점심</a></div>
     </div>
     <div class="day">
+      <div class="sub" style="opacity:0.75;font-size:0.85em;"><a href="https://livejapan.com/en/in-kansai/in-pref-kyoto/in-kyoto-station_to-ji-temple/spot-lj0091598/" target="_blank" rel="noopener" style="color:inherit;">🚶 · 교토역 → JR 우메코지-교토니시역 인근 카덴쇼. JR 1정거장도 가능 · 8분 · 0.6km</a></div>
       <div class="date"><span class="k">13:30</span> <a href="https://maps.google.com/?q=Umekoji+Kadensho" target="_blank" rel="noopener">우메코지 카덴쇼 체크인</a></div>
     </div>
     <div class="day">
+      
       <div class="date"><span class="k">17:00</span> <a href="https://maps.google.com/?q=Umekoji+Kadensho" target="_blank" rel="noopener">료칸 대욕장 (천연식 온천)</a></div>
     </div>
     <div class="day">
+      
       <div class="date"><span class="k">18:00</span> <a href="https://maps.google.com/?q=Umekoji+Kadensho" target="_blank" rel="noopener">카덴쇼 가이세키 저녁</a></div>
     </div>
     <div class="sub" style="margin-top:0.4rem;">도보 약 5km · 숙박: 우메코지 카덴쇼 (2명×2실)</div>
@@ -379,65 +313,18 @@
     <div class="subtitle">6/3 (수) — 출국 (아침 일찍)</div>
     
     <div class="day">
+      <div class="sub" style="opacity:0.75;font-size:0.85em;"><a href="https://livejapan.com/en/in-kansai/in-pref-kyoto/in-kyoto-station_to-ji-temple/spot-lj0091598/" target="_blank" rel="noopener" style="color:inherit;">🚶 · 카덴쇼 → 교토역 (역방향) · 8분 · 0.6km</a></div>
       <div class="date"><span class="k">이른 아침</span> <a href="https://maps.google.com/?q=Kyoto+Station" target="_blank" rel="noopener">카덴쇼 체크아웃 → 교토역</a></div>
     </div>
     <div class="day">
+      <div class="sub" style="opacity:0.75;font-size:0.85em;"><a href="https://kyoto.travel/en/getting-around/comfortable-access-to-around-kyoto-station-to-ji-temple/" target="_blank" rel="noopener" style="color:inherit;">🚶 · 교토역 하치조서구 → 토지 케이가몬 (1.2km, 약 16분) · 16분 · 1.2km</a></div>
       <div class="date"><span class="k">시간 여유 시</span> <a href="https://maps.google.com/?q=To-ji+Temple" target="_blank" rel="noopener">토지(東寺) 오층탑 또는 교토역 이세탄</a></div>
     </div>
     <div class="day">
+      <div class="sub" style="opacity:0.75;font-size:0.85em;">✈️ · JR 하루카 (교토역 → KIX) · 75분</div>
       <div class="date"><span class="k">출국</span> <a href="https://maps.google.com/?q=Kansai+International+Airport" target="_blank" rel="noopener">JR 하루카 → 간사이공항 → 인천</a></div>
     </div>
     <div class="sub" style="margin-top:0.4rem;">도보 약 1km · 숙박: —</div>
-  </div>
-</section>
-
-
-<!-- SYNC: data/booking-checklist.json -->
-<section id="checklist" class="card">
-  <h2>예약 체크리스트 (7개)</h2>
-  <div class="sub" style="margin-bottom:0.5rem;">상세: <a href="viz/checklist.html">전체 체크리스트 화면 ↗</a></div>
-  
-  <div class="subcard">
-    <div class="subtitle">항공 (ICN↔KIX 5/31~6/3, 4인)</div>
-    <div class="row"><span class="k">상태</span><span class="v" style="color:#c33">미정</span></div>
-    <div class="row"><span class="k">기한</span><span class="v">2026-05-18</span></div>
-    <div class="sub">Skyscanner 추정 ₩1,012K. 영욱 직접 재조회 후 발권사 평점 확인 → Booking.com 또는 항공사 직판 권장</div>
-  </div>
-  <div class="subcard">
-    <div class="subtitle">에어비앤비 #3 시오(Shio) 5/31~6/2 (2박, 4명)</div>
-    <div class="row"><span class="k">상태</span><span class="v" style="color:#c33">미정</span></div>
-    <div class="row"><span class="k">기한</span><span class="v">2026-05-18</span></div>
-    <div class="sub">PR #16 소연 추천으로 채택. 매물 1373928005681941061, ★4.95, 침실 3·욕실 2. 2박 ₩730,372. 후기 59개·운영 2년 → 호스트 응답성 사전 확인 + 환불 정책 검토</div>
-  </div>
-  <div class="subcard">
-    <div class="subtitle">우메코지 카덴쇼 6/2 (1박, 2명×2실 조기할인 조식)</div>
-    <div class="row"><span class="k">상태</span><span class="v" style="color:#c33">미정</span></div>
-    <div class="row"><span class="k">기한</span><span class="v">2026-05-18</span></div>
-    <div class="sub">dormy-hotels.com 직판. 환불 정책 사전 확인 후 결제. 4인 ¥76,500 ≈ ₩726,750</div>
-  </div>
-  <div class="subcard">
-    <div class="subtitle">여행자보험 (4인, 시부모 포함)</div>
-    <div class="row"><span class="k">상태</span><span class="v" style="color:#c33">미정</span></div>
-    <div class="row"><span class="k">기한</span><span class="v">2026-05-25</span></div>
-    <div class="sub">시부모 보험·상비약, 한국어 가능 의료기관 위치 사전 저장</div>
-  </div>
-  <div class="subcard">
-    <div class="subtitle">eSIM / 데이터 (4인)</div>
-    <div class="row"><span class="k">상태</span><span class="v" style="color:#c33">미정</span></div>
-    <div class="row"><span class="k">기한</span><span class="v">2026-05-28</span></div>
-    <div class="sub">Klook·Trip.com 4일권 시세 ₩5~10K/인</div>
-  </div>
-  <div class="subcard">
-    <div class="subtitle">교통패스 (ICOCA &amp; HARUKA + 교토 시영 1일권)</div>
-    <div class="row"><span class="k">상태</span><span class="v" style="color:#c33">미정</span></div>
-    <div class="row"><span class="k">기한</span><span class="v">2026-05-25</span></div>
-    <div class="sub">JR 하루카 KIX↔교토 왕복 ¥2,400 × 4 × 2 = ₩192K, 교토 시영 1일권 ¥700 × 4 × 3 = ₩84K</div>
-  </div>
-  <div class="subcard">
-    <div class="subtitle">환전 / 트래블카드</div>
-    <div class="row"><span class="k">상태</span><span class="v" style="color:#c33">미정</span></div>
-    <div class="row"><span class="k">기한</span><span class="v">2026-05-28</span></div>
-    <div class="sub">1인 ¥30,000 가정 (현금 식비·신사 새전·잔돈). 트래블월렛/하나비바X 등 무환전료 카드 권장</div>
   </div>
 </section>
 
@@ -492,6 +379,6 @@
 </div>
 
 <footer>data/decision.json · data/cost-options.json · data/itinerary.json · data/booking-checklist.json 단일 출처 · scripts/build_index.py 산출</footer>
-
+<nav class="tab-bar" aria-label="하단 탭"><a href="index.html" class="active" data-tab="home"><span class="tab-icon">🏠</span><span>홈</span></a><a href="viz/itinerary.html" data-tab="itinerary"><span class="tab-icon">📅</span><span>일정</span></a><a href="viz/lodging.html" data-tab="lodging"><span class="tab-icon">✈️</span><span>숙박·항공</span></a><a href="viz/checklist.html" data-tab="checklist"><span class="tab-icon">☑</span><span>예약</span></a></nav>
 </body>
 </html>
