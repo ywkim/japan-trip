@@ -201,6 +201,48 @@ class BuildIndexTests(unittest.TestCase):
                 for mode, url in url_legs[:5]:
                     self.assertIn(url, html, f"{mode} leg URL {url!r} not linked in {path.name}")
 
+    def test_transit_pass_playbook_rendered_as_steps(self):
+        """data/itinerary.json trip.transit_pass_playbook(when·action 배열)이
+        index.html·viz/itinerary.html 양쪽 카드에 번호 매김된 실행 단계로
+        렌더돼야 한다. 모바일 현지 운영용 회귀 가드.
+        """
+        run()
+        import json as _json
+        data = _json.loads((BASE / "data" / "itinerary.json").read_text(encoding="utf-8"))
+        steps = data.get("trip", {}).get("transit_pass_playbook") or []
+        self.assertGreaterEqual(len(steps), 5, "playbook must have at least 5 steps")
+        for s in steps:
+            self.assertIn("when", s)
+            self.assertIn("action", s)
+        for path in (INDEX, ITINERARY):
+            with self.subTest(path=path.name):
+                html = path.read_text(encoding="utf-8")
+                self.assertIn("실행 단계", html, f"playbook header missing in {path.name}")
+                for s in steps:
+                    self.assertIn(s["when"], html, f"step.when {s['when']!r} not in {path.name}")
+                    self.assertIn(s["action"][:20], html, f"step.action prefix not in {path.name}")
+
+    def test_transit_pass_sources_rendered_as_links(self):
+        """data/itinerary.json trip.transit_pass_sources(label·url 배열)가
+        index.html·viz/itinerary.html 양쪽 카드에 클릭 가능한 <a href> 링크로
+        렌더돼야 한다. 모바일 운영용 출처 노출 회귀 가드.
+        """
+        run()
+        import json as _json
+        data = _json.loads((BASE / "data" / "itinerary.json").read_text(encoding="utf-8"))
+        sources = data.get("trip", {}).get("transit_pass_sources") or []
+        self.assertGreater(len(sources), 0, "trip.transit_pass_sources must be populated")
+        for src in sources:
+            self.assertIn("label", src)
+            self.assertIn("url", src)
+            self.assertTrue(src["url"].startswith("http"), f"non-http source url: {src['url']}")
+        for path in (INDEX, ITINERARY):
+            with self.subTest(path=path.name):
+                html = path.read_text(encoding="utf-8")
+                for src in sources:
+                    self.assertIn(src["url"], html, f"source url {src['url']!r} not in {path.name}")
+                    self.assertIn(src["label"], html, f"source label {src['label']!r} not in {path.name}")
+
     def test_route_candidates_rendered_in_itinerary(self):
         run()
         itin = ITINERARY.read_text(encoding="utf-8")

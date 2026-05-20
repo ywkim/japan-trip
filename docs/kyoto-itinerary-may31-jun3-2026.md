@@ -85,7 +85,8 @@
 
 > 출처: `data/cost-options.json` `kyoto_local_transit_4pax` + `data/itinerary.json` days[].pass_recommendation. 분석·정정 일지: [2026-05-18-04-transit-pass-correction-icoca](./decision-log/2026-05-18-04-transit-pass-correction-icoca.md) (직전 [03 일지](./decision-log/2026-05-18-03-transit-pass-rightsizing.md)는 ¥700 시버스 1일권 기준 — 폐지 반영 전).
 
-**결제 채널**: 4인 모두 iPhone Apple Wallet에 **ICOCA(또는 Suica/PASMO) 1장**씩 추가 → 시버스·시영지하철·JR(산인·나라선) 모두 탭. 종이·발권기·앱 발권 없음. iPhone 8 이상·iOS 최신·Apple Account 2단계 인증 필요. 출국 전 초기 충전 권장 1인당 ¥3,000.
+**결제 채널**: 4인 모두 iPhone Apple Wallet에 **ICOCA(또는 Suica/PASMO) 1장**씩 추가 → 시버스·시영지하철·JR(산인·나라선) 모두 탭. 종이·발권기·앱 발권 없음. iPhone 8 이상·iOS 최신·Apple Account 2단계 인증 필요. 출국 전 초기 충전 권장 1인당 ¥3,000.  
+출처: [Apple Support 108772](https://support.apple.com/en-us/108772) · [Inside Kyoto iPhone Hack](https://www.insidekyoto.com/iphone-the-killer-japan-travel-hack) · [Tictivity Japan IC Card 2026](https://www.tictivity.com/en/blog/japan-ic-card-guide). ¥700 시버스 1일권 폐지: [SoraNews24](https://soranews24.com/2023/03/30/kyoto-will-abolish-one-day-bus-passes-to-combat-tourism-overcrowding/) · [교토시 공식](https://www2.city.kyoto.lg.jp/kotsu/webguide/en/ticket/regular_1day_card_comm.html).
 
 | 일자 | 사용 | 단권 합 (4인) | 통합 1일권 ¥1,100×4=¥4,400 | 채택 |
 |---|---|---|---|---|

@@ -384,7 +384,7 @@
       "label": "교토 시내 교통 4인 (4일 모두 단권, iPhone Apple Wallet ICOCA 통일)",
       "category": "transport",
       "krw": 56000,
-      "source": "교토시·JR 서일본 공식. 5/31 시버스 ¥230×4=¥920 + 6/1 시버스 3회(¥460+¥230+¥230)×4=¥3,680 + 6/2 JR 나라선 ¥200×4=¥800(leg×3 정확액 후속 측정 보류) + 6/3 도보. 총 ¥5,400 ≈ ₩56,000(FX ¥1=₩10.4). 4인 iPhone Apple Wallet ICOCA 통일. ¥700 시버스 1일권은 2023-09 판매 종료/2024-03-31 만료, 현 통합 1일권 ¥1,100×4=¥4,400은 6/1 단권 ¥3,680 대비 ¥720 비효율. 분석: docs/decision-log/2026-05-18-04-transit-pass-correction-icoca.md",
+      "source": "교토시·JR 서일본 공식. 5/31 시버스 ¥230×4=¥920 + 6/1 시버스 3회(¥460+¥230+¥230)×4=¥3,680 + 6/2 JR 나라선 ¥200×4=¥800(leg×3 정확액 후속 측정 보류) + 6/3 도보. 총 ¥5,400 ≈ ₩56,000(FX ¥1=₩10.4). 4인 iPhone Apple Wallet ICOCA 통일 — Apple Support https://support.apple.com/en-us/108772 · Inside Kyoto https://www.insidekyoto.com/iphone-the-killer-japan-travel-hack · Japan IC Card Guide 2026 https://www.tictivity.com/en/blog/japan-ic-card-guide (2026-05-18 검증). ¥700 시버스 1일권은 2023-09 판매 종료/2024-03-31 만료(SoraNews24 https://soranews24.com/2023/03/30/kyoto-will-abolish-one-day-bus-passes-to-combat-tourism-overcrowding/ · 교토시 공식 https://www2.city.kyoto.lg.jp/kotsu/webguide/en/ticket/regular_1day_card_comm.html), 현 통합 1일권 ¥1,100×4=¥4,400은 6/1 단권 ¥3,680 대비 ¥720 비효율. 분석: docs/decision-log/2026-05-18-04-transit-pass-correction-icoca.md",
       "data_quality": "official_fare"
     },
     {
