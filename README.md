@@ -21,12 +21,14 @@
 
 ### 1. 확정 정보 보기 (모바일·웹)
 
-- `index.html` — 🏠 홈 탭 (요약·장마·예산·점수·일정 미리보기). 하단 고정 4탭 내비게이션 포함. 인라인 데이터로 자기완결, 더블클릭 동작
+- `index.html` — 🏠 홈 탭 (운영 모드): 요약 + 일자별 일정. 하단 고정 4탭 내비게이션. 인라인 데이터로 자기완결, 더블클릭 동작
 - `viz/itinerary.html` — 📅 일정 탭: 일자별 상세 일정 카드 뷰 (시간대·동선·메모·이미지). `data/itinerary.json` 단일 출처
 - `viz/itinerary-table.html` — 📅 일정 탭: 3박4일 **시간표 뷰** (4일 열 × 시간대 행, 모바일 카드/데스크탑 테이블 자동 전환). `data/itinerary.json` 단일 출처
 - `viz/lodging.html` — ✈️ 숙박·항공 탭: 에어비앤비·카덴쇼·항공편 확정 예약 내역. `data/cost-options.json` 단일 출처
 - `viz/checklist.html` — ✅ 예약 탭: 예약 진행 상태 (기한 이른 순 정렬, 상태별 카운트). `data/booking-checklist.json` 단일 출처
-- **5개 모두 `scripts/build_index.py` 빌드 산출물 — 직접 편집 금지**. 데이터(`data/*.json`)·스크립트 변경 후 `python scripts/build_index.py` 실행. CI(`build_index.py --check`)가 모든 산출물의 drift를 차단
+- `viz/archive.html` — 📦 의사결정 아카이브 (장마 확률·9 예산 시나리오·7 후보지 점수). 메인 페이지의 무게중심을 운영 정보로 유지하기 위해 분석·결정 자료는 이곳으로 분리
+- `assets/og-*.svg` — 6장의 OG/Twitter 카드 이미지 (1200×630). 카톡·Slack·X 공유 시 페이지별 썸네일·제목·설명 노출
+- **HTML 6개·SVG 6장 모두 `scripts/build_index.py` 빌드 산출물 — 직접 편집 금지**. 데이터(`data/*.json`)·스크립트 변경 후 `python scripts/build_index.py` 실행. CI(`build_index.py --check`)가 모든 산출물의 drift를 차단
 - 각 섹션 위 `<!-- SYNC: ... -->` 주석이 데이터 출처를 명시. CI(`scripts/validate.py`)가 경로 유효성과 §N 절 번호를 검증
 
 ### 2. 발권·예약 갱신
@@ -79,11 +81,12 @@
 ```
 data/        # itinerary·booking-checklist·cost-options (실행 단일 출처) + decision·weather·flights (아카이브)
 docs/        # 일정·후보·날씨·항공 분석, 의사결정 일지(decision-log/)
-viz/         # itinerary.html·itinerary-table.html·lodging.html·checklist.html (build_index.py 산출물)
+viz/         # itinerary.html·itinerary-table.html·lodging.html·checklist.html·archive.html (build_index.py 산출물)
+assets/      # og-*.svg (OG/Twitter 카드 이미지 6장, build_index.py 산출물)
 scripts/     # build_index·validate·score·budget·render-pdf
 tests/       # unittest (validate·build_index·score·budget)
 reports/     # 최종 보고서 (아카이브)
-index.html   # 모바일 8섹션 카드 (build_index.py 산출물)
+index.html   # 운영 페이지 — 요약·일자별 일정 (build_index.py 산출물)
 ```
 
 ## 환경 요구
