@@ -30,6 +30,8 @@ OUT_CHECKLIST = BASE / "viz" / "checklist.html"
 
 GH_BLOB = "https://github.com/ywkim/japan-trip/blob/main"
 SCENARIO_ID = "kyoto_may31_kadensho_early_bird"
+SITE_URL = "https://nihon-trip.vercel.app"
+SITE_NAME = "교토 가족여행 2026"
 
 # 탭바 정의: (탭 키, 아이콘, 레이블, 루트 기준 경로, viz/ 기준 경로)
 _TABS = [
@@ -191,7 +193,36 @@ CSS = """
 """
 
 
-def html_doc(title: str, body: str) -> str:
+def og_meta(*, title: str, description: str, slug: str, page_path: str) -> str:
+    url = f"{SITE_URL}/{page_path}" if page_path else f"{SITE_URL}/"
+    image = f"{SITE_URL}/assets/og-{slug}.svg"
+    return f"""<meta name="description" content="{esc(description)}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="{esc(SITE_NAME)}">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:url" content="{esc(url)}">
+<meta property="og:title" content="{esc(title)}">
+<meta property="og:description" content="{esc(description)}">
+<meta property="og:image" content="{esc(image)}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{esc(title)}">
+<meta name="twitter:description" content="{esc(description)}">
+<meta name="twitter:image" content="{esc(image)}">"""
+
+
+def html_doc(
+    title: str,
+    body: str,
+    *,
+    description: str,
+    og_slug: str,
+    page_path: str,
+    extra_css: str = "",
+) -> str:
+    css = CSS + extra_css
+    meta = og_meta(title=title, description=description, slug=og_slug, page_path=page_path)
     return f"""<!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -200,7 +231,8 @@ def html_doc(title: str, body: str) -> str:
 <meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#1a1a1a" media="(prefers-color-scheme: dark)">
 <title>{esc(title)}</title>
-<style>{CSS}</style>
+{meta}
+<style>{css}</style>
 </head>
 <body>
 {body}
@@ -213,17 +245,14 @@ def html_doc(title: str, body: str) -> str:
 
 def card_summary(d) -> str:
     decision = d["decision"]
-    score = d["score"]
     budget = d["budget"]
     kyoto = next(c for c in decision["candidates"] if c["id"] == "kyoto")
-    kyoto_score = next((s for s in score["scored"] if s["id"] == "kyoto"), None)
     scn = next((s for s in budget["scenarios"] if s["id"] == SCENARIO_ID), None)
     pass_marker = "통과" if scn and scn["passes_cap"] else f"{won(-scn['headroom_krw'])} 초과" if scn else "—"
-    score_str = f"{kyoto_score['score']:.2f} / 10" if kyoto_score else "N/A"
     total_str = won(scn["confirmed_total_krw"]) if scn else "—"
 
     return f"""
-<!-- SYNC: reports/final-report.md §1 (결정 요약) · data/decision.json (companions·점수) · data/cost-options.json (scenario {SCENARIO_ID}) -->
+<!-- SYNC: reports/final-report.md §1 (결정 요약) · data/decision.json (companions) · data/cost-options.json (scenario {SCENARIO_ID}) -->
 <section id="summary" class="card">
   <h2>요약</h2>
   <div class="big">교토 · 5/31~6/3</div>
@@ -233,7 +262,6 @@ def card_summary(d) -> str:
   <div class="row"><span class="k">숙박</span><span class="v">에어비앤비 2박 + 카덴쇼 료칸 1박 (2명×2실)</span></div>
   <div class="row"><span class="k">예상 비용</span><span class="v">{esc(total_str)}</span></div>
   <div class="row"><span class="k">3M 캡</span><span class="v">{esc(pass_marker)}</span></div>
-  <div class="row"><span class="k">종합 점수</span><span class="v">{esc(score_str)}</span></div>
   <div class="sub" style="margin-top:0.5rem;">{esc(kyoto.get('notes', ''))}</div>
 </section>
 """
@@ -522,46 +550,92 @@ def card_score(d) -> str:
 <!-- SYNC: scripts/score.py --json · data/decision.json (criteria·candidates) -->
 <section id="score" class="card">
   <h2>후보지 종합 점수</h2>
-  <div class="sub" style="margin-bottom:0.5rem;">교토만 7기준 모두 입력. 나머지는 seasonality(2026-05)만.</div>
+  <div class="sub" style="margin-bottom:0.3rem;">교토만 7기준 모두 입력. 나머지는 seasonality(2026-05)만.</div>
+  <div class="sub" style="margin-bottom:0.5rem;">교토는 1위(오사카·고베 9.0) 후보가 아니지만 시부모 동반·비용·이동 부담을 종합한 별도 의사결정. 사유: <a href="{GH_BLOB}/docs/decision-log/2026-05-11-may31-jun3-kyoto-update.md" target="_blank" rel="noopener">2026-05-11 결정 일지 ↗</a></div>
   {''.join(rows)}
 </section>
 """
 
 
-INDEX_HEAD = """<h1>일본 여행 최종 결정</h1>
-<div class="status">교토 5/31~6/3 · 시부모 4인 확정</div>
+INDEX_TITLE = "교토 5/31~6/3 · 4인 가족 여행"
+INDEX_DESCRIPTION = "교토 5/31~6/3 · 4인 가족(부부+시부모) · 3박 4일 · 확정 일정·예약 현황"
+
+INDEX_HEAD = f"""<h1>{esc(INDEX_TITLE)}</h1>
+<div class="status">시부모 동반 · 3박 4일 · 시오 마치야 2박 + 카덴쇼 료칸 1박</div>
 
 <nav>
   <a href="#summary">요약</a>
-  <a href="#tsuyu">장마</a>
-  <a href="#budget">예산</a>
   <a href="#itinerary">일정</a>
-  <a href="#score">점수</a>
+  <a href="viz/lodging.html">숙박·항공</a>
+  <a href="viz/checklist.html">예약</a>
+  <a href="viz/archive.html">아카이브</a>
 </nav>
 """
 
 INDEX_FOOTER = f"""
 <div class="links">
-  <a href="{GH_BLOB}/reports/final-report.md" target="_blank" rel="noopener">최종 보고서</a>
-  <a href="{GH_BLOB}/docs/airbnb-kyoto-may31-jun2-2026.md" target="_blank" rel="noopener">에어비앤비 비교</a>
-  <a href="viz/itinerary.html">일자별 일정</a>
-  <a href="viz/checklist.html">예약 체크리스트</a>
+  <a href="viz/itinerary.html">일자별 일정 ↗</a>
+  <a href="viz/checklist.html">예약 체크리스트 ↗</a>
+  <a href="viz/archive.html">의사결정 아카이브 ↗</a>
 </div>
 
-<footer>data/decision.json · data/cost-options.json · data/itinerary.json · data/booking-checklist.json 단일 출처 · scripts/build_index.py 산출</footer>
+<footer>2026-05-12 의사결정 종료 · 이 페이지는 확정 일정·예약 운영용. 결정 근거는 <a href="viz/archive.html" style="color:inherit;">아카이브</a>·<a href="{GH_BLOB}/reports/final-report.md" target="_blank" rel="noopener" style="color:inherit;">최종 보고서 ↗</a></footer>
 """
 
 
 def build_index(d) -> str:
     sections = [
         card_summary(d),
-        card_tsuyu(d),
-        card_budget(d),
         card_itinerary(d),
-        card_score(d),
     ]
     body = INDEX_HEAD + "\n".join(sections) + INDEX_FOOTER + tab_bar("home", in_viz=False)
-    return html_doc("일본 여행 최종 결정", body)
+    return html_doc(
+        INDEX_TITLE,
+        body,
+        description=INDEX_DESCRIPTION,
+        og_slug="home",
+        page_path="",
+    )
+
+
+# ─── viz/archive.html ──────────────────────────────────────────────────────
+
+ARCHIVE_TITLE = "의사결정 아카이브 · 교토 가족여행 2026"
+ARCHIVE_DESCRIPTION = "의사결정 아카이브 · 장마 확률·예산 시나리오·후보지 점수 (2026-05-12 종료)"
+
+
+def build_archive(d) -> str:
+    sections = [
+        card_tsuyu(d),
+        card_budget(d),
+        card_score(d),
+    ]
+    head = f"""<h1>의사결정 아카이브</h1>
+<div class="status">2026-05-12 의사결정 종료 · 회귀 가드·재참조용 분석 자료</div>
+
+<nav>
+  <a href="../index.html">← 운영 페이지로</a>
+  <a href="#tsuyu">장마</a>
+  <a href="#budget">예산 시나리오</a>
+  <a href="#score">후보지 점수</a>
+</nav>
+"""
+    footer = f"""
+<div class="links">
+  <a href="{GH_BLOB}/reports/final-report.md" target="_blank" rel="noopener">최종 보고서 ↗</a>
+  <a href="{GH_BLOB}/docs/decision-log/" target="_blank" rel="noopener">결정 일지 ↗</a>
+</div>
+
+<footer>data/decision.json · data/cost-options.json · data/weather.json 단일 출처</footer>
+"""
+    body = head + "\n".join(sections) + footer + tab_bar("home", in_viz=True)
+    return html_doc(
+        ARCHIVE_TITLE,
+        body,
+        description=ARCHIVE_DESCRIPTION,
+        og_slug="archive",
+        page_path="viz/archive.html",
+    )
 
 
 # ─── viz/lodging.html ──────────────────────────────────────────────────────
@@ -572,10 +646,16 @@ def build_lodging(d) -> str:
 {card_airbnb(d)}
 {card_kadensho(d)}
 {card_flights(d)}
-<footer>data/cost-options.json 단일 출처 · scripts/build_index.py 산출 — 직접 편집 금지</footer>
+<footer>data/cost-options.json 단일 출처</footer>
 {tab_bar("lodging", in_viz=True)}
 """
-    return html_doc("숙박·항공", body)
+    return html_doc(
+        "숙박·항공 · 교토 5/31~6/3",
+        body,
+        description="시오 마치야 2박 + 카덴쇼 료칸 1박 · 에어서울 4인 발권",
+        og_slug="lodging",
+        page_path="viz/lodging.html",
+    )
 
 
 # ─── viz/itinerary.html ────────────────────────────────────────────────────
@@ -707,10 +787,16 @@ def build_itinerary(d) -> str:
   <a href="{GH_BLOB}/{esc(itin.get('source_doc',''))}" target="_blank" rel="noopener">마크다운</a>
 </div>
 
-<footer>data/itinerary.json 단일 출처 · scripts/build_index.py 산출 — 직접 편집 금지</footer>
+<footer>data/itinerary.json 단일 출처</footer>
 {tab_bar("itinerary", in_viz=True)}
 """
-    return html_doc("교토 3박4일 일정", body)
+    return html_doc(
+        "교토 3박4일 일정 · 5/31~6/3 · 4인 가족",
+        body,
+        description="교토 3박 4일 일자별 코스 · 5/31~6/3 · 4인 가족",
+        og_slug="itinerary",
+        page_path="viz/itinerary.html",
+    )
 
 
 # ─── viz/checklist.html ────────────────────────────────────────────────────
@@ -754,10 +840,16 @@ def build_checklist(d) -> str:
   {''.join(item_cards)}
 </section>
 
-<footer>data/booking-checklist.json 단일 출처 · scripts/build_index.py 산출 — 직접 편집 금지</footer>
+<footer>data/booking-checklist.json 단일 출처</footer>
 {tab_bar("checklist", in_viz=True)}
 """
-    return html_doc("예약 체크리스트", body)
+    return html_doc(
+        "예약 체크리스트 · 교토 5/31~6/3",
+        body,
+        description="예약 진행 상태 7항목 (확정·미정)",
+        og_slug="checklist",
+        page_path="viz/checklist.html",
+    )
 
 
 # ─── viz/itinerary-table.html ─────────────────────────────────────────────
@@ -908,36 +1000,66 @@ def build_itinerary_table(d) -> str:
   <a href="itinerary.html">카드 뷰</a>
 </div>
 
-<footer>data/itinerary.json 단일 출처 · scripts/build_index.py 산출 — 직접 편집 금지</footer>
+<footer>data/itinerary.json 단일 출처</footer>
 {tab_bar("itinerary", in_viz=True)}
 """
-    # TABLE_CSS를 공통 CSS에 추가해 단독 페이지로 렌더
-    combined_css = CSS + TABLE_CSS
-    return f"""<!DOCTYPE html>
-<html lang="ko">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#1a1a1a" media="(prefers-color-scheme: dark)">
-<title>교토 3박4일 시간표</title>
-<style>{combined_css}</style>
-</head>
-<body>
-{body}
-</body>
-</html>
+    return html_doc(
+        "교토 3박4일 시간표 · 5/31~6/3",
+        body,
+        description="교토 3박 4일 시간표 · 4일 한눈에",
+        og_slug="itinerary-table",
+        page_path="viz/itinerary-table.html",
+        extra_css=TABLE_CSS,
+    )
+
+
+# ─── OG SVG 자산 (1200×630) ────────────────────────────────────────────────
+
+OG_FONT_STACK = "-apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif"
+
+
+def build_og_svg(*, eyebrow: str, title: str, subtitle: str) -> str:
+    """1200×630 SVG OG 카드. 좌측 액센트 바 + 큰 한글 제목 + 부제 + 도메인."""
+    return f"""<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#0a0a0a"/>
+  <rect x="0" y="0" width="12" height="630" fill="#ededed"/>
+  <g font-family="{OG_FONT_STACK}" fill="#ededed">
+    <text x="80" y="170" font-size="34" font-weight="500" fill="#888">{esc(eyebrow)}</text>
+    <text x="80" y="290" font-size="84" font-weight="700">{esc(title)}</text>
+    <text x="80" y="380" font-size="40" font-weight="400" fill="#cfcfcf">{esc(subtitle)}</text>
+    <text x="80" y="560" font-size="26" font-weight="500" fill="#888">nihon-trip.vercel.app</text>
+    <text x="1120" y="560" font-size="26" font-weight="500" fill="#888" text-anchor="end">교토 가족여행 2026</text>
+  </g>
+</svg>
 """
+
+
+OG_CARDS = (
+    ("home",            "교토 가족여행 · 2026",     "교토 5/31~6/3 · 4인 가족",     "부부 + 시부모 · 3박 4일 · 확정"),
+    ("itinerary",       "일자별 코스",              "교토 3박 4일 일정",            "5/31~6/3 · 청수사·아라시야마·후시미"),
+    ("itinerary-table", "4일 시간표",               "교토 3박 4일 · 한눈에",        "5/31 일 · 6/1 월 · 6/2 화 · 6/3 수"),
+    ("lodging",         "숙박 · 항공",              "시오 2박 + 카덴쇼 1박",        "에어서울 인천↔간사이 4인 발권"),
+    ("checklist",       "예약 체크리스트",          "예약 진행 상태",               "확정 3 · 미정 4 항목"),
+    ("archive",         "의사결정 아카이브",        "장마·예산·후보지 점수",        "2026-05-12 결정 종료 · 회귀 가드"),
+)
 
 
 # ─── 메인 ──────────────────────────────────────────────────────────────────
 
 OUTPUTS = (
-    ("index.html",               lambda p: p / "index.html",                  build_index),
+    ("index.html",               lambda p: p / "index.html",                   build_index),
     ("viz/itinerary.html",       lambda p: p / "viz" / "itinerary.html",       build_itinerary),
     ("viz/checklist.html",       lambda p: p / "viz" / "checklist.html",       build_checklist),
     ("viz/itinerary-table.html", lambda p: p / "viz" / "itinerary-table.html", build_itinerary_table),
     ("viz/lodging.html",         lambda p: p / "viz" / "lodging.html",         build_lodging),
+    ("viz/archive.html",         lambda p: p / "viz" / "archive.html",         build_archive),
+) + tuple(
+    (
+        f"assets/og-{slug}.svg",
+        lambda p, s=slug: p / "assets" / f"og-{s}.svg",
+        lambda _d, e=eyebrow, t=title, s=subtitle: build_og_svg(eyebrow=e, title=t, subtitle=s),
+    )
+    for slug, eyebrow, title, subtitle in OG_CARDS
 )
 
 
