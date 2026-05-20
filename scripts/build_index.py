@@ -281,7 +281,7 @@ def card_summary(d) -> str:
   <div class="row"><span class="k">숙박</span><span class="v">에어비앤비 2박 + 카덴쇼 료칸 1박 (2명×2실)</span></div>
   <div class="row"><span class="k">예상 비용</span><span class="v">{esc(total_str)}</span></div>
   <div class="row"><span class="k">3M 캡</span><span class="v">{esc(pass_marker)}</span></div>
-  <div class="sub" style="margin-top:0.5rem;">{esc(kyoto.get('notes', ''))}</div>
+  <div class="sub" style="margin-top:0.5rem;">발권·예약 완료 (항공 A8YW58 · 시오 마치야 · 카덴쇼 트립닷컴). 출국 전 점검은 ☑ 예약 탭.</div>
 </section>
 """
 
@@ -366,28 +366,27 @@ def card_airbnb(d) -> str:
 
 
 def card_kadensho(d) -> str:
-    items = [l for l in d["cost"]["lodging"] if "kadensho" in l["id"] and "2026jun2" in l["id"]]
+    items = [l for l in d["cost"]["lodging"] if l["id"] == "kadensho_tripcom_no_meal_2026jun2"]
     cards = []
     for l in items:
         cards.append(f"""
   <div class="subcard">
     <div class="subtitle">{esc(l['name'])}</div>
-    <div class="row"><span class="k">1박 (4인)</span><span class="v">{esc(won(l['per_night_krw']))}</span></div>
-    <div class="row"><span class="k">출처</span><span class="v">{esc(l.get('data_quality', ''))}</span></div>
+    <div class="row"><span class="k">1박 (4인, 객실 2개)</span><span class="v">{esc(won(l['per_night_krw']))}</span></div>
     <div class="sub">{esc(l.get('notes', ''))}</div>
   </div>""")
     return f"""
-<!-- SYNC: data/cost-options.json (lodging.kadensho_*_2026jun2) · docs/decision-log/2026-05-11-may31-jun3-kyoto-update.md -->
+<!-- SYNC: data/cost-options.json (lodging.kadensho_tripcom_no_meal_2026jun2) · data/booking-checklist.json (ryokan) -->
 <section id="kadensho" class="card">
-  <h2>우메코지 카덴쇼 4 플랜 (6/2 1박, 2명×2실)</h2>
-  <div class="sub" style="margin-bottom:0.5rem;">dormy-hotels.com 공식 검색 2026-05-11. 환불 정책 사전 확인 후 결제.</div>
+  <h2>우메코지 카덴쇼 (6/2 1박)</h2>
+  <div class="sub" style="margin-bottom:0.5rem;">트립닷컴 예약번호 1400825991981904 · 2026-05-13 확정 · 숙소 현지결제.</div>
   {''.join(cards)}
 </section>
 """
 
 
 def card_flights(d) -> str:
-    items = d["cost"]["flights"]
+    items = [f for f in d["cost"]["flights"] if f["id"] == "rs_kix_may31_jun3"]
     cards = []
     for f in items:
         cards.append(f"""
@@ -395,13 +394,12 @@ def card_flights(d) -> str:
     <div class="subtitle">{esc(f['label'])}</div>
     <div class="row"><span class="k">일자</span><span class="v">{esc(f['depart_date'])} → {esc(f['return_date'])}</span></div>
     <div class="row"><span class="k">4인 총액</span><span class="v">{esc(won(f['total_krw']))}</span></div>
-    <div class="row"><span class="k">출처</span><span class="v">{esc(f.get('source', ''))}</span></div>
-    <div class="sub">{esc(f.get('notes', ''))}</div>
+    <div class="sub">에어서울 RS · 예약번호 A8YW58 · 2026-05-12 확정 (시부 결제). ICN 13:15→KIX 15:15 / KIX 10:05→ICN 12:05.</div>
   </div>""")
     return f"""
-<!-- SYNC: data/cost-options.json (flights) -->
+<!-- SYNC: data/cost-options.json (flights.rs_kix_may31_jun3) · data/booking-checklist.json (flight) -->
 <section id="flights" class="card">
-  <h2>항공 옵션</h2>
+  <h2>항공 (확정)</h2>
   {''.join(cards)}
 </section>
 """
@@ -661,7 +659,7 @@ def build_archive(d) -> str:
 
 def build_lodging(d) -> str:
     body = f"""<h1>숙박 · 항공</h1>
-<div class="status">에어비앤비 2박 + 카덴쇼 료칸 1박 · 항공 옵션</div>
+<div class="status">에어비앤비 2박 + 카덴쇼 료칸 1박 · 에어서울 4인 발권 완료</div>
 {card_airbnb(d)}
 {card_kadensho(d)}
 {card_flights(d)}
@@ -847,7 +845,7 @@ def build_checklist(d) -> str:
   </div>""")
 
     body = f"""<h1>예약 체크리스트</h1>
-<div class="status">시나리오: {esc(cl.get('scenario',''))} · {len(items)}개 항목</div>
+<div class="status">{counts.get('확정', 0)}개 확정 · {counts.get('미정', 0)}개 미정 · 총 {len(items)}개 항목</div>
 
 <!-- SYNC: data/booking-checklist.json -->
 <section class="card">

@@ -458,7 +458,7 @@
   "scenarios": [
     {
       "id": "kyoto_kadensho_with_bf_original",
-      "label": "[원안] 교토 3박4일 (카덴쇼 조식 포함 + 에어비앤비 2박)",
+      "label": "[아카이브·원안 5/24~27] 교토 3박4일 (카덴쇼 조식 포함 + 에어비앤비 2박)",
       "flight": "rs_kix_may24_27",
       "lodging_plan": [
         {"lodging": "kyoto_airbnb_4pax", "nights": 2},
@@ -474,7 +474,7 @@
     },
     {
       "id": "kyoto_matsubaya_mid",
-      "label": "[추천] 교토 3박4일 (마츠바야 료칸 1박 + 에어비앤비 2박, 중간 식비)",
+      "label": "[아카이브·원안 추천 5/24~27] 교토 3박4일 (마츠바야 료칸 1박 + 에어비앤비 2박, 중간 식비)",
       "flight": "rs_kix_may24_27",
       "lodging_plan": [
         {"lodging": "kyoto_airbnb_4pax", "nights": 2},
@@ -490,7 +490,7 @@
     },
     {
       "id": "kyoto_matsubaya_budget",
-      "label": "교토 3박4일 (마츠바야 료칸 + 에어비앤비, 절약 식비)",
+      "label": "[아카이브 5/24~27] 교토 3박4일 (마츠바야 료칸 + 에어비앤비, 절약 식비)",
       "flight": "rs_kix_may24_27",
       "lodging_plan": [
         {"lodging": "kyoto_airbnb_4pax", "nights": 2},
@@ -506,7 +506,7 @@
     },
     {
       "id": "kyoto_kadensho_min_budget",
-      "label": "교토 3박4일 (카덴쇼 5월 평일 최저가 + 에어비앤비, 절약 식비)",
+      "label": "[아카이브 5/24~27] 교토 3박4일 (카덴쇼 5월 평일 최저가 + 에어비앤비, 절약 식비)",
       "flight": "rs_kix_may24_27",
       "lodging_plan": [
         {"lodging": "kyoto_airbnb_4pax", "nights": 2},
@@ -522,7 +522,7 @@
     },
     {
       "id": "kyoto_no_ryokan_all_airbnb",
-      "label": "교토 3박4일 (전 박 에어비앤비, 료칸 제외, 중간 식비)",
+      "label": "[아카이브 5/24~27] 교토 3박4일 (전 박 에어비앤비, 료칸 제외, 중간 식비)",
       "flight": "rs_kix_may24_27",
       "lodging_plan": [
         {"lodging": "kyoto_airbnb_4pax", "nights": 3}
@@ -554,7 +554,7 @@
     },
     {
       "id": "nagasaki_forest_villa_mid",
-      "label": "나가사키·HTB 4박5일 (시내 호텔 3박 + Forest Villa 1박, 중간 식비, JR)",
+      "label": "[아카이브·나가사키 후보] 4박5일 (시내 호텔 3박 + Forest Villa 1박, 중간 식비, JR)",
       "flight": "ke_ngs_may12_16",
       "lodging_plan": [
         {"lodging": "nagasaki_business_hotel_2rooms", "nights": 2},
@@ -571,7 +571,7 @@
     },
     {
       "id": "nagasaki_sasebo_budget_bus",
-      "label": "[가성비] 나가사키·HTB 4박5일 (사세보 비즈니스 1박, 절약 식비, 고속버스)",
+      "label": "[아카이브·나가사키 가성비] 4박5일 (사세보 비즈니스 1박, 절약 식비, 고속버스)",
       "flight": "ke_ngs_may12_16",
       "lodging_plan": [
         {"lodging": "nagasaki_business_hotel_2rooms", "nights": 3},
