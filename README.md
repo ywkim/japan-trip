@@ -71,6 +71,7 @@
 - `docs/weather.md` — 시기별 쾌적도 순위, `seasonality`/`physical_burden` 점수 제안 + §5 교토 5/31~6/3 장마 정량 분석
 - `docs/flights.md` — 4인 총액 비교, GMP 가용성
 - `docs/transit-pass-jr-kansai-2026.md` — JR 간사이 에어리어 패스 1/2/3/4일권 비교·권장 (예약 탭 `transit_pass` 근거)
+- `docs/breakfast-near-lodging.md` — 숙소(시오·카덴쇼) 인근 조식 옵션: 거리·영업시간·아침별(6/1·6/2·6/3) 권장
 - `reports/final-report.md` — 최종 권고 (교토·5/31~6/3·4인)
 - `scripts/score.py`·`scripts/budget.py` — 회귀 가드용
 

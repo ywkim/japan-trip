@@ -99,6 +99,7 @@ japan-trip/
 │   ├── airbnb-kyoto-may31-jun2-2026.md    # 에어비앤비 5개 매물 비교
 │   ├── jejuair-icn-kobe-june-2026.md      # 제주항공 인천-고베 신규 노선·가격 리서치
 │   ├── transit-pass-jr-kansai-2026.md     # JR 간사이 에어리어 패스 1/2/3/4일권 비교·권장 (booking-checklist transit_pass 근거)
+│   ├── breakfast-near-lodging.md          # 숙소(시오·카덴쇼) 인근 조식 옵션 — 거리·영업시간·아침별 권장 (조식 정보 단일 출처)
 │   └── transit-mcp-handoff.md             # 후속 세션(Playwright MCP) 위임 가이드 (tbd_needs_browser_mcp leg 측정)
 ├── viz/
 │   ├── itinerary.html         # 일자별 카드 뷰 (build_index.py 산출물 — 직접 편집 금지)
