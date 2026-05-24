@@ -48,3 +48,18 @@ CLAUDE.md "절대 금지: 학습 데이터 기반 가격 추측" 위반 — ¥70
 - (선택) ICOCA 초기 충전액 권장치 산정 — 4인×¥3,000 = ¥12,000 vs 부족 시 차내 추가 충전 시나리오.
 - (선택) `arrive_from`에 `fare_yen`·`ic_card_eligible` 필드 추가하는 스키마 확장 — 본 일지 결론을 데이터에 박아 자동 정합 검증. 후속 PR.
 - 직전 일지(`2026-05-18-03`)는 보존 (의사결정 자취 기록). 본 일지가 정정·우선 적용.
+
+## 출처 (2026-05-18 WebSearch/WebFetch 검증)
+
+**iPhone Apple Wallet ICOCA 단권 통일 근거**
+
+- [Apple Support — Add a transit card to Apple Wallet in Japan](https://support.apple.com/en-us/108772) — Suica/PASMO/ICOCA/TOICA Apple Wallet 추가·iPhone 8 이상·iOS 최신·Apple Account 2단계 인증 요구사항.
+- [Inside Kyoto — iPhone: The Killer Japan Travel Hack](https://www.insidekyoto.com/iphone-the-killer-japan-travel-hack) — 전국 IC 상호이용 서비스로 ICOCA가 시버스·시영지하철·JR 모두 호환·신용카드 즉시 충전.
+- [Tictivity — Japan IC Card Guide 2026](https://www.tictivity.com/en/blog/japan-ic-card-guide) — 2026 시점 디지털 IC카드 운영 현황·Apple Pay·Google Pay 충전 옵션.
+
+**¥700 시버스 단독 1일권 폐지 근거**
+
+- [SoraNews24 — Kyoto will abolish one-day bus passes to combat tourism overcrowding (2023-03-30)](https://soranews24.com/2023/03/30/kyoto-will-abolish-one-day-bus-passes-to-combat-tourism-overcrowding/) — 2023-09 판매 종료·2024-03-31 사용 만료 발표.
+- [Mothership — Kyoto will stop selling 1-day bus passes by end-Sep. 2023](https://mothership.sg/2023/04/kyoto-bus-pass-overcrowding/) — 오버투어리즘 대책 보도.
+- [Kyoto City Bus & Subway Information Guide — Subway & Bus 1-Day Pass](https://www2.city.kyoto.lg.jp/kotsu/webguide/en/ticket/regular_1day_card_comm.html) — 현 유효 통합 1일권 ¥1,100/인 공식 안내 (시버스 단독 1일권 항목 부재).
+- [KKday Korea — 2026 오사카 교통패스 총정리](https://www.kkday.com/ko/blog/23750/aisa-japan-osaka-travel-pass) — 2025-04 디지털 24시간권 ¥1,100 신설·2일권 폐지.

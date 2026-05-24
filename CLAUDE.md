@@ -15,7 +15,7 @@
 | 동반 | 부부 2인 + 시부모 2인 (4인) | 같음 |
 | 항공 | 에어서울 인천↔간사이 4인 발권 | 별도 PR (발권 기록) |
 | 1·2박 (5/31·6/1) | 시오(Shio) 100년 마치야 에어비앤비 | `docs/decision-log/2026-05-12-04-airbnb-shio-selected.md` |
-| 3박 (6/2) | 우메코지 카덴쇼 조기할인 조식포함 | `data/booking-checklist.json` |
+| 3박 (6/2) | 우메코지 카덴쇼 트립닷컴 (객실 2개, 식사 불포함) | `data/booking-checklist.json` |
 
 ## 작업 범위
 
@@ -79,7 +79,9 @@
 japan-trip/
 ├── README.md            # 사람용 안내
 ├── CLAUDE.md            # AI 세션 지시
-├── index.html           # 모바일 8섹션 카드 (build_index.py 산출물 — 직접 편집 금지)
+├── index.html           # 메인 운영 페이지 — 요약·일자별 일정 (build_index.py 산출물 — 직접 편집 금지)
+├── assets/
+│   └── og-*.svg                 # OG/Twitter 카드 이미지 6장 (1200×630 SVG, build_index.py 산출물 — 직접 편집 금지)
 ├── data/
 │   ├── decision.json          # 단일 출처 (criteria + candidates + scores)
 │   ├── cost-options.json      # 단일 출처 (flights/lodging/daily_fixed/one_time/scenarios)
@@ -96,16 +98,18 @@ japan-trip/
 │   ├── kyoto-itinerary-may31-jun3-2026.md # 교토 5/31~6/3 확정 시나리오 (사람용 사본)
 │   ├── airbnb-kyoto-may31-jun2-2026.md    # 에어비앤비 5개 매물 비교
 │   ├── jejuair-icn-kobe-june-2026.md      # 제주항공 인천-고베 신규 노선·가격 리서치
+│   ├── transit-pass-jr-kansai-2026.md     # JR 간사이 에어리어 패스 1/2/3/4일권 비교·권장 (booking-checklist transit_pass 근거)
 │   └── transit-mcp-handoff.md             # 후속 세션(Playwright MCP) 위임 가이드 (tbd_needs_browser_mcp leg 측정)
 ├── viz/
 │   ├── itinerary.html         # 일자별 카드 뷰 (build_index.py 산출물 — 직접 편집 금지)
 │   ├── itinerary-table.html   # 4일 시간표 뷰 (build_index.py 산출물 — 직접 편집 금지)
 │   ├── checklist.html         # 예약 체크리스트 화면 (build_index.py 산출물 — 직접 편집 금지)
-│   └── lodging.html           # 숙박·항공 탭 화면 (build_index.py 산출물 — 직접 편집 금지)
+│   ├── lodging.html           # 숙박·항공 탭 화면 (build_index.py 산출물 — 직접 편집 금지)
+│   └── archive.html           # 의사결정 아카이브 (장마 확률·9 예산 시나리오·7 후보지 점수 — build_index.py 산출물 — 직접 편집 금지)
 ├── scripts/
 │   ├── score.py         # 종합 점수 계산 (--json 지원)
 │   ├── budget.py        # 3M 예산 시나리오 평가 (--json 지원)
-│   ├── build_index.py   # index.html + viz/itinerary.html + viz/itinerary-table.html + viz/checklist.html 빌드 (--check)
+│   ├── build_index.py   # index.html + viz/*.html(5개) + assets/og-*.svg(6장) 빌드 (--check)
 │   ├── validate.py      # 가격 필드·묵은 가격·SYNC 주석 무결성 검사
 │   └── render-pdf.sh    # PDF 생성
 ├── tests/               # unittest (validate·build_index·score·budget)
@@ -125,7 +129,8 @@ japan-trip/
   - `data/decision.json` — criteria·candidates·scores (MCDA 입력. 교토 확정 후 회귀 가드)
   - `data/weather.json` — 후보지×시기 기후 + `tsuyu_normals`(긴키 매우입·매우명 평년 + 최근 7년 실적) + `cities.kyoto.sub_monthly_precip`(순계열)·`trip_window_daily_precip`(5/31~6/3 일별). 원자료: JMA 매우 평년값·京都(47759) 일별 평년값 1991–2020. `docs/weather.md` §5와 동기화. 5/31~6/3 실측 기상 추적이 필요해지면 본 파일의 `cities.kyoto`에 새 키로 추가
   - `data/flights.json` — 후보지×출발지 항공권 시세 스냅샷 (시점 스냅샷, snapshot_date 명시). 발권은 별도 PR로 `data/booking-checklist.json`·`data/cost-options.json`에 기록
-- **`index.html`·`viz/itinerary.html`·`viz/itinerary-table.html`·`viz/checklist.html`·`viz/lodging.html`는 `scripts/build_index.py` 산출물 — 직접 편집 금지**. 데이터(`data/*.json`)·스크립트 변경 후 `python scripts/build_index.py` 실행. CI(`build_index.py --check`)가 5개 산출물의 drift를 PR 단계에서 차단
+- **`index.html`·`viz/itinerary.html`·`viz/itinerary-table.html`·`viz/checklist.html`·`viz/lodging.html`·`viz/archive.html`·`assets/og-*.svg`(6장)는 `scripts/build_index.py` 산출물 — 직접 편집 금지**. 데이터(`data/*.json`)·스크립트 변경 후 `python scripts/build_index.py` 실행. CI(`build_index.py --check`)가 6 HTML + 6 SVG = 12개 산출물의 drift를 PR 단계에서 차단
+- 메인 페이지(`index.html`)는 **운영 모드** — 요약·일자별 일정만. 분석·결정 자료(장마 확률·9 예산 시나리오·7 후보지 점수)는 `viz/archive.html`로 분리. 받는 사람에게 "아직 결정 중"으로 읽히는 콘텐츠는 메인에서 제외
 - `docs/weather.md`·`docs/flights.md`의 표는 각각 `data/weather.json`·`data/flights.json`의 사람용 사본 — JSON 수정 시 함께 갱신 (CI 게이트: `scripts/validate.py` E·F가 도시·시기 수치, snapshot_date, 시세 표기의 drift를 PR 단계에서 차단)
 - `docs/kyoto-itinerary-may31-jun3-2026.md`는 `data/itinerary.json`의 사람용 마크다운 사본 (JSON이 정본). 일정 변경 시 JSON을 먼저 수정 → 마크다운 함께 갱신
 - `data/flights.json`은 **시점 스냅샷**. 시세 재조회 시 새 스냅샷으로 덮어쓰지 말고 snapshot_date 갱신 + 변경 사유를 `docs/decision-log/`에 새 일지로 기록
@@ -210,13 +215,64 @@ japan-trip/
 > 이후 모든 의사결정에 자료가 누적·재사용되도록, 어떤 PR이든 작업물뿐 아니라
 > 메타 문서를 함께 갱신한다. 이는 강제 규칙이며 예외 없음.
 
+### ADR(Nygard) 형식 — decision-log 항목·PR 본문 (필수)
+
+**근거**: Michael Nygard, "Documenting Architecture Decisions" (2011). 결정의 "왜(Context)"를 명시적으로 남겨 후속 세션이 의도를 빠르게 복원할 수 있도록 한다.
+
+**적용 대상**:
+- `docs/decision-log/YYYY-MM-DD-slug.md` (모든 신규 일지)
+- 모든 PR 본문 (Summary 영역)
+
+**5섹션 표준 (Korean 매핑)**:
+
+| ADR 섹션 | 한국어 의도 | 필수 | 설명 |
+|---|---|---|---|
+| Title | 한 줄 명사구 | ✓ | `# YYYY-MM-DD — 주제` 형태 |
+| Status | 상태 | △ | `Accepted`(기본·자명할 시 PR 본문에서 생략 가능) / `Proposed` / `Deprecated` / `Superseded by <YYYY-MM-DD-slug.md>` |
+| Context (왜) | 결정을 강제한 힘·사실 | ✓ | 사실 위주, 가치판단 배제. 시점·환경·외부 사건·알려진 대안과 한계 |
+| Decision (무엇) | 채택한 행동 | ✓ | 능동태 1개. 채택하지 않은 대안은 한 줄씩 사유와 함께 |
+| Consequences (그래서) | 결정의 결과 | ✓ | 긍정 / 부정·트레이드오프 / 후속 행동 / 영향 받은 파일·데이터 |
+
+**공용 템플릿** (decision-log·PR 본문 동일):
+
+```markdown
+# YYYY-MM-DD — 한 줄 명사구 (Title)
+
+## Status
+
+Accepted | Proposed | Deprecated | Superseded by `<YYYY-MM-DD-slug.md>`
+
+## Context (왜)
+
+- 이 결정을 강제한 힘·문제·제약 (사실 위주)
+- 시점·환경·외부 사건 (예: 채팅 업로드, 가격 변동, 사용자 지시)
+- 알려진 대안과 그 한계 (필요 시)
+
+## Decision (무엇)
+
+- 능동태로 명시한 채택 행동 1개
+- 채택하지 않은 대안은 한 줄씩 사유와 함께 (선택)
+
+## Consequences (그래서)
+
+- 긍정 영향
+- 부정·트레이드오프
+- 후속 행동·별도 PR 필요 항목
+- 영향 받은 파일·데이터 (해당 시)
+```
+
+**PR 본문 추가 규칙**: 위 4섹션(Status 생략 가능) 다음에 기존 `## Test plan` 체크리스트를 그대로 유지. Test plan은 ADR 외 운영 항목으로 본문 하단에 둔다.
+
+**Cutover**: 2026-05-20 ADR 도입 일지 (`docs/decision-log/2026-05-20-02-adr-format-mandate.md`) 머지 이후 모든 신규 PR/일지에 적용. **기존 일지는 시점 스냅샷으로 보존**(`reports/final-report.md` 동일 원칙) — retroactive 변환 금지.
+
+**예외**: 본 문서 하단 "메타 문서를 갱신하지 않는 경우"의 `META: skip` 예외(오타 수정 등)에 해당하면 일지도 생략 가능.
+
 ### 모든 PR이 반드시 갱신해야 하는 항목
 
 1. **`docs/decision-log/`**
    - **새 파일을 추가**한다. 기존 파일을 편집하지 않는다 (충돌 방지).
    - 파일명 `YYYY-MM-DD-slug.md` (같은 날 여러 항목이면 슬러그로 구분, 강한 순서가 필요하면 `YYYY-MM-DD-NN-slug.md`)
-   - 내용: 날짜·주제·산출물·합의·보류·다음 단계
-   - 데이터/분석 PR은 **핵심 관찰 3~5줄**도 포함
+   - **형식**: 위 "ADR(Nygard) 형식" 절의 공용 템플릿을 따른다.
    - 컨벤션 상세: `docs/decision-log/README.md`
 
 2. **`README.md`**
