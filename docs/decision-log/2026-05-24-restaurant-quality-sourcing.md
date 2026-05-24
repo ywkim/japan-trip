@@ -27,7 +27,7 @@ Accepted
 
 검증 인프라도 확장했다.
 - `scripts/validate.py`: 검사 **H**(`check_itinerary_food_quality`) 신설 — food_quality가 있는 항목에 한해 필수 필드·`data_quality` 화이트리스트·60일 staleness 검사. `route_candidates`도 순회. (검사 G 미러링)
-- `scripts/build_index.py`: `food_quality_html()` 헬퍼로 `viz/itinerary.html`·`viz/itinerary-table.html`에 평점 배지 렌더. 운영 요약 `index.html`은 제외.
+- `scripts/build_index.py`: `food_quality_html()` 헬퍼로 `viz/itinerary.html`·`viz/itinerary-table.html`에 평점 배지 렌더. 운영 요약 `index.html`은 제외. 평점은 출처 페이지(`food_quality.url`)로 가는 **탭 가능한 링크** — 모바일에서 타베로그 평점을 눌러 직접 확인(검증 가능성). 大鵬은 미쉐린 빕구르망 교토 공식 리스트(`michelin_url`)도 병기. 개별 미쉐린 페이지 URL 미확보 → 추측 않고 공식 리스트로 연결.
 - 채택하지 않은 대안: 동네 끼니를 그대로 두기 → 사용자 지시(교체)로 기각. 라멘코지를 푸드코트 통칭 유지 → 최고점 점포(中村商店) 지정으로 대체.
 
 ## Consequences (그래서)

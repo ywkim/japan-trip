@@ -86,20 +86,34 @@ def blog_reviews_html(reviews: list) -> str:
 
 
 def food_quality_html(fq) -> str:
-    """식사 항목 평점·출처 배지 (data/itinerary.json food_quality)."""
+    """식사 항목 평점·출처 배지 (data/itinerary.json food_quality).
+
+    url(평점 출처 페이지)이 있으면 평점을 탭 가능한 링크로 감싼다 — 모바일에서
+    "타베로그 3.x"를 눌러 실제 리뷰 페이지를 확인할 수 있게(검증 가능성).
+    """
     if not fq:
         return ""
     rating = esc(fq.get("rating", ""))
+    body = f"🍽️ {rating}"
+    url = (fq.get("url") or "").strip()
+    if url.startswith(("http://", "https://")):
+        body = f'<a href="{esc(url)}" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;">{body}</a>'
+    michelin_url = (fq.get("michelin_url") or "").strip()
+    if michelin_url.startswith(("http://", "https://")):
+        body += (
+            f' · <a href="{esc(michelin_url)}" target="_blank" rel="noopener" '
+            f'style="color:inherit;text-decoration:underline;">미쉐린 가이드</a>'
+        )
     src = esc((fq.get("source") or "").strip())
-    note = fq.get("note")
     src_html = f' <span style="opacity:0.65;">· 출처: {src}</span>' if src else ""
+    note = fq.get("note")
     note_html = (
         f'<div class="sub" style="font-size:0.8em;opacity:0.7;margin-top:0.1rem;">{esc(note)}</div>'
         if note else ""
     )
     return (
         f'<div class="food-quality" style="font-size:0.85em;margin-top:0.25rem;color:var(--muted);">'
-        f'🍽️ {rating}{src_html}</div>{note_html}'
+        f'{body}{src_html}</div>{note_html}'
     )
 
 

@@ -339,6 +339,18 @@ class FoodQualityRenderTests(unittest.TestCase):
         # 실제 평점 출처가 본문에 노출되어야 함 (식당이 검증됐다는 신호).
         self.assertIn("타베로그", itin, "Tabelog rating missing from itinerary.html")
 
+    def test_food_quality_rating_links_to_source(self):
+        # 평점 출처(url)가 탭 가능한 링크여야 함 — 모바일에서 검증 가능성.
+        run()
+        for path in (ITINERARY, TABLE):
+            html = path.read_text(encoding="utf-8")
+            block = html[html.index('class="food-quality"'):]
+            self.assertIn("tabelog.com", html, f"no Tabelog source link in {path.name}")
+            self.assertRegex(
+                block, r'class="food-quality"[^>]*>\s*<a href="https?://',
+                f"food-quality rating is not wrapped in a link in {path.name}",
+            )
+
     def test_food_quality_in_table_views(self):
         run()
         html = TABLE.read_text(encoding="utf-8")

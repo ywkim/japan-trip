@@ -98,6 +98,8 @@
             "source": "Tabelog 2026-05-24 · 미쉐린 가이드 교토 2024",
             "source_fetched_at": "2026-05-24",
             "data_quality": "researched_market_rate",
+            "url": "https://tabelog.com/en/kyoto/A2601/A260203/26003254/",
+            "michelin_url": "https://guide.michelin.com/us/en/kyoto-region/restaurants/bib-gourmand",
             "note": "쓰촨 중식. 니조역 도보 5분(시오 인접). 5/31 일요일 영업·화·부정기수 휴무. 인기점 웨이팅 가능 — 도착편 지연 시 대안: 京ゆば処 静家(유바). 1인 ¥4,000~5,000"
           },
           "arrive_from": {
@@ -185,6 +187,7 @@
             "source": "Tabelog 2026-05-24",
             "source_fetched_at": "2026-05-24",
             "data_quality": "researched_market_rate",
+            "url": "https://tabelog.com/en/kyoto/A2601/A260201/26021180/",
             "note": "4인 호리고타쓰 완전개실(시부모 좌식 편함). 두부·교토 오반자이. 기온시조역 도보 5분. 예약 권장. 대안: まんざら亭(3.30). 1인 ¥4,000~5,000"
           },
           "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/JP-Kyoto-Gion-Area-Traditional-House-Night-View.JPG?width=480",
@@ -288,6 +291,7 @@
             "source": "Tabelog 2026-05-24",
             "source_fetched_at": "2026-05-24",
             "data_quality": "researched_market_rate",
+            "url": "https://tabelog.com/en/kyoto/A2601/A260403/26003826/",
             "note": "두부 가이세키. 호즈가와 강변석. 수요일 휴무(6/1 월 영업·11~17시). 4인 좌석 사전 예약 필수"
           },
           "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Japanese_SilkyTofu_%28Kinugoshi_Tofu%29.JPG?width=480",
@@ -361,6 +365,7 @@
             "source": "Tabelog 2026-05-24",
             "source_fetched_at": "2026-05-24",
             "data_quality": "researched_market_rate",
+            "url": "https://tabelog.com/en/kyoto/A2601/A260201/26000957/",
             "note": "130년 교마치야. 창작 교토요리·오반자이. 가와라마치역 도보 5분. 川床 6~9월 가능. 4인은 일반석(완전개실 6인~). 1인 ¥6,000~8,000"
           },
           "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Nishiki_ichiba_kyoto.jpg?width=480",
@@ -457,6 +462,7 @@
             "source": "Tabelog 2026-05-24",
             "source_fetched_at": "2026-05-24",
             "data_quality": "researched_market_rate",
+            "url": "https://tabelog.com/en/kyoto/A2601/A260101/26030811/",
             "note": "라멘은 타베로그 3.5+면 최상급대. 교토역 빌딩 10층. 券売機 식권. 대안: 麺家いろは(3.41·도야마블랙)·博多一幸舎(3.25·돈코쓰)"
           },
           "arrive_from": {
@@ -499,6 +505,7 @@
             "source": "Yahoo Travel · Ikyu · Trip.com 2026-05-24",
             "source_fetched_at": "2026-05-24",
             "data_quality": "researched_market_rate",
+            "url": "https://www.ikyu.com/00002982/review/",
             "note": "예약 료칸 포함 석식(교체 불가). 여성 조리장 계절 가이세키(사시미·복어 나베). 평점은 료칸 종합 — 식사 전용 점수 아님"
           }
         }
