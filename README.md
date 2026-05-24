@@ -41,6 +41,7 @@
 ### 3. 일정 갱신
 
 - `data/itinerary.json`의 해당 day(`days[*]`)에 시간대·동선·메모 갱신
+- 식사 항목은 `food_quality`(타베로그·구글·미쉐린 등 평점 + `source`·`data_quality`)로 맛집 근거 명시 — 추측 금지, 출처 없으면 머지 차단(검사 H)
 - `docs/kyoto-itinerary-may31-jun3-2026.md`(사람용 사본) 함께 갱신
 - `python scripts/build_index.py` 재빌드 → `viz/itinerary.html`·`viz/itinerary-table.html`·`index.html` 재생성
 

@@ -85,6 +85,24 @@ def blog_reviews_html(reviews: list) -> str:
     return f'<div class="blog-reviews"><div class="blog-strip">{cards}</div></div>'
 
 
+def food_quality_html(fq) -> str:
+    """식사 항목 평점·출처 배지 (data/itinerary.json food_quality)."""
+    if not fq:
+        return ""
+    rating = esc(fq.get("rating", ""))
+    src = esc((fq.get("source") or "").strip())
+    note = fq.get("note")
+    src_html = f' <span style="opacity:0.65;">· 출처: {src}</span>' if src else ""
+    note_html = (
+        f'<div class="sub" style="font-size:0.8em;opacity:0.7;margin-top:0.1rem;">{esc(note)}</div>'
+        if note else ""
+    )
+    return (
+        f'<div class="food-quality" style="font-size:0.85em;margin-top:0.25rem;color:var(--muted);">'
+        f'🍽️ {rating}{src_html}</div>{note_html}'
+    )
+
+
 def run_json(script: str) -> dict:
     res = subprocess.run(
         [sys.executable, str(SCRIPTS / script), "--json"],
@@ -702,11 +720,12 @@ def build_itinerary(d) -> str:
             else:
                 img_html = ""
             reviews_html = blog_reviews_html(it.get("blog_reviews", []))
+            food_html = food_quality_html(it.get("food_quality"))
             item_rows.append(f"""
     <div class="day">
       {transit}
       <div class="date"><span class="k">{esc(it['time'])}</span> {link}</div>
-      {note_html}{img_html}{reviews_html}
+      {note_html}{food_html}{img_html}{reviews_html}
     </div>""")
         day_cards.append(f"""
   <div class="subcard">
@@ -748,10 +767,11 @@ def build_itinerary(d) -> str:
             for it in day["items"]:
                 link = maps_link(it["maps_query"], it["title"]) if it.get("maps_query") else esc(it["title"])
                 note_html = f'<div class="sub">{esc(it["note"])}</div>' if it.get("note") else ""
+                food_html = food_quality_html(it.get("food_quality"))
                 item_rows.append(f"""
     <div class="day">
       <div class="date"><span class="k">{esc(it['time'])}</span> {link}</div>
-      {note_html}
+      {note_html}{food_html}
     </div>""")
             cand_day_cards.append(f"""
   <div class="subcard">
@@ -952,9 +972,10 @@ def build_itinerary_table(d) -> str:
                     )
                 else:
                     img_html = ""
+                food_html = food_quality_html(it.get("food_quality"))
                 cells.append(
                     f'<td>{transit}<span class="t-time">{esc(it["time"])}</span>'
-                    f'<span class="t-title">{link}</span>{note_html}{img_html}</td>'
+                    f'<span class="t-title">{link}</span>{note_html}{food_html}{img_html}</td>'
                 )
             else:
                 cells.append("<td></td>")
@@ -977,11 +998,12 @@ def build_itinerary_table(d) -> str:
             else:
                 img_html = ""
             reviews_html = blog_reviews_html(it.get("blog_reviews", []))
+            food_html = food_quality_html(it.get("food_quality"))
             item_rows.append(f"""
     <div class="day">
       {transit}
       <div class="date"><span class="k">{esc(it["time"])}</span> {link}</div>
-      {note_html}{img_html}{reviews_html}
+      {note_html}{food_html}{img_html}{reviews_html}
     </div>""")
         mobile_cards.append(f"""
   <div class="subcard">

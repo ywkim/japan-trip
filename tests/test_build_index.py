@@ -328,6 +328,28 @@ class BlogReviewsTests(unittest.TestCase):
         self.assertIn('class="blog-reviews"', html, "blog-reviews missing from itinerary-table.html mobile view")
 
 
+class FoodQualityRenderTests(unittest.TestCase):
+    def test_food_quality_rendered_in_itinerary(self):
+        run()
+        itin = ITINERARY.read_text(encoding="utf-8")
+        self.assertGreaterEqual(
+            itin.count('class="food-quality"'), 1,
+            "no food-quality badges rendered in itinerary.html",
+        )
+        # 실제 평점 출처가 본문에 노출되어야 함 (식당이 검증됐다는 신호).
+        self.assertIn("타베로그", itin, "Tabelog rating missing from itinerary.html")
+
+    def test_food_quality_in_table_views(self):
+        run()
+        html = TABLE.read_text(encoding="utf-8")
+        self.assertIn('class="food-quality"', html, "food-quality missing from itinerary-table.html")
+
+    def test_food_quality_absent_from_minimal_index(self):
+        run()
+        index = INDEX.read_text(encoding="utf-8")
+        self.assertNotIn('class="food-quality"', index, "minimal index.html should not carry food-quality badges")
+
+
 class TabBarTests(unittest.TestCase):
     TAB_PAGES = (INDEX, ITINERARY, TABLE, CHECKLIST, LODGING, ARCHIVE)
 

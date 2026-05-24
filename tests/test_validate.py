@@ -404,6 +404,93 @@ class ItineraryTransitTests(unittest.TestCase):
             self.assertTrue(any(e.startswith("[G]") and "mode" in e for e in errs), errs)
 
 
+VALID_FOOD_QUALITY = {
+    "rating": "타베로그 3.50 (100)",
+    "source": "Tabelog 2026-05-17",
+    "source_fetched_at": "2026-05-17",
+    "data_quality": "researched_market_rate",
+}
+
+
+class FoodQualityTests(unittest.TestCase):
+    """검사 H: data/itinerary.json food_quality(식사 평점 출처) 무결성."""
+
+    def _base(self, td, itin):
+        return make_fixture(Path(td), cost=VALID_COST, index_html="<html></html>", itinerary=itin)
+
+    def test_valid_food_quality_passes(self):
+        itin = _itin([
+            {"time": "12:00", "title": "점심", "maps_query": "A", "food_quality": VALID_FOOD_QUALITY},
+        ])
+        with tempfile.TemporaryDirectory() as td:
+            base = self._base(td, itin)
+            errs, _ = validate.run(base, date(2026, 5, 17))
+            self.assertEqual(errs, [], errs)
+
+    def test_absent_food_quality_ok(self):
+        itin = _itin([
+            {"time": "12:00", "title": "동네 끼니", "maps_query": "A"},
+        ])
+        with tempfile.TemporaryDirectory() as td:
+            base = self._base(td, itin)
+            errs, _ = validate.run(base, date(2026, 5, 17))
+            self.assertEqual(errs, [], errs)
+
+    def test_missing_source_fails(self):
+        fq = dict(VALID_FOOD_QUALITY); del fq["source"]
+        itin = _itin([
+            {"time": "12:00", "title": "점심", "maps_query": "A", "food_quality": fq},
+        ])
+        with tempfile.TemporaryDirectory() as td:
+            base = self._base(td, itin)
+            errs, _ = validate.run(base, date(2026, 5, 17))
+            self.assertTrue(any(e.startswith("[H]") and "source" in e for e in errs), errs)
+
+    def test_missing_rating_fails(self):
+        fq = dict(VALID_FOOD_QUALITY); del fq["rating"]
+        itin = _itin([
+            {"time": "12:00", "title": "점심", "maps_query": "A", "food_quality": fq},
+        ])
+        with tempfile.TemporaryDirectory() as td:
+            base = self._base(td, itin)
+            errs, _ = validate.run(base, date(2026, 5, 17))
+            self.assertTrue(any(e.startswith("[H]") and "rating" in e for e in errs), errs)
+
+    def test_invalid_data_quality_fails(self):
+        fq = dict(VALID_FOOD_QUALITY); fq["data_quality"] = "guess"
+        itin = _itin([
+            {"time": "12:00", "title": "점심", "maps_query": "A", "food_quality": fq},
+        ])
+        with tempfile.TemporaryDirectory() as td:
+            base = self._base(td, itin)
+            errs, _ = validate.run(base, date(2026, 5, 17))
+            self.assertTrue(any(e.startswith("[H]") and "data_quality" in e for e in errs), errs)
+
+    def test_stale_food_quality_fails(self):
+        fq = dict(VALID_FOOD_QUALITY); fq["source_fetched_at"] = "2026-01-01"  # 136d
+        itin = _itin([
+            {"time": "12:00", "title": "점심", "maps_query": "A", "food_quality": fq},
+        ])
+        with tempfile.TemporaryDirectory() as td:
+            base = self._base(td, itin)
+            errs, _ = validate.run(base, date(2026, 5, 17))
+            self.assertTrue(any(e.startswith("[H]") and "stale" in e for e in errs), errs)
+
+    def test_route_candidate_food_quality_checked(self):
+        fq = dict(VALID_FOOD_QUALITY); fq["data_quality"] = "guess"
+        itin = _itin([{"time": "09:00", "title": "A", "maps_query": "A"}])
+        itin["route_candidates"] = [{
+            "id": "food_culture", "name": "미식형",
+            "days": [{"date": "2026-05-31", "day_label": "D1", "walking_km": 1, "items": [
+                {"time": "12:00", "title": "대안 점심", "maps_query": "A", "food_quality": fq},
+            ]}],
+        }]
+        with tempfile.TemporaryDirectory() as td:
+            base = self._base(td, itin)
+            errs, _ = validate.run(base, date(2026, 5, 17))
+            self.assertTrue(any(e.startswith("[H]") and "data_quality" in e for e in errs), errs)
+
+
 class ProductionDataTests(unittest.TestCase):
     """현재 레포 데이터가 validate를 통과하는지 회귀 검사."""
 

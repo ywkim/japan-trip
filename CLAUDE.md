@@ -122,7 +122,7 @@ japan-trip/
 ## 데이터 동기화 규칙
 
 - **실행 단일 출처(정본)** — 본 레포의 현재 1차 데이터:
-  - `data/itinerary.json` — 교토 3박4일 일정. `days`: 확정 코스 (일자·시간대·동선·메모·도보거리·보류). `route_candidates`: 대안 코스 3개 (여유형·서북 사찰 집중형·미식+문화 체험형). days[].items[].`arrive_from`(mode/duration_min/distance_km/route/source/source_fetched_at/data_quality)으로 장소 간 이동 출처 명시. data_quality는 `official_fare`/`researched_market_rate`/`tbd_needs_browser_mcp`(Playwright MCP 후속 세션 위임)
+  - `data/itinerary.json` — 교토 3박4일 일정. `days`: 확정 코스 (일자·시간대·동선·메모·도보거리·보류). `route_candidates`: 대안 코스 3개 (여유형·서북 사찰 집중형·미식+문화 체험형). days[].items[].`arrive_from`(mode/duration_min/distance_km/route/source/source_fetched_at/data_quality)으로 장소 간 이동 출처 명시. data_quality는 `official_fare`/`researched_market_rate`/`tbd_needs_browser_mcp`(Playwright MCP 후속 세션 위임). 식사 항목은 days[].items[].`food_quality`(rating/source/source_fetched_at/data_quality/note)로 맛집 근거(타베로그·구글·미쉐린 등 평점) 명시 — 추측 금지, 출처 없으면 검사 H가 머지 차단. 사람용 사본은 `docs/kyoto-itinerary-may31-jun3-2026.md`
   - `data/booking-checklist.json` — 예약 진행 상태
   - `data/cost-options.json` — 항공·숙박·고정비·일회성·시나리오 (확정 금액은 `confirmed_booking` 라벨로 승격)
 - **아카이브 단일 출처(참조용)** — 의사결정 종료(2026-05-12) 시점의 입력 데이터. 신규 비교가 필요해질 때만 갱신:
@@ -152,6 +152,7 @@ japan-trip/
 | weather MD↔JSON 동기화 | `scripts/validate.py` (E) | `docs/weather.md`의 도시·시기 수치가 `data/weather.json`과 일치하지 않음 |
 | flights MD↔JSON 동기화 | `scripts/validate.py` (F) | `docs/flights.md`의 snapshot_date·시세 수치가 `data/flights.json`과 일치하지 않음 |
 | itinerary arrive_from 무결성 | `scripts/validate.py` (G) | `data/itinerary.json` arrive_from에 mode/source/source_fetched_at/data_quality 누락, mode·data_quality 화이트리스트 외, source_fetched_at > 60d(tbd_needs_browser_mcp 제외), days[].walking_km보다 도보 leg 합이 2km 이상 초과 |
+| itinerary food_quality 무결성 | `scripts/validate.py` (H) | `data/itinerary.json` 식사 항목 food_quality에 rating/source/source_fetched_at/data_quality 누락, data_quality 화이트리스트 외, source_fetched_at > 60d. food_quality 없는 항목(동네 끼니)은 면제. route_candidates도 순회 |
 | 빌드 산출물 drift | `scripts/build_index.py --check` | `index.html`·`viz/itinerary.html`·`viz/checklist.html` 중 하나라도 빌드 결과와 다름 |
 
 ## 테스트 작성 규칙 (TDD)
