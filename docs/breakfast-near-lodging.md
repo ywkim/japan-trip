@@ -2,8 +2,8 @@
 
 > 5/31(일)~6/3(수) 교토 3박4일 · 4인(부부 + 시부모 2인) 기준.
 > 트리거: "여행 중 조식이 중요하다 — 숙소 기준 거리·영업시간을 조사" (사용자 지시, 2026-05-23).
-> 본 문서가 조식 정보의 단일 출처. `data/itinerary.json`의 일정과 별개 참조 자료
-> (`docs/transit-pass-jr-kansai-2026.md`·`docs/airbnb-kyoto-may31-jun2-2026.md`와 동일한 standalone 리서치 문서).
+> 본 문서가 조식 옵션의 단일 출처(`docs/transit-pass-jr-kansai-2026.md`·`docs/airbnb-kyoto-may31-jun2-2026.md`와 동일한 standalone 리서치 문서).
+> `data/itinerary.json`의 6/1·6/2·6/3 첫 조식 슬롯은 "언제·기본 선택지"만 두고 가게·거리·영업시간 상세는 본 문서를 참조한다.
 
 ## 0. 조식이 필요한 아침 3회 (출발 시각이 옵션을 결정)
 
