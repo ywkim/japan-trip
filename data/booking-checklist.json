@@ -28,28 +28,28 @@
       "label": "여행자보험 (4인, 시부모 포함)",
       "status": "미정",
       "due_date": "2026-05-25",
-      "note": "시부모 보험·상비약, 한국어 가능 의료기관 위치 사전 저장"
+      "note": "시부모 보험·상비약, 한국어 가능 의료기관 위치 사전 저장 · 리서치 완료(2026-05-24): 일본 3박4일 종합형 1인 약 ₩8,000~20,000(기본형 ₩3,000~8,000), 65세+ 시부모 2인은 연령 할증으로 2~3배 가능. 의료비 한도 높은 실손형 권장. 채널: 삼성화재·DB손보·카카오페이·토스 다이렉트(연령·출발/귀국일 입력 시 정확 산출). 상세·출처: https://github.com/ywkim/japan-trip/blob/main/docs/booking-research-2026-05-24.md"
     },
     {
       "id": "esim",
       "label": "eSIM / 데이터 (4인)",
       "status": "미정",
       "due_date": "2026-05-28",
-      "note": "Klook·Trip.com 4일권 시세 ₩5~10K/인"
+      "note": "Klook·Trip.com 4일권 시세 ₩5~10K/인 · 리서치 완료(2026-05-24): Klook 일일 데이터 플랜 ~$2/일(8일 무제한 1GB/일 기준) → 4일 ~₩11K/인 내외, Airalo 5GB/7일 ~$10·Holafly 무제한은 고가. 권장: Klook 가성비 데이터 플랜, 출국 전 설치·도착 후 활성화(4인 각 기기 eSIM 지원 확인). 상세·출처: https://github.com/ywkim/japan-trip/blob/main/docs/booking-research-2026-05-24.md"
     },
     {
       "id": "transit_pass",
       "label": "교통패스 (Apple Wallet ICOCA 단권 + 하루카 할인 편도권)",
       "status": "미정",
       "due_date": "2026-05-25",
-      "note": "결정(소연, 2026-05-19): 하루카 할인 편도권 채택, JR 간사이 패스 미채택. 하루카 KIX↔교토 할인 편도권 ¥2,200/인(외국인 단기체재·자유석) × 4인 × 2(왕복) = ¥17,600 ≈ ₩167K. 교토 시내 JR·시버스는 4인 Apple Wallet ICOCA 단권(기확정). 발권: 출발 전 클룩/JR서일본 온라인 예약 또는 KIX 도착 후 JR 매표소 교환 — 방식 확정 후 status·reference 갱신. (시부모 2인 75분 구간 지정석 +¥530/인 옵션 가능, 채택 시 별도 갱신). 비교 근거(1/2/3/4일권 부적합): https://github.com/ywkim/japan-trip/blob/main/docs/transit-pass-jr-kansai-2026.md"
+      "note": "결정(소연, 2026-05-19): 하루카 할인 편도권 채택, JR 간사이 패스 미채택. 하루카 KIX↔교토 할인 편도권 ¥2,200/인(외국인 단기체재·자유석) × 4인 × 2(왕복) = ¥17,600 ≈ ₩167K. 교토 시내 JR·시버스는 4인 Apple Wallet ICOCA 단권(기확정). 발권: 출발 전 클룩/JR서일본 온라인 예약 또는 KIX 도착 후 JR 매표소 교환 — 방식 확정 후 status·reference 갱신. (시부모 2인 75분 구간 지정석 +¥530/인 옵션 가능, 채택 시 별도 갱신). 비교 근거(1/2/3/4일권 부적합): https://github.com/ywkim/japan-trip/blob/main/docs/transit-pass-jr-kansai-2026.md · 발권 채널 리서치 완료(2026-05-24): 하루카 할인 편도 ¥2,200/인 재확인(japan-guide.com). 권장 = JR West 온라인 2026 WEST QR e-티켓 사전 구매(지정석 사전 예약·KIX 교환 대기 회피) 또는 Klook QR 바우처(유효 3개월). 여권 단기체재 제시 필수. 상세: https://github.com/ywkim/japan-trip/blob/main/docs/booking-research-2026-05-24.md"
     },
     {
       "id": "fx",
       "label": "환전 / 트래블카드",
       "status": "미정",
       "due_date": "2026-05-28",
-      "note": "1인 ¥30,000 가정 (현금 식비·신사 새전·잔돈). 트래블월렛/하나비바X 등 무환전료 카드 권장"
+      "note": "1인 ¥30,000 가정 (현금 식비·신사 새전·잔돈). 트래블월렛/하나비바X 등 무환전료 카드 권장 · 리서치 완료(2026-05-24): 트래블월렛(USD/EUR/JPY 환전수수료 0·ATM 월$500 무료), 하나 트래블로그(4통화 무료·하나계좌 보유 시 유리), 신한 SOL트래블(ATM 인출수수료 0·한도 큼). 권장: 하나계좌 보유 시 트래블로그, 아니면 트래블월렛 + ATM 인출 잦으면 SOL트래블 병행. 현금 ¥30,000/인은 신사 새전·소액 현금 전용점에 적정. 상세·출처: https://github.com/ywkim/japan-trip/blob/main/docs/booking-research-2026-05-24.md"
     }
   ]
 }
