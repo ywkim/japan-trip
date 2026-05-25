@@ -580,7 +580,7 @@ def card_itinerary(d) -> str:
             f'<a href="{esc(s["url"])}" target="_blank" rel="noopener">{esc(s["label"])}</a>'
             for s in pass_sources
         )
-        pass_sources_html = f'<div class="sub" style="margin-top:0.6rem;">📚 교통 출처: {links}</div>'
+        pass_sources_html = f'<div style="margin-top:0.6rem;">{fold(f"📚 교통 출처 {len(pass_sources)}건", links)}</div>'
 
     playbook = trip.get("transit_pass_playbook", [])
     playbook_html = ""
@@ -809,7 +809,7 @@ def build_itinerary(d) -> str:
             f'<a href="{esc(s["url"])}" target="_blank" rel="noopener">{esc(s["label"])}</a>'
             for s in pass_sources
         )
-        pass_sources_html = f'<div class="sub" style="margin-top:0.6rem;">📚 교통 출처: {links}</div>'
+        pass_sources_html = f'<div style="margin-top:0.6rem;">{fold(f"📚 교통 출처 {len(pass_sources)}건", links)}</div>'
 
     playbook = trip.get("transit_pass_playbook", [])
     playbook_html = ""
