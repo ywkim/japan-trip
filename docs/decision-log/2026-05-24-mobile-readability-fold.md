@@ -20,7 +20,8 @@ Accepted
 - 타임라인 항목 순서를 "시간·장소 먼저 → 이동 접기 아래"로 재배치하고 시간(`.day .date .k`)을 굵게·tabular-nums로 강조.
 - ICOCA 실행 단계·예산 비선택 시나리오를 `fold`로 접는다(선택 시나리오는 펼친 상태 유지).
 - `note_block()` 헬퍼 추가: 60자 초과 예약·숙박 메모는 `·` 구분 앞 2개 항목을 요약으로 노출하고 나머지(예약번호·PIN·탑승객·FX·체크인시각 등)를 접는다. 60자 이하는 평문 유지.
-- 적용: index·viz/itinerary·viz/itinerary-table·viz/archive(이동·playbook·예산) + viz/lodging·viz/checklist(긴 메모). 모든 화면 커버.
+- `pass_block()` 헬퍼 추가: 일자별 교통패스 추천(🎫)은 `' — '` 앞 추천명만 보이고 비용 계산·근거를 접는다(짧으면 평문).
+- 적용: index·viz/itinerary·viz/itinerary-table·viz/archive(이동·playbook·예산·패스) + viz/lodging·viz/checklist(긴 메모). 모든 화면 커버.
 
 ## Consequences (그래서)
 

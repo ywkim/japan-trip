@@ -507,6 +507,20 @@ def note_block(note: str, *, style: str = "") -> str:
     return fold("상세 보기", esc(note))
 
 
+def pass_block(text: str) -> str:
+    """일자별 교통패스 추천(🎫)을 '추천 요약 + 근거 접기'로 렌더.
+
+    '{추천} — {근거}' 형식의 장문은 추천만 보이고 비용 계산·근거를 접는다.
+    """
+    text = (text or "").strip()
+    if not text:
+        return ""
+    if len(text) <= 60 or " — " not in text:
+        return f'<div class="sub" style="margin-top:0.25rem;">🎫 {esc(text)}</div>'
+    head, _, rest = text.partition(" — ")
+    return f'<div style="margin-top:0.25rem;">{fold("🎫 " + esc(head.strip()), esc(rest.strip()))}</div>'
+
+
 def transit_line(af) -> str:
     """도착 경로를 '아이콘 + 평이 요약(소요시간)' summary와 장문 route 상세로 렌더."""
     if not af:
@@ -556,7 +570,7 @@ def card_itinerary(d) -> str:
     <div class="subtitle">{esc(day['day_label'])}</div>
     {''.join(items_html)}
     <div class="sub" style="margin-top:0.4rem;">도보 약 {day['walking_km']}km · 숙박: {esc(day['lodging'])}</div>
-    {f'<div class="sub" style="margin-top:0.25rem;">🎫 {esc(day["pass_recommendation"])}</div>' if day.get("pass_recommendation") else ""}
+    {pass_block(day.get("pass_recommendation"))}
   </div>""")
 
     pass_sources = trip.get("transit_pass_sources", [])
@@ -783,7 +797,7 @@ def build_itinerary(d) -> str:
     <div class="subtitle">{esc(day['day_label'])}</div>
     {''.join(item_rows)}
     <div class="sub" style="margin-top:0.4rem;">도보 약 {day['walking_km']}km · 숙박: {esc(day['lodging'])}</div>
-    {f'<div class="sub" style="margin-top:0.25rem;">🎫 {esc(day["pass_recommendation"])}</div>' if day.get("pass_recommendation") else ""}
+    {pass_block(day.get("pass_recommendation"))}
   </div>""")
 
     pending_items = "".join(f"<li>{esc(p)}</li>" for p in itin.get("pending", []))

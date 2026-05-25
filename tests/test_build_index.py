@@ -279,6 +279,16 @@ class TransitFoldTests(unittest.TestCase):
                 self.assertIn("JR 하루카 KIX→교토역", html,
                               f"verbose route detail missing in {path.name}")
 
+    def test_pass_recommendation_folded(self):
+        """교통패스 추천(🎫)은 추천 요약 + 근거 접기로, 근거 텍스트는 보존."""
+        run()
+        for path in (INDEX, ITINERARY):
+            with self.subTest(path=path.name):
+                html = path.read_text(encoding="utf-8")
+                self.assertIn("🎫 iPhone Apple Wallet ICOCA 단권", html,
+                              f"pass recommendation summary missing in {path.name}")
+                self.assertIn("본전 미달", html, f"pass rationale detail lost in {path.name}")
+
     def test_playbook_collapsed_but_text_preserved(self):
         run()
         import json as _json
