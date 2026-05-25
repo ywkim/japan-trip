@@ -16,6 +16,7 @@ from __future__ import annotations
 import argparse
 import html
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -60,6 +61,27 @@ def esc(s) -> str:
     if s is None:
         return ""
     return html.escape(str(s), quote=True)
+
+
+_URL_RE = re.compile(r"(https?://[^\s)]+)")
+
+
+def linkify(s) -> str:
+    """자유 텍스트를 HTML escape하되 http(s) URL은 클릭 가능한 <a> 링크로 변환.
+
+    체크리스트 노트 등 출처 URL이 모바일에서 탭으로 열리도록 한다.
+    """
+    if s is None:
+        return ""
+    parts = _URL_RE.split(str(s))
+    out = []
+    for i, part in enumerate(parts):
+        if i % 2 == 1:  # 캡처된 URL
+            url = esc(part)
+            out.append(f'<a href="{url}" target="_blank" rel="noopener">{url}</a>')
+        else:
+            out.append(esc(part))
+    return "".join(out)
 
 
 def won(n: int) -> str:
@@ -537,7 +559,7 @@ def card_checklist(d) -> str:
     <div class="subtitle">{esc(it['label'])}</div>
     <div class="row"><span class="k">상태</span><span class="v"{dim}>{esc(it['status'])}</span></div>
     <div class="row"><span class="k">기한</span><span class="v">{esc(it['due_date'])}</span></div>
-    <div class="sub">{esc(it.get('note', ''))}</div>
+    <div class="sub">{linkify(it.get('note', ''))}</div>
   </div>""")
     return f"""
 <!-- SYNC: data/booking-checklist.json -->
@@ -841,7 +863,7 @@ def build_checklist(d) -> str:
     <div class="subtitle">{esc(it['label'])}</div>
     <div class="row"><span class="k">상태</span><span class="v"><span class="badge"{badge_style}>{esc(it['status'])}</span></span></div>
     <div class="row"><span class="k">기한</span><span class="v">{esc(it.get('due_date',''))}</span></div>
-    <div class="sub">{esc(it.get('note',''))}</div>
+    <div class="sub">{linkify(it.get('note',''))}</div>
   </div>""")
 
     body = f"""<h1>예약 체크리스트</h1>

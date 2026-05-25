@@ -250,6 +250,26 @@ class BuildIndexTests(unittest.TestCase):
         for candidate_name in ("여유형", "서북 사찰 집중형", "미식+문화 체험형"):
             self.assertIn(candidate_name, itin, f"candidate '{candidate_name}' missing in itinerary.html")
 
+    def test_checklist_note_urls_rendered_as_links(self):
+        """data/booking-checklist.json 항목 note에 포함된 http URL이
+        viz/checklist.html에서 클릭 가능한 <a href> 링크로 렌더돼야 한다.
+        모바일 예약 탭에서 출처·상세 문서로 바로 이동하기 위한 회귀 가드.
+        """
+        run()
+        import json as _json
+        import re as _re
+        data = _json.loads((BASE / "data" / "booking-checklist.json").read_text(encoding="utf-8"))
+        url_re = _re.compile(r"https?://[^\s]+")
+        urls = []
+        for it in data["items"]:
+            urls.extend(url_re.findall(it.get("note", "")))
+        self.assertGreater(len(urls), 0, "fixture must have at least one note containing a URL")
+        html = CHECKLIST.read_text(encoding="utf-8")
+        for url in urls:
+            with self.subTest(url=url):
+                self.assertIn(f'href="{url}"', html,
+                              f"note URL {url!r} not rendered as <a href> in checklist.html")
+
 
 class ItineraryTableTests(unittest.TestCase):
     def test_table_file_is_generated(self):
