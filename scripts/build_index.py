@@ -71,6 +71,20 @@ def maps_link(query: str, label: str) -> str:
     return f'<a href="https://maps.google.com/?q={q}" target="_blank" rel="noopener">{esc(label)}</a>'
 
 
+def blog_reviews_html(reviews: list) -> str:
+    """Render a scrollable photo strip of Naver blog reviews."""
+    if not reviews:
+        return ""
+    cards = "".join(
+        f'<a href="{esc(r["url"])}" target="_blank" rel="noopener" class="blog-card">'
+        f'<img src="{esc(r["img"])}" class="blog-thumb" loading="lazy" alt="">'
+        f'<p class="blog-comment">{esc(r["comment"])}</p>'
+        f'</a>'
+        for r in reviews
+    )
+    return f'<div class="blog-reviews"><div class="blog-strip">{cards}</div></div>'
+
+
 def run_json(script: str) -> dict:
     res = subprocess.run(
         [sys.executable, str(SCRIPTS / script), "--json"],
@@ -206,6 +220,11 @@ def render_css(tokens: dict) -> str:
     max-height: 200px;
   }}
   .img-credit {{ color: var(--muted); font-size: 0.65rem; text-align: right; }}
+  .blog-reviews {{ margin-top: 0.5rem; }}
+  .blog-strip {{ display: flex; gap: 0.5rem; overflow-x: auto; padding-bottom: 0.3rem; -webkit-overflow-scrolling: touch; }}
+  .blog-card {{ flex: 0 0 140px; text-decoration: none; color: var(--fg); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }}
+  .blog-thumb {{ width: 140px; height: 100px; object-fit: cover; display: block; }}
+  .blog-comment {{ font-size: 0.7rem; padding: 0.3rem; margin: 0; color: var(--muted); line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }}
 """
 
 
@@ -281,7 +300,7 @@ def card_summary(d) -> str:
   <div class="row"><span class="k">숙박</span><span class="v">에어비앤비 2박 + 카덴쇼 료칸 1박 (2명×2실)</span></div>
   <div class="row"><span class="k">예상 비용</span><span class="v">{esc(total_str)}</span></div>
   <div class="row"><span class="k">3M 캡</span><span class="v">{esc(pass_marker)}</span></div>
-  <div class="sub" style="margin-top:0.5rem;">{esc(kyoto.get('notes', ''))}</div>
+  <div class="sub" style="margin-top:0.5rem;">발권·예약 완료 (항공 A8YW58 · 시오 마치야 · 카덴쇼 트립닷컴). 출국 전 점검은 ☑ 예약 탭.</div>
 </section>
 """
 
@@ -366,28 +385,27 @@ def card_airbnb(d) -> str:
 
 
 def card_kadensho(d) -> str:
-    items = [l for l in d["cost"]["lodging"] if "kadensho" in l["id"] and "2026jun2" in l["id"]]
+    items = [l for l in d["cost"]["lodging"] if l["id"] == "kadensho_tripcom_no_meal_2026jun2"]
     cards = []
     for l in items:
         cards.append(f"""
   <div class="subcard">
     <div class="subtitle">{esc(l['name'])}</div>
-    <div class="row"><span class="k">1박 (4인)</span><span class="v">{esc(won(l['per_night_krw']))}</span></div>
-    <div class="row"><span class="k">출처</span><span class="v">{esc(l.get('data_quality', ''))}</span></div>
+    <div class="row"><span class="k">1박 (4인, 객실 2개)</span><span class="v">{esc(won(l['per_night_krw']))}</span></div>
     <div class="sub">{esc(l.get('notes', ''))}</div>
   </div>""")
     return f"""
-<!-- SYNC: data/cost-options.json (lodging.kadensho_*_2026jun2) · docs/decision-log/2026-05-11-may31-jun3-kyoto-update.md -->
+<!-- SYNC: data/cost-options.json (lodging.kadensho_tripcom_no_meal_2026jun2) · data/booking-checklist.json (ryokan) -->
 <section id="kadensho" class="card">
-  <h2>우메코지 카덴쇼 4 플랜 (6/2 1박, 2명×2실)</h2>
-  <div class="sub" style="margin-bottom:0.5rem;">dormy-hotels.com 공식 검색 2026-05-11. 환불 정책 사전 확인 후 결제.</div>
+  <h2>우메코지 카덴쇼 (6/2 1박)</h2>
+  <div class="sub" style="margin-bottom:0.5rem;">트립닷컴 예약번호 1400825991981904 · 2026-05-13 확정 · 숙소 현지결제.</div>
   {''.join(cards)}
 </section>
 """
 
 
 def card_flights(d) -> str:
-    items = d["cost"]["flights"]
+    items = [f for f in d["cost"]["flights"] if f["id"] == "rs_kix_may31_jun3"]
     cards = []
     for f in items:
         cards.append(f"""
@@ -395,13 +413,12 @@ def card_flights(d) -> str:
     <div class="subtitle">{esc(f['label'])}</div>
     <div class="row"><span class="k">일자</span><span class="v">{esc(f['depart_date'])} → {esc(f['return_date'])}</span></div>
     <div class="row"><span class="k">4인 총액</span><span class="v">{esc(won(f['total_krw']))}</span></div>
-    <div class="row"><span class="k">출처</span><span class="v">{esc(f.get('source', ''))}</span></div>
-    <div class="sub">{esc(f.get('notes', ''))}</div>
+    <div class="sub">에어서울 RS · 예약번호 A8YW58 · 2026-05-12 확정 (시부 결제). ICN 13:15→KIX 15:15 / KIX 10:05→ICN 12:05.</div>
   </div>""")
     return f"""
-<!-- SYNC: data/cost-options.json (flights) -->
+<!-- SYNC: data/cost-options.json (flights.rs_kix_may31_jun3) · data/booking-checklist.json (flight) -->
 <section id="flights" class="card">
-  <h2>항공 옵션</h2>
+  <h2>항공 (확정)</h2>
   {''.join(cards)}
 </section>
 """
@@ -474,6 +491,7 @@ def transit_line(af) -> str:
 
 def card_itinerary(d) -> str:
     itin = d["itinerary"]
+    trip = itin.get("trip", {})
     days = []
     for day in itin["days"]:
         items_html = []
@@ -490,13 +508,39 @@ def card_itinerary(d) -> str:
     <div class="subtitle">{esc(day['day_label'])}</div>
     {''.join(items_html)}
     <div class="sub" style="margin-top:0.4rem;">도보 약 {day['walking_km']}km · 숙박: {esc(day['lodging'])}</div>
+    {f'<div class="sub" style="margin-top:0.25rem;">🎫 {esc(day["pass_recommendation"])}</div>' if day.get("pass_recommendation") else ""}
   </div>""")
+
+    pass_sources = trip.get("transit_pass_sources", [])
+    pass_sources_html = ""
+    if pass_sources:
+        links = " · ".join(
+            f'<a href="{esc(s["url"])}" target="_blank" rel="noopener">{esc(s["label"])}</a>'
+            for s in pass_sources
+        )
+        pass_sources_html = f'<div class="sub" style="margin-top:0.6rem;">📚 교통 출처: {links}</div>'
+
+    playbook = trip.get("transit_pass_playbook", [])
+    playbook_html = ""
+    if playbook:
+        rows = "".join(
+            f'<li style="margin-bottom:0.35rem;"><b>{esc(s["when"])}</b> — {esc(s["action"])}</li>'
+            for s in playbook
+        )
+        playbook_html = (
+            f'<div class="subcard" style="margin-top:0.6rem;">'
+            f'<div class="subtitle">🧭 ICOCA 실행 단계</div>'
+            f'<ol style="margin:0.3rem 0 0 1.1rem;padding:0;">{rows}</ol></div>'
+        )
+
     return f"""
 <!-- SYNC: data/itinerary.json · docs/kyoto-itinerary-may31-jun3-2026.md -->
 <section id="itinerary" class="card">
   <h2>일자별 일정</h2>
   <div class="sub" style="margin-bottom:0.5rem;">장소 탭 → 구글맵. 상세: <a href="viz/itinerary.html">카드 뷰 ↗</a> · <a href="viz/itinerary-table.html">시간표 뷰 ↗</a></div>
   {''.join(days)}
+  {playbook_html}
+  {pass_sources_html}
 </section>
 """
 
@@ -636,7 +680,7 @@ def build_archive(d) -> str:
 
 def build_lodging(d) -> str:
     body = f"""<h1>숙박 · 항공</h1>
-<div class="status">에어비앤비 2박 + 카덴쇼 료칸 1박 · 항공 옵션</div>
+<div class="status">에어비앤비 2박 + 카덴쇼 료칸 1박 · 에어서울 4인 발권 완료</div>
 {card_airbnb(d)}
 {card_kadensho(d)}
 {card_flights(d)}
@@ -679,11 +723,12 @@ def build_itinerary(d) -> str:
                 )
             else:
                 img_html = ""
+            reviews_html = blog_reviews_html(it.get("blog_reviews", []))
             item_rows.append(f"""
     <div class="day">
       {transit}
       <div class="date"><span class="k">{esc(it['time'])}</span> {link}</div>
-      {note_html}{img_html}
+      {note_html}{img_html}{reviews_html}
     </div>""")
         day_cards.append(f"""
   <div class="subcard">
@@ -694,6 +739,28 @@ def build_itinerary(d) -> str:
   </div>""")
 
     pending_items = "".join(f"<li>{esc(p)}</li>" for p in itin.get("pending", []))
+
+    pass_sources = trip.get("transit_pass_sources", [])
+    pass_sources_html = ""
+    if pass_sources:
+        links = " · ".join(
+            f'<a href="{esc(s["url"])}" target="_blank" rel="noopener">{esc(s["label"])}</a>'
+            for s in pass_sources
+        )
+        pass_sources_html = f'<div class="sub" style="margin-top:0.6rem;">📚 교통 출처: {links}</div>'
+
+    playbook = trip.get("transit_pass_playbook", [])
+    playbook_html = ""
+    if playbook:
+        rows = "".join(
+            f'<li style="margin-bottom:0.35rem;"><b>{esc(s["when"])}</b> — {esc(s["action"])}</li>'
+            for s in playbook
+        )
+        playbook_html = (
+            f'<div class="subcard" style="margin-top:0.6rem;">'
+            f'<div class="subtitle">🧭 ICOCA 실행 단계</div>'
+            f'<ol style="margin:0.3rem 0 0 1.1rem;padding:0;">{rows}</ol></div>'
+        )
 
     candidate_cards = []
     for cand in itin.get("route_candidates", []):
@@ -746,6 +813,8 @@ def build_itinerary(d) -> str:
 <section class="card">
   <h2>일자별 코스</h2>
   {''.join(day_cards)}
+  {playbook_html}
+  {pass_sources_html}
 </section>
 {candidates_section}
 <section class="card">
@@ -799,7 +868,7 @@ def build_checklist(d) -> str:
   </div>""")
 
     body = f"""<h1>예약 체크리스트</h1>
-<div class="status">시나리오: {esc(cl.get('scenario',''))} · {len(items)}개 항목</div>
+<div class="status">{counts.get('확정', 0)}개 확정 · {counts.get('미정', 0)}개 미정 · 총 {len(items)}개 항목</div>
 
 <!-- SYNC: data/booking-checklist.json -->
 <section class="card">
@@ -931,11 +1000,12 @@ def build_itinerary_table(d) -> str:
                 )
             else:
                 img_html = ""
+            reviews_html = blog_reviews_html(it.get("blog_reviews", []))
             item_rows.append(f"""
     <div class="day">
       {transit}
       <div class="date"><span class="k">{esc(it["time"])}</span> {link}</div>
-      {note_html}{img_html}
+      {note_html}{img_html}{reviews_html}
     </div>""")
         mobile_cards.append(f"""
   <div class="subcard">

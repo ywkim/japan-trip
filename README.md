@@ -13,7 +13,7 @@
 | 동반 | 부부 2인 + 시부모 2인 (4인) |
 | 항공 | 에어서울 인천↔간사이 4인 발권 |
 | 1·2박 (5/31·6/1) | 시오(Shio) 100년 마치야 에어비앤비 |
-| 3박 (6/2) | 우메코지 카덴쇼 조기할인 조식포함 |
+| 3박 (6/2) | 우메코지 카덴쇼 트립닷컴 (객실 2개, 식사 불포함) |
 
 상세는 `docs/kyoto-itinerary-may31-jun3-2026.md` (사람용 일정), `docs/decision-log/` (의사결정 시계열).
 
@@ -76,6 +76,7 @@
 - `docs/candidates.md` — 후보지 상세 비교
 - `docs/weather.md` — 시기별 쾌적도 순위, `seasonality`/`physical_burden` 점수 제안 + §5 교토 5/31~6/3 장마 정량 분석
 - `docs/flights.md` — 4인 총액 비교, GMP 가용성
+- `docs/transit-pass-jr-kansai-2026.md` — JR 간사이 에어리어 패스 1/2/3/4일권 비교·권장 (예약 탭 `transit_pass` 근거)
 - `reports/final-report.md` — 최종 권고 (교토·5/31~6/3·4인)
 - `scripts/score.py`·`scripts/budget.py` — 회귀 가드용
 
