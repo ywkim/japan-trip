@@ -378,7 +378,7 @@
       "krw": 167200,
       "source": "JR West HARUKA 외국인 할인 편도권 ¥2,200/인 × 4 × 2 (japan-guide.com 2026-05-24 교차검증, FX 100엔=950원). 채택 결정: docs/decision-log/2026-05-19-haruka-discount-oneway-selected.md",
       "data_quality": "official_fare",
-      "notes": "할인 편도권은 자유석·지정석 모두 유효, 여권(단기체재) 제시 필수. 발권 권장: JR West 온라인(2026 WEST QR e-티켓, 지정석 사전예약) 또는 Klook QR 바우처 — KIX 도착 후 매표소 교환 대기 회피. 기존 ¥2,400 정상운임 표기에서 채택 운임으로 정합화 (2026-05-19 결정·booking-checklist transit_pass와 일치)."
+      "notes": "할인 편도권은 자유석·지정석 모두 유효, 여권(단기체재) 제시 필수. 발권: KIX 도착 후 현장 발권으로 진행 (소연 결정 2026-05-24, 온라인 WEST QR 사전구매는 보류). KIX 1F JR 매표소/간사이 관광정보센터에서 구매. 기존 ¥2,400 정상운임 표기에서 채택 운임으로 정합화 (2026-05-19 결정·booking-checklist transit_pass와 일치)."
     },
     {
       "id": "kyoto_local_transit_4pax",
