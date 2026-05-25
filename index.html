@@ -81,7 +81,22 @@
   .day { padding: 0.35rem 0; border-bottom: 1px solid var(--border); }
   .day:last-child { border-bottom: none; }
   .day .date { font-size: 0.9rem; }
-  .day .date .k { display: inline-block; min-width: 3.2rem; color: var(--muted); }
+  .day .date .k { display: inline-block; min-width: 3.2rem; color: var(--fg); font-weight: 600; font-variant-numeric: tabular-nums; }
+  /* ── 접기(쉬운 설명 + 펼침 상세) ── */
+  details.leg { margin: 0.15rem 0 0.35rem; }
+  details.leg > summary {
+    cursor: pointer; list-style: none; color: var(--muted);
+    font-size: 0.82rem; padding: 0.1rem 0; -webkit-tap-highlight-color: transparent;
+  }
+  details.leg > summary::-webkit-details-marker { display: none; }
+  details.leg > summary::before { content: '▸ '; color: var(--muted); }
+  details.leg[open] > summary::before { content: '▾ '; }
+  .leg-detail {
+    color: var(--muted); font-size: 0.8rem; line-height: 1.35;
+    padding: 0.2rem 0 0.1rem 0.9rem; margin-top: 0.2rem;
+    border-left: 2px solid var(--border);
+  }
+  .leg-detail a { color: var(--fg); }
   .day a { color: var(--fg); text-decoration: underline; text-decoration-color: var(--border); }
   .bar { height: 6px; background: var(--bar-track); border-radius: 3px; margin: 0.2rem 0 0.5rem; overflow: hidden; }
   .bar-fill { height: 100%; background: var(--accent); }
@@ -115,15 +130,6 @@
     text-decoration: none; color: var(--fg); font-size: 0.8rem;
   }
   .doc-link:hover { border-color: var(--accent); }
-  .ck-note { margin-top: 0.5rem; }
-  .ck-note summary {
-    cursor: pointer; color: var(--muted); font-size: 0.8rem; list-style: none;
-  }
-  .ck-note summary::-webkit-details-marker { display: none; }
-  .ck-note summary::before { content: '▸ '; }
-  .ck-note[open] summary::before { content: '▾ '; }
-  .ck-note[open] summary { margin-bottom: 0.35rem; }
-  .ck-note .sub { margin-top: 0; }
   footer { color: var(--muted); font-size: 0.75rem; margin-top: 1.5rem; text-align: center; }
   /* ── 하단 탭바 ── */
   body { padding-bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px)); }
@@ -197,120 +203,120 @@
     <div class="subtitle">5/31 (일) — 도착 + 니조성 + 동산 지구 + 철학의 길 단축</div>
     
     <div class="day">
-      
       <div class="date"><span class="k">09:05</span> <a href="https://maps.google.com/?q=Kansai+International+Airport" target="_blank" rel="noopener">간사이공항 도착 → JR 하루카 → 교토역</a></div>
+      
     </div>
     <div class="day">
-      <div class="sub" style="opacity:0.75;font-size:0.85em;">✈️ · JR 하루카 KIX→교토역 75분 + JR 산인본선 교토→니조 5분 + 도보 니조역→시오 7분 0.5km · 87분</div>
       <div class="date"><span class="k">11:30</span> <a href="https://maps.google.com/?q=Nijo+Station+Kyoto" target="_blank" rel="noopener">니조역 → 시오 짐 보관</a></div>
+      <details class="leg"><summary>✈️ 공항특급으로 87분</summary><div class="leg-detail">JR 하루카 KIX→교토역 75분 + JR 산인본선 교토→니조 5분 + 도보 니조역→시오 7분 0.5km</div></details>
     </div>
     <div class="day">
-      <div class="sub" style="opacity:0.75;font-size:0.85em;"><a href="https://www.google.com/maps/dir/Shio+Machiya+Kyoto/Nijo+Castle" target="_blank" rel="noopener" style="color:inherit;">🚶 시오 마치야 → 니조성 동대수문 (堀川通 경유 700m) · 소요시간 미확정 — Maps 확인 필요</a></div>
       <div class="date"><span class="k">12:00</span> <a href="https://maps.google.com/?q=Nijo+Castle" target="_blank" rel="noopener">니조성 (二条城) 외정원 산책</a></div>
+      <details class="leg"><summary>🚶 걸어서 약 12분 (현지 확인) (0.7km)</summary><div class="leg-detail">시오 마치야 → 니조성 동대수문 (堀川通 경유 700m) <a href="https://www.google.com/maps/dir/Shio+Machiya+Kyoto/Nijo+Castle" target="_blank" rel="noopener">경로 ↗</a></div></details>
     </div>
     <div class="day">
-      <div class="sub" style="opacity:0.75;font-size:0.85em;"><a href="https://www.google.com/maps/search/restaurants+near+Shio+Machiya+Kyoto" target="_blank" rel="noopener" style="color:inherit;">🚶 니조성 → 시오 도보권 식당 (500m 내) · 소요시간 미확정 — Maps 확인 필요</a></div>
       <div class="date"><span class="k">12:45</span> <a href="https://maps.google.com/?q=Nijo+Station+Kyoto+점심" target="_blank" rel="noopener">니조 인근 점심 (시오 도보권)</a></div>
+      <details class="leg"><summary>🚶 걸어서 약 8분 (현지 확인) (0.5km)</summary><div class="leg-detail">니조성 → 시오 도보권 식당 (500m 내) <a href="https://www.google.com/maps/search/restaurants+near+Shio+Machiya+Kyoto" target="_blank" rel="noopener">경로 ↗</a></div></details>
     </div>
     <div class="day">
-      <div class="sub" style="opacity:0.75;font-size:0.85em;"><a href="https://www.google.com/maps/dir/Shio+Machiya+Kyoto/Kiyomizu-dera" target="_blank" rel="noopener" style="color:inherit;">🚌 점심 후 시오/니조 → JR 산인선 + 시버스 → 키요미즈 (니조 출발 약 35분. 교토역 출발 28분 대비 7분 가산) · 소요시간 미확정 — Maps 확인 필요</a></div>
       <div class="date"><span class="k">13:30</span> <a href="https://maps.google.com/?q=Kiyomizu-dera" target="_blank" rel="noopener">키요미즈데라 (清水寺)</a></div>
+      <details class="leg"><summary>🚌 버스로 약 35분 (현지 확인)</summary><div class="leg-detail">점심 후 시오/니조 → JR 산인선 + 시버스 → 키요미즈 (니조 출발 약 35분. 교토역 출발 28분 대비 7분 가산) <a href="https://www.google.com/maps/dir/Shio+Machiya+Kyoto/Kiyomizu-dera" target="_blank" rel="noopener">경로 ↗</a></div></details>
     </div>
     <div class="day">
-      <div class="sub" style="opacity:0.75;font-size:0.85em;"><a href="https://en.kyotokk.com/course2.html" target="_blank" rel="noopener" style="color:inherit;">🚶 · 키요미즈→니넨자카·산넨자카→야사카신사 (1.3km, 20~26분, 경사 완만) · 25분 · 1.3km</a></div>
       <div class="date"><span class="k">16:30</span> <a href="https://maps.google.com/?q=Gion+Kyoto" target="_blank" rel="noopener">산넨자카 → 야사카 신사 → 기온</a></div>
+      <details class="leg"><summary>🚶 걸어서 25분 (1.3km)</summary><div class="leg-detail">키요미즈→니넨자카·산넨자카→야사카신사 (1.3km, 20~26분, 경사 완만) <a href="https://en.kyotokk.com/course2.html" target="_blank" rel="noopener">경로 ↗</a></div></details>
     </div>
     <div class="day">
-      <div class="sub" style="opacity:0.75;font-size:0.85em;"><a href="https://www.google.com/maps/dir/Yasaka+Shrine/Philosopher%27s+Path+Kyoto" target="_blank" rel="noopener" style="color:inherit;">🚶 야사카 신사 → 난젠지 정문 → 철학의 길 남단 (1.2km, 동산 북부) · 소요시간 미확정 — Maps 확인 필요</a></div>
       <div class="date"><span class="k">17:00</span> <a href="https://maps.google.com/?q=Philosopher&#x27;s+Path+Kyoto" target="_blank" rel="noopener">철학의 길 단축 구간 (난젠지~철학의 길 남단)</a></div>
+      <details class="leg"><summary>🚶 걸어서 약 15분 (현지 확인) (1.2km)</summary><div class="leg-detail">야사카 신사 → 난젠지 정문 → 철학의 길 남단 (1.2km, 동산 북부) <a href="https://www.google.com/maps/dir/Yasaka+Shrine/Philosopher%27s+Path+Kyoto" target="_blank" rel="noopener">경로 ↗</a></div></details>
     </div>
     <div class="day">
-      <div class="sub" style="opacity:0.75;font-size:0.85em;"><a href="https://www.google.com/maps/dir/Philosopher%27s+Path+Kyoto/Kawaramachi" target="_blank" rel="noopener" style="color:inherit;">🚌 철학의 길 남단 → 市バス 46 또는 201 → 四条河原町 (도보 1km + 버스 15분 가산) · 소요시간 미확정 — Maps 확인 필요</a></div>
       <div class="date"><span class="k">18:30</span> <a href="https://maps.google.com/?q=Kawaramachi" target="_blank" rel="noopener">가와라마치 저녁 (시라카와·폰토초)</a></div>
+      <details class="leg"><summary>🚌 버스로 약 20분 (현지 확인)</summary><div class="leg-detail">철학의 길 남단 → 市バス 46 또는 201 → 四条河原町 (도보 1km + 버스 15분 가산) <a href="https://www.google.com/maps/dir/Philosopher%27s+Path+Kyoto/Kawaramachi" target="_blank" rel="noopener">경로 ↗</a></div></details>
     </div>
     <div class="sub" style="margin-top:0.4rem;">도보 약 4km · 숙박: 에어비앤비 시오</div>
-    <div class="sub" style="margin-top:0.25rem;">🎫 iPhone Apple Wallet ICOCA 단권 — 시버스 2회(시오→키요미즈 ¥230, 철학의 길→가와라마치 ¥230) ¥460×4=¥1,840. 통합 1일권 ¥1,100×4=¥4,400 본전 미달.</div>
+    <div style="margin-top:0.25rem;"><details class="leg"><summary>🎫 iPhone Apple Wallet ICOCA 단권</summary><div class="leg-detail">시버스 2회(시오→키요미즈 ¥230, 철학의 길→가와라마치 ¥230) ¥460×4=¥1,840. 통합 1일권 ¥1,100×4=¥4,400 본전 미달.</div></details></div>
   </div>
   <div class="subcard">
     <div class="subtitle">6/1 (월) — 아라시야마 + 북서쪽</div>
     
     <div class="day">
-      <div class="sub" style="opacity:0.75;font-size:0.85em;"><a href="https://www.kyotostation.com/jr-sagano-line-for-nijo-uzumasa-saga-arashiyama/" target="_blank" rel="noopener" style="color:inherit;">🚆 · JR 산인본선 (니조역 → 사가아라시야마역). 교토역→사가아라시야마 17분 기준 5분 차감 · 12분 · 8.5km</a></div>
       <div class="date"><span class="k">09:00</span> <a href="https://maps.google.com/?q=Arashiyama+Bamboo+Grove" target="_blank" rel="noopener">죽림길 (지쿠린)</a></div>
+      <details class="leg"><summary>🚆 전철로 12분</summary><div class="leg-detail">JR 산인본선 (니조역 → 사가아라시야마역). 교토역→사가아라시야마 17분 기준 5분 차감 <a href="https://www.kyotostation.com/jr-sagano-line-for-nijo-uzumasa-saga-arashiyama/" target="_blank" rel="noopener">경로 ↗</a></div></details>
     </div>
     <div class="day">
-      <div class="sub" style="opacity:0.75;font-size:0.85em;"><a href="https://www.google.com/maps/dir/Arashiyama+Bamboo+Grove/Tenryu-ji" target="_blank" rel="noopener" style="color:inherit;">🚶 · 죽림길 → 텐류지 북문 (竹林の小径 경유 7m, Maps 1분; 정원 경내 진입 도보 ~3분 가산) · 3분 · 0.1km</a></div>
       <div class="date"><span class="k">09:45</span> <a href="https://maps.google.com/?q=Tenryu-ji+Temple" target="_blank" rel="noopener">텐류지 정원</a></div>
+      <details class="leg"><summary>🚶 걸어서 3분 (0.1km)</summary><div class="leg-detail">죽림길 → 텐류지 북문 (竹林の小径 경유 7m, Maps 1분; 정원 경내 진입 도보 ~3분 가산) <a href="https://www.google.com/maps/dir/Arashiyama+Bamboo+Grove/Tenryu-ji" target="_blank" rel="noopener">경로 ↗</a></div></details>
     </div>
     <div class="day">
-      <div class="sub" style="opacity:0.75;font-size:0.85em;"><a href="https://www.google.com/maps/dir/Tenryu-ji+Temple,+Kyoto/松籟庵+Arashiyama" target="_blank" rel="noopener" style="color:inherit;">🚶 · 텐류지 정문 → 도게쓰교 건너 가쓰라강 거슬러 → 쇼라이안(松籟庵, 아라시야마 공원 내) 도보 7분 500m · 7분 · 0.5km</a></div>
       <div class="date"><span class="k">12:00</span> <a href="https://maps.google.com/?q=Arashiyama+Tofu" target="_blank" rel="noopener">두부 가이세키 점심 (쇼라이안 松籟庵)</a></div>
+      <details class="leg"><summary>🚶 걸어서 7분 (0.5km)</summary><div class="leg-detail">텐류지 정문 → 도게쓰교 건너 가쓰라강 거슬러 → 쇼라이안(松籟庵, 아라시야마 공원 내) 도보 7분 500m <a href="https://www.google.com/maps/dir/Tenryu-ji+Temple,+Kyoto/松籟庵+Arashiyama" target="_blank" rel="noopener">경로 ↗</a></div></details>
     </div>
     <div class="day">
-      <div class="sub" style="opacity:0.75;font-size:0.85em;"><a href="https://www.google.com/maps/dir/Tenryu-ji+Temple,+Kyoto/Kinkaku-ji+Temple,+Kyoto" target="_blank" rel="noopener" style="color:inherit;">🚌 · 市バス 11(嵐山天龍寺前→山越中町) 11분 + 환승도보 6분 + 市バス 59(山越中町→金閣寺道) 18분 + 도보 2분 ¥460. 단 11번 40분 간격 · 놓치면 택시 22분(7.1km) 대안 · 38분 · 7.5km</a></div>
       <div class="date"><span class="k">14:00</span> <a href="https://maps.google.com/?q=Kinkaku-ji" target="_blank" rel="noopener">금각사 (鹿苑寺)</a></div>
+      <details class="leg"><summary>🚌 버스로 38분</summary><div class="leg-detail">市バス 11(嵐山天龍寺前→山越中町) 11분 + 환승도보 6분 + 市バス 59(山越中町→金閣寺道) 18분 + 도보 2분 ¥460. 단 11번 40분 간격 · 놓치면 택시 22분(7.1km) 대안 <a href="https://www.google.com/maps/dir/Tenryu-ji+Temple,+Kyoto/Kinkaku-ji+Temple,+Kyoto" target="_blank" rel="noopener">경로 ↗</a></div></details>
     </div>
     <div class="day">
-      <div class="sub" style="opacity:0.75;font-size:0.85em;"><a href="https://kinukake.com/en/day-tour.html" target="_blank" rel="noopener" style="color:inherit;">🚌 · 市バス 59 (金閣寺道 → 竜安寺前). 12~15분 간격 운행 · 4분 · 1.6km</a></div>
       <div class="date"><span class="k">15:30</span> <a href="https://maps.google.com/?q=Ryoan-ji" target="_blank" rel="noopener">료안지 석정원</a></div>
+      <details class="leg"><summary>🚌 버스로 4분</summary><div class="leg-detail">市バス 59 (金閣寺道 → 竜安寺前). 12~15분 간격 운행 <a href="https://kinukake.com/en/day-tour.html" target="_blank" rel="noopener">경로 ↗</a></div></details>
     </div>
     <div class="day">
-      <div class="sub" style="opacity:0.75;font-size:0.85em;"><a href="https://www.google.com/maps/dir/Ryoan-ji/Kawaramachi" target="_blank" rel="noopener" style="color:inherit;">🚌 · 市バス 59 (竜安寺前 → 四条河原町). 직행 + 도보 2분 ¥230 · 42분 · 8.1km</a></div>
       <div class="date"><span class="k">18:30</span> <a href="https://maps.google.com/?q=Pontocho+Alley" target="_blank" rel="noopener">가와라마치 + 니시키 시장 저녁</a></div>
+      <details class="leg"><summary>🚌 버스로 42분</summary><div class="leg-detail">市バス 59 (竜安寺前 → 四条河原町). 직행 + 도보 2분 ¥230 <a href="https://www.google.com/maps/dir/Ryoan-ji/Kawaramachi" target="_blank" rel="noopener">경로 ↗</a></div></details>
     </div>
     <div class="sub" style="margin-top:0.4rem;">도보 약 4km · 숙박: 에어비앤비 시오 (2박째)</div>
-    <div class="sub" style="margin-top:0.25rem;">🎫 iPhone Apple Wallet ICOCA 단권 — 시버스 3회(텐류지→금각 ¥460 + 금각→료안 ¥230 + 료안→가와라마치 ¥230) ¥920/인×4=¥3,680. 통합 1일권 ¥1,100×4=¥4,400 대비 ¥720 절약(¥700 시버스 단독 1일권은 2023-09 폐지).</div>
+    <div style="margin-top:0.25rem;"><details class="leg"><summary>🎫 iPhone Apple Wallet ICOCA 단권</summary><div class="leg-detail">시버스 3회(텐류지→금각 ¥460 + 금각→료안 ¥230 + 료안→가와라마치 ¥230) ¥920/인×4=¥3,680. 통합 1일권 ¥1,100×4=¥4,400 대비 ¥720 절약(¥700 시버스 단독 1일권은 2023-09 폐지).</div></details></div>
   </div>
   <div class="subcard">
     <div class="subtitle">6/2 (화) — 후시미 + 료칸 체크인</div>
     
     <div class="day">
-      <div class="sub" style="opacity:0.75;font-size:0.85em;"><a href="https://www.kyotostation.com/jr-nara-line-for-tofukuji-inari-uji-nara/" target="_blank" rel="noopener" style="color:inherit;">🚆 · 니조역 JR 산인본선(니조→교토) + JR 나라선(교토→이나리) 20분 ¥200 + 도보 5분 · 20분 · 10.0km</a></div>
       <div class="date"><span class="k">07:30</span> <a href="https://maps.google.com/?q=Fushimi+Inari+Taisha" target="_blank" rel="noopener">후시미 이나리 신사</a></div>
+      <details class="leg"><summary>🚆 전철로 20분</summary><div class="leg-detail">니조역 JR 산인본선(니조→교토) + JR 나라선(교토→이나리) 20분 ¥200 + 도보 5분 <a href="https://www.kyotostation.com/jr-nara-line-for-tofukuji-inari-uji-nara/" target="_blank" rel="noopener">경로 ↗</a></div></details>
     </div>
     <div class="day">
-      <div class="sub" style="opacity:0.75;font-size:0.85em;"><a href="https://www.kyotostation.com/jr-nara-line-for-tofukuji-inari-uji-nara/" target="_blank" rel="noopener" style="color:inherit;">🚆 · JR 나라선 (이나리역 → 토후쿠지역). 1정거장 + 토후쿠지역 도보 10분 · 2분 · 1.0km</a></div>
       <div class="date"><span class="k">09:30</span> <a href="https://maps.google.com/?q=Tofuku-ji" target="_blank" rel="noopener">토후쿠지 정원</a></div>
+      <details class="leg"><summary>🚆 전철로 2분</summary><div class="leg-detail">JR 나라선 (이나리역 → 토후쿠지역). 1정거장 + 토후쿠지역 도보 10분 <a href="https://www.kyotostation.com/jr-nara-line-for-tofukuji-inari-uji-nara/" target="_blank" rel="noopener">경로 ↗</a></div></details>
     </div>
     <div class="day">
-      <div class="sub" style="opacity:0.75;font-size:0.85em;"><a href="https://www.kyotostation.com/jr-nara-line-for-tofukuji-inari-uji-nara/" target="_blank" rel="noopener" style="color:inherit;">🚆 · JR 나라선 (토후쿠지역 → 교토역). 1정거장 · 5분 · 2.5km</a></div>
       <div class="date"><span class="k">11:30</span> <a href="https://maps.google.com/?q=Kyoto+Station" target="_blank" rel="noopener">교토역 라멘코지 점심</a></div>
+      <details class="leg"><summary>🚆 전철로 5분</summary><div class="leg-detail">JR 나라선 (토후쿠지역 → 교토역). 1정거장 <a href="https://www.kyotostation.com/jr-nara-line-for-tofukuji-inari-uji-nara/" target="_blank" rel="noopener">경로 ↗</a></div></details>
     </div>
     <div class="day">
-      <div class="sub" style="opacity:0.75;font-size:0.85em;"><a href="https://livejapan.com/en/in-kansai/in-pref-kyoto/in-kyoto-station_to-ji-temple/spot-lj0091598/" target="_blank" rel="noopener" style="color:inherit;">🚶 · 교토역 → JR 우메코지-교토니시역 인근 카덴쇼. JR 1정거장도 가능 · 8분 · 0.6km</a></div>
       <div class="date"><span class="k">13:30</span> <a href="https://maps.google.com/?q=Umekoji+Kadensho" target="_blank" rel="noopener">우메코지 카덴쇼 체크인</a></div>
+      <details class="leg"><summary>🚶 걸어서 8분 (0.6km)</summary><div class="leg-detail">교토역 → JR 우메코지-교토니시역 인근 카덴쇼. JR 1정거장도 가능 <a href="https://livejapan.com/en/in-kansai/in-pref-kyoto/in-kyoto-station_to-ji-temple/spot-lj0091598/" target="_blank" rel="noopener">경로 ↗</a></div></details>
     </div>
     <div class="day">
-      
       <div class="date"><span class="k">17:00</span> <a href="https://maps.google.com/?q=Umekoji+Kadensho" target="_blank" rel="noopener">료칸 대욕장 (천연식 온천)</a></div>
+      
     </div>
     <div class="day">
-      
       <div class="date"><span class="k">18:00</span> <a href="https://maps.google.com/?q=Umekoji+Kadensho" target="_blank" rel="noopener">카덴쇼 가이세키 저녁</a></div>
+      
     </div>
     <div class="sub" style="margin-top:0.4rem;">도보 약 5km · 숙박: 우메코지 카덴쇼 (2명×2실)</div>
-    <div class="sub" style="margin-top:0.25rem;">🎫 iPhone Apple Wallet ICOCA 단권 — JR 나라선 leg 합산 잠정 ¥800/4인(정확액은 후속 측정 보류). 시영 미사용.</div>
+    <div style="margin-top:0.25rem;"><details class="leg"><summary>🎫 iPhone Apple Wallet ICOCA 단권</summary><div class="leg-detail">JR 나라선 leg 합산 잠정 ¥800/4인(정확액은 후속 측정 보류). 시영 미사용.</div></details></div>
   </div>
   <div class="subcard">
     <div class="subtitle">6/3 (수) — 출국 (아침 일찍)</div>
     
     <div class="day">
-      <div class="sub" style="opacity:0.75;font-size:0.85em;"><a href="https://livejapan.com/en/in-kansai/in-pref-kyoto/in-kyoto-station_to-ji-temple/spot-lj0091598/" target="_blank" rel="noopener" style="color:inherit;">🚶 · 카덴쇼 → 교토역 (역방향) · 8분 · 0.6km</a></div>
       <div class="date"><span class="k">이른 아침</span> <a href="https://maps.google.com/?q=Kyoto+Station" target="_blank" rel="noopener">카덴쇼 체크아웃 → 교토역</a></div>
+      <details class="leg"><summary>🚶 걸어서 8분 (0.6km)</summary><div class="leg-detail">카덴쇼 → 교토역 (역방향) <a href="https://livejapan.com/en/in-kansai/in-pref-kyoto/in-kyoto-station_to-ji-temple/spot-lj0091598/" target="_blank" rel="noopener">경로 ↗</a></div></details>
     </div>
     <div class="day">
-      <div class="sub" style="opacity:0.75;font-size:0.85em;"><a href="https://kyoto.travel/en/getting-around/comfortable-access-to-around-kyoto-station-to-ji-temple/" target="_blank" rel="noopener" style="color:inherit;">🚶 · 교토역 하치조서구 → 토지 케이가몬 (1.2km, 약 16분) · 16분 · 1.2km</a></div>
       <div class="date"><span class="k">시간 여유 시</span> <a href="https://maps.google.com/?q=To-ji+Temple" target="_blank" rel="noopener">토지(東寺) 오층탑 또는 교토역 이세탄</a></div>
+      <details class="leg"><summary>🚶 걸어서 16분 (1.2km)</summary><div class="leg-detail">교토역 하치조서구 → 토지 케이가몬 (1.2km, 약 16분) <a href="https://kyoto.travel/en/getting-around/comfortable-access-to-around-kyoto-station-to-ji-temple/" target="_blank" rel="noopener">경로 ↗</a></div></details>
     </div>
     <div class="day">
-      <div class="sub" style="opacity:0.75;font-size:0.85em;">✈️ · JR 하루카 (교토역 → KIX) · 75분</div>
       <div class="date"><span class="k">출국</span> <a href="https://maps.google.com/?q=Kansai+International+Airport" target="_blank" rel="noopener">JR 하루카 → 간사이공항 → 인천</a></div>
+      <details class="leg"><summary>✈️ 공항특급으로 75분</summary><div class="leg-detail">JR 하루카 (교토역 → KIX)</div></details>
     </div>
     <div class="sub" style="margin-top:0.4rem;">도보 약 1km · 숙박: —</div>
     <div class="sub" style="margin-top:0.25rem;">🎫 패스 불요 — 도보 + JR 하루카(별도 왕복권).</div>
   </div>
-  <div class="subcard" style="margin-top:0.6rem;"><div class="subtitle">🧭 ICOCA 실행 단계</div><ol style="margin:0.3rem 0 0 1.1rem;padding:0;"><li style="margin-bottom:0.35rem;"><b>출국 전 (5/30 이전)</b> — 4인 각자 iPhone Wallet → &#x27;+&#x27; → 교통카드 → ICOCA 추가. Apple Pay로 ¥3,000/인 초기 충전. iPhone 8 이상·iOS 최신·Apple Account 2단계 인증 필수 (시부모 폰 사양 사전 확인).</li><li style="margin-bottom:0.35rem;"><b>5/31 KIX 도착</b> — JR 하루카는 별도 왕복권(¥2,400/인 × 4)으로 탑승 — ICOCA 미사용. 교토역→니조 환승 시 ICOCA 탭.</li><li style="margin-bottom:0.35rem;"><b>5/31 시오 → 키요미즈</b> — 시버스 균일 ¥230. 뒷문 승차 → 앞문 하차 시 운전석 옆 IC 리더에 탭.</li><li style="margin-bottom:0.35rem;"><b>6/1 시버스 3회</b> — 텐류지→금각 ¥460·금각→료안 ¥230·료안→가와라마치 ¥230 모두 ICOCA 탭. 통합 1일권(¥1,100) 채택 안 함 — ¥720 비효율.</li><li style="margin-bottom:0.35rem;"><b>6/2 JR 나라선 3 leg</b> — 시오→이나리·이나리→토후쿠지·토후쿠지→교토역 모두 개찰구 입·출 탭. 시영 미사용.</li><li style="margin-bottom:0.35rem;"><b>잔액 부족 시</b> — 역 발권기·세븐일레븐·로손에서 현금 ¥1,000 단위 충전. 차내 충전 불가.</li><li style="margin-bottom:0.35rem;"><b>귀국 6/3 이후</b> — ICOCA 카드는 보관(다음 일본 여행 재사용) 또는 JR 서일본 미도리노마도구치에서 환불(수수료 ¥220).</li></ol></div>
-  <div class="sub" style="margin-top:0.6rem;">📚 교통 출처: <a href="https://support.apple.com/en-us/108772" target="_blank" rel="noopener">Apple Wallet 교통카드 (Apple)</a> · <a href="https://www.insidekyoto.com/iphone-the-killer-japan-travel-hack" target="_blank" rel="noopener">iPhone ICOCA 활용법 (Inside Kyoto)</a> · <a href="https://www2.city.kyoto.lg.jp/kotsu/webguide/en/ticket/regular_1day_card_comm.html" target="_blank" rel="noopener">현 통합 1일권 ¥1,100 (교토시 공식)</a> · <a href="https://soranews24.com/2023/03/30/kyoto-will-abolish-one-day-bus-passes-to-combat-tourism-overcrowding/" target="_blank" rel="noopener">¥700 시버스 1일권 폐지 (SoraNews24)</a></div>
+  <div class="subcard" style="margin-top:0.6rem;"><details class="leg"><summary>🧭 ICOCA 실행 단계 (탭하면 펼침)</summary><div class="leg-detail"><ol style="margin:0.3rem 0 0 1.1rem;padding:0;"><li style="margin-bottom:0.35rem;"><b>출국 전 (5/30 이전)</b> — 4인 각자 iPhone Wallet → &#x27;+&#x27; → 교통카드 → ICOCA 추가. Apple Pay로 ¥3,000/인 초기 충전. iPhone 8 이상·iOS 최신·Apple Account 2단계 인증 필수 (시부모 폰 사양 사전 확인).</li><li style="margin-bottom:0.35rem;"><b>5/31 KIX 도착</b> — JR 하루카는 별도 왕복권(¥2,400/인 × 4)으로 탑승 — ICOCA 미사용. 교토역→니조 환승 시 ICOCA 탭.</li><li style="margin-bottom:0.35rem;"><b>5/31 시오 → 키요미즈</b> — 시버스 균일 ¥230. 뒷문 승차 → 앞문 하차 시 운전석 옆 IC 리더에 탭.</li><li style="margin-bottom:0.35rem;"><b>6/1 시버스 3회</b> — 텐류지→금각 ¥460·금각→료안 ¥230·료안→가와라마치 ¥230 모두 ICOCA 탭. 통합 1일권(¥1,100) 채택 안 함 — ¥720 비효율.</li><li style="margin-bottom:0.35rem;"><b>6/2 JR 나라선 3 leg</b> — 시오→이나리·이나리→토후쿠지·토후쿠지→교토역 모두 개찰구 입·출 탭. 시영 미사용.</li><li style="margin-bottom:0.35rem;"><b>잔액 부족 시</b> — 역 발권기·세븐일레븐·로손에서 현금 ¥1,000 단위 충전. 차내 충전 불가.</li><li style="margin-bottom:0.35rem;"><b>귀국 6/3 이후</b> — ICOCA 카드는 보관(다음 일본 여행 재사용) 또는 JR 서일본 미도리노마도구치에서 환불(수수료 ¥220).</li></ol></div></details></div>
+  <div style="margin-top:0.6rem;"><details class="leg"><summary>📚 교통 출처 4건</summary><div class="leg-detail"><a href="https://support.apple.com/en-us/108772" target="_blank" rel="noopener">Apple Wallet 교통카드 (Apple)</a> · <a href="https://www.insidekyoto.com/iphone-the-killer-japan-travel-hack" target="_blank" rel="noopener">iPhone ICOCA 활용법 (Inside Kyoto)</a> · <a href="https://www2.city.kyoto.lg.jp/kotsu/webguide/en/ticket/regular_1day_card_comm.html" target="_blank" rel="noopener">현 통합 1일권 ¥1,100 (교토시 공식)</a> · <a href="https://soranews24.com/2023/03/30/kyoto-will-abolish-one-day-bus-passes-to-combat-tourism-overcrowding/" target="_blank" rel="noopener">¥700 시버스 1일권 폐지 (SoraNews24)</a></div></details></div>
 </section>
 
 <div class="links">

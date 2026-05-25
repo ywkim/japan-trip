@@ -343,6 +343,76 @@ class BuildIndexTests(unittest.TestCase):
                       "checklist should include the D-day computing script")
 
 
+class TransitFoldTests(unittest.TestCase):
+    """이동 설명을 평이 요약(summary) + 접기 상세(details.leg)로 렌더하는 회귀 가드."""
+
+    def test_plain_transit_labels_present(self):
+        run()
+        for path in (INDEX, ITINERARY):
+            html = path.read_text(encoding="utf-8")
+            for label in ("걸어서", "버스로", "전철로", "공항특급으로"):
+                with self.subTest(path=path.name, label=label):
+                    self.assertIn(label, html, f"plain transit label '{label}' missing in {path.name}")
+
+    def test_transit_rendered_as_collapsible_leg(self):
+        run()
+        for path in (INDEX, ITINERARY, TABLE):
+            with self.subTest(path=path.name):
+                html = path.read_text(encoding="utf-8")
+                self.assertIn('<details class="leg"', html,
+                              f"{path.name} should render transit legs as <details class=\"leg\">")
+
+    def test_verbose_route_kept_in_detail(self):
+        """장문 route 텍스트는 접기 상세 안에 그대로 보존돼야 한다(정보 손실 없음)."""
+        run()
+        for path in (INDEX, ITINERARY):
+            with self.subTest(path=path.name):
+                html = path.read_text(encoding="utf-8")
+                self.assertIn("JR 하루카 KIX→교토역", html,
+                              f"verbose route detail missing in {path.name}")
+
+    def test_pass_recommendation_folded(self):
+        """교통패스 추천(🎫)은 추천 요약 + 근거 접기로, 근거 텍스트는 보존."""
+        run()
+        for path in (INDEX, ITINERARY):
+            with self.subTest(path=path.name):
+                html = path.read_text(encoding="utf-8")
+                self.assertIn("🎫 iPhone Apple Wallet ICOCA 단권", html,
+                              f"pass recommendation summary missing in {path.name}")
+                self.assertIn("본전 미달", html, f"pass rationale detail lost in {path.name}")
+
+    def test_playbook_collapsed_but_text_preserved(self):
+        run()
+        import json as _json
+        data = _json.loads((BASE / "data" / "itinerary.json").read_text(encoding="utf-8"))
+        steps = data.get("trip", {}).get("transit_pass_playbook") or []
+        for path in (INDEX, ITINERARY):
+            with self.subTest(path=path.name):
+                html = path.read_text(encoding="utf-8")
+                self.assertIn("실행 단계", html, f"playbook header missing in {path.name}")
+                for s in steps:
+                    self.assertIn(s["when"], html, f"step.when {s['when']!r} not in {path.name}")
+
+
+class NoteFoldTests(unittest.TestCase):
+    """긴 예약·숙박 메모(예약번호·PIN·탑승객 등)를 접기로 렌더하는 회귀 가드."""
+
+    def test_long_notes_collapsed_in_lodging_and_checklist(self):
+        run()
+        for path in (LODGING, CHECKLIST):
+            with self.subTest(path=path.name):
+                html = path.read_text(encoding="utf-8")
+                self.assertIn('<details class="leg"', html,
+                              f"{path.name} should collapse long notes into a fold")
+
+    def test_collapsed_note_detail_preserved(self):
+        """접어도 운영 메모 텍스트(PIN·확정번호)는 HTML에 그대로 남아야 한다."""
+        run()
+        html = CHECKLIST.read_text(encoding="utf-8")
+        self.assertIn("PIN 5647", html, "checklist note detail (PIN) lost after fold")
+        self.assertIn("20260513170241828", html, "checklist note detail (confirm no.) lost after fold")
+
+
 class ItineraryTableTests(unittest.TestCase):
     def test_table_file_is_generated(self):
         run()

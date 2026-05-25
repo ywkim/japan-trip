@@ -81,7 +81,22 @@
   .day { padding: 0.35rem 0; border-bottom: 1px solid var(--border); }
   .day:last-child { border-bottom: none; }
   .day .date { font-size: 0.9rem; }
-  .day .date .k { display: inline-block; min-width: 3.2rem; color: var(--muted); }
+  .day .date .k { display: inline-block; min-width: 3.2rem; color: var(--fg); font-weight: 600; font-variant-numeric: tabular-nums; }
+  /* ── 접기(쉬운 설명 + 펼침 상세) ── */
+  details.leg { margin: 0.15rem 0 0.35rem; }
+  details.leg > summary {
+    cursor: pointer; list-style: none; color: var(--muted);
+    font-size: 0.82rem; padding: 0.1rem 0; -webkit-tap-highlight-color: transparent;
+  }
+  details.leg > summary::-webkit-details-marker { display: none; }
+  details.leg > summary::before { content: '▸ '; color: var(--muted); }
+  details.leg[open] > summary::before { content: '▾ '; }
+  .leg-detail {
+    color: var(--muted); font-size: 0.8rem; line-height: 1.35;
+    padding: 0.2rem 0 0.1rem 0.9rem; margin-top: 0.2rem;
+    border-left: 2px solid var(--border);
+  }
+  .leg-detail a { color: var(--fg); }
   .day a { color: var(--fg); text-decoration: underline; text-decoration-color: var(--border); }
   .bar { height: 6px; background: var(--bar-track); border-radius: 3px; margin: 0.2rem 0 0.5rem; overflow: hidden; }
   .bar-fill { height: 100%; background: var(--accent); }
@@ -115,15 +130,6 @@
     text-decoration: none; color: var(--fg); font-size: 0.8rem;
   }
   .doc-link:hover { border-color: var(--accent); }
-  .ck-note { margin-top: 0.5rem; }
-  .ck-note summary {
-    cursor: pointer; color: var(--muted); font-size: 0.8rem; list-style: none;
-  }
-  .ck-note summary::-webkit-details-marker { display: none; }
-  .ck-note summary::before { content: '▸ '; }
-  .ck-note[open] summary::before { content: '▾ '; }
-  .ck-note[open] summary { margin-bottom: 0.35rem; }
-  .ck-note .sub { margin-top: 0; }
   footer { color: var(--muted); font-size: 0.75rem; margin-top: 1.5rem; text-align: center; }
   /* ── 하단 탭바 ── */
   body { padding-bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px)); }
@@ -173,7 +179,7 @@
   <div class="row"><span class="k">위치</span><span class="v">중교구 · 니조역 도보 7분</span></div>
   <div class="row"><span class="k">2박 총액</span><span class="v">₩730,372</span></div>
   <div class="row"><span class="k">1인 1박</span><span class="v">₩91,296</span></div>
-  <div class="sub" style="margin-top:0.4rem;">후기 59·★4.95(최고)·침실 3/욕실 2/화장실 2·78㎡ 2층·시부모-부부 완전 분리 가능. 슈퍼호스트 2년.</div>
+  <details class="leg"><summary>상세 보기</summary><div class="leg-detail">후기 59·★4.95(최고)·침실 3/욕실 2/화장실 2·78㎡ 2층·시부모-부부 완전 분리 가능. 슈퍼호스트 2년.</div></details>
   <div class="links"></div>
 </section>
 
@@ -186,7 +192,7 @@
   <div class="subcard">
     <div class="subtitle">우메코지 카덴쇼 (객실 2개, 식사 불포함, 트립닷컴 확정, 2026-06-02→06-03 1박)</div>
     <div class="row"><span class="k">1박 (4인, 객실 2개)</span><span class="v">₩354,065</span></div>
-    <div class="sub">객실 2개 1박, 식사 불포함, 숙소 현지결제. 조식 미포함은 6/3 새벽 출국 동선 우선(시부 2026-05-13 결정). 가이세키 저녁은 현장 별도 주문. 환불 불가. 숙소 확정번호: 20260513170241828, 20260513170241823 · PIN 5647.</div>
+    <details class="leg"><summary>상세 보기</summary><div class="leg-detail">객실 2개 1박, 식사 불포함, 숙소 현지결제. 조식 미포함은 6/3 새벽 출국 동선 우선(시부 2026-05-13 결정). 가이세키 저녁은 현장 별도 주문. 환불 불가. 숙소 확정번호: 20260513170241828, 20260513170241823 · PIN 5647.</div></details>
   </div>
 </section>
 
@@ -199,7 +205,7 @@
     <div class="subtitle">ICN↔KIX (5/31~6/3, 3박) — 가족 일정(5/28~29) 회피 후보</div>
     <div class="row"><span class="k">일자</span><span class="v">2026-05-31 → 2026-06-03</span></div>
     <div class="row"><span class="k">4인 총액</span><span class="v">₩1,012,000</span></div>
-    <div class="sub">에어서울 RS · 예약번호 A8YW58 · 2026-05-12 확정 (시부 결제). ICN 13:15→KIX 15:15 / KIX 10:05→ICN 12:05.</div>
+    <details class="leg"><summary>에어서울 RS · 예약번호 A8YW58</summary><div class="leg-detail">2026-05-12 확정 (시부 결제). ICN 13:15→KIX 15:15 / KIX 10:05→ICN 12:05.</div></details>
   </div>
 </section>
 
