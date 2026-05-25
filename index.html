@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#1a1a1a" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F7F6F2" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#161821" media="(prefers-color-scheme: dark)">
 <title>교토 5/31~6/3 · 4인 가족 여행</title>
 <meta name="description" content="교토 5/31~6/3 · 4인 가족(부부+시부모) · 3박 4일 · 확정 일정·예약 현황">
 <meta property="og:type" content="website">
@@ -22,19 +22,26 @@
 <meta name="twitter:image" content="https://nihon-trip.vercel.app/assets/og-home.svg">
 <style>
   :root {
-    --bg: #fff; --fg: #111; --muted: #888; --border: #eaeaea;
-    --accent: #111; --card: #fff; --subcard: #fafafa;
+    --bg: #F7F6F2; --fg: #1B1D24; --muted: #5B6070; --border: #D9D6CC;
+    --accent: #3E5C76; --accent-soft: #E3EAF3;
+    --card: #FFFFFF; --subcard: #EFEDE6;
+    --ok: #2F7D5B; --warn: #B5811F; --danger: #9A3B3B;
+    --bar-track: #E3EAF3;
+    --font-sans: -apple-system, "Apple SD Gothic Neo", "Pretendard Variable", BlinkMacSystemFont, "Segoe UI", sans-serif;
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --bg: #000; --fg: #ededed; --muted: #888; --border: #333;
-      --accent: #ededed; --card: #0a0a0a; --subcard: #111;
+      --bg: #161821; --fg: #E8E6DE; --muted: #9A9DA8; --border: #2E3140;
+      --accent: #8AA8C7; --accent-soft: #262E3A;
+      --card: #1F222C; --subcard: #13151D;
+      --ok: #6FB58E; --warn: #D4B36A; --danger: #D08585;
+      --bar-track: #262E3A;
     }
   }
   * { box-sizing: border-box; }
   html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
   body {
-    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "AppleGothic", sans-serif;
+    font-family: var(--font-sans);
     background: var(--bg); color: var(--fg);
     margin: 0 auto; padding: 1rem; max-width: 640px;
     line-height: 1.5; font-size: 16px;
@@ -52,13 +59,16 @@
     background: var(--card); border: 1px solid var(--border); border-radius: 8px;
     padding: 1rem; margin: 0.75rem 0;
   }
+  @media (prefers-color-scheme: dark) {
+    .card { box-shadow: 0 1px 0 rgba(0,0,0,0.25); }
+  }
   .subcard {
     background: var(--subcard); border: 1px solid var(--border); border-radius: 6px;
     padding: 0.75rem; margin: 0.5rem 0;
   }
   .subtitle { font-weight: 600; margin-bottom: 0.4rem; font-size: 0.95rem; }
   .big { font-size: 1.6rem; font-weight: 600; line-height: 1.2; }
-  .sub { color: var(--muted); font-size: 0.85rem; margin-top: 0.25rem; }
+  .sub { color: var(--muted); font-size: 0.85rem; margin-top: 0.25rem; word-break: keep-all; }
   .row {
     display: flex; justify-content: space-between; gap: 0.5rem;
     padding: 0.35rem 0; border-bottom: 1px solid var(--border);
@@ -73,7 +83,7 @@
   .day .date { font-size: 0.9rem; }
   .day .date .k { display: inline-block; min-width: 3.2rem; color: var(--muted); }
   .day a { color: var(--fg); text-decoration: underline; text-decoration-color: var(--border); }
-  .bar { height: 6px; background: var(--border); border-radius: 3px; margin: 0.2rem 0 0.5rem; overflow: hidden; }
+  .bar { height: 6px; background: var(--bar-track); border-radius: 3px; margin: 0.2rem 0 0.5rem; overflow: hidden; }
   .bar-fill { height: 100%; background: var(--accent); }
   .links { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.6rem; }
   .links a {
@@ -117,6 +127,11 @@
     max-height: 200px;
   }
   .img-credit { color: var(--muted); font-size: 0.65rem; text-align: right; }
+  .blog-reviews { margin-top: 0.5rem; }
+  .blog-strip { display: flex; gap: 0.5rem; overflow-x: auto; padding-bottom: 0.3rem; -webkit-overflow-scrolling: touch; }
+  .blog-card { flex: 0 0 140px; text-decoration: none; color: var(--fg); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+  .blog-thumb { width: 140px; height: 100px; object-fit: cover; display: block; }
+  .blog-comment { font-size: 0.7rem; padding: 0.3rem; margin: 0; color: var(--muted); line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 </style>
 </head>
 <body>
@@ -139,9 +154,9 @@
   <div class="row"><span class="k">시기</span><span class="v">2026-05-31 (일) ~ 06-03 (수)</span></div>
   <div class="row"><span class="k">동반</span><span class="v">영욱·소연 + 시부모 (4인)</span></div>
   <div class="row"><span class="k">숙박</span><span class="v">에어비앤비 2박 + 카덴쇼 료칸 1박 (2명×2실)</span></div>
-  <div class="row"><span class="k">예상 비용</span><span class="v">₩3,392,522</span></div>
-  <div class="row"><span class="k">3M 캡</span><span class="v">₩392,522 초과</span></div>
-  <div class="sub" style="margin-top:0.5rem;">2026-05-31~06-03 시나리오 (4인 시부모 동반 확정). 1·2박 에어비앤비(5/31~6/2), 마지막 박 우메코지 카덴쇼 료칸 2명×2실 조기할인 조식 포함(6/2~6/3). seasonality: weather.json kyoto 2026-05 comfort_score=9. 상세: docs/kyoto-itinerary-may-2026.md, docs/airbnb-kyoto-may31-jun2-2026.md, docs/decision-log/2026-05-11-may31-jun3-kyoto-update.md</div>
+  <div class="row"><span class="k">예상 비용</span><span class="v">₩3,019,837</span></div>
+  <div class="row"><span class="k">3M 캡</span><span class="v">₩19,837 초과</span></div>
+  <div class="sub" style="margin-top:0.5rem;">발권·예약 완료 (항공 A8YW58 · 시오 마치야 · 카덴쇼 트립닷컴). 출국 전 점검은 ☑ 예약 탭.</div>
 </section>
 
 
@@ -151,7 +166,7 @@
   <div class="sub" style="margin-bottom:0.5rem;">장소 탭 → 구글맵. 상세: <a href="viz/itinerary.html">카드 뷰 ↗</a> · <a href="viz/itinerary-table.html">시간표 뷰 ↗</a></div>
   
   <div class="subcard">
-    <div class="subtitle">5/31 (일) — 도착 + 동산 지구</div>
+    <div class="subtitle">5/31 (일) — 도착 + 니조성 + 동산 지구 + 철학의 길 단축</div>
     
     <div class="day">
       
@@ -159,10 +174,18 @@
     </div>
     <div class="day">
       <div class="sub" style="opacity:0.75;font-size:0.85em;">✈️ · JR 하루카 KIX→교토역 75분 + JR 산인본선 교토→니조 5분 + 도보 니조역→시오 7분 0.5km · 87분</div>
-      <div class="date"><span class="k">11:30</span> <a href="https://maps.google.com/?q=Nijo+Station+Kyoto" target="_blank" rel="noopener">니조역 → 시오 짐 보관 후 점심</a></div>
+      <div class="date"><span class="k">11:30</span> <a href="https://maps.google.com/?q=Nijo+Station+Kyoto" target="_blank" rel="noopener">니조역 → 시오 짐 보관</a></div>
     </div>
     <div class="day">
-      <div class="sub" style="opacity:0.75;font-size:0.85em;"><a href="https://www.google.com/maps/dir/Shio+Machiya+Kyoto/Kiyomizu-dera" target="_blank" rel="noopener" style="color:inherit;">🚌 시오 → 니조역 도보 7분 + JR/시버스 → 키요미즈 (니조 출발 시 약 35분. 교토역 출발 28분 대비 7분 가산) · 소요시간 미확정 — Maps 확인 필요</a></div>
+      <div class="sub" style="opacity:0.75;font-size:0.85em;"><a href="https://www.google.com/maps/dir/Shio+Machiya+Kyoto/Nijo+Castle" target="_blank" rel="noopener" style="color:inherit;">🚶 시오 마치야 → 니조성 동대수문 (堀川通 경유 700m) · 소요시간 미확정 — Maps 확인 필요</a></div>
+      <div class="date"><span class="k">12:00</span> <a href="https://maps.google.com/?q=Nijo+Castle" target="_blank" rel="noopener">니조성 (二条城) 외정원 산책</a></div>
+    </div>
+    <div class="day">
+      <div class="sub" style="opacity:0.75;font-size:0.85em;"><a href="https://www.google.com/maps/search/restaurants+near+Shio+Machiya+Kyoto" target="_blank" rel="noopener" style="color:inherit;">🚶 니조성 → 시오 도보권 식당 (500m 내) · 소요시간 미확정 — Maps 확인 필요</a></div>
+      <div class="date"><span class="k">12:45</span> <a href="https://maps.google.com/?q=Nijo+Station+Kyoto+점심" target="_blank" rel="noopener">니조 인근 점심 (시오 도보권)</a></div>
+    </div>
+    <div class="day">
+      <div class="sub" style="opacity:0.75;font-size:0.85em;"><a href="https://www.google.com/maps/dir/Shio+Machiya+Kyoto/Kiyomizu-dera" target="_blank" rel="noopener" style="color:inherit;">🚌 점심 후 시오/니조 → JR 산인선 + 시버스 → 키요미즈 (니조 출발 약 35분. 교토역 출발 28분 대비 7분 가산) · 소요시간 미확정 — Maps 확인 필요</a></div>
       <div class="date"><span class="k">13:30</span> <a href="https://maps.google.com/?q=Kiyomizu-dera" target="_blank" rel="noopener">키요미즈데라 (清水寺)</a></div>
     </div>
     <div class="day">
@@ -170,10 +193,15 @@
       <div class="date"><span class="k">16:30</span> <a href="https://maps.google.com/?q=Gion+Kyoto" target="_blank" rel="noopener">산넨자카 → 야사카 신사 → 기온</a></div>
     </div>
     <div class="day">
-      <div class="sub" style="opacity:0.75;font-size:0.85em;"><a href="https://www.google.com/maps/dir/Gion,+Higashiyama+Ward,+Kyoto/Pontocho+Alley,+Kyoto" target="_blank" rel="noopener" style="color:inherit;">🚶 · 기온 → 시조대교 → 폰토초 (四条通/市道186号 경유, 600m) · 9분 · 0.6km</a></div>
+      <div class="sub" style="opacity:0.75;font-size:0.85em;"><a href="https://www.google.com/maps/dir/Yasaka+Shrine/Philosopher%27s+Path+Kyoto" target="_blank" rel="noopener" style="color:inherit;">🚶 야사카 신사 → 난젠지 정문 → 철학의 길 남단 (1.2km, 동산 북부) · 소요시간 미확정 — Maps 확인 필요</a></div>
+      <div class="date"><span class="k">17:00</span> <a href="https://maps.google.com/?q=Philosopher&#x27;s+Path+Kyoto" target="_blank" rel="noopener">철학의 길 단축 구간 (난젠지~철학의 길 남단)</a></div>
+    </div>
+    <div class="day">
+      <div class="sub" style="opacity:0.75;font-size:0.85em;"><a href="https://www.google.com/maps/dir/Philosopher%27s+Path+Kyoto/Kawaramachi" target="_blank" rel="noopener" style="color:inherit;">🚌 철학의 길 남단 → 市バス 46 또는 201 → 四条河原町 (도보 1km + 버스 15분 가산) · 소요시간 미확정 — Maps 확인 필요</a></div>
       <div class="date"><span class="k">18:30</span> <a href="https://maps.google.com/?q=Kawaramachi" target="_blank" rel="noopener">가와라마치 저녁 (시라카와·폰토초)</a></div>
     </div>
-    <div class="sub" style="margin-top:0.4rem;">도보 약 3km · 숙박: 에어비앤비 시오</div>
+    <div class="sub" style="margin-top:0.4rem;">도보 약 4km · 숙박: 에어비앤비 시오</div>
+    <div class="sub" style="margin-top:0.25rem;">🎫 iPhone Apple Wallet ICOCA 단권 — 시버스 2회(시오→키요미즈 ¥230, 철학의 길→가와라마치 ¥230) ¥460×4=¥1,840. 통합 1일권 ¥1,100×4=¥4,400 본전 미달.</div>
   </div>
   <div class="subcard">
     <div class="subtitle">6/1 (월) — 아라시야마 + 북서쪽</div>
@@ -203,6 +231,7 @@
       <div class="date"><span class="k">18:30</span> <a href="https://maps.google.com/?q=Pontocho+Alley" target="_blank" rel="noopener">가와라마치 + 니시키 시장 저녁</a></div>
     </div>
     <div class="sub" style="margin-top:0.4rem;">도보 약 4km · 숙박: 에어비앤비 시오 (2박째)</div>
+    <div class="sub" style="margin-top:0.25rem;">🎫 iPhone Apple Wallet ICOCA 단권 — 시버스 3회(텐류지→금각 ¥460 + 금각→료안 ¥230 + 료안→가와라마치 ¥230) ¥920/인×4=¥3,680. 통합 1일권 ¥1,100×4=¥4,400 대비 ¥720 절약(¥700 시버스 단독 1일권은 2023-09 폐지).</div>
   </div>
   <div class="subcard">
     <div class="subtitle">6/2 (화) — 후시미 + 료칸 체크인</div>
@@ -232,6 +261,7 @@
       <div class="date"><span class="k">18:00</span> <a href="https://maps.google.com/?q=Umekoji+Kadensho" target="_blank" rel="noopener">카덴쇼 가이세키 저녁</a></div>
     </div>
     <div class="sub" style="margin-top:0.4rem;">도보 약 5km · 숙박: 우메코지 카덴쇼 (2명×2실)</div>
+    <div class="sub" style="margin-top:0.25rem;">🎫 iPhone Apple Wallet ICOCA 단권 — JR 나라선 leg 합산 잠정 ¥800/4인(정확액은 후속 측정 보류). 시영 미사용.</div>
   </div>
   <div class="subcard">
     <div class="subtitle">6/3 (수) — 출국 (아침 일찍)</div>
@@ -249,7 +279,10 @@
       <div class="date"><span class="k">출국</span> <a href="https://maps.google.com/?q=Kansai+International+Airport" target="_blank" rel="noopener">JR 하루카 → 간사이공항 → 인천</a></div>
     </div>
     <div class="sub" style="margin-top:0.4rem;">도보 약 1km · 숙박: —</div>
+    <div class="sub" style="margin-top:0.25rem;">🎫 패스 불요 — 도보 + JR 하루카(별도 왕복권).</div>
   </div>
+  <div class="subcard" style="margin-top:0.6rem;"><div class="subtitle">🧭 ICOCA 실행 단계</div><ol style="margin:0.3rem 0 0 1.1rem;padding:0;"><li style="margin-bottom:0.35rem;"><b>출국 전 (5/30 이전)</b> — 4인 각자 iPhone Wallet → &#x27;+&#x27; → 교통카드 → ICOCA 추가. Apple Pay로 ¥3,000/인 초기 충전. iPhone 8 이상·iOS 최신·Apple Account 2단계 인증 필수 (시부모 폰 사양 사전 확인).</li><li style="margin-bottom:0.35rem;"><b>5/31 KIX 도착</b> — JR 하루카는 별도 왕복권(¥2,400/인 × 4)으로 탑승 — ICOCA 미사용. 교토역→니조 환승 시 ICOCA 탭.</li><li style="margin-bottom:0.35rem;"><b>5/31 시오 → 키요미즈</b> — 시버스 균일 ¥230. 뒷문 승차 → 앞문 하차 시 운전석 옆 IC 리더에 탭.</li><li style="margin-bottom:0.35rem;"><b>6/1 시버스 3회</b> — 텐류지→금각 ¥460·금각→료안 ¥230·료안→가와라마치 ¥230 모두 ICOCA 탭. 통합 1일권(¥1,100) 채택 안 함 — ¥720 비효율.</li><li style="margin-bottom:0.35rem;"><b>6/2 JR 나라선 3 leg</b> — 시오→이나리·이나리→토후쿠지·토후쿠지→교토역 모두 개찰구 입·출 탭. 시영 미사용.</li><li style="margin-bottom:0.35rem;"><b>잔액 부족 시</b> — 역 발권기·세븐일레븐·로손에서 현금 ¥1,000 단위 충전. 차내 충전 불가.</li><li style="margin-bottom:0.35rem;"><b>귀국 6/3 이후</b> — ICOCA 카드는 보관(다음 일본 여행 재사용) 또는 JR 서일본 미도리노마도구치에서 환불(수수료 ¥220).</li></ol></div>
+  <div class="sub" style="margin-top:0.6rem;">📚 교통 출처: <a href="https://support.apple.com/en-us/108772" target="_blank" rel="noopener">Apple Wallet 교통카드 (Apple)</a> · <a href="https://www.insidekyoto.com/iphone-the-killer-japan-travel-hack" target="_blank" rel="noopener">iPhone ICOCA 활용법 (Inside Kyoto)</a> · <a href="https://www2.city.kyoto.lg.jp/kotsu/webguide/en/ticket/regular_1day_card_comm.html" target="_blank" rel="noopener">현 통합 1일권 ¥1,100 (교토시 공식)</a> · <a href="https://soranews24.com/2023/03/30/kyoto-will-abolish-one-day-bus-passes-to-combat-tourism-overcrowding/" target="_blank" rel="noopener">¥700 시버스 1일권 폐지 (SoraNews24)</a></div>
 </section>
 
 <div class="links">

@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#1a1a1a" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F7F6F2" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#161821" media="(prefers-color-scheme: dark)">
 <title>숙박·항공 · 교토 5/31~6/3</title>
 <meta name="description" content="시오 마치야 2박 + 카덴쇼 료칸 1박 · 에어서울 4인 발권">
 <meta property="og:type" content="website">
@@ -22,19 +22,26 @@
 <meta name="twitter:image" content="https://nihon-trip.vercel.app/assets/og-lodging.svg">
 <style>
   :root {
-    --bg: #fff; --fg: #111; --muted: #888; --border: #eaeaea;
-    --accent: #111; --card: #fff; --subcard: #fafafa;
+    --bg: #F7F6F2; --fg: #1B1D24; --muted: #5B6070; --border: #D9D6CC;
+    --accent: #3E5C76; --accent-soft: #E3EAF3;
+    --card: #FFFFFF; --subcard: #EFEDE6;
+    --ok: #2F7D5B; --warn: #B5811F; --danger: #9A3B3B;
+    --bar-track: #E3EAF3;
+    --font-sans: -apple-system, "Apple SD Gothic Neo", "Pretendard Variable", BlinkMacSystemFont, "Segoe UI", sans-serif;
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --bg: #000; --fg: #ededed; --muted: #888; --border: #333;
-      --accent: #ededed; --card: #0a0a0a; --subcard: #111;
+      --bg: #161821; --fg: #E8E6DE; --muted: #9A9DA8; --border: #2E3140;
+      --accent: #8AA8C7; --accent-soft: #262E3A;
+      --card: #1F222C; --subcard: #13151D;
+      --ok: #6FB58E; --warn: #D4B36A; --danger: #D08585;
+      --bar-track: #262E3A;
     }
   }
   * { box-sizing: border-box; }
   html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
   body {
-    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "AppleGothic", sans-serif;
+    font-family: var(--font-sans);
     background: var(--bg); color: var(--fg);
     margin: 0 auto; padding: 1rem; max-width: 640px;
     line-height: 1.5; font-size: 16px;
@@ -52,13 +59,16 @@
     background: var(--card); border: 1px solid var(--border); border-radius: 8px;
     padding: 1rem; margin: 0.75rem 0;
   }
+  @media (prefers-color-scheme: dark) {
+    .card { box-shadow: 0 1px 0 rgba(0,0,0,0.25); }
+  }
   .subcard {
     background: var(--subcard); border: 1px solid var(--border); border-radius: 6px;
     padding: 0.75rem; margin: 0.5rem 0;
   }
   .subtitle { font-weight: 600; margin-bottom: 0.4rem; font-size: 0.95rem; }
   .big { font-size: 1.6rem; font-weight: 600; line-height: 1.2; }
-  .sub { color: var(--muted); font-size: 0.85rem; margin-top: 0.25rem; }
+  .sub { color: var(--muted); font-size: 0.85rem; margin-top: 0.25rem; word-break: keep-all; }
   .row {
     display: flex; justify-content: space-between; gap: 0.5rem;
     padding: 0.35rem 0; border-bottom: 1px solid var(--border);
@@ -73,7 +83,7 @@
   .day .date { font-size: 0.9rem; }
   .day .date .k { display: inline-block; min-width: 3.2rem; color: var(--muted); }
   .day a { color: var(--fg); text-decoration: underline; text-decoration-color: var(--border); }
-  .bar { height: 6px; background: var(--border); border-radius: 3px; margin: 0.2rem 0 0.5rem; overflow: hidden; }
+  .bar { height: 6px; background: var(--bar-track); border-radius: 3px; margin: 0.2rem 0 0.5rem; overflow: hidden; }
   .bar-fill { height: 100%; background: var(--accent); }
   .links { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.6rem; }
   .links a {
@@ -117,11 +127,16 @@
     max-height: 200px;
   }
   .img-credit { color: var(--muted); font-size: 0.65rem; text-align: right; }
+  .blog-reviews { margin-top: 0.5rem; }
+  .blog-strip { display: flex; gap: 0.5rem; overflow-x: auto; padding-bottom: 0.3rem; -webkit-overflow-scrolling: touch; }
+  .blog-card { flex: 0 0 140px; text-decoration: none; color: var(--fg); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+  .blog-thumb { width: 140px; height: 100px; object-fit: cover; display: block; }
+  .blog-comment { font-size: 0.7rem; padding: 0.3rem; margin: 0; color: var(--muted); line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 </style>
 </head>
 <body>
 <h1>숙박 · 항공</h1>
-<div class="status">에어비앤비 2박 + 카덴쇼 료칸 1박 · 항공 옵션</div>
+<div class="status">에어비앤비 2박 + 카덴쇼 료칸 1박 · 에어서울 4인 발권 완료</div>
 
 <!-- SYNC: data/cost-options.json (lodging.airbnb_shio_machiya) · docs/airbnb-kyoto-may31-jun2-2026.md -->
 <section id="airbnb" class="card">
@@ -135,62 +150,28 @@
 </section>
 
 
-<!-- SYNC: data/cost-options.json (lodging.kadensho_*_2026jun2) · docs/decision-log/2026-05-11-may31-jun3-kyoto-update.md -->
+<!-- SYNC: data/cost-options.json (lodging.kadensho_tripcom_no_meal_2026jun2) · data/booking-checklist.json (ryokan) -->
 <section id="kadensho" class="card">
-  <h2>우메코지 카덴쇼 4 플랜 (6/2 1박, 2명×2실)</h2>
-  <div class="sub" style="margin-bottom:0.5rem;">dormy-hotels.com 공식 검색 2026-05-11. 환불 정책 사전 확인 후 결제.</div>
+  <h2>우메코지 카덴쇼 (6/2 1박)</h2>
+  <div class="sub" style="margin-bottom:0.5rem;">트립닷컴 예약번호 1400825991981904 · 2026-05-13 확정 · 숙소 현지결제.</div>
   
   <div class="subcard">
-    <div class="subtitle">우메코지 카덴쇼 (2명×2실, 조식 포함, 조기할인 15% OFF, 2026-06-02→06-03 1박)</div>
-    <div class="row"><span class="k">1박 (4인)</span><span class="v">₩726,750</span></div>
-    <div class="row"><span class="k">출처</span><span class="v">confirmed_booking</span></div>
-    <div class="sub">원안 4인 1실은 카덴쇼 객실 정원 한계로 가격 노출 0건 → 2명×2실 분리 시 18개 플랜 모두 가용. 공식 사이트(Kyoritsu Resort) 직판 = OTA 대비 일반 저렴 + 쿠폰. 환불 불가 조건 사전 확인 필요.</div>
-  </div>
-  <div class="subcard">
-    <div class="subtitle">우메코지 카덴쇼 (2명×2실, 조식 포함, 꽃전초 세일 10% OFF, 2026-06-02→06-03 1박)</div>
-    <div class="row"><span class="k">1박 (4인)</span><span class="v">₩769,500</span></div>
-    <div class="row"><span class="k">출처</span><span class="v">official_fare</span></div>
-    <div class="sub">조기할인(15%) 다음 가격대. 6월 강가 마루석 시즌 사이드 프로모션.</div>
-  </div>
-  <div class="subcard">
-    <div class="subtitle">우메코지 카덴쇼 (2명×2실, 조식 포함, 스탠다드, 2026-06-02→06-03 1박)</div>
-    <div class="row"><span class="k">1박 (4인)</span><span class="v">₩855,000</span></div>
-    <div class="row"><span class="k">출처</span><span class="v">official_fare</span></div>
-    <div class="sub">기준 가격. 환불 정책 가장 유연.</div>
-  </div>
-  <div class="subcard">
-    <div class="subtitle">우메코지 카덴쇼 (2명×2실, 강가룸 가이세키+조식, 가오슝×꽃전초, 2026-06-02→06-03 1박)</div>
-    <div class="row"><span class="k">1박 (4인)</span><span class="v">₩1,235,000</span></div>
-    <div class="row"><span class="k">출처</span><span class="v">official_fare</span></div>
-    <div class="sub">강가 마루석 + 가이세키 풀코스. 6월 한정 시즌 플랜.</div>
+    <div class="subtitle">우메코지 카덴쇼 (객실 2개, 식사 불포함, 트립닷컴 확정, 2026-06-02→06-03 1박)</div>
+    <div class="row"><span class="k">1박 (4인, 객실 2개)</span><span class="v">₩354,065</span></div>
+    <div class="sub">객실 2개 1박, 식사 불포함, 숙소 현지결제. 조식 미포함은 6/3 새벽 출국 동선 우선(시부 2026-05-13 결정). 가이세키 저녁은 현장 별도 주문. 환불 불가. 숙소 확정번호: 20260513170241828, 20260513170241823 · PIN 5647.</div>
   </div>
 </section>
 
 
-<!-- SYNC: data/cost-options.json (flights) -->
+<!-- SYNC: data/cost-options.json (flights.rs_kix_may31_jun3) · data/booking-checklist.json (flight) -->
 <section id="flights" class="card">
-  <h2>항공 옵션</h2>
+  <h2>항공 (확정)</h2>
   
-  <div class="subcard">
-    <div class="subtitle">에어서울 ICN↔KIX (5/24~27, 3박)</div>
-    <div class="row"><span class="k">일자</span><span class="v">2026-05-24 → 2026-05-27</span></div>
-    <div class="row"><span class="k">4인 총액</span><span class="v">₩1,170,638</span></div>
-    <div class="row"><span class="k">출처</span><span class="v">Skyscanner Gotogate 2026-05-09</span></div>
-    <div class="sub"></div>
-  </div>
-  <div class="subcard">
-    <div class="subtitle">대한항공 ICN↔NGS (5/12~16, 4박)</div>
-    <div class="row"><span class="k">일자</span><span class="v">2026-05-12 → 2026-05-16</span></div>
-    <div class="row"><span class="k">4인 총액</span><span class="v">₩1,147,025</span></div>
-    <div class="row"><span class="k">출처</span><span class="v">Skyscanner Gotogate 2026-05-09</span></div>
-    <div class="sub"></div>
-  </div>
   <div class="subcard">
     <div class="subtitle">ICN↔KIX (5/31~6/3, 3박) — 가족 일정(5/28~29) 회피 후보</div>
     <div class="row"><span class="k">일자</span><span class="v">2026-05-31 → 2026-06-03</span></div>
     <div class="row"><span class="k">4인 총액</span><span class="v">₩1,012,000</span></div>
-    <div class="row"><span class="k">출처</span><span class="v">Skyscanner 4인 직항 일반석 2026-05-11 (₩253,000/인 × 4)</span></div>
-    <div class="sub">변경가능 날짜 비교: 5/27~30 ₩940K(가족 일정 충돌), 5/30~6/2 ₩1,130K, 5/31~6/3 ₩1,012K(선택). 발권사 평점 미확인 → 영욱 직접 재조회 권장.</div>
+    <div class="sub">에어서울 RS · 예약번호 A8YW58 · 2026-05-12 확정 (시부 결제). ICN 13:15→KIX 15:15 / KIX 10:05→ICN 12:05.</div>
   </div>
 </section>
 

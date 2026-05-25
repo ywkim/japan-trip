@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#1a1a1a" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F7F6F2" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#161821" media="(prefers-color-scheme: dark)">
 <title>예약 체크리스트 · 교토 5/31~6/3</title>
 <meta name="description" content="예약 진행 상태 7항목 (확정·미정)">
 <meta property="og:type" content="website">
@@ -22,19 +22,26 @@
 <meta name="twitter:image" content="https://nihon-trip.vercel.app/assets/og-checklist.svg">
 <style>
   :root {
-    --bg: #fff; --fg: #111; --muted: #888; --border: #eaeaea;
-    --accent: #111; --card: #fff; --subcard: #fafafa;
+    --bg: #F7F6F2; --fg: #1B1D24; --muted: #5B6070; --border: #D9D6CC;
+    --accent: #3E5C76; --accent-soft: #E3EAF3;
+    --card: #FFFFFF; --subcard: #EFEDE6;
+    --ok: #2F7D5B; --warn: #B5811F; --danger: #9A3B3B;
+    --bar-track: #E3EAF3;
+    --font-sans: -apple-system, "Apple SD Gothic Neo", "Pretendard Variable", BlinkMacSystemFont, "Segoe UI", sans-serif;
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --bg: #000; --fg: #ededed; --muted: #888; --border: #333;
-      --accent: #ededed; --card: #0a0a0a; --subcard: #111;
+      --bg: #161821; --fg: #E8E6DE; --muted: #9A9DA8; --border: #2E3140;
+      --accent: #8AA8C7; --accent-soft: #262E3A;
+      --card: #1F222C; --subcard: #13151D;
+      --ok: #6FB58E; --warn: #D4B36A; --danger: #D08585;
+      --bar-track: #262E3A;
     }
   }
   * { box-sizing: border-box; }
   html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
   body {
-    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "AppleGothic", sans-serif;
+    font-family: var(--font-sans);
     background: var(--bg); color: var(--fg);
     margin: 0 auto; padding: 1rem; max-width: 640px;
     line-height: 1.5; font-size: 16px;
@@ -52,13 +59,16 @@
     background: var(--card); border: 1px solid var(--border); border-radius: 8px;
     padding: 1rem; margin: 0.75rem 0;
   }
+  @media (prefers-color-scheme: dark) {
+    .card { box-shadow: 0 1px 0 rgba(0,0,0,0.25); }
+  }
   .subcard {
     background: var(--subcard); border: 1px solid var(--border); border-radius: 6px;
     padding: 0.75rem; margin: 0.5rem 0;
   }
   .subtitle { font-weight: 600; margin-bottom: 0.4rem; font-size: 0.95rem; }
   .big { font-size: 1.6rem; font-weight: 600; line-height: 1.2; }
-  .sub { color: var(--muted); font-size: 0.85rem; margin-top: 0.25rem; }
+  .sub { color: var(--muted); font-size: 0.85rem; margin-top: 0.25rem; word-break: keep-all; }
   .row {
     display: flex; justify-content: space-between; gap: 0.5rem;
     padding: 0.35rem 0; border-bottom: 1px solid var(--border);
@@ -73,7 +83,7 @@
   .day .date { font-size: 0.9rem; }
   .day .date .k { display: inline-block; min-width: 3.2rem; color: var(--muted); }
   .day a { color: var(--fg); text-decoration: underline; text-decoration-color: var(--border); }
-  .bar { height: 6px; background: var(--border); border-radius: 3px; margin: 0.2rem 0 0.5rem; overflow: hidden; }
+  .bar { height: 6px; background: var(--bar-track); border-radius: 3px; margin: 0.2rem 0 0.5rem; overflow: hidden; }
   .bar-fill { height: 100%; background: var(--accent); }
   .links { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.6rem; }
   .links a {
@@ -117,16 +127,21 @@
     max-height: 200px;
   }
   .img-credit { color: var(--muted); font-size: 0.65rem; text-align: right; }
+  .blog-reviews { margin-top: 0.5rem; }
+  .blog-strip { display: flex; gap: 0.5rem; overflow-x: auto; padding-bottom: 0.3rem; -webkit-overflow-scrolling: touch; }
+  .blog-card { flex: 0 0 140px; text-decoration: none; color: var(--fg); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+  .blog-thumb { width: 140px; height: 100px; object-fit: cover; display: block; }
+  .blog-comment { font-size: 0.7rem; padding: 0.3rem; margin: 0; color: var(--muted); line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 </style>
 </head>
 <body>
 <h1>예약 체크리스트</h1>
-<div class="status">시나리오: kyoto_may31_kadensho_early_bird · 7개 항목</div>
+<div class="status">3개 확정 · 5개 미정 · 총 8개 항목</div>
 
 <!-- SYNC: data/booking-checklist.json -->
 <section class="card">
   <h2>상태 요약</h2>
-  <div class="row"><span class="k">확정</span><span class="v">3개</span></div><div class="row"><span class="k">예약중</span><span class="v">0개</span></div><div class="row"><span class="k">미정</span><span class="v">4개</span></div>
+  <div class="row"><span class="k">확정</span><span class="v">3개</span></div><div class="row"><span class="k">예약중</span><span class="v">0개</span></div><div class="row"><span class="k">미정</span><span class="v">5개</span></div>
 </section>
 
 <section class="card">
@@ -136,19 +151,19 @@
     <div class="subtitle">항공 (ICN↔KIX 5/31~6/3, 4인)</div>
     <div class="row"><span class="k">상태</span><span class="v"><span class="badge">확정</span></span></div>
     <div class="row"><span class="k">기한</span><span class="v">2026-05-18</span></div>
-    <div class="sub">에어서울 RS · 예약번호 A8YW58 · ICN 13:15→KIX 15:15 / KIX 10:05→ICN 12:05 · 탑승객: KIM/BYUNGNAM, WANG/HAEJA, KIM/YOUNGWOOK, LEE/SOYEON</div>
+    <div class="sub">에어서울 RS · 예약번호 A8YW58 · ICN 13:15→KIX 15:15 / KIX 10:05→ICN 12:05 · 탑승객: KIM/BYUNGNAM, WANG/HAEJA, KIM/YOUNGWOOK, LEE/SOYEON · 2026-05-12 확정 (시부 PC 결제)</div>
   </div>
   <div class="subcard">
     <div class="subtitle">에어비앤비 #3 시오(Shio) 5/31~6/2 (2박, 4명)</div>
     <div class="row"><span class="k">상태</span><span class="v"><span class="badge">확정</span></span></div>
     <div class="row"><span class="k">기한</span><span class="v">2026-05-18</span></div>
-    <div class="sub">에어비앤비 확정 · 총 ₩740,954 (2박) · 매물 1373928005681941061</div>
+    <div class="sub">에어비앤비 확정 · 총 ₩740,954 (2박) · 매물 1373928005681941061 · 체크인 5/31 15:00 / 체크아웃 6/2 10:00 · 2026-05-13 확정 (시부 KB국민카드 결제)</div>
   </div>
   <div class="subcard">
-    <div class="subtitle">우메코지 카덴쇼 6/2 (1박, 2명×2실 조기할인 조식)</div>
+    <div class="subtitle">우메코지 카덴쇼 6/2 (1박, 객실 2개, 식사 불포함)</div>
     <div class="row"><span class="k">상태</span><span class="v"><span class="badge">확정</span></span></div>
     <div class="row"><span class="k">기한</span><span class="v">2026-05-18</span></div>
-    <div class="sub">예약 확정. dormy-hotels.com 직판 조기할인 조식 포함. 4인 ¥76,500 ≈ ₩726,750</div>
+    <div class="sub">트립닷컴 예약 확정 2026-05-13 · 예약번호 1400825991981904 · 숙소 확정번호 20260513170241828, 20260513170241823 · PIN 5647 · 객실 2개 1박 · 식사 불포함 · JPY 37,270 (≈ ₩354,065, FX 100엔=950원) · 숙소 현지결제 · 체크인 6/2 15:00 / 체크아웃 6/3 11:00 · 예약자 KIM BYUNG NAM · 조식 미포함은 6/3 새벽 출국 동선 우선 결정 (시부 2026-05-13) · 가이세키 저녁은 현장 별도 주문</div>
   </div>
   <div class="subcard">
     <div class="subtitle">여행자보험 (4인, 시부모 포함)</div>
@@ -157,10 +172,16 @@
     <div class="sub">시부모 보험·상비약, 한국어 가능 의료기관 위치 사전 저장</div>
   </div>
   <div class="subcard">
-    <div class="subtitle">교통패스 (ICOCA &amp; HARUKA + 교토 시영 1일권)</div>
+    <div class="subtitle">교통패스 (Apple Wallet ICOCA 단권 + 하루카 할인 편도권)</div>
     <div class="row"><span class="k">상태</span><span class="v"><span class="badge" style="color:var(--muted)">미정</span></span></div>
     <div class="row"><span class="k">기한</span><span class="v">2026-05-25</span></div>
-    <div class="sub">JR 하루카 KIX↔교토 왕복 ¥2,400 × 4 × 2 = ₩192K, 교토 시영 1일권 ¥700 × 4 × 3 = ₩84K</div>
+    <div class="sub">결정(소연, 2026-05-19): 하루카 할인 편도권 채택, JR 간사이 패스 미채택. 하루카 KIX↔교토 할인 편도권 ¥2,200/인(외국인 단기체재·자유석) × 4인 × 2(왕복) = ¥17,600 ≈ ₩167K. 교토 시내 JR·시버스는 4인 Apple Wallet ICOCA 단권(기확정). 발권: 출발 전 클룩/JR서일본 온라인 예약 또는 KIX 도착 후 JR 매표소 교환 — 방식 확정 후 status·reference 갱신. (시부모 2인 75분 구간 지정석 +¥530/인 옵션 가능, 채택 시 별도 갱신). 비교 근거(1/2/3/4일권 부적합): https://github.com/ywkim/japan-trip/blob/main/docs/transit-pass-jr-kansai-2026.md</div>
+  </div>
+  <div class="subcard">
+    <div class="subtitle">사이호지(이끼사찰) 예약 가능성 조사 (intosaihoji.com)</div>
+    <div class="row"><span class="k">상태</span><span class="v"><span class="badge" style="color:var(--muted)">미정</span></span></div>
+    <div class="row"><span class="k">기한</span><span class="v">2026-05-25</span></div>
+    <div class="sub">1977년부터 사전예약 필수. 온라인 포털 intosaihoji.com에서 5/31~6/2 슬롯 가능 여부 + 정확한 입장료(¥4,000/인 추정) 확인. 5/24 현재 출국 7일 전으로 lead time 미공시 → 즉시 확인 필요. 예약 가능 시 6/2 후시미이나리·토후쿠지 일정 일부 재배치 검토 (별도 PR)</div>
   </div>
   <div class="subcard">
     <div class="subtitle">eSIM / 데이터 (4인)</div>

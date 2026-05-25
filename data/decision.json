@@ -1,4 +1,6 @@
 {
+  "_archive_status": "decision_ended_2026_05_12",
+  "_archive_note": "MCDA 의사결정 종료 (2026-05-12, 교토 확정). 본 파일은 회귀 가드·재참조용 아카이브. 운영 정본은 data/booking-checklist.json·data/itinerary.json·data/cost-options.json scenarios.kyoto_may31_kadensho_early_bird.",
   "trip": {
     "destination_country": "일본",
     "travelers": ["영욱", "소연", "시아버지", "시어머니"],
@@ -90,7 +92,7 @@
         "medical_access": 6,
         "seasonality": 9
       },
-      "notes": "2026-05-31~06-03 시나리오 (4인 시부모 동반 확정). 1·2박 에어비앤비(5/31~6/2), 마지막 박 우메코지 카덴쇼 료칸 2명×2실 조기할인 조식 포함(6/2~6/3). seasonality: weather.json kyoto 2026-05 comfort_score=9. 상세: docs/kyoto-itinerary-may-2026.md, docs/airbnb-kyoto-may31-jun2-2026.md, docs/decision-log/2026-05-11-may31-jun3-kyoto-update.md"
+      "notes": "2026-05-31~06-03 시나리오 (4인 시부모 동반 확정). 1·2박 에어비앤비(5/31~6/2, Shio 마치야), 마지막 박 우메코지 카덴쇼 객실 2개 식사 불포함 트립닷컴 확정(6/2~6/3, 2026-05-13). seasonality: weather.json kyoto 2026-05 comfort_score=9. 상세: docs/kyoto-itinerary-may-2026.md, docs/airbnb-kyoto-may31-jun2-2026.md, docs/decision-log/2026-05-11-may31-jun3-kyoto-update.md, docs/decision-log/2026-05-20-kakaotalk-sync-kadensho-booking.md"
     },
     {
       "id": "sapporo",

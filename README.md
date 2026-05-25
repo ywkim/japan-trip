@@ -13,7 +13,7 @@
 | 동반 | 부부 2인 + 시부모 2인 (4인) |
 | 항공 | 에어서울 인천↔간사이 4인 발권 |
 | 1·2박 (5/31·6/1) | 시오(Shio) 100년 마치야 에어비앤비 |
-| 3박 (6/2) | 우메코지 카덴쇼 조기할인 조식포함 |
+| 3박 (6/2) | 우메코지 카덴쇼 트립닷컴 (객실 2개, 식사 불포함) |
 
 상세는 `docs/kyoto-itinerary-may31-jun3-2026.md` (사람용 일정), `docs/decision-log/` (의사결정 시계열).
 
@@ -56,10 +56,16 @@
 
 ### 6. 검증 (CI)
 
-- `python -m unittest discover tests` — 단위 테스트 (validate·build_index·score·budget)
-- `python scripts/validate.py` — 가격 필드 무결성(source·data_quality), 30/60일 묵은 가격 경고/실패, SYNC 주석 경로·절 번호 검증, `docs/weather.md`↔`data/weather.json` 및 `docs/flights.md`↔`data/flights.json` 동기화 검증
-- `python scripts/build_index.py --check` — 빌드 산출물이 데이터와 동기화 상태인지 (drift 시 exit 1)
+- `python -m unittest discover tests` — 단위 테스트 (validate·build_index·design_tokens·score·budget)
+- `python scripts/validate.py` — 가격 필드 무결성(source·data_quality), 30/60일 묵은 가격 경고/실패, SYNC 주석 경로·절 번호 검증, `docs/weather.md`↔`data/weather.json`, `docs/flights.md`↔`data/flights.json`, `DESIGN.md`↔`data/design-tokens.json` 동기화 검증
+- `python scripts/build_index.py --check` — 6 HTML + 6 OG SVG 빌드 산출물(`index.html`·`viz/itinerary.html`·`viz/itinerary-table.html`·`viz/lodging.html`·`viz/checklist.html`·`viz/archive.html`·`assets/og-*.svg`)이 데이터·토큰과 동기화 상태인지 (drift 시 exit 1)
 - `.github/workflows/validate.yml`이 PR마다 위를 실행
+
+### 7. 시각 디자인 출처
+
+- `DESIGN.md` — 시각 디자인 컨벤션 (`voltagent/awesome-design-md` 9섹션). Quiet Ledger 테마: paper-white + slate-indigo accent. AI 에이전트가 UI 변경 작업 시 본 파일을 1차 참조
+- `data/design-tokens.json` — 색·타이포·간격·반경 단일 출처. `scripts/build_index.py`의 `render_css(tokens)`가 6개 산출물(`index.html`·`viz/itinerary.html`·`viz/itinerary-table.html`·`viz/lodging.html`·`viz/checklist.html`·`viz/archive.html`)의 인라인 CSS를 공통 생성
+- 동기화 게이트: `scripts/validate.py` (H)가 DESIGN.md ↔ tokens의 drift를 PR 단계에서 차단
 
 ## 아카이브 (참조용)
 
@@ -71,6 +77,7 @@
 - `docs/candidates.md` — 후보지 상세 비교
 - `docs/weather.md` — 시기별 쾌적도 순위, `seasonality`/`physical_burden` 점수 제안 + §5 교토 5/31~6/3 장마 정량 분석
 - `docs/flights.md` — 4인 총액 비교, GMP 가용성
+- `docs/transit-pass-jr-kansai-2026.md` — JR 간사이 에어리어 패스 1/2/3/4일권 비교·권장 (예약 탭 `transit_pass` 근거)
 - `reports/final-report.md` — 최종 권고 (교토·5/31~6/3·4인)
 - `scripts/score.py`·`scripts/budget.py` — 회귀 가드용
 
@@ -79,12 +86,13 @@
 ## 디렉토리
 
 ```
-data/        # itinerary·booking-checklist·cost-options (실행 단일 출처) + decision·weather·flights (아카이브)
+DESIGN.md    # 시각 디자인 컨벤션 (awesome-design-md 9섹션, Quiet Ledger)
+data/        # itinerary·booking-checklist·cost-options·design-tokens (실행 단일 출처) + decision·weather·flights (아카이브)
 docs/        # 일정·후보·날씨·항공 분석, 의사결정 일지(decision-log/)
 viz/         # itinerary.html·itinerary-table.html·lodging.html·checklist.html·archive.html (build_index.py 산출물)
 assets/      # og-*.svg (OG/Twitter 카드 이미지 6장, build_index.py 산출물)
 scripts/     # build_index·validate·score·budget·render-pdf
-tests/       # unittest (validate·build_index·score·budget)
+tests/       # unittest (validate·build_index·design_tokens·score·budget)
 reports/     # 최종 보고서 (아카이브)
 index.html   # 운영 페이지 — 요약·일자별 일정 (build_index.py 산출물)
 ```
