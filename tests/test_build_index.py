@@ -292,6 +292,25 @@ class TransitFoldTests(unittest.TestCase):
                     self.assertIn(s["when"], html, f"step.when {s['when']!r} not in {path.name}")
 
 
+class NoteFoldTests(unittest.TestCase):
+    """긴 예약·숙박 메모(예약번호·PIN·탑승객 등)를 접기로 렌더하는 회귀 가드."""
+
+    def test_long_notes_collapsed_in_lodging_and_checklist(self):
+        run()
+        for path in (LODGING, CHECKLIST):
+            with self.subTest(path=path.name):
+                html = path.read_text(encoding="utf-8")
+                self.assertIn('<details class="leg"', html,
+                              f"{path.name} should collapse long notes into a fold")
+
+    def test_collapsed_note_detail_preserved(self):
+        """접어도 운영 메모 텍스트(PIN·확정번호)는 HTML에 그대로 남아야 한다."""
+        run()
+        html = CHECKLIST.read_text(encoding="utf-8")
+        self.assertIn("PIN 5647", html, "checklist note detail (PIN) lost after fold")
+        self.assertIn("20260513170241828", html, "checklist note detail (confirm no.) lost after fold")
+
+
 class ItineraryTableTests(unittest.TestCase):
     def test_table_file_is_generated(self):
         run()

@@ -374,7 +374,7 @@ def card_airbnb(d) -> str:
   <div class="row"><span class="k">위치</span><span class="v">중교구 · 니조역 도보 7분</span></div>
   <div class="row"><span class="k">2박 총액</span><span class="v">{esc(won(two_night))}</span></div>
   <div class="row"><span class="k">1인 1박</span><span class="v">{esc(won(l['per_night_krw'] // 4))}</span></div>
-  <div class="sub" style="margin-top:0.4rem;">{esc(l.get('notes', ''))}</div>
+  {note_block(l.get('notes', ''), style='margin-top:0.4rem;')}
   <div class="links">{link_html}</div>
 </section>
 """
@@ -388,7 +388,7 @@ def card_kadensho(d) -> str:
   <div class="subcard">
     <div class="subtitle">{esc(l['name'])}</div>
     <div class="row"><span class="k">1박 (4인, 객실 2개)</span><span class="v">{esc(won(l['per_night_krw']))}</span></div>
-    <div class="sub">{esc(l.get('notes', ''))}</div>
+    {note_block(l.get('notes', ''))}
   </div>""")
     return f"""
 <!-- SYNC: data/cost-options.json (lodging.kadensho_tripcom_no_meal_2026jun2) · data/booking-checklist.json (ryokan) -->
@@ -409,7 +409,7 @@ def card_flights(d) -> str:
     <div class="subtitle">{esc(f['label'])}</div>
     <div class="row"><span class="k">일자</span><span class="v">{esc(f['depart_date'])} → {esc(f['return_date'])}</span></div>
     <div class="row"><span class="k">4인 총액</span><span class="v">{esc(won(f['total_krw']))}</span></div>
-    <div class="sub">에어서울 RS · 예약번호 A8YW58 · 2026-05-12 확정 (시부 결제). ICN 13:15→KIX 15:15 / KIX 10:05→ICN 12:05.</div>
+    {note_block("에어서울 RS · 예약번호 A8YW58 · 2026-05-12 확정 (시부 결제). ICN 13:15→KIX 15:15 / KIX 10:05→ICN 12:05.")}
   </div>""")
     return f"""
 <!-- SYNC: data/cost-options.json (flights.rs_kix_may31_jun3) · data/booking-checklist.json (flight) -->
@@ -487,6 +487,24 @@ def fold(summary_html: str, detail_html: str, *, open: bool = False) -> str:
         f'<details class="leg"{open_attr}><summary>{summary_html}</summary>'
         f'<div class="leg-detail">{detail_html}</div></details>'
     )
+
+
+def note_block(note: str, *, style: str = "") -> str:
+    """예약·숙박 메모를 짧으면 평문, 길면 '앞 항목 요약 + 접기'로 렌더.
+
+    ' · '로 구분된 장문 운영 메모(예약번호·PIN·탑승객·체크인시각 등)가
+    카드를 압도하지 않도록, 식별용 앞 2개 항목만 보이고 나머지는 접는다.
+    """
+    note = (note or "").strip()
+    if not note:
+        return ""
+    style_attr = f' style="{style}"' if style else ""
+    if len(note) <= 60:
+        return f'<div class="sub"{style_attr}>{esc(note)}</div>'
+    segs = [s for s in note.split(" · ") if s.strip()]
+    if len(segs) >= 3:
+        return fold(esc(" · ".join(segs[:2])), esc(" · ".join(segs[2:])))
+    return fold("상세 보기", esc(note))
 
 
 def transit_line(af) -> str:
@@ -896,7 +914,7 @@ def build_checklist(d) -> str:
     <div class="subtitle">{esc(it['label'])}</div>
     <div class="row"><span class="k">상태</span><span class="v"><span class="badge"{badge_style}>{esc(it['status'])}</span></span></div>
     <div class="row"><span class="k">기한</span><span class="v">{esc(it.get('due_date',''))}</span></div>
-    <div class="sub">{esc(it.get('note',''))}</div>
+    {note_block(it.get('note',''))}
   </div>""")
 
     body = f"""<h1>예약 체크리스트</h1>

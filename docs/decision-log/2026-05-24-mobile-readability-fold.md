@@ -19,14 +19,15 @@ Accepted
 - `transit_line()` 재작성: 요약은 모드별 한국어 동사(`MODE_VERBS`: 걸어서·버스로·전철로·공항특급으로 등) + 소요시간(예: "🚌 버스로 35분", tbd는 "약 35분 (현지 확인)"), 상세는 원문 `route` + 기존 출처 URL(`경로 ↗` 링크).
 - 타임라인 항목 순서를 "시간·장소 먼저 → 이동 접기 아래"로 재배치하고 시간(`.day .date .k`)을 굵게·tabular-nums로 강조.
 - ICOCA 실행 단계·예산 비선택 시나리오를 `fold`로 접는다(선택 시나리오는 펼친 상태 유지).
-- 적용: index·viz/itinerary·viz/itinerary-table·viz/archive. 비대상: lodging·checklist(2~3줄 k/v 카드라 이미 스캔 가능).
+- `note_block()` 헬퍼 추가: 60자 초과 예약·숙박 메모는 `·` 구분 앞 2개 항목을 요약으로 노출하고 나머지(예약번호·PIN·탑승객·FX·체크인시각 등)를 접는다. 60자 이하는 평문 유지.
+- 적용: index·viz/itinerary·viz/itinerary-table·viz/archive(이동·playbook·예산) + viz/lodging·viz/checklist(긴 메모). 모든 화면 커버.
 
 ## Consequences (그래서)
 
 - 긍정: 기본 화면이 "시간·장소·이동수단·소요시간"만 보여 한눈에 들어옴. 상세 경로·출처 링크는 손실 없이 접기 안에 보존. 표 셀도 짧아져 가독성 향상.
 - 부정·트레이드오프: 상세 경로 확인에 탭 1회 필요. `<details>` 의존(구형 브라우저 일부 미지원이나 모바일 사파리·크롬 지원).
 - 후속: 새 장문 정보도 `fold` 패턴을 따른다(CLAUDE.md 데이터 동기화 규칙에 명시).
-- 영향 받은 파일: `scripts/build_index.py`(헬퍼·`transit_line`·`card_budget`·playbook·타임라인 순서·CSS), `tests/test_build_index.py`(`TransitFoldTests` 신규), 재빌드된 6 HTML, `README.md`, `CLAUDE.md`.
+- 영향 받은 파일: `scripts/build_index.py`(`fold`·`note_block`·`transit_line`·`card_budget`·lodging/checklist 메모·playbook·타임라인 순서·CSS), `tests/test_build_index.py`(`TransitFoldTests`·`NoteFoldTests` 신규), 재빌드된 6 HTML, `README.md`, `CLAUDE.md`.
 
 ## Test plan
 
