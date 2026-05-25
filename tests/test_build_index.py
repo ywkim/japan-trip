@@ -270,6 +270,42 @@ class BuildIndexTests(unittest.TestCase):
                 self.assertIn(f'href="{url}"', html,
                               f"note URL {url!r} not rendered as <a href> in checklist.html")
 
+    def test_checklist_status_is_color_coded(self):
+        """예약 탭 항목은 상태별 색상 클래스(badge·subcard accent)로 구분돼야 한다.
+        확정/미정을 한눈에 스캔하기 위한 시각 회귀 가드."""
+        run()
+        html = CHECKLIST.read_text(encoding="utf-8")
+        for cls in ("badge-done", "badge-pending", "status-pending", "status-done"):
+            with self.subTest(cls=cls):
+                self.assertIn(cls, html, f"checklist.html missing status class {cls!r}")
+
+    def test_checklist_renders_structured_fields(self):
+        """긴 노트 대신 금액·예약번호·권장 등 구조화 필드가 라벨 행으로 렌더돼야 한다."""
+        run()
+        html = CHECKLIST.read_text(encoding="utf-8")
+        for label in ("금액", "권장", "예약번호"):
+            with self.subTest(label=label):
+                self.assertIn(f">{label}<", html,
+                              f"checklist.html missing structured field label {label!r}")
+
+    def test_checklist_long_note_is_collapsible(self):
+        """긴 리서치 노트는 <details>로 접혀 기본 화면이 간결해야 한다."""
+        run()
+        html = CHECKLIST.read_text(encoding="utf-8")
+        self.assertIn("<details", html, "checklist long note should be collapsible (<details>)")
+        self.assertIn("자세히", html, "collapsible note should have a '자세히' summary")
+
+    def test_checklist_pending_due_has_dday(self):
+        """미정(처리 필요) 항목의 마감일은 D-day 계산용 data-due 속성과
+        클라이언트 스크립트를 동반해야 한다 (빌드 결정성 유지)."""
+        run()
+        html = CHECKLIST.read_text(encoding="utf-8")
+        self.assertIn('data-due="2026-05-25"', html,
+                      "pending due date should carry data-due for client-side D-day")
+        self.assertIn('class="dday"', html, "checklist should render a .dday slot")
+        self.assertIn("getAttribute('data-due')", html,
+                      "checklist should include the D-day computing script")
+
 
 class ItineraryTableTests(unittest.TestCase):
     def test_table_file_is_generated(self):

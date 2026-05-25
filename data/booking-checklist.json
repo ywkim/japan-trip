@@ -1,5 +1,5 @@
 {
-  "_doc": "예약 진행 상태. status: 미정|예약중|확정. index.html §7 카드 데이터 출처. 변경 시 build_index.py 재실행.",
+  "_doc": "예약 진행 상태. status: 미정|예약중|확정. viz/checklist.html(예약 탭) 카드 데이터 출처. 변경 시 build_index.py 재실행. 선택 필드(스캔용 요약): amount(금액 한 줄)·reference(예약/확정 정보, 확정 항목)·action(권장 다음 행동, 미정 항목)·link({label,url} 출처/상세 문서). note는 전체 상세(예약 탭에서 '자세히'로 접힘).",
   "scenario": "kyoto_may31_kadensho_early_bird",
   "items": [
     {
@@ -7,6 +7,7 @@
       "label": "항공 (ICN↔KIX 5/31~6/3, 4인)",
       "status": "확정",
       "due_date": "2026-05-18",
+      "reference": "에어서울 RS · A8YW58 · 2026-05-12 발권 (시부 PC)",
       "note": "에어서울 RS · 예약번호 A8YW58 · ICN 13:15→KIX 15:15 / KIX 10:05→ICN 12:05 · 탑승객: KIM/BYUNGNAM, WANG/HAEJA, KIM/YOUNGWOOK, LEE/SOYEON · 2026-05-12 확정 (시부 PC 결제)"
     },
     {
@@ -14,6 +15,8 @@
       "label": "에어비앤비 #3 시오(Shio) 5/31~6/2 (2박, 4명)",
       "status": "확정",
       "due_date": "2026-05-18",
+      "amount": "₩740,954 (2박, 4인)",
+      "reference": "Airbnb 매물 1373928005681941061 · 2026-05-13 확정 (시부 KB국민카드)",
       "note": "에어비앤비 확정 · 총 ₩740,954 (2박) · 매물 1373928005681941061 · 체크인 5/31 15:00 / 체크아웃 6/2 10:00 · 2026-05-13 확정 (시부 KB국민카드 결제)"
     },
     {
@@ -21,6 +24,8 @@
       "label": "우메코지 카덴쇼 6/2 (1박, 객실 2개, 식사 불포함)",
       "status": "확정",
       "due_date": "2026-05-18",
+      "amount": "JPY 37,270 (≈₩354,065) · 숙소 현지결제",
+      "reference": "트립닷컴 1400825991981904 · PIN 5647 · 2026-05-13 확정",
       "note": "트립닷컴 예약 확정 2026-05-13 · 예약번호 1400825991981904 · 숙소 확정번호 20260513170241828, 20260513170241823 · PIN 5647 · 객실 2개 1박 · 식사 불포함 · JPY 37,270 (≈ ₩354,065, FX 100엔=950원) · 숙소 현지결제 · 체크인 6/2 15:00 / 체크아웃 6/3 11:00 · 예약자 KIM BYUNG NAM · 조식 미포함은 6/3 새벽 출국 동선 우선 결정 (시부 2026-05-13) · 가이세키 저녁은 현장 별도 주문"
     },
     {
@@ -28,6 +33,9 @@
       "label": "여행자보험 (4인, 시부모 포함)",
       "status": "미정",
       "due_date": "2026-05-25",
+      "amount": "1인 ₩8,000~20,000 (실손 종합형, 65세+ 할증)",
+      "action": "삼성·DB·카카오페이·토스 다이렉트에서 시부모 생년 입력 후 가입",
+      "link": {"label": "리서치 상세", "url": "https://github.com/ywkim/japan-trip/blob/main/docs/booking-research-2026-05-24.md"},
       "note": "시부모 보험·상비약, 한국어 가능 의료기관 위치 사전 저장 · 리서치 완료(2026-05-24): 일본 3박4일 종합형 1인 약 ₩8,000~20,000(기본형 ₩3,000~8,000), 65세+ 시부모 2인은 연령 할증으로 2~3배 가능. 의료비 한도 높은 실손형 권장. 채널: 삼성화재·DB손보·카카오페이·토스 다이렉트(연령·출발/귀국일 입력 시 정확 산출). 상세·출처: https://github.com/ywkim/japan-trip/blob/main/docs/booking-research-2026-05-24.md"
     },
     {
@@ -35,6 +43,9 @@
       "label": "eSIM / 데이터 (4인)",
       "status": "미정",
       "due_date": "2026-05-28",
+      "amount": "1인 ~₩11K (Klook 데이터 플랜)",
+      "action": "Klook 가성비 플랜 4인 · 출국 전 설치, 도착 후 활성화 (기기 eSIM 지원 확인)",
+      "link": {"label": "리서치 상세", "url": "https://github.com/ywkim/japan-trip/blob/main/docs/booking-research-2026-05-24.md"},
       "note": "Klook·Trip.com 4일권 시세 ₩5~10K/인 · 리서치 완료(2026-05-24): Klook 일일 데이터 플랜 ~$2/일(8일 무제한 1GB/일 기준) → 4일 ~₩11K/인 내외, Airalo 5GB/7일 ~$10·Holafly 무제한은 고가. 권장: Klook 가성비 데이터 플랜, 출국 전 설치·도착 후 활성화(4인 각 기기 eSIM 지원 확인). 상세·출처: https://github.com/ywkim/japan-trip/blob/main/docs/booking-research-2026-05-24.md"
     },
     {
@@ -42,6 +53,9 @@
       "label": "교통패스 (Apple Wallet ICOCA 단권 + 하루카 할인 편도권)",
       "status": "미정",
       "due_date": "2026-05-25",
+      "amount": "하루카 할인 편도 ¥2,200/인 · 4인 왕복 ≈₩167K",
+      "action": "JR West 온라인 2026 WEST QR e-티켓 사전 구매(지정석) 또는 Klook QR",
+      "link": {"label": "리서치 상세", "url": "https://github.com/ywkim/japan-trip/blob/main/docs/booking-research-2026-05-24.md"},
       "note": "결정(소연, 2026-05-19): 하루카 할인 편도권 채택, JR 간사이 패스 미채택. 하루카 KIX↔교토 할인 편도권 ¥2,200/인(외국인 단기체재·자유석) × 4인 × 2(왕복) = ¥17,600 ≈ ₩167K. 교토 시내 JR·시버스는 4인 Apple Wallet ICOCA 단권(기확정). 발권: 출발 전 클룩/JR서일본 온라인 예약 또는 KIX 도착 후 JR 매표소 교환 — 방식 확정 후 status·reference 갱신. (시부모 2인 75분 구간 지정석 +¥530/인 옵션 가능, 채택 시 별도 갱신). 비교 근거(1/2/3/4일권 부적합): https://github.com/ywkim/japan-trip/blob/main/docs/transit-pass-jr-kansai-2026.md · 발권 채널 리서치 완료(2026-05-24): 하루카 할인 편도 ¥2,200/인 재확인(japan-guide.com). 권장 = JR West 온라인 2026 WEST QR e-티켓 사전 구매(지정석 사전 예약·KIX 교환 대기 회피) 또는 Klook QR 바우처(유효 3개월). 여권 단기체재 제시 필수. 상세: https://github.com/ywkim/japan-trip/blob/main/docs/booking-research-2026-05-24.md"
     },
     {
@@ -49,6 +63,9 @@
       "label": "환전 / 트래블카드",
       "status": "미정",
       "due_date": "2026-05-28",
+      "amount": "1인 현금 ¥30,000 가정",
+      "action": "트래블로그(하나계좌)/트래블월렛 + ATM 잦으면 SOL트래블 병행",
+      "link": {"label": "리서치 상세", "url": "https://github.com/ywkim/japan-trip/blob/main/docs/booking-research-2026-05-24.md"},
       "note": "1인 ¥30,000 가정 (현금 식비·신사 새전·잔돈). 트래블월렛/하나비바X 등 무환전료 카드 권장 · 리서치 완료(2026-05-24): 트래블월렛(USD/EUR/JPY 환전수수료 0·ATM 월$500 무료), 하나 트래블로그(4통화 무료·하나계좌 보유 시 유리), 신한 SOL트래블(ATM 인출수수료 0·한도 큼). 권장: 하나계좌 보유 시 트래블로그, 아니면 트래블월렛 + ATM 인출 잦으면 SOL트래블 병행. 현금 ¥30,000/인은 신사 새전·소액 현금 전용점에 적정. 상세·출처: https://github.com/ywkim/japan-trip/blob/main/docs/booking-research-2026-05-24.md"
     }
   ]
