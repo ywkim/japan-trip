@@ -196,6 +196,7 @@ CSS = """
   .badge {
     display: inline-block; padding: 0.1rem 0.45rem; border-radius: 4px;
     font-size: 0.75rem; border: 1px solid currentColor;
+    white-space: nowrap; flex-shrink: 0;
   }
   /* ── 예약 체크리스트 ── */
   .ck-head { display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; margin-bottom: 0.4rem; }

@@ -270,6 +270,14 @@ class BuildIndexTests(unittest.TestCase):
                 self.assertIn(f'href="{url}"', html,
                               f"note URL {url!r} not rendered as <a href> in checklist.html")
 
+    def test_checklist_badge_does_not_wrap(self):
+        """상태 배지(미정/확정)가 좁은 폭에서 글자 단위로 세로 줄바꿈되지 않도록
+        nowrap·flex-shrink:0 규칙이 있어야 한다 (모바일 ck-head flex 압축 방지)."""
+        run()
+        html = CHECKLIST.read_text(encoding="utf-8")
+        self.assertRegex(html, r"\.badge\s*\{[^}]*white-space:\s*nowrap")
+        self.assertRegex(html, r"\.badge\s*\{[^}]*flex-shrink:\s*0")
+
     def test_checklist_status_is_color_coded(self):
         """예약 탭 항목은 상태별 색상 클래스(badge·subcard accent)로 구분돼야 한다.
         확정/미정을 한눈에 스캔하기 위한 시각 회귀 가드."""
