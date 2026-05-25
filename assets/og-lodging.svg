@@ -1,11 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
-  <rect width="1200" height="630" fill="#0a0a0a"/>
-  <rect x="0" y="0" width="12" height="630" fill="#ededed"/>
-  <g font-family="-apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" fill="#ededed">
-    <text x="80" y="170" font-size="34" font-weight="500" fill="#888">숙박 · 항공</text>
+  <rect width="1200" height="630" fill="#1F222C"/>
+  <rect x="0" y="0" width="12" height="630" fill="#8AA8C7"/>
+  <g font-family="-apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif" fill="#E8E6DE">
+    <text x="80" y="170" font-size="34" font-weight="500" fill="#9A9DA8">숙박 · 항공</text>
     <text x="80" y="290" font-size="84" font-weight="700">시오 2박 + 카덴쇼 1박</text>
-    <text x="80" y="380" font-size="40" font-weight="400" fill="#cfcfcf">에어서울 인천↔간사이 4인 발권</text>
-    <text x="80" y="560" font-size="26" font-weight="500" fill="#888">nihon-trip.vercel.app</text>
-    <text x="1120" y="560" font-size="26" font-weight="500" fill="#888" text-anchor="end">교토 가족여행 2026</text>
+    <text x="80" y="380" font-size="40" font-weight="400" fill="#9A9DA8">에어서울 인천↔간사이 4인 발권</text>
+    <text x="80" y="560" font-size="26" font-weight="500" fill="#9A9DA8">nihon-trip.vercel.app</text>
+    <text x="1120" y="560" font-size="26" font-weight="500" fill="#9A9DA8" text-anchor="end">교토 가족여행 2026</text>
   </g>
 </svg>

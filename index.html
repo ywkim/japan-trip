@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#1a1a1a" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F7F6F2" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#161821" media="(prefers-color-scheme: dark)">
 <title>교토 5/31~6/3 · 4인 가족 여행</title>
 <meta name="description" content="교토 5/31~6/3 · 4인 가족(부부+시부모) · 3박 4일 · 확정 일정·예약 현황">
 <meta property="og:type" content="website">
@@ -22,19 +22,26 @@
 <meta name="twitter:image" content="https://nihon-trip.vercel.app/assets/og-home.svg">
 <style>
   :root {
-    --bg: #fff; --fg: #111; --muted: #888; --border: #eaeaea;
-    --accent: #111; --card: #fff; --subcard: #fafafa;
+    --bg: #F7F6F2; --fg: #1B1D24; --muted: #5B6070; --border: #D9D6CC;
+    --accent: #3E5C76; --accent-soft: #E3EAF3;
+    --card: #FFFFFF; --subcard: #EFEDE6;
+    --ok: #2F7D5B; --warn: #B5811F; --danger: #9A3B3B;
+    --bar-track: #E3EAF3;
+    --font-sans: -apple-system, "Apple SD Gothic Neo", "Pretendard Variable", BlinkMacSystemFont, "Segoe UI", sans-serif;
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --bg: #000; --fg: #ededed; --muted: #888; --border: #333;
-      --accent: #ededed; --card: #0a0a0a; --subcard: #111;
+      --bg: #161821; --fg: #E8E6DE; --muted: #9A9DA8; --border: #2E3140;
+      --accent: #8AA8C7; --accent-soft: #262E3A;
+      --card: #1F222C; --subcard: #13151D;
+      --ok: #6FB58E; --warn: #D4B36A; --danger: #D08585;
+      --bar-track: #262E3A;
     }
   }
   * { box-sizing: border-box; }
   html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
   body {
-    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "AppleGothic", sans-serif;
+    font-family: var(--font-sans);
     background: var(--bg); color: var(--fg);
     margin: 0 auto; padding: 1rem; max-width: 640px;
     line-height: 1.5; font-size: 16px;
@@ -52,13 +59,16 @@
     background: var(--card); border: 1px solid var(--border); border-radius: 8px;
     padding: 1rem; margin: 0.75rem 0;
   }
+  @media (prefers-color-scheme: dark) {
+    .card { box-shadow: 0 1px 0 rgba(0,0,0,0.25); }
+  }
   .subcard {
     background: var(--subcard); border: 1px solid var(--border); border-radius: 6px;
     padding: 0.75rem; margin: 0.5rem 0;
   }
   .subtitle { font-weight: 600; margin-bottom: 0.4rem; font-size: 0.95rem; }
   .big { font-size: 1.6rem; font-weight: 600; line-height: 1.2; }
-  .sub { color: var(--muted); font-size: 0.85rem; margin-top: 0.25rem; }
+  .sub { color: var(--muted); font-size: 0.85rem; margin-top: 0.25rem; word-break: keep-all; }
   .row {
     display: flex; justify-content: space-between; gap: 0.5rem;
     padding: 0.35rem 0; border-bottom: 1px solid var(--border);
@@ -88,7 +98,7 @@
   }
   .leg-detail a { color: var(--fg); }
   .day a { color: var(--fg); text-decoration: underline; text-decoration-color: var(--border); }
-  .bar { height: 6px; background: var(--border); border-radius: 3px; margin: 0.2rem 0 0.5rem; overflow: hidden; }
+  .bar { height: 6px; background: var(--bar-track); border-radius: 3px; margin: 0.2rem 0 0.5rem; overflow: hidden; }
   .bar-fill { height: 100%; background: var(--accent); }
   .links { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.6rem; }
   .links a {
@@ -171,30 +181,42 @@
   <div class="sub" style="margin-bottom:0.5rem;">장소 탭 → 구글맵. 상세: <a href="viz/itinerary.html">카드 뷰 ↗</a> · <a href="viz/itinerary-table.html">시간표 뷰 ↗</a></div>
   
   <div class="subcard">
-    <div class="subtitle">5/31 (일) — 도착 + 동산 지구</div>
+    <div class="subtitle">5/31 (일) — 도착 + 니조성 + 동산 지구 + 철학의 길 단축</div>
     
     <div class="day">
       <div class="date"><span class="k">09:05</span> <a href="https://maps.google.com/?q=Kansai+International+Airport" target="_blank" rel="noopener">간사이공항 도착 → JR 하루카 → 교토역</a></div>
       
     </div>
     <div class="day">
-      <div class="date"><span class="k">11:30</span> <a href="https://maps.google.com/?q=Nijo+Station+Kyoto" target="_blank" rel="noopener">니조역 → 시오 짐 보관 후 점심</a></div>
+      <div class="date"><span class="k">11:30</span> <a href="https://maps.google.com/?q=Nijo+Station+Kyoto" target="_blank" rel="noopener">니조역 → 시오 짐 보관</a></div>
       <details class="leg"><summary>✈️ 공항특급으로 87분</summary><div class="leg-detail">JR 하루카 KIX→교토역 75분 + JR 산인본선 교토→니조 5분 + 도보 니조역→시오 7분 0.5km</div></details>
     </div>
     <div class="day">
+      <div class="date"><span class="k">12:00</span> <a href="https://maps.google.com/?q=Nijo+Castle" target="_blank" rel="noopener">니조성 (二条城) 외정원 산책</a></div>
+      <details class="leg"><summary>🚶 걸어서 약 12분 (현지 확인) (0.7km)</summary><div class="leg-detail">시오 마치야 → 니조성 동대수문 (堀川通 경유 700m) <a href="https://www.google.com/maps/dir/Shio+Machiya+Kyoto/Nijo+Castle" target="_blank" rel="noopener">경로 ↗</a></div></details>
+    </div>
+    <div class="day">
+      <div class="date"><span class="k">12:45</span> <a href="https://maps.google.com/?q=Nijo+Station+Kyoto+점심" target="_blank" rel="noopener">니조 인근 점심 (시오 도보권)</a></div>
+      <details class="leg"><summary>🚶 걸어서 약 8분 (현지 확인) (0.5km)</summary><div class="leg-detail">니조성 → 시오 도보권 식당 (500m 내) <a href="https://www.google.com/maps/search/restaurants+near+Shio+Machiya+Kyoto" target="_blank" rel="noopener">경로 ↗</a></div></details>
+    </div>
+    <div class="day">
       <div class="date"><span class="k">13:30</span> <a href="https://maps.google.com/?q=Kiyomizu-dera" target="_blank" rel="noopener">키요미즈데라 (清水寺)</a></div>
-      <details class="leg"><summary>🚌 버스로 약 35분 (현지 확인)</summary><div class="leg-detail">시오 → 니조역 도보 7분 + JR/시버스 → 키요미즈 (니조 출발 시 약 35분. 교토역 출발 28분 대비 7분 가산) <a href="https://www.google.com/maps/dir/Shio+Machiya+Kyoto/Kiyomizu-dera" target="_blank" rel="noopener">경로 ↗</a></div></details>
+      <details class="leg"><summary>🚌 버스로 약 35분 (현지 확인)</summary><div class="leg-detail">점심 후 시오/니조 → JR 산인선 + 시버스 → 키요미즈 (니조 출발 약 35분. 교토역 출발 28분 대비 7분 가산) <a href="https://www.google.com/maps/dir/Shio+Machiya+Kyoto/Kiyomizu-dera" target="_blank" rel="noopener">경로 ↗</a></div></details>
     </div>
     <div class="day">
       <div class="date"><span class="k">16:30</span> <a href="https://maps.google.com/?q=Gion+Kyoto" target="_blank" rel="noopener">산넨자카 → 야사카 신사 → 기온</a></div>
       <details class="leg"><summary>🚶 걸어서 25분 (1.3km)</summary><div class="leg-detail">키요미즈→니넨자카·산넨자카→야사카신사 (1.3km, 20~26분, 경사 완만) <a href="https://en.kyotokk.com/course2.html" target="_blank" rel="noopener">경로 ↗</a></div></details>
     </div>
     <div class="day">
-      <div class="date"><span class="k">18:30</span> <a href="https://maps.google.com/?q=Kawaramachi" target="_blank" rel="noopener">가와라마치 저녁 (시라카와·폰토초)</a></div>
-      <details class="leg"><summary>🚶 걸어서 9분 (0.6km)</summary><div class="leg-detail">기온 → 시조대교 → 폰토초 (四条通/市道186号 경유, 600m) <a href="https://www.google.com/maps/dir/Gion,+Higashiyama+Ward,+Kyoto/Pontocho+Alley,+Kyoto" target="_blank" rel="noopener">경로 ↗</a></div></details>
+      <div class="date"><span class="k">17:00</span> <a href="https://maps.google.com/?q=Philosopher&#x27;s+Path+Kyoto" target="_blank" rel="noopener">철학의 길 단축 구간 (난젠지~철학의 길 남단)</a></div>
+      <details class="leg"><summary>🚶 걸어서 약 15분 (현지 확인) (1.2km)</summary><div class="leg-detail">야사카 신사 → 난젠지 정문 → 철학의 길 남단 (1.2km, 동산 북부) <a href="https://www.google.com/maps/dir/Yasaka+Shrine/Philosopher%27s+Path+Kyoto" target="_blank" rel="noopener">경로 ↗</a></div></details>
     </div>
-    <div class="sub" style="margin-top:0.4rem;">도보 약 3km · 숙박: 에어비앤비 시오</div>
-    <div style="margin-top:0.25rem;"><details class="leg"><summary>🎫 iPhone Apple Wallet ICOCA 단권</summary><div class="leg-detail">시버스 1회(시오→키요미즈) ¥230×4=¥920. 통합 1일권 ¥1,100/인 본전 미달.</div></details></div>
+    <div class="day">
+      <div class="date"><span class="k">18:30</span> <a href="https://maps.google.com/?q=Kawaramachi" target="_blank" rel="noopener">가와라마치 저녁 (시라카와·폰토초)</a></div>
+      <details class="leg"><summary>🚌 버스로 약 20분 (현지 확인)</summary><div class="leg-detail">철학의 길 남단 → 市バス 46 또는 201 → 四条河原町 (도보 1km + 버스 15분 가산) <a href="https://www.google.com/maps/dir/Philosopher%27s+Path+Kyoto/Kawaramachi" target="_blank" rel="noopener">경로 ↗</a></div></details>
+    </div>
+    <div class="sub" style="margin-top:0.4rem;">도보 약 4km · 숙박: 에어비앤비 시오</div>
+    <div style="margin-top:0.25rem;"><details class="leg"><summary>🎫 iPhone Apple Wallet ICOCA 단권</summary><div class="leg-detail">시버스 2회(시오→키요미즈 ¥230, 철학의 길→가와라마치 ¥230) ¥460×4=¥1,840. 통합 1일권 ¥1,100×4=¥4,400 본전 미달.</div></details></div>
   </div>
   <div class="subcard">
     <div class="subtitle">6/1 (월) — 아라시야마 + 북서쪽</div>

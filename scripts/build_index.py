@@ -100,6 +100,7 @@ def load_data():
         "weather": json.loads((DATA / "weather.json").read_text(encoding="utf-8")),
         "itinerary": json.loads((DATA / "itinerary.json").read_text(encoding="utf-8")),
         "checklist": json.loads((DATA / "booking-checklist.json").read_text(encoding="utf-8")),
+        "tokens": json.loads((DATA / "design-tokens.json").read_text(encoding="utf-8")),
         "score": run_json("score.py"),
         "budget": run_json("budget.py"),
     }
@@ -107,123 +108,138 @@ def load_data():
 
 # ─── 공통 스타일 ───────────────────────────────────────────────────────────
 
-CSS = """
-  :root {
-    --bg: #fff; --fg: #111; --muted: #888; --border: #eaeaea;
-    --accent: #111; --card: #fff; --subcard: #fafafa;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #000; --fg: #ededed; --muted: #888; --border: #333;
-      --accent: #ededed; --card: #0a0a0a; --subcard: #111;
-    }
-  }
-  * { box-sizing: border-box; }
-  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "AppleGothic", sans-serif;
+def render_css(tokens: dict) -> str:
+    """data/design-tokens.json → <style> 본문. 6개 산출물(index·itinerary·itinerary-table·lodging·checklist·archive) 공통."""
+    cl = tokens["color"]["light"]
+    cd = tokens["color"]["dark"]
+    fs = tokens["typography"]["font_family_sans"]
+    return f"""
+  :root {{
+    --bg: {cl['bg']}; --fg: {cl['ink']}; --muted: {cl['ink_muted']}; --border: {cl['border']};
+    --accent: {cl['accent']}; --accent-soft: {cl['accent_soft']};
+    --card: {cl['surface']}; --subcard: {cl['surface_sunken']};
+    --ok: {cl['ok']}; --warn: {cl['warn']}; --danger: {cl['danger']};
+    --bar-track: {cl['bar_track']};
+    --font-sans: {fs};
+  }}
+  @media (prefers-color-scheme: dark) {{
+    :root {{
+      --bg: {cd['bg']}; --fg: {cd['ink']}; --muted: {cd['ink_muted']}; --border: {cd['border']};
+      --accent: {cd['accent']}; --accent-soft: {cd['accent_soft']};
+      --card: {cd['surface']}; --subcard: {cd['surface_sunken']};
+      --ok: {cd['ok']}; --warn: {cd['warn']}; --danger: {cd['danger']};
+      --bar-track: {cd['bar_track']};
+    }}
+  }}
+  * {{ box-sizing: border-box; }}
+  html {{ -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }}
+  body {{
+    font-family: var(--font-sans);
     background: var(--bg); color: var(--fg);
     margin: 0 auto; padding: 1rem; max-width: 640px;
     line-height: 1.5; font-size: 16px;
-  }
-  h1 { font-size: 1.4rem; margin: 0.5rem 0 0.25rem; }
-  h2 { font-size: 1rem; margin: 0 0 0.5rem; color: var(--muted); font-weight: 500; }
-  .status { color: var(--muted); font-size: 0.85rem; margin-bottom: 1rem; }
-  nav { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 1rem 0; }
-  nav a {
+  }}
+  h1 {{ font-size: 1.4rem; margin: 0.5rem 0 0.25rem; }}
+  h2 {{ font-size: 1rem; margin: 0 0 0.5rem; color: var(--muted); font-weight: 500; }}
+  .status {{ color: var(--muted); font-size: 0.85rem; margin-bottom: 1rem; }}
+  nav {{ display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 1rem 0; }}
+  nav a {{
     padding: 0.4rem 0.7rem; border: 1px solid var(--border); border-radius: 999px;
     text-decoration: none; color: var(--fg); font-size: 0.8rem; background: var(--card);
-  }
-  nav a:hover { border-color: var(--accent); }
-  .card {
+  }}
+  nav a:hover {{ border-color: var(--accent); }}
+  .card {{
     background: var(--card); border: 1px solid var(--border); border-radius: 8px;
     padding: 1rem; margin: 0.75rem 0;
-  }
-  .subcard {
+  }}
+  @media (prefers-color-scheme: dark) {{
+    .card {{ box-shadow: 0 1px 0 rgba(0,0,0,0.25); }}
+  }}
+  .subcard {{
     background: var(--subcard); border: 1px solid var(--border); border-radius: 6px;
     padding: 0.75rem; margin: 0.5rem 0;
-  }
-  .subtitle { font-weight: 600; margin-bottom: 0.4rem; font-size: 0.95rem; }
-  .big { font-size: 1.6rem; font-weight: 600; line-height: 1.2; }
-  .sub { color: var(--muted); font-size: 0.85rem; margin-top: 0.25rem; }
-  .row {
+  }}
+  .subtitle {{ font-weight: 600; margin-bottom: 0.4rem; font-size: 0.95rem; }}
+  .big {{ font-size: 1.6rem; font-weight: 600; line-height: 1.2; }}
+  .sub {{ color: var(--muted); font-size: 0.85rem; margin-top: 0.25rem; word-break: keep-all; }}
+  .row {{
     display: flex; justify-content: space-between; gap: 0.5rem;
     padding: 0.35rem 0; border-bottom: 1px solid var(--border);
-  }
-  .row:last-child { border-bottom: none; }
-  .row .k { color: var(--muted); flex-shrink: 0; }
-  .row .v { font-variant-numeric: tabular-nums; text-align: right; word-break: keep-all; }
-  ul { padding-left: 1.2rem; margin: 0.3rem 0; }
-  li { margin: 0.2rem 0; }
-  .day { padding: 0.35rem 0; border-bottom: 1px solid var(--border); }
-  .day:last-child { border-bottom: none; }
-  .day .date { font-size: 0.9rem; }
-  .day .date .k { display: inline-block; min-width: 3.2rem; color: var(--fg); font-weight: 600; font-variant-numeric: tabular-nums; }
+  }}
+  .row:last-child {{ border-bottom: none; }}
+  .row .k {{ color: var(--muted); flex-shrink: 0; }}
+  .row .v {{ font-variant-numeric: tabular-nums; text-align: right; word-break: keep-all; }}
+  ul {{ padding-left: 1.2rem; margin: 0.3rem 0; }}
+  li {{ margin: 0.2rem 0; }}
+  .day {{ padding: 0.35rem 0; border-bottom: 1px solid var(--border); }}
+  .day:last-child {{ border-bottom: none; }}
+  .day .date {{ font-size: 0.9rem; }}
+  .day .date .k {{ display: inline-block; min-width: 3.2rem; color: var(--fg); font-weight: 600; font-variant-numeric: tabular-nums; }}
   /* ── 접기(쉬운 설명 + 펼침 상세) ── */
-  details.leg { margin: 0.15rem 0 0.35rem; }
-  details.leg > summary {
+  details.leg {{ margin: 0.15rem 0 0.35rem; }}
+  details.leg > summary {{
     cursor: pointer; list-style: none; color: var(--muted);
     font-size: 0.82rem; padding: 0.1rem 0; -webkit-tap-highlight-color: transparent;
-  }
-  details.leg > summary::-webkit-details-marker { display: none; }
-  details.leg > summary::before { content: '▸ '; color: var(--muted); }
-  details.leg[open] > summary::before { content: '▾ '; }
-  .leg-detail {
+  }}
+  details.leg > summary::-webkit-details-marker {{ display: none; }}
+  details.leg > summary::before {{ content: '▸ '; color: var(--muted); }}
+  details.leg[open] > summary::before {{ content: '▾ '; }}
+  .leg-detail {{
     color: var(--muted); font-size: 0.8rem; line-height: 1.35;
     padding: 0.2rem 0 0.1rem 0.9rem; margin-top: 0.2rem;
     border-left: 2px solid var(--border);
-  }
-  .leg-detail a { color: var(--fg); }
-  .day a { color: var(--fg); text-decoration: underline; text-decoration-color: var(--border); }
-  .bar { height: 6px; background: var(--border); border-radius: 3px; margin: 0.2rem 0 0.5rem; overflow: hidden; }
-  .bar-fill { height: 100%; background: var(--accent); }
-  .links { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.6rem; }
-  .links a {
+  }}
+  .leg-detail a {{ color: var(--fg); }}
+  .day a {{ color: var(--fg); text-decoration: underline; text-decoration-color: var(--border); }}
+  .bar {{ height: 6px; background: var(--bar-track); border-radius: 3px; margin: 0.2rem 0 0.5rem; overflow: hidden; }}
+  .bar-fill {{ height: 100%; background: var(--accent); }}
+  .links {{ display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.6rem; }}
+  .links a {{
     flex: 1 1 auto; text-align: center; padding: 0.5rem 0.7rem;
     background: transparent; color: var(--fg); border: 1px solid var(--border);
     border-radius: 6px; text-decoration: none; font-size: 0.85rem;
-  }
-  .links a:hover { border-color: var(--accent); }
-  .badge {
+  }}
+  .links a:hover {{ border-color: var(--accent); }}
+  .badge {{
     display: inline-block; padding: 0.1rem 0.45rem; border-radius: 4px;
     font-size: 0.75rem; border: 1px solid currentColor;
-  }
-  footer { color: var(--muted); font-size: 0.75rem; margin-top: 1.5rem; text-align: center; }
+  }}
+  footer {{ color: var(--muted); font-size: 0.75rem; margin-top: 1.5rem; text-align: center; }}
   /* ── 하단 탭바 ── */
-  body { padding-bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px)); }
-  .tab-bar {
+  body {{ padding-bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px)); }}
+  .tab-bar {{
     position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
     width: 100%; max-width: 640px;
     display: flex; background: var(--card); border-top: 1px solid var(--border);
     z-index: 200; padding-bottom: env(safe-area-inset-bottom, 0px);
-  }
-  .tab-bar::after {
+  }}
+  .tab-bar::after {{
     content: ''; position: absolute; top: 100%; left: 0; right: 0;
     height: 80px; background: var(--card);
-  }
-  .tab-bar a {
+  }}
+  .tab-bar a {{
     flex: 1; display: flex; flex-direction: column; align-items: center;
     padding: 0.6rem 0.25rem 0.45rem; text-decoration: none;
     color: var(--muted); font-size: 0.68rem; gap: 0.2rem; line-height: 1.2;
     -webkit-tap-highlight-color: transparent;
-  }
-  .tab-bar a.active {
+  }}
+  .tab-bar a.active {{
     color: var(--fg); font-weight: 600;
-  }
-  .tab-bar a:active { opacity: 0.6; }
-  .tab-bar .tab-icon { font-size: 1.25rem; line-height: 1; }
+  }}
+  .tab-bar a:active {{ opacity: 0.6; }}
+  .tab-bar .tab-icon {{ font-size: 1.25rem; line-height: 1; }}
   /* ── 이미지 ── */
-  .place-img {
+  .place-img {{
     width: 100%; aspect-ratio: 16/9; object-fit: cover;
     border-radius: 4px; display: block; margin-top: 0.35rem;
     max-height: 200px;
-  }
-  .img-credit { color: var(--muted); font-size: 0.65rem; text-align: right; }
-  .blog-reviews { margin-top: 0.5rem; }
-  .blog-strip { display: flex; gap: 0.5rem; overflow-x: auto; padding-bottom: 0.3rem; -webkit-overflow-scrolling: touch; }
-  .blog-card { flex: 0 0 140px; text-decoration: none; color: var(--fg); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
-  .blog-thumb { width: 140px; height: 100px; object-fit: cover; display: block; }
-  .blog-comment { font-size: 0.7rem; padding: 0.3rem; margin: 0; color: var(--muted); line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  }}
+  .img-credit {{ color: var(--muted); font-size: 0.65rem; text-align: right; }}
+  .blog-reviews {{ margin-top: 0.5rem; }}
+  .blog-strip {{ display: flex; gap: 0.5rem; overflow-x: auto; padding-bottom: 0.3rem; -webkit-overflow-scrolling: touch; }}
+  .blog-card {{ flex: 0 0 140px; text-decoration: none; color: var(--fg); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }}
+  .blog-thumb {{ width: 140px; height: 100px; object-fit: cover; display: block; }}
+  .blog-comment {{ font-size: 0.7rem; padding: 0.3rem; margin: 0; color: var(--muted); line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }}
 """
 
 
@@ -250,20 +266,23 @@ def html_doc(
     title: str,
     body: str,
     *,
+    tokens: dict,
     description: str,
     og_slug: str,
     page_path: str,
     extra_css: str = "",
 ) -> str:
-    css = CSS + extra_css
+    css = render_css(tokens) + extra_css
     meta = og_meta(title=title, description=description, slug=og_slug, page_path=page_path)
+    bg_light = tokens["color"]["light"]["bg"]
+    bg_dark = tokens["color"]["dark"]["bg"]
     return f"""<!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#1a1a1a" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="{bg_light}" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="{bg_dark}" media="(prefers-color-scheme: dark)">
 <title>{esc(title)}</title>
 {meta}
 <style>{css}</style>
@@ -693,6 +712,7 @@ def build_index(d) -> str:
     return html_doc(
         INDEX_TITLE,
         body,
+        tokens=d["tokens"],
         description=INDEX_DESCRIPTION,
         og_slug="home",
         page_path="",
@@ -733,6 +753,7 @@ def build_archive(d) -> str:
     return html_doc(
         ARCHIVE_TITLE,
         body,
+        tokens=d["tokens"],
         description=ARCHIVE_DESCRIPTION,
         og_slug="archive",
         page_path="viz/archive.html",
@@ -753,6 +774,7 @@ def build_lodging(d) -> str:
     return html_doc(
         "숙박·항공 · 교토 5/31~6/3",
         body,
+        tokens=d["tokens"],
         description="시오 마치야 2박 + 카덴쇼 료칸 1박 · 에어서울 4인 발권",
         og_slug="lodging",
         page_path="viz/lodging.html",
@@ -898,6 +920,7 @@ def build_itinerary(d) -> str:
     return html_doc(
         "교토 3박4일 일정 · 5/31~6/3 · 4인 가족",
         body,
+        tokens=d["tokens"],
         description="교토 3박 4일 일자별 코스 · 5/31~6/3 · 4인 가족",
         og_slug="itinerary",
         page_path="viz/itinerary.html",
@@ -951,6 +974,7 @@ def build_checklist(d) -> str:
     return html_doc(
         "예약 체크리스트 · 교토 5/31~6/3",
         body,
+        tokens=d["tokens"],
         description="예약 진행 상태 7항목 (확정·미정)",
         og_slug="checklist",
         page_path="viz/checklist.html",
@@ -1112,6 +1136,7 @@ def build_itinerary_table(d) -> str:
     return html_doc(
         "교토 3박4일 시간표 · 5/31~6/3",
         body,
+        tokens=d["tokens"],
         description="교토 3박 4일 시간표 · 4일 한눈에",
         og_slug="itinerary-table",
         page_path="viz/itinerary-table.html",
@@ -1124,17 +1149,19 @@ def build_itinerary_table(d) -> str:
 OG_FONT_STACK = "-apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif"
 
 
-def build_og_svg(*, eyebrow: str, title: str, subtitle: str) -> str:
-    """1200×630 SVG OG 카드. 좌측 액센트 바 + 큰 한글 제목 + 부제 + 도메인."""
+def build_og_svg(*, tokens: dict, eyebrow: str, title: str, subtitle: str) -> str:
+    """1200×630 SVG OG 카드. 좌측 액센트 바 + 큰 한글 제목 + 부제 + 도메인.
+    배경은 dark surface, 텍스트는 dark ink, 액센트는 dark accent — 카톡·Slack 다크 미리보기 친화."""
+    cd = tokens["color"]["dark"]
     return f"""<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
-  <rect width="1200" height="630" fill="#0a0a0a"/>
-  <rect x="0" y="0" width="12" height="630" fill="#ededed"/>
-  <g font-family="{OG_FONT_STACK}" fill="#ededed">
-    <text x="80" y="170" font-size="34" font-weight="500" fill="#888">{esc(eyebrow)}</text>
+  <rect width="1200" height="630" fill="{cd['surface']}"/>
+  <rect x="0" y="0" width="12" height="630" fill="{cd['accent']}"/>
+  <g font-family="{OG_FONT_STACK}" fill="{cd['ink']}">
+    <text x="80" y="170" font-size="34" font-weight="500" fill="{cd['ink_muted']}">{esc(eyebrow)}</text>
     <text x="80" y="290" font-size="84" font-weight="700">{esc(title)}</text>
-    <text x="80" y="380" font-size="40" font-weight="400" fill="#cfcfcf">{esc(subtitle)}</text>
-    <text x="80" y="560" font-size="26" font-weight="500" fill="#888">nihon-trip.vercel.app</text>
-    <text x="1120" y="560" font-size="26" font-weight="500" fill="#888" text-anchor="end">교토 가족여행 2026</text>
+    <text x="80" y="380" font-size="40" font-weight="400" fill="{cd['ink_muted']}">{esc(subtitle)}</text>
+    <text x="80" y="560" font-size="26" font-weight="500" fill="{cd['ink_muted']}">nihon-trip.vercel.app</text>
+    <text x="1120" y="560" font-size="26" font-weight="500" fill="{cd['ink_muted']}" text-anchor="end">교토 가족여행 2026</text>
   </g>
 </svg>
 """
@@ -1163,7 +1190,7 @@ OUTPUTS = (
     (
         f"assets/og-{slug}.svg",
         lambda p, s=slug: p / "assets" / f"og-{s}.svg",
-        lambda _d, e=eyebrow, t=title, s=subtitle: build_og_svg(eyebrow=e, title=t, subtitle=s),
+        lambda d, e=eyebrow, t=title, s=subtitle: build_og_svg(tokens=d["tokens"], eyebrow=e, title=t, subtitle=s),
     )
     for slug, eyebrow, title, subtitle in OG_CARDS
 )

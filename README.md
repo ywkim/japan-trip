@@ -21,6 +21,7 @@
 
 ### 1. 확정 정보 보기 (모바일·웹)
 
+- 배포: https://nihon-trip.vercel.app (Vercel, main 브랜치 자동 배포)
 - `index.html` — 🏠 홈 탭 (운영 모드): 요약 + 일자별 일정. 하단 고정 4탭 내비게이션. 인라인 데이터로 자기완결, 더블클릭 동작
 - `viz/itinerary.html` — 📅 일정 탭: 일자별 상세 일정 카드 뷰 (시간대·동선·메모·이미지). `data/itinerary.json` 단일 출처. 이동 설명은 평이 요약(예: "🚌 버스로 35분") + 접기(상세 경로·링크)로 표시 — 모바일에서 시간·장소가 먼저 읽히도록
 - `viz/itinerary-table.html` — 📅 일정 탭: 3박4일 **시간표 뷰** (4일 열 × 시간대 행, 모바일 카드/데스크탑 테이블 자동 전환). `data/itinerary.json` 단일 출처
@@ -55,10 +56,16 @@
 
 ### 6. 검증 (CI)
 
-- `python -m unittest discover tests` — 단위 테스트 (validate·build_index·score·budget)
-- `python scripts/validate.py` — 가격 필드 무결성(source·data_quality), 30/60일 묵은 가격 경고/실패, SYNC 주석 경로·절 번호 검증, `docs/weather.md`↔`data/weather.json` 및 `docs/flights.md`↔`data/flights.json` 동기화 검증
-- `python scripts/build_index.py --check` — 빌드 산출물이 데이터와 동기화 상태인지 (drift 시 exit 1)
+- `python -m unittest discover tests` — 단위 테스트 (validate·build_index·design_tokens·score·budget)
+- `python scripts/validate.py` — 가격 필드 무결성(source·data_quality), 30/60일 묵은 가격 경고/실패, SYNC 주석 경로·절 번호 검증, `docs/weather.md`↔`data/weather.json`, `docs/flights.md`↔`data/flights.json`, `DESIGN.md`↔`data/design-tokens.json` 동기화 검증
+- `python scripts/build_index.py --check` — 6 HTML + 6 OG SVG 빌드 산출물(`index.html`·`viz/itinerary.html`·`viz/itinerary-table.html`·`viz/lodging.html`·`viz/checklist.html`·`viz/archive.html`·`assets/og-*.svg`)이 데이터·토큰과 동기화 상태인지 (drift 시 exit 1)
 - `.github/workflows/validate.yml`이 PR마다 위를 실행
+
+### 7. 시각 디자인 출처
+
+- `DESIGN.md` — 시각 디자인 컨벤션 (`voltagent/awesome-design-md` 9섹션). Quiet Ledger 테마: paper-white + slate-indigo accent. AI 에이전트가 UI 변경 작업 시 본 파일을 1차 참조
+- `data/design-tokens.json` — 색·타이포·간격·반경 단일 출처. `scripts/build_index.py`의 `render_css(tokens)`가 6개 산출물(`index.html`·`viz/itinerary.html`·`viz/itinerary-table.html`·`viz/lodging.html`·`viz/checklist.html`·`viz/archive.html`)의 인라인 CSS를 공통 생성
+- 동기화 게이트: `scripts/validate.py` (H)가 DESIGN.md ↔ tokens의 drift를 PR 단계에서 차단
 
 ## 아카이브 (참조용)
 
@@ -79,12 +86,13 @@
 ## 디렉토리
 
 ```
-data/        # itinerary·booking-checklist·cost-options (실행 단일 출처) + decision·weather·flights (아카이브)
+DESIGN.md    # 시각 디자인 컨벤션 (awesome-design-md 9섹션, Quiet Ledger)
+data/        # itinerary·booking-checklist·cost-options·design-tokens (실행 단일 출처) + decision·weather·flights (아카이브)
 docs/        # 일정·후보·날씨·항공 분석, 의사결정 일지(decision-log/)
 viz/         # itinerary.html·itinerary-table.html·lodging.html·checklist.html·archive.html (build_index.py 산출물)
 assets/      # og-*.svg (OG/Twitter 카드 이미지 6장, build_index.py 산출물)
 scripts/     # build_index·validate·score·budget·render-pdf
-tests/       # unittest (validate·build_index·score·budget)
+tests/       # unittest (validate·build_index·design_tokens·score·budget)
 reports/     # 최종 보고서 (아카이브)
 index.html   # 운영 페이지 — 요약·일자별 일정 (build_index.py 산출물)
 ```
