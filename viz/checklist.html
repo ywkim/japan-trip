@@ -71,7 +71,22 @@
   .day { padding: 0.35rem 0; border-bottom: 1px solid var(--border); }
   .day:last-child { border-bottom: none; }
   .day .date { font-size: 0.9rem; }
-  .day .date .k { display: inline-block; min-width: 3.2rem; color: var(--muted); }
+  .day .date .k { display: inline-block; min-width: 3.2rem; color: var(--fg); font-weight: 600; font-variant-numeric: tabular-nums; }
+  /* ── 접기(쉬운 설명 + 펼침 상세) ── */
+  details.leg { margin: 0.15rem 0 0.35rem; }
+  details.leg > summary {
+    cursor: pointer; list-style: none; color: var(--muted);
+    font-size: 0.82rem; padding: 0.1rem 0; -webkit-tap-highlight-color: transparent;
+  }
+  details.leg > summary::-webkit-details-marker { display: none; }
+  details.leg > summary::before { content: '▸ '; color: var(--muted); }
+  details.leg[open] > summary::before { content: '▾ '; }
+  .leg-detail {
+    color: var(--muted); font-size: 0.8rem; line-height: 1.35;
+    padding: 0.2rem 0 0.1rem 0.9rem; margin-top: 0.2rem;
+    border-left: 2px solid var(--border);
+  }
+  .leg-detail a { color: var(--fg); }
   .day a { color: var(--fg); text-decoration: underline; text-decoration-color: var(--border); }
   .bar { height: 6px; background: var(--border); border-radius: 3px; margin: 0.2rem 0 0.5rem; overflow: hidden; }
   .bar-fill { height: 100%; background: var(--accent); }

@@ -251,6 +251,47 @@ class BuildIndexTests(unittest.TestCase):
             self.assertIn(candidate_name, itin, f"candidate '{candidate_name}' missing in itinerary.html")
 
 
+class TransitFoldTests(unittest.TestCase):
+    """이동 설명을 평이 요약(summary) + 접기 상세(details.leg)로 렌더하는 회귀 가드."""
+
+    def test_plain_transit_labels_present(self):
+        run()
+        for path in (INDEX, ITINERARY):
+            html = path.read_text(encoding="utf-8")
+            for label in ("걸어서", "버스로", "전철로", "공항특급으로"):
+                with self.subTest(path=path.name, label=label):
+                    self.assertIn(label, html, f"plain transit label '{label}' missing in {path.name}")
+
+    def test_transit_rendered_as_collapsible_leg(self):
+        run()
+        for path in (INDEX, ITINERARY, TABLE):
+            with self.subTest(path=path.name):
+                html = path.read_text(encoding="utf-8")
+                self.assertIn('<details class="leg"', html,
+                              f"{path.name} should render transit legs as <details class=\"leg\">")
+
+    def test_verbose_route_kept_in_detail(self):
+        """장문 route 텍스트는 접기 상세 안에 그대로 보존돼야 한다(정보 손실 없음)."""
+        run()
+        for path in (INDEX, ITINERARY):
+            with self.subTest(path=path.name):
+                html = path.read_text(encoding="utf-8")
+                self.assertIn("JR 하루카 KIX→교토역", html,
+                              f"verbose route detail missing in {path.name}")
+
+    def test_playbook_collapsed_but_text_preserved(self):
+        run()
+        import json as _json
+        data = _json.loads((BASE / "data" / "itinerary.json").read_text(encoding="utf-8"))
+        steps = data.get("trip", {}).get("transit_pass_playbook") or []
+        for path in (INDEX, ITINERARY):
+            with self.subTest(path=path.name):
+                html = path.read_text(encoding="utf-8")
+                self.assertIn("실행 단계", html, f"playbook header missing in {path.name}")
+                for s in steps:
+                    self.assertIn(s["when"], html, f"step.when {s['when']!r} not in {path.name}")
+
+
 class ItineraryTableTests(unittest.TestCase):
     def test_table_file_is_generated(self):
         run()

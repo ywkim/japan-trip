@@ -22,7 +22,7 @@
 ### 1. 확정 정보 보기 (모바일·웹)
 
 - `index.html` — 🏠 홈 탭 (운영 모드): 요약 + 일자별 일정. 하단 고정 4탭 내비게이션. 인라인 데이터로 자기완결, 더블클릭 동작
-- `viz/itinerary.html` — 📅 일정 탭: 일자별 상세 일정 카드 뷰 (시간대·동선·메모·이미지). `data/itinerary.json` 단일 출처
+- `viz/itinerary.html` — 📅 일정 탭: 일자별 상세 일정 카드 뷰 (시간대·동선·메모·이미지). `data/itinerary.json` 단일 출처. 이동 설명은 평이 요약(예: "🚌 버스로 35분") + 접기(상세 경로·링크)로 표시 — 모바일에서 시간·장소가 먼저 읽히도록
 - `viz/itinerary-table.html` — 📅 일정 탭: 3박4일 **시간표 뷰** (4일 열 × 시간대 행, 모바일 카드/데스크탑 테이블 자동 전환). `data/itinerary.json` 단일 출처
 - `viz/lodging.html` — ✈️ 숙박·항공 탭: 에어비앤비·카덴쇼·항공편 확정 예약 내역. `data/cost-options.json` 단일 출처
 - `viz/checklist.html` — ✅ 예약 탭: 예약 진행 상태 (기한 이른 순 정렬, 상태별 카운트). `data/booking-checklist.json` 단일 출처

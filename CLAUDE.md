@@ -130,6 +130,7 @@ japan-trip/
   - `data/weather.json` — 후보지×시기 기후 + `tsuyu_normals`(긴키 매우입·매우명 평년 + 최근 7년 실적) + `cities.kyoto.sub_monthly_precip`(순계열)·`trip_window_daily_precip`(5/31~6/3 일별). 원자료: JMA 매우 평년값·京都(47759) 일별 평년값 1991–2020. `docs/weather.md` §5와 동기화. 5/31~6/3 실측 기상 추적이 필요해지면 본 파일의 `cities.kyoto`에 새 키로 추가
   - `data/flights.json` — 후보지×출발지 항공권 시세 스냅샷 (시점 스냅샷, snapshot_date 명시). 발권은 별도 PR로 `data/booking-checklist.json`·`data/cost-options.json`에 기록
 - **`index.html`·`viz/itinerary.html`·`viz/itinerary-table.html`·`viz/checklist.html`·`viz/lodging.html`·`viz/archive.html`·`assets/og-*.svg`(6장)는 `scripts/build_index.py` 산출물 — 직접 편집 금지**. 데이터(`data/*.json`)·스크립트 변경 후 `python scripts/build_index.py` 실행. CI(`build_index.py --check`)가 6 HTML + 6 SVG = 12개 산출물의 drift를 PR 단계에서 차단
+- 모바일 가독성: 장문 블록(이동 경로 `arrive_from.route`·ICOCA 실행 단계·비선택 예산 시나리오)은 `build_index.py`의 `fold(summary, detail)` 헬퍼로 "평이 요약 + `<details>` 접기"로 렌더. 요약에는 모드별 한국어 동사(`MODE_VERBS`)+소요시간, 상세에는 원문 경로·출처 링크. 새 장문 정보도 이 패턴을 따른다
 - 메인 페이지(`index.html`)는 **운영 모드** — 요약·일자별 일정만. 분석·결정 자료(장마 확률·9 예산 시나리오·7 후보지 점수)는 `viz/archive.html`로 분리. 받는 사람에게 "아직 결정 중"으로 읽히는 콘텐츠는 메인에서 제외
 - `docs/weather.md`·`docs/flights.md`의 표는 각각 `data/weather.json`·`data/flights.json`의 사람용 사본 — JSON 수정 시 함께 갱신 (CI 게이트: `scripts/validate.py` E·F가 도시·시기 수치, snapshot_date, 시세 표기의 drift를 PR 단계에서 차단)
 - `docs/kyoto-itinerary-may31-jun3-2026.md`는 `data/itinerary.json`의 사람용 마크다운 사본 (JSON이 정본). 일정 변경 시 JSON을 먼저 수정 → 마크다운 함께 갱신
