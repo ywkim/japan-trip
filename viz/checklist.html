@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#1a1a1a" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F7F6F2" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#161821" media="(prefers-color-scheme: dark)">
 <title>예약 체크리스트 · 교토 5/31~6/3</title>
 <meta name="description" content="예약 진행 상태 7항목 (확정·미정)">
 <meta property="og:type" content="website">
@@ -22,19 +22,26 @@
 <meta name="twitter:image" content="https://nihon-trip.vercel.app/assets/og-checklist.svg">
 <style>
   :root {
-    --bg: #fff; --fg: #111; --muted: #888; --border: #eaeaea;
-    --accent: #111; --card: #fff; --subcard: #fafafa;
+    --bg: #F7F6F2; --fg: #1B1D24; --muted: #5B6070; --border: #D9D6CC;
+    --accent: #3E5C76; --accent-soft: #E3EAF3;
+    --card: #FFFFFF; --subcard: #EFEDE6;
+    --ok: #2F7D5B; --warn: #B5811F; --danger: #9A3B3B;
+    --bar-track: #E3EAF3;
+    --font-sans: -apple-system, "Apple SD Gothic Neo", "Pretendard Variable", BlinkMacSystemFont, "Segoe UI", sans-serif;
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --bg: #000; --fg: #ededed; --muted: #888; --border: #333;
-      --accent: #ededed; --card: #0a0a0a; --subcard: #111;
+      --bg: #161821; --fg: #E8E6DE; --muted: #9A9DA8; --border: #2E3140;
+      --accent: #8AA8C7; --accent-soft: #262E3A;
+      --card: #1F222C; --subcard: #13151D;
+      --ok: #6FB58E; --warn: #D4B36A; --danger: #D08585;
+      --bar-track: #262E3A;
     }
   }
   * { box-sizing: border-box; }
   html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
   body {
-    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "AppleGothic", sans-serif;
+    font-family: var(--font-sans);
     background: var(--bg); color: var(--fg);
     margin: 0 auto; padding: 1rem; max-width: 640px;
     line-height: 1.5; font-size: 16px;
@@ -52,13 +59,16 @@
     background: var(--card); border: 1px solid var(--border); border-radius: 8px;
     padding: 1rem; margin: 0.75rem 0;
   }
+  @media (prefers-color-scheme: dark) {
+    .card { box-shadow: 0 1px 0 rgba(0,0,0,0.25); }
+  }
   .subcard {
     background: var(--subcard); border: 1px solid var(--border); border-radius: 6px;
     padding: 0.75rem; margin: 0.5rem 0;
   }
   .subtitle { font-weight: 600; margin-bottom: 0.4rem; font-size: 0.95rem; }
   .big { font-size: 1.6rem; font-weight: 600; line-height: 1.2; }
-  .sub { color: var(--muted); font-size: 0.85rem; margin-top: 0.25rem; }
+  .sub { color: var(--muted); font-size: 0.85rem; margin-top: 0.25rem; word-break: keep-all; }
   .row {
     display: flex; justify-content: space-between; gap: 0.5rem;
     padding: 0.35rem 0; border-bottom: 1px solid var(--border);
@@ -73,7 +83,7 @@
   .day .date { font-size: 0.9rem; }
   .day .date .k { display: inline-block; min-width: 3.2rem; color: var(--muted); }
   .day a { color: var(--fg); text-decoration: underline; text-decoration-color: var(--border); }
-  .bar { height: 6px; background: var(--border); border-radius: 3px; margin: 0.2rem 0 0.5rem; overflow: hidden; }
+  .bar { height: 6px; background: var(--bar-track); border-radius: 3px; margin: 0.2rem 0 0.5rem; overflow: hidden; }
   .bar-fill { height: 100%; background: var(--accent); }
   .links { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.6rem; }
   .links a {
