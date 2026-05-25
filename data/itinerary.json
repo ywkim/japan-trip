@@ -78,8 +78,8 @@
   "days": [
     {
       "date": "2026-05-31",
-      "day_label": "5/31 (일) — 도착 + 동산 지구",
-      "walking_km": 3,
+      "day_label": "5/31 (일) — 도착 + 니조성 + 동산 지구 + 철학의 길 단축",
+      "walking_km": 4,
       "lodging": "에어비앤비 시오",
       "items": [
         {
@@ -90,9 +90,39 @@
         },
         {
           "time": "11:30",
-          "title": "니조역 → 시오 짐 보관 후 점심 (中華 大鵬)",
+          "title": "니조역 → 시오 짐 보관",
+          "maps_query": "Nijo Station Kyoto",
+          "note": "에어비앤비 체크인 전 짐 맡기기 (시오 도보 7분). 점심은 니조성 외정원 산책 후 12:45",
+          "arrive_from": {
+            "mode": "airport_express",
+            "duration_min": 87,
+            "distance_km": 99,
+            "route": "JR 하루카 KIX→교토역 75분 + JR 산인본선 교토→니조 5분 + 도보 니조역→시오 7분 0.5km",
+            "source": "JR 서일본 공식 (haruka_rt_4pax cost-options 인용) + 5/31 동선 수정 PR #26",
+            "source_fetched_at": "2026-05-17",
+            "data_quality": "official_fare"
+          }
+        },
+        {
+          "time": "12:00",
+          "title": "니조성 (二条城) 외정원 산책",
+          "maps_query": "Nijo Castle",
+          "note": "시오 도보 10분. 외정원 30분, 본궁 입장(¥1,300/인)은 시간·체력 절약 차 생략 권장 — 5/31 당일 컨디션으로 결정",
+          "arrive_from": {
+            "mode": "walk",
+            "duration_min": 12,
+            "distance_km": 0.7,
+            "route": "시오 마치야 → 니조성 동대수문 (堀川通 경유 700m)",
+            "source": "https://www.google.com/maps/dir/Shio+Machiya+Kyoto/Nijo+Castle",
+            "source_fetched_at": "2026-05-24",
+            "data_quality": "tbd_needs_browser_mcp"
+          }
+        },
+        {
+          "time": "12:45",
+          "title": "니조 인근 점심 (中華 大鵬)",
           "maps_query": "Taiho Nijo Kyoto",
-          "note": "에어비앤비 체크인 전 짐 맡기기 (시오 도보 7분). 코인락커 불필요",
+          "note": "니조성→시오 도보권. 키요미즈 13:30 출발 위해 45분 내",
           "food_quality": {
             "rating": "타베로그 3.76 · 미쉐린 빕구르망 2024 · 中国料理WEST百名店2024",
             "source": "Tabelog 2026-05-24 · 미쉐린 가이드 교토 2024",
@@ -103,13 +133,13 @@
             "note": "쓰촨 중식. 니조역 도보 5분(시오 인접). 5/31 일요일 영업·화·부정기수 휴무. 인기점 웨이팅 가능 — 도착편 지연 시 대안: 京ゆば処 静家(유바). 1인 ¥4,000~5,000"
           },
           "arrive_from": {
-            "mode": "airport_express",
-            "duration_min": 87,
-            "distance_km": 99,
-            "route": "JR 하루카 KIX→교토역 75분 + JR 산인본선 교토→니조 5분 + 도보 니조역→시오 7분 0.5km",
-            "source": "JR 서일본 공식 (haruka_rt_4pax cost-options 인용) + 5/31 동선 수정 PR #26",
-            "source_fetched_at": "2026-05-17",
-            "data_quality": "official_fare"
+            "mode": "walk",
+            "duration_min": 8,
+            "distance_km": 0.5,
+            "route": "니조성 → 大鵬 (시오 도보권 500m 내)",
+            "source": "https://www.google.com/maps/search/restaurants+near+Shio+Machiya+Kyoto",
+            "source_fetched_at": "2026-05-24",
+            "data_quality": "tbd_needs_browser_mcp"
           }
         },
         {
@@ -123,7 +153,7 @@
             "mode": "bus",
             "duration_min": 35,
             "distance_km": 5.5,
-            "route": "시오 → 니조역 도보 7분 + JR/시버스 → 키요미즈 (니조 출발 시 약 35분. 교토역 출발 28분 대비 7분 가산)",
+            "route": "점심 후 시오/니조 → JR 산인선 + 시버스 → 키요미즈 (니조 출발 약 35분. 교토역 출발 28분 대비 7분 가산)",
             "source": "https://www.google.com/maps/dir/Shio+Machiya+Kyoto/Kiyomizu-dera",
             "source_fetched_at": "2026-05-18",
             "data_quality": "tbd_needs_browser_mcp"
@@ -150,6 +180,7 @@
           "time": "16:30",
           "title": "산넨자카 → 야사카 신사 → 기온",
           "maps_query": "Gion Kyoto",
+          "note": "니넨자카 진입점 스타벅스 야사카차야점(100년 마치야 매장) · % 아라비카 교토 히가시야마점 — 둘 중 택1 카페 휴식 권장. 4인 좌석 대기 길 수 있음",
           "arrive_from": {
             "mode": "walk",
             "duration_min": 25,
@@ -178,10 +209,25 @@
           ]
         },
         {
+          "time": "17:00",
+          "title": "철학의 길 단축 구간 (난젠지~철학의 길 남단)",
+          "maps_query": "Philosopher's Path Kyoto",
+          "note": "야사카→난젠지 도보 1.2km. 철학의 길 남단 200~500m 짧게 산책 후 가와라마치행 버스. 시부모 피로 시 야사카에서 시버스 46/201로 가와라마치 직행 대안",
+          "arrive_from": {
+            "mode": "walk",
+            "duration_min": 15,
+            "distance_km": 1.2,
+            "route": "야사카 신사 → 난젠지 정문 → 철학의 길 남단 (1.2km, 동산 북부)",
+            "source": "https://www.google.com/maps/dir/Yasaka+Shrine/Philosopher%27s+Path+Kyoto",
+            "source_fetched_at": "2026-05-24",
+            "data_quality": "tbd_needs_browser_mcp"
+          }
+        },
+        {
           "time": "18:30",
-          "title": "폰토초 저녁 (豆八 — 두부·오반자이)",
+          "title": "가와라마치 저녁 (폰토초 豆八 — 두부·오반자이)",
           "maps_query": "Mametetsu Pontocho Kyoto",
-          "note": "폰토초 골목 야간 분위기 최고",
+          "note": "철학의 길 남단에서 시버스 46/201 → 가와라마치. 폰토초 골목 야간 분위기 최고",
           "food_quality": {
             "rating": "타베로그 3.43 (246)",
             "source": "Tabelog 2026-05-24",
@@ -193,13 +239,13 @@
           "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/JP-Kyoto-Gion-Area-Traditional-House-Night-View.JPG?width=480",
           "image_credit": "Wikimedia Commons",
           "arrive_from": {
-            "mode": "walk",
-            "duration_min": 9,
-            "distance_km": 0.6,
-            "route": "기온 → 시조대교 → 폰토초 (四条通/市道186号 경유, 600m)",
-            "source": "https://www.google.com/maps/dir/Gion,+Higashiyama+Ward,+Kyoto/Pontocho+Alley,+Kyoto",
-            "source_fetched_at": "2026-05-18",
-            "data_quality": "researched_market_rate"
+            "mode": "bus",
+            "duration_min": 20,
+            "distance_km": 4.0,
+            "route": "철학의 길 남단 → 市バス 46 또는 201 → 四条河原町 (도보 1km + 버스 15분 가산)",
+            "source": "https://www.google.com/maps/dir/Philosopher%27s+Path+Kyoto/Kawaramachi",
+            "source_fetched_at": "2026-05-24",
+            "data_quality": "tbd_needs_browser_mcp"
           },
           "blog_reviews": [
             {
@@ -215,8 +261,8 @@
           ]
         }
       ],
-      "walking_km_source": "items[].arrive_from[mode=walk] 합(~1.9km) + 키요미즈 경내·기온·폰토초 산책 추정(~1.1km)",
-      "pass_recommendation": "iPhone Apple Wallet ICOCA 단권 — 시버스 1회(시오→키요미즈) ¥230×4=¥920. 통합 1일권 ¥1,100/인 본전 미달."
+      "walking_km_source": "items[].arrive_from[mode=walk] 합(~3.7km: 니조성 0.7 + 점심 0.5 + 산넨자카 1.3 + 철학의 길 1.2) + 키요미즈 경내·니조성 외정원·기온 산책 추정",
+      "pass_recommendation": "iPhone Apple Wallet ICOCA 단권 — 시버스 2회(시오→키요미즈 ¥230, 철학의 길→가와라마치 ¥230) ¥460×4=¥1,840. 통합 1일권 ¥1,100×4=¥4,400 본전 미달."
     },
     {
       "date": "2026-06-01",
@@ -228,7 +274,7 @@
           "time": "09:00",
           "title": "죽림길 (지쿠린)",
           "maps_query": "Arashiyama Bamboo Grove",
-          "note": "일찍 출발 (관광객 적음)",
+          "note": "일찍 출발 (관광객 적음). 죽림길 북측 출구 인근 교토 오르골당 아라시야마점(입장 무료) 텐류지 진입 전 5분 즉석 방문 가능",
           "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Sagano_Bamboo_forest%2C_Arashiyama%2C_Kyoto.jpg?width=480",
           "image_credit": "Wikimedia Commons",
           "arrive_from": {
@@ -1026,7 +1072,10 @@
     "카덴쇼 짐 위탁 (6/2 오전 시오 체크아웃 후 일찍 맡길 수 있는지)",
     "후시미이나리 정상은 시부모 동반이라 X — 입구 ~5분 사진 충분",
     "6/3 출국 시간에 따라 토지 산책·교토역 식사 가능 여부 결정",
-    "tbd_needs_browser_mcp 라벨 leg (시오→키요미즈) — Playwright MCP 보유 세션에서 Google Maps Directions로 분·거리·노선 확정 필요"
+    "tbd_needs_browser_mcp 라벨 leg (시오→키요미즈 + 신규 4개: 시오→니조성, 니조성→점심, 야사카→철학의 길, 철학의 길→가와라마치) — Playwright MCP 보유 세션에서 Google Maps Directions로 분·거리·노선 확정 필요",
+    "철학의 길 — 시부모 피로 시 17:00 야사카에서 시버스 46/201로 가와라마치 직행 대안 (단축 산책 생략)",
+    "사이호지(이끼사찰) — intosaihoji.com 예약 가능성 별도 조사 (5/24 현재 출국 7일 전, lead time 미공시). booking-checklist saihoji_research 항목으로 추적. 예약 가능 확인 시 6/2 일정 분기 검토",
+    "니조성 본궁 입장료 ¥1,300/인 — 외정원만 산책 시 무료. 입장 여부 5/31 당일 컨디션·시간으로 결정"
   ],
   "source_doc": "docs/kyoto-itinerary-may31-jun3-2026.md",
   "_arrive_from_schema": {

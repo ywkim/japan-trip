@@ -23,6 +23,8 @@ def make_fixture(
     weather_md: str | None = None,
     flights: dict | None = None,
     flights_md: str | None = None,
+    design_tokens: dict | None = None,
+    design_md: str | None = None,
     itinerary: dict | None = None,
 ) -> Path:
     (tmp / "data").mkdir()
@@ -40,6 +42,12 @@ def make_fixture(
         (tmp / "data" / "flights.json").write_text(json.dumps(flights, ensure_ascii=False), encoding="utf-8")
     if flights_md is not None:
         (tmp / "docs" / "flights.md").write_text(flights_md, encoding="utf-8")
+    if design_tokens is not None:
+        (tmp / "data" / "design-tokens.json").write_text(
+            json.dumps(design_tokens, ensure_ascii=False), encoding="utf-8"
+        )
+    if design_md is not None:
+        (tmp / "DESIGN.md").write_text(design_md, encoding="utf-8")
     if itinerary is not None:
         (tmp / "data" / "itinerary.json").write_text(json.dumps(itinerary, ensure_ascii=False), encoding="utf-8")
     return tmp
@@ -402,6 +410,80 @@ class ItineraryTransitTests(unittest.TestCase):
             base = self._base(td, itin)
             errs, _ = validate.run(base, date(2026, 5, 17))
             self.assertTrue(any(e.startswith("[G]") and "mode" in e for e in errs), errs)
+VALID_TOKENS = {
+    "theme_name": "Quiet Ledger",
+    "version": "1.0.0",
+    "color": {
+        "light": {"bg": "#F7F6F2", "ink": "#1B1D24", "accent": "#3E5C76"},
+        "dark": {"bg": "#161821", "ink": "#E8E6DE", "accent": "#8AA8C7"},
+    },
+}
+
+VALID_DESIGN_MD = """# DESIGN.md — Quiet Ledger
+
+Version: 1.0.0
+
+Colors used: `#F7F6F2`, `#1B1D24`, `#3E5C76`, `#161821`, `#E8E6DE`, `#8AA8C7`.
+"""
+
+class DesignSyncTests(unittest.TestCase):
+    """검사 H: DESIGN.md ↔ data/design-tokens.json hex 양방향 + theme_name·version."""
+
+    def _fixture(self, td, *, design_md=VALID_DESIGN_MD, tokens=None):
+        return make_fixture(
+            Path(td),
+            cost=VALID_COST,
+            index_html="<html></html>",
+            design_tokens=tokens if tokens is not None else VALID_TOKENS,
+            design_md=design_md,
+        )
+
+    def test_design_in_sync_passes(self):
+        with tempfile.TemporaryDirectory() as td:
+            base = self._fixture(td)
+            errs, _ = validate.run(base, date(2026, 5, 14))
+            self.assertEqual([e for e in errs if e.startswith("[H]")], [], errs)
+
+    def test_hex_in_md_not_in_tokens_fails(self):
+        bad_md = VALID_DESIGN_MD + "\nstray color: #ABCDEF\n"
+        with tempfile.TemporaryDirectory() as td:
+            base = self._fixture(td, design_md=bad_md)
+            errs, _ = validate.run(base, date(2026, 5, 14))
+            self.assertTrue(
+                any(e.startswith("[H]") and "not in design-tokens.json" in e for e in errs),
+                errs,
+            )
+
+    def test_token_color_not_in_md_fails(self):
+        bad_tokens = json.loads(json.dumps(VALID_TOKENS))
+        bad_tokens["color"]["light"]["accent"] = "#123456"
+        with tempfile.TemporaryDirectory() as td:
+            base = self._fixture(td, tokens=bad_tokens)
+            errs, _ = validate.run(base, date(2026, 5, 14))
+            self.assertTrue(
+                any(e.startswith("[H]") and "not documented in DESIGN.md" in e for e in errs),
+                errs,
+            )
+
+    def test_theme_name_drift_fails(self):
+        bad_tokens = json.loads(json.dumps(VALID_TOKENS))
+        bad_tokens["theme_name"] = "Loud Ledger"
+        with tempfile.TemporaryDirectory() as td:
+            base = self._fixture(td, tokens=bad_tokens)
+            errs, _ = validate.run(base, date(2026, 5, 14))
+            self.assertTrue(
+                any(e.startswith("[H]") and "theme_name" in e for e in errs), errs
+            )
+
+    def test_version_drift_fails(self):
+        bad_tokens = json.loads(json.dumps(VALID_TOKENS))
+        bad_tokens["version"] = "9.9.9"
+        with tempfile.TemporaryDirectory() as td:
+            base = self._fixture(td, tokens=bad_tokens)
+            errs, _ = validate.run(base, date(2026, 5, 14))
+            self.assertTrue(
+                any(e.startswith("[H]") and "version" in e for e in errs), errs
+            )
 
 
 VALID_FOOD_QUALITY = {
@@ -413,7 +495,7 @@ VALID_FOOD_QUALITY = {
 
 
 class FoodQualityTests(unittest.TestCase):
-    """검사 H: data/itinerary.json food_quality(식사 평점 출처) 무결성."""
+    """검사 I: data/itinerary.json food_quality(식사 평점 출처) 무결성."""
 
     def _base(self, td, itin):
         return make_fixture(Path(td), cost=VALID_COST, index_html="<html></html>", itinerary=itin)
@@ -444,7 +526,7 @@ class FoodQualityTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as td:
             base = self._base(td, itin)
             errs, _ = validate.run(base, date(2026, 5, 17))
-            self.assertTrue(any(e.startswith("[H]") and "source" in e for e in errs), errs)
+            self.assertTrue(any(e.startswith("[I]") and "source" in e for e in errs), errs)
 
     def test_missing_rating_fails(self):
         fq = dict(VALID_FOOD_QUALITY); del fq["rating"]
@@ -454,7 +536,7 @@ class FoodQualityTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as td:
             base = self._base(td, itin)
             errs, _ = validate.run(base, date(2026, 5, 17))
-            self.assertTrue(any(e.startswith("[H]") and "rating" in e for e in errs), errs)
+            self.assertTrue(any(e.startswith("[I]") and "rating" in e for e in errs), errs)
 
     def test_invalid_data_quality_fails(self):
         fq = dict(VALID_FOOD_QUALITY); fq["data_quality"] = "guess"
@@ -464,7 +546,7 @@ class FoodQualityTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as td:
             base = self._base(td, itin)
             errs, _ = validate.run(base, date(2026, 5, 17))
-            self.assertTrue(any(e.startswith("[H]") and "data_quality" in e for e in errs), errs)
+            self.assertTrue(any(e.startswith("[I]") and "data_quality" in e for e in errs), errs)
 
     def test_stale_food_quality_fails(self):
         fq = dict(VALID_FOOD_QUALITY); fq["source_fetched_at"] = "2026-01-01"  # 136d
@@ -474,7 +556,7 @@ class FoodQualityTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as td:
             base = self._base(td, itin)
             errs, _ = validate.run(base, date(2026, 5, 17))
-            self.assertTrue(any(e.startswith("[H]") and "stale" in e for e in errs), errs)
+            self.assertTrue(any(e.startswith("[I]") and "stale" in e for e in errs), errs)
 
     def test_route_candidate_food_quality_checked(self):
         fq = dict(VALID_FOOD_QUALITY); fq["data_quality"] = "guess"
@@ -488,7 +570,7 @@ class FoodQualityTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as td:
             base = self._base(td, itin)
             errs, _ = validate.run(base, date(2026, 5, 17))
-            self.assertTrue(any(e.startswith("[H]") and "data_quality" in e for e in errs), errs)
+            self.assertTrue(any(e.startswith("[I]") and "data_quality" in e for e in errs), errs)
 
 
 class ProductionDataTests(unittest.TestCase):
