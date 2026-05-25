@@ -174,7 +174,22 @@ def render_css(tokens: dict) -> str:
   .day {{ padding: 0.35rem 0; border-bottom: 1px solid var(--border); }}
   .day:last-child {{ border-bottom: none; }}
   .day .date {{ font-size: 0.9rem; }}
-  .day .date .k {{ display: inline-block; min-width: 3.2rem; color: var(--muted); }}
+  .day .date .k {{ display: inline-block; min-width: 3.2rem; color: var(--fg); font-weight: 600; font-variant-numeric: tabular-nums; }}
+  /* ── 접기(쉬운 설명 + 펼침 상세) ── */
+  details.leg {{ margin: 0.15rem 0 0.35rem; }}
+  details.leg > summary {{
+    cursor: pointer; list-style: none; color: var(--muted);
+    font-size: 0.82rem; padding: 0.1rem 0; -webkit-tap-highlight-color: transparent;
+  }}
+  details.leg > summary::-webkit-details-marker {{ display: none; }}
+  details.leg > summary::before {{ content: '▸ '; color: var(--muted); }}
+  details.leg[open] > summary::before {{ content: '▾ '; }}
+  .leg-detail {{
+    color: var(--muted); font-size: 0.8rem; line-height: 1.35;
+    padding: 0.2rem 0 0.1rem 0.9rem; margin-top: 0.2rem;
+    border-left: 2px solid var(--border);
+  }}
+  .leg-detail a {{ color: var(--fg); }}
   .day a {{ color: var(--fg); text-decoration: underline; text-decoration-color: var(--border); }}
   .bar {{ height: 6px; background: var(--bar-track); border-radius: 3px; margin: 0.2rem 0 0.5rem; overflow: hidden; }}
   .bar-fill {{ height: 100%; background: var(--accent); }}
@@ -378,7 +393,7 @@ def card_airbnb(d) -> str:
   <div class="row"><span class="k">위치</span><span class="v">중교구 · 니조역 도보 7분</span></div>
   <div class="row"><span class="k">2박 총액</span><span class="v">{esc(won(two_night))}</span></div>
   <div class="row"><span class="k">1인 1박</span><span class="v">{esc(won(l['per_night_krw'] // 4))}</span></div>
-  <div class="sub" style="margin-top:0.4rem;">{esc(l.get('notes', ''))}</div>
+  {note_block(l.get('notes', ''), style='margin-top:0.4rem;')}
   <div class="links">{link_html}</div>
 </section>
 """
@@ -392,7 +407,7 @@ def card_kadensho(d) -> str:
   <div class="subcard">
     <div class="subtitle">{esc(l['name'])}</div>
     <div class="row"><span class="k">1박 (4인, 객실 2개)</span><span class="v">{esc(won(l['per_night_krw']))}</span></div>
-    <div class="sub">{esc(l.get('notes', ''))}</div>
+    {note_block(l.get('notes', ''))}
   </div>""")
     return f"""
 <!-- SYNC: data/cost-options.json (lodging.kadensho_tripcom_no_meal_2026jun2) · data/booking-checklist.json (ryokan) -->
@@ -413,7 +428,7 @@ def card_flights(d) -> str:
     <div class="subtitle">{esc(f['label'])}</div>
     <div class="row"><span class="k">일자</span><span class="v">{esc(f['depart_date'])} → {esc(f['return_date'])}</span></div>
     <div class="row"><span class="k">4인 총액</span><span class="v">{esc(won(f['total_krw']))}</span></div>
-    <div class="sub">에어서울 RS · 예약번호 A8YW58 · 2026-05-12 확정 (시부 결제). ICN 13:15→KIX 15:15 / KIX 10:05→ICN 12:05.</div>
+    {note_block("에어서울 RS · 예약번호 A8YW58 · 2026-05-12 확정 (시부 결제). ICN 13:15→KIX 15:15 / KIX 10:05→ICN 12:05.")}
   </div>""")
     return f"""
 <!-- SYNC: data/cost-options.json (flights.rs_kix_may31_jun3) · data/booking-checklist.json (flight) -->
@@ -426,28 +441,39 @@ def card_flights(d) -> str:
 
 def card_budget(d) -> str:
     budget = d["budget"]
-    rows = []
+    selected_html = ""
+    others = []
     for s in budget["scenarios"]:
         marker = "통과" if s["passes_cap"] else "초과"
         head = won(s["headroom_krw"]) if s["headroom_krw"] >= 0 else f"−{won(-s['headroom_krw'])}"
-        highlight = ' style="border-color: var(--accent); border-width: 2px;"' if s["id"] == SCENARIO_ID else ""
+        is_selected = s["id"] == SCENARIO_ID
+        highlight = ' style="border-color: var(--accent); border-width: 2px;"' if is_selected else ""
         cats = []
         for c in s["categories"]:
             dim = ' style="color:var(--muted)"' if c["status"] == "ok" else (' style="font-weight:600"' if c["status"] == "over" else "")
             cats.append(f'<div class="row"><span class="k">{esc(c["label"])}</span><span class="v"{dim}>{esc(won(c["actual_krw"]))} ({c["actual_pct"]}%)</span></div>')
-        rows.append(f"""
+        subcard = f"""
   <div class="subcard"{highlight}>
     <div class="subtitle">{marker} {esc(s['label'])}</div>
     <div class="row"><span class="k">확정 합계</span><span class="v">{esc(won(s['confirmed_total_krw']))}</span></div>
     <div class="row"><span class="k">3M 여유</span><span class="v">{esc(head)}</span></div>
     {''.join(cats)}
-  </div>""")
+  </div>"""
+        if is_selected:
+            selected_html = subcard
+        else:
+            others.append(subcard)
+
+    others_html = ""
+    if others:
+        others_html = fold(f"다른 예산 시나리오 {len(others)}개 보기", "".join(others))
     return f"""
 <!-- SYNC: scripts/budget.py --json · data/cost-options.json (scenarios) -->
 <section id="budget" class="card">
   <h2>예산 시뮬 (3M 캡 = {esc(won(budget['cap_krw']))})</h2>
   <div class="sub" style="margin-bottom:0.5rem;">확정 항목만 기준. 굵은 테두리 = 현재 선택 시나리오.</div>
-  {''.join(rows)}
+  {selected_html}
+  {others_html}
 </section>
 """
 
@@ -462,31 +488,86 @@ MODE_ICONS = {
     "taxi": "🚕",
 }
 
+MODE_VERBS = {
+    "walk": "걸어서",
+    "bus": "버스로",
+    "subway": "지하철로",
+    "train": "전철로",
+    "jr": "전철로",
+    "airport_express": "공항특급으로",
+    "taxi": "택시로",
+}
+
+
+def fold(summary_html: str, detail_html: str, *, open: bool = False) -> str:
+    """평이 요약(summary) + 펼침 상세(details)로 감싸는 재사용 헬퍼."""
+    open_attr = " open" if open else ""
+    return (
+        f'<details class="leg"{open_attr}><summary>{summary_html}</summary>'
+        f'<div class="leg-detail">{detail_html}</div></details>'
+    )
+
+
+def note_block(note: str, *, style: str = "") -> str:
+    """예약·숙박 메모를 짧으면 평문, 길면 '앞 항목 요약 + 접기'로 렌더.
+
+    ' · '로 구분된 장문 운영 메모(예약번호·PIN·탑승객·체크인시각 등)가
+    카드를 압도하지 않도록, 식별용 앞 2개 항목만 보이고 나머지는 접는다.
+    """
+    note = (note or "").strip()
+    if not note:
+        return ""
+    style_attr = f' style="{style}"' if style else ""
+    if len(note) <= 60:
+        return f'<div class="sub"{style_attr}>{esc(note)}</div>'
+    segs = [s for s in note.split(" · ") if s.strip()]
+    if len(segs) >= 3:
+        return fold(esc(" · ".join(segs[:2])), esc(" · ".join(segs[2:])))
+    return fold("상세 보기", esc(note))
+
+
+def pass_block(text: str) -> str:
+    """일자별 교통패스 추천(🎫)을 '추천 요약 + 근거 접기'로 렌더.
+
+    '{추천} — {근거}' 형식의 장문은 추천만 보이고 비용 계산·근거를 접는다.
+    """
+    text = (text or "").strip()
+    if not text:
+        return ""
+    if len(text) <= 60 or " — " not in text:
+        return f'<div class="sub" style="margin-top:0.25rem;">🎫 {esc(text)}</div>'
+    head, _, rest = text.partition(" — ")
+    return f'<div style="margin-top:0.25rem;">{fold("🎫 " + esc(head.strip()), esc(rest.strip()))}</div>'
+
 
 def transit_line(af) -> str:
+    """도착 경로를 '아이콘 + 평이 요약(소요시간)' summary와 장문 route 상세로 렌더."""
     if not af:
         return ""
-    icon = MODE_ICONS.get(af.get("mode"), "·")
+    mode = af.get("mode")
+    icon = MODE_ICONS.get(mode, "·")
+    verb = MODE_VERBS.get(mode, "이동")
+    dur = af.get("duration_min")
+    tbd = af.get("data_quality") == "tbd_needs_browser_mcp"
+
+    if dur:
+        time_part = f"약 {dur}분 (현지 확인)" if tbd else f"{dur}분"
+    else:
+        time_part = "이동 (Maps 확인)" if tbd else "이동"
+    summary = f"{icon} {verb} {time_part}"
+    dist = af.get("distance_km")
+    if mode == "walk" and isinstance(dist, (int, float)) and dist < 2:
+        summary += f" ({dist}km)"
+
     # source 필드의 첫 토큰이 http(s) URL이면 클릭 가능 링크로 감싼다 (Maps Directions 등).
     src = (af.get("source") or "").strip()
     first_token = src.split()[0] if src else ""
     href = first_token if first_token.startswith(("http://", "https://")) else ""
-    if af.get("data_quality") == "tbd_needs_browser_mcp":
-        route = af.get("route") or af.get("mode", "")
-        body = f"{icon} {esc(route)} · 소요시간 미확정 — Maps 확인 필요"
-    else:
-        bits = [icon]
-        if af.get("route"):
-            bits.append(esc(af["route"]))
-        if af.get("duration_min"):
-            bits.append(f"{af['duration_min']}분")
-        dist = af.get("distance_km")
-        if isinstance(dist, (int, float)) and dist < 50:
-            bits.append(f"{dist}km")
-        body = " · ".join(bits)
+    route = af.get("route") or ""
+    detail = esc(route) if route else f"{esc(verb)} {esc(time_part)}"
     if href:
-        body = f'<a href="{esc(href)}" target="_blank" rel="noopener" style="color:inherit;">{body}</a>'
-    return f'<div class="sub" style="opacity:0.75;font-size:0.85em;">{body}</div>'
+        detail += f' <a href="{esc(href)}" target="_blank" rel="noopener">경로 ↗</a>'
+    return fold(summary, detail)
 
 
 def card_itinerary(d) -> str:
@@ -500,15 +581,15 @@ def card_itinerary(d) -> str:
             transit = transit_line(it.get("arrive_from"))
             items_html.append(f"""
     <div class="day">
-      {transit}
       <div class="date"><span class="k">{esc(it['time'])}</span> {link}</div>
+      {transit}
     </div>""")
         days.append(f"""
   <div class="subcard">
     <div class="subtitle">{esc(day['day_label'])}</div>
     {''.join(items_html)}
     <div class="sub" style="margin-top:0.4rem;">도보 약 {day['walking_km']}km · 숙박: {esc(day['lodging'])}</div>
-    {f'<div class="sub" style="margin-top:0.25rem;">🎫 {esc(day["pass_recommendation"])}</div>' if day.get("pass_recommendation") else ""}
+    {pass_block(day.get("pass_recommendation"))}
   </div>""")
 
     pass_sources = trip.get("transit_pass_sources", [])
@@ -518,7 +599,7 @@ def card_itinerary(d) -> str:
             f'<a href="{esc(s["url"])}" target="_blank" rel="noopener">{esc(s["label"])}</a>'
             for s in pass_sources
         )
-        pass_sources_html = f'<div class="sub" style="margin-top:0.6rem;">📚 교통 출처: {links}</div>'
+        pass_sources_html = f'<div style="margin-top:0.6rem;">{fold(f"📚 교통 출처 {len(pass_sources)}건", links)}</div>'
 
     playbook = trip.get("transit_pass_playbook", [])
     playbook_html = ""
@@ -529,8 +610,11 @@ def card_itinerary(d) -> str:
         )
         playbook_html = (
             f'<div class="subcard" style="margin-top:0.6rem;">'
-            f'<div class="subtitle">🧭 ICOCA 실행 단계</div>'
-            f'<ol style="margin:0.3rem 0 0 1.1rem;padding:0;">{rows}</ol></div>'
+            + fold(
+                "🧭 ICOCA 실행 단계 (탭하면 펼침)",
+                f'<ol style="margin:0.3rem 0 0 1.1rem;padding:0;">{rows}</ol>',
+            )
+            + "</div>"
         )
 
     return f"""
@@ -726,8 +810,8 @@ def build_itinerary(d) -> str:
             reviews_html = blog_reviews_html(it.get("blog_reviews", []))
             item_rows.append(f"""
     <div class="day">
-      {transit}
       <div class="date"><span class="k">{esc(it['time'])}</span> {link}</div>
+      {transit}
       {note_html}{img_html}{reviews_html}
     </div>""")
         day_cards.append(f"""
@@ -735,7 +819,7 @@ def build_itinerary(d) -> str:
     <div class="subtitle">{esc(day['day_label'])}</div>
     {''.join(item_rows)}
     <div class="sub" style="margin-top:0.4rem;">도보 약 {day['walking_km']}km · 숙박: {esc(day['lodging'])}</div>
-    {f'<div class="sub" style="margin-top:0.25rem;">🎫 {esc(day["pass_recommendation"])}</div>' if day.get("pass_recommendation") else ""}
+    {pass_block(day.get("pass_recommendation"))}
   </div>""")
 
     pending_items = "".join(f"<li>{esc(p)}</li>" for p in itin.get("pending", []))
@@ -747,7 +831,7 @@ def build_itinerary(d) -> str:
             f'<a href="{esc(s["url"])}" target="_blank" rel="noopener">{esc(s["label"])}</a>'
             for s in pass_sources
         )
-        pass_sources_html = f'<div class="sub" style="margin-top:0.6rem;">📚 교통 출처: {links}</div>'
+        pass_sources_html = f'<div style="margin-top:0.6rem;">{fold(f"📚 교통 출처 {len(pass_sources)}건", links)}</div>'
 
     playbook = trip.get("transit_pass_playbook", [])
     playbook_html = ""
@@ -758,8 +842,11 @@ def build_itinerary(d) -> str:
         )
         playbook_html = (
             f'<div class="subcard" style="margin-top:0.6rem;">'
-            f'<div class="subtitle">🧭 ICOCA 실행 단계</div>'
-            f'<ol style="margin:0.3rem 0 0 1.1rem;padding:0;">{rows}</ol></div>'
+            + fold(
+                "🧭 ICOCA 실행 단계 (탭하면 펼침)",
+                f'<ol style="margin:0.3rem 0 0 1.1rem;padding:0;">{rows}</ol>',
+            )
+            + "</div>"
         )
 
     candidate_cards = []
@@ -864,7 +951,7 @@ def build_checklist(d) -> str:
     <div class="subtitle">{esc(it['label'])}</div>
     <div class="row"><span class="k">상태</span><span class="v"><span class="badge"{badge_style}>{esc(it['status'])}</span></span></div>
     <div class="row"><span class="k">기한</span><span class="v">{esc(it.get('due_date',''))}</span></div>
-    <div class="sub">{esc(it.get('note',''))}</div>
+    {note_block(it.get('note',''))}
   </div>""")
 
     body = f"""<h1>예약 체크리스트</h1>
@@ -977,8 +1064,8 @@ def build_itinerary_table(d) -> str:
                 else:
                     img_html = ""
                 cells.append(
-                    f'<td>{transit}<span class="t-time">{esc(it["time"])}</span>'
-                    f'<span class="t-title">{link}</span>{note_html}{img_html}</td>'
+                    f'<td><span class="t-time">{esc(it["time"])}</span>'
+                    f'<span class="t-title">{link}</span>{transit}{note_html}{img_html}</td>'
                 )
             else:
                 cells.append("<td></td>")
@@ -1003,8 +1090,8 @@ def build_itinerary_table(d) -> str:
             reviews_html = blog_reviews_html(it.get("blog_reviews", []))
             item_rows.append(f"""
     <div class="day">
-      {transit}
       <div class="date"><span class="k">{esc(it["time"])}</span> {link}</div>
+      {transit}
       {note_html}{img_html}{reviews_html}
     </div>""")
         mobile_cards.append(f"""
