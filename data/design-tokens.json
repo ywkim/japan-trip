@@ -1,0 +1,79 @@
+{
+  "_doc": "단일 출처: 시각 디자인 토큰 (색·타이포·간격·반경). DESIGN.md §2~§6과 동기화. scripts/build_index.py의 render_css(tokens)가 6개 산출물(index.html·viz/itinerary.html·viz/itinerary-table.html·viz/lodging.html·viz/checklist.html·viz/archive.html)의 인라인 CSS를 공통 생성. scripts/validate.py (H)가 DESIGN.md ↔ 본 JSON의 drift를 차단.",
+  "version": "1.0.0",
+  "theme_name": "Quiet Ledger",
+  "color": {
+    "light": {
+      "bg": "#F7F6F2",
+      "surface": "#FFFFFF",
+      "surface_sunken": "#EFEDE6",
+      "ink": "#1B1D24",
+      "ink_muted": "#5B6070",
+      "border": "#D9D6CC",
+      "accent": "#3E5C76",
+      "accent_soft": "#E3EAF3",
+      "ok": "#2F7D5B",
+      "warn": "#B5811F",
+      "danger": "#9A3B3B",
+      "table_stripe": "#EFEDE6",
+      "bar_track": "#E3EAF3"
+    },
+    "dark": {
+      "bg": "#161821",
+      "surface": "#1F222C",
+      "surface_sunken": "#13151D",
+      "ink": "#E8E6DE",
+      "ink_muted": "#9A9DA8",
+      "border": "#2E3140",
+      "accent": "#8AA8C7",
+      "accent_soft": "#262E3A",
+      "ok": "#6FB58E",
+      "warn": "#D4B36A",
+      "danger": "#D08585",
+      "table_stripe": "#262E3A",
+      "bar_track": "#262E3A"
+    }
+  },
+  "typography": {
+    "font_family_sans": "-apple-system, \"Apple SD Gothic Neo\", \"Pretendard Variable\", BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+    "font_family_mono": "\"SF Mono\", \"JetBrains Mono\", ui-monospace, monospace",
+    "scale_rem": {
+      "xs": 0.75,
+      "sm": 0.8125,
+      "base": 0.9375,
+      "md": 1.0625,
+      "lg": 1.375,
+      "xl": 1.75
+    },
+    "line_height": {
+      "body": 1.5,
+      "display": 1.25
+    },
+    "weight": {
+      "regular": 400,
+      "medium": 500,
+      "semibold": 600
+    }
+  },
+  "spacing_rem": {
+    "xs": 0.25,
+    "sm": 0.5,
+    "md": 0.75,
+    "base": 1,
+    "lg": 1.5,
+    "xl": 2
+  },
+  "radius_px": {
+    "sm": 4,
+    "md": 8,
+    "lg": 12
+  },
+  "elevation": {
+    "card_light": "none",
+    "card_dark": "0 1px 0 rgba(0,0,0,0.25)"
+  },
+  "breakpoint_px": {
+    "mobile_max": 640,
+    "tablet_max": 960
+  }
+}
