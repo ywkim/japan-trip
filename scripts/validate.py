@@ -21,6 +21,11 @@
      data_quality != tbd_needs_browser_mcp 면 stale fail. mode=walk leg의
      distance_km 합과 days[].walking_km 차이가 2km 초과면 fail (정수 반올림
      오차 + 시장·사찰 내부 산책 추정 여유 포함).
+  H. DESIGN MD↔JSON 동기화: DESIGN.md의 모든 hex 색상이 data/design-tokens.json의
+     color 트리에 존재하고, 그 반대(tokens의 모든 색이 DESIGN.md 본문에 등장)도
+     성립. theme_name·version 일치. (4개 산출물(index·itinerary·itinerary-table·
+     checklist)의 CSS는 scripts/build_index.py가 tokens에서 생성하므로 별도
+     sentinel 검증 불필요 — build_index.py --check가 drift를 잡는다.)
 
 exit 0 = 모두 통과 또는 경고만, exit 1 = 실패.
 
@@ -233,6 +238,58 @@ def check_itinerary_transit(base: Path, today: date) -> tuple[list[str], list[st
     return errors, warnings
 
 
+HEX_RE = re.compile(r"#[0-9A-Fa-f]{6}\b")
+
+
+def _flatten_color_hexes(color_tree: dict) -> set[str]:
+    """{light: {bg: '#...', ...}, dark: {...}} → {'#...', ...} (대문자)."""
+    out: set[str] = set()
+    for variant in color_tree.values():
+        if not isinstance(variant, dict):
+            continue
+        for v in variant.values():
+            if isinstance(v, str) and HEX_RE.fullmatch(v):
+                out.add(v.upper())
+    return out
+
+
+def check_design_sync(base: Path) -> list[str]:
+    """검사 H: DESIGN.md ↔ data/design-tokens.json hex 양방향 + theme_name·version."""
+    errors: list[str] = []
+    design_md = base / "DESIGN.md"
+    tokens_json = base / "data" / "design-tokens.json"
+    # 격리된 fixture가 디자인 자산을 갖추지 않은 경우 silent-skip.
+    if not design_md.exists() or not tokens_json.exists():
+        return errors
+    tokens = json.loads(tokens_json.read_text(encoding="utf-8"))
+    md = design_md.read_text(encoding="utf-8")
+
+    md_hexes = {h.upper() for h in HEX_RE.findall(md)}
+    token_hexes = _flatten_color_hexes(tokens.get("color", {}))
+
+    missing_in_tokens = md_hexes - token_hexes
+    if missing_in_tokens:
+        errors.append(
+            f"[H] DESIGN.md hex(es) not in design-tokens.json color tree: "
+            f"{sorted(missing_in_tokens)}"
+        )
+    missing_in_md = token_hexes - md_hexes
+    if missing_in_md:
+        errors.append(
+            f"[H] design-tokens.json color(s) not documented in DESIGN.md: "
+            f"{sorted(missing_in_md)}"
+        )
+
+    theme = tokens.get("theme_name")
+    version = tokens.get("version")
+    if theme and theme not in md:
+        errors.append(f"[H] DESIGN.md missing theme_name {theme!r} from tokens")
+    if version and version not in md:
+        errors.append(f"[H] DESIGN.md missing version {version!r} from tokens")
+
+    return errors
+
+
 def run(base: Path, today: date) -> tuple[list[str], list[str]]:
     errors: list[str] = []
     warnings: list[str] = []
@@ -245,6 +302,7 @@ def run(base: Path, today: date) -> tuple[list[str], list[str]]:
     e, w = check_itinerary_transit(base, today)
     errors.extend(e)
     warnings.extend(w)
+    errors.extend(check_design_sync(base))
     return errors, warnings
 
 

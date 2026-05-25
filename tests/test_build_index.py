@@ -178,6 +178,34 @@ class BuildIndexTests(unittest.TestCase):
         cl = CHECKLIST.read_text(encoding="utf-8")
         self.assertIn("data/booking-checklist.json", cl)
 
+    def test_all_html_outputs_use_token_palette(self):
+        """HTML 6종: light(#F7F6F2/#3E5C76) + dark 토큰 모두 인라인 CSS에 등장."""
+        run()
+        for path in ALL_HTML_OUTPUTS:
+            with self.subTest(path=path.name):
+                content = path.read_text(encoding="utf-8")
+                self.assertIn("#F7F6F2", content, f"{path.name}: light bg token not injected")
+                self.assertIn("#3E5C76", content, f"{path.name}: slate-indigo accent not injected")
+                for legacy in ("#d33", "#fafafa", "#ff6464", "#c33", "#c80", "#2a7"):
+                    self.assertNotIn(
+                        legacy, content,
+                        f"{path.name}: legacy color {legacy} still present",
+                    )
+
+    def test_og_svgs_use_dark_token_palette(self):
+        """OG SVG 6장: dark surface(#1F222C) + dark accent(#8AA8C7) 토큰 인젝션. 다크 미리보기 친화."""
+        run()
+        for path in ALL_OG_SVGS:
+            with self.subTest(path=path.name):
+                content = path.read_text(encoding="utf-8")
+                self.assertIn("#1F222C", content, f"{path.name}: dark surface token not injected")
+                self.assertIn("#8AA8C7", content, f"{path.name}: dark accent token not injected")
+                for legacy in ("#0a0a0a", "#ededed", "#cfcfcf"):
+                    self.assertNotIn(
+                        legacy, content,
+                        f"{path.name}: legacy SVG color {legacy} still present",
+                    )
+
     def test_arrive_from_route_is_clickable_link_when_source_is_url(self):
         """모든 mode(bus·subway·jr·taxi·walk·airport_express)의 arrive_from에서
         source가 http URL이면 route 텍스트가 <a href> 링크로 렌더돼야 한다.

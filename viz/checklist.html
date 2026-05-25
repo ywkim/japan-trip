@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#1a1a1a" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F7F6F2" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#161821" media="(prefers-color-scheme: dark)">
 <title>예약 체크리스트 · 교토 5/31~6/3</title>
 <meta name="description" content="예약 진행 상태 7항목 (확정·미정)">
 <meta property="og:type" content="website">
@@ -22,21 +22,26 @@
 <meta name="twitter:image" content="https://nihon-trip.vercel.app/assets/og-checklist.svg">
 <style>
   :root {
-    --bg: #fff; --fg: #111; --muted: #888; --border: #eaeaea;
-    --accent: #111; --card: #fff; --subcard: #fafafa;
-    --ok: #1a7f37; --warn: #9a6700; --info: #0969da; --urgent: #cf222e;
+    --bg: #F7F6F2; --fg: #1B1D24; --muted: #5B6070; --border: #D9D6CC;
+    --accent: #3E5C76; --accent-soft: #E3EAF3;
+    --card: #FFFFFF; --subcard: #EFEDE6;
+    --ok: #2F7D5B; --warn: #B5811F; --danger: #9A3B3B;
+    --bar-track: #E3EAF3;
+    --font-sans: -apple-system, "Apple SD Gothic Neo", "Pretendard Variable", BlinkMacSystemFont, "Segoe UI", sans-serif;
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --bg: #000; --fg: #ededed; --muted: #888; --border: #333;
-      --accent: #ededed; --card: #0a0a0a; --subcard: #111;
-      --ok: #3fb950; --warn: #d29922; --info: #4493f8; --urgent: #f85149;
+      --bg: #161821; --fg: #E8E6DE; --muted: #9A9DA8; --border: #2E3140;
+      --accent: #8AA8C7; --accent-soft: #262E3A;
+      --card: #1F222C; --subcard: #13151D;
+      --ok: #6FB58E; --warn: #D4B36A; --danger: #D08585;
+      --bar-track: #262E3A;
     }
   }
   * { box-sizing: border-box; }
   html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
   body {
-    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "AppleGothic", sans-serif;
+    font-family: var(--font-sans);
     background: var(--bg); color: var(--fg);
     margin: 0 auto; padding: 1rem; max-width: 640px;
     line-height: 1.5; font-size: 16px;
@@ -54,13 +59,16 @@
     background: var(--card); border: 1px solid var(--border); border-radius: 8px;
     padding: 1rem; margin: 0.75rem 0;
   }
+  @media (prefers-color-scheme: dark) {
+    .card { box-shadow: 0 1px 0 rgba(0,0,0,0.25); }
+  }
   .subcard {
     background: var(--subcard); border: 1px solid var(--border); border-radius: 6px;
     padding: 0.75rem; margin: 0.5rem 0;
   }
   .subtitle { font-weight: 600; margin-bottom: 0.4rem; font-size: 0.95rem; }
   .big { font-size: 1.6rem; font-weight: 600; line-height: 1.2; }
-  .sub { color: var(--muted); font-size: 0.85rem; margin-top: 0.25rem; }
+  .sub { color: var(--muted); font-size: 0.85rem; margin-top: 0.25rem; word-break: keep-all; }
   .row {
     display: flex; justify-content: space-between; gap: 0.5rem;
     padding: 0.35rem 0; border-bottom: 1px solid var(--border);
@@ -75,7 +83,7 @@
   .day .date { font-size: 0.9rem; }
   .day .date .k { display: inline-block; min-width: 3.2rem; color: var(--muted); }
   .day a { color: var(--fg); text-decoration: underline; text-decoration-color: var(--border); }
-  .bar { height: 6px; background: var(--border); border-radius: 3px; margin: 0.2rem 0 0.5rem; overflow: hidden; }
+  .bar { height: 6px; background: var(--bar-track); border-radius: 3px; margin: 0.2rem 0 0.5rem; overflow: hidden; }
   .bar-fill { height: 100%; background: var(--accent); }
   .links { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.6rem; }
   .links a {
@@ -94,12 +102,12 @@
   .ck-head .subtitle { margin: 0; }
   .badge-done { color: var(--ok); border-color: var(--ok); }
   .badge-pending { color: var(--warn); border-color: var(--warn); }
-  .badge-progress { color: var(--info); border-color: var(--info); }
+  .badge-progress { color: var(--accent); border-color: var(--accent); }
   .subcard.status-done { border-left: 3px solid var(--ok); }
   .subcard.status-pending { border-left: 3px solid var(--warn); }
-  .subcard.status-progress { border-left: 3px solid var(--info); }
+  .subcard.status-progress { border-left: 3px solid var(--accent); }
   .dday { font-size: 0.78rem; color: var(--muted); margin-left: 0.3rem; }
-  .dday.urgent { color: var(--urgent); font-weight: 600; }
+  .dday.urgent { color: var(--danger); font-weight: 600; }
   .dday.over { color: var(--muted); }
   .doc-link {
     display: inline-block; margin-top: 0.5rem; padding: 0.4rem 0.7rem;
@@ -156,12 +164,12 @@
 </head>
 <body>
 <h1>예약 체크리스트</h1>
-<div class="status">3개 확정 · 4개 미정 · 총 7개 항목</div>
+<div class="status">3개 확정 · 5개 미정 · 총 8개 항목</div>
 
 <!-- SYNC: data/booking-checklist.json -->
 <section class="card">
   <h2>상태 요약</h2>
-  <div class="row"><span class="k"><span class="badge badge-done">확정</span></span><span class="v">3개</span></div><div class="row"><span class="k"><span class="badge badge-progress">예약중</span></span><span class="v">0개</span></div><div class="row"><span class="k"><span class="badge badge-pending">미정</span></span><span class="v">4개</span></div>
+  <div class="row"><span class="k"><span class="badge badge-done">확정</span></span><span class="v">3개</span></div><div class="row"><span class="k"><span class="badge badge-progress">예약중</span></span><span class="v">0개</span></div><div class="row"><span class="k"><span class="badge badge-pending">미정</span></span><span class="v">5개</span></div>
 </section>
 
 <section class="card">
@@ -178,6 +186,11 @@
     <div class="row"><span class="k">금액</span><span class="v">하루카 할인 편도 ¥2,200/인 · 4인 왕복 ≈₩167K</span></div><div class="row"><span class="k">마감</span><span class="v">2026-05-25<span class="dday" data-due="2026-05-25"></span></span></div><div class="row"><span class="k">권장</span><span class="v">KIX 도착 후 JR 매표소(간사이 관광정보센터) 현장 발권 · 여권 제시 (소연 결정 2026-05-24). 온라인 WEST QR 사전구매는 보류.</span></div>
     <a class="doc-link" href="https://github.com/ywkim/japan-trip/blob/main/docs/booking-research-2026-05-24.md" target="_blank" rel="noopener">리서치 상세 ↗</a>
     <details class="ck-note"><summary>자세히</summary><div class="sub">결정(소연, 2026-05-19): 하루카 할인 편도권 채택, JR 간사이 패스 미채택. 하루카 KIX↔교토 할인 편도권 ¥2,200/인(외국인 단기체재·자유석) × 4인 × 2(왕복) = ¥17,600 ≈ ₩167K. 교토 시내 JR·시버스는 4인 Apple Wallet ICOCA 단권(기확정). (시부모 2인 75분 구간 지정석 +¥530/인 옵션 가능, 채택 시 별도 갱신). 비교 근거(1/2/3/4일권 부적합): <a href="https://github.com/ywkim/japan-trip/blob/main/docs/transit-pass-jr-kansai-2026.md" target="_blank" rel="noopener">https://github.com/ywkim/japan-trip/blob/main/docs/transit-pass-jr-kansai-2026.md</a> · 발권 채널 결정(소연, 2026-05-24): KIX 도착 후 현장 발권으로 진행 — KIX 1F JR 매표소/간사이 관광정보센터에서 여권 제시 후 하루카 외국인 할인 편도권 ¥2,200/인 구매. 온라인 WEST QR e-티켓 사전구매는 보류(대안). 참고(소연 제공): <a href="https://blog.naver.com/bomnarigom/223024559486" target="_blank" rel="noopener">https://blog.naver.com/bomnarigom/223024559486</a> · 리서치 상세: <a href="https://github.com/ywkim/japan-trip/blob/main/docs/booking-research-2026-05-24.md" target="_blank" rel="noopener">https://github.com/ywkim/japan-trip/blob/main/docs/booking-research-2026-05-24.md</a></div></details>
+  </div>
+  <div class="subcard status-pending">
+    <div class="ck-head"><span class="subtitle">사이호지(이끼사찰) 예약 가능성 조사 (intosaihoji.com)</span><span class="badge badge-pending">미정</span></div>
+    <div class="row"><span class="k">금액</span><span class="v">입장료 ¥4,000/인 추정</span></div><div class="row"><span class="k">마감</span><span class="v">2026-05-25<span class="dday" data-due="2026-05-25"></span></span></div><div class="row"><span class="k">권장</span><span class="v">intosaihoji.com에서 5/31~6/2 슬롯·입장료 즉시 확인 (출국 7일 전, lead time 미공시)</span></div>
+    <details class="ck-note"><summary>자세히</summary><div class="sub">1977년부터 사전예약 필수. 온라인 포털 intosaihoji.com에서 5/31~6/2 슬롯 가능 여부 + 정확한 입장료(¥4,000/인 추정) 확인. 5/24 현재 출국 7일 전으로 lead time 미공시 → 즉시 확인 필요. 예약 가능 시 6/2 후시미이나리·토후쿠지 일정 일부 재배치 검토 (별도 PR)</div></details>
   </div>
   <div class="subcard status-pending">
     <div class="ck-head"><span class="subtitle">eSIM / 데이터 (4인)</span><span class="badge badge-pending">미정</span></div>

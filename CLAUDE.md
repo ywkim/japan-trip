@@ -28,8 +28,9 @@
 
 - 한국어
 - 일정·예약 데이터는 `data/itinerary.json`·`data/booking-checklist.json`에 단일 출처
+- 시각 디자인 토큰은 `data/design-tokens.json`에 단일 출처 (DESIGN.md §2~§6과 동기화)
 - 사람이 읽는 일지·상세 시나리오는 `docs/*.md`
-- 모바일/상세 화면은 `index.html`·`viz/itinerary.html`·`viz/itinerary-table.html`·`viz/checklist.html` — 모두 `scripts/build_index.py` 산출물 (직접 편집 금지)
+- 모바일/상세 화면은 `index.html`·`viz/itinerary.html`·`viz/itinerary-table.html`·`viz/lodging.html`·`viz/checklist.html`·`viz/archive.html` — 모두 `scripts/build_index.py` 산출물 (직접 편집 금지)
 - 과거 의사결정 보고서는 `reports/final-report.md` → PDF (아카이브)
 
 ## 실행 워크플로우
@@ -79,6 +80,7 @@
 japan-trip/
 ├── README.md            # 사람용 안내
 ├── CLAUDE.md            # AI 세션 지시
+├── DESIGN.md            # 시각 디자인 단일 출처 (awesome-design-md 9섹션, Quiet Ledger 테마)
 ├── index.html           # 메인 운영 페이지 — 요약·일자별 일정 (build_index.py 산출물 — 직접 편집 금지)
 ├── assets/
 │   └── og-*.svg                 # OG/Twitter 카드 이미지 6장 (1200×630 SVG, build_index.py 산출물 — 직접 편집 금지)
@@ -88,7 +90,8 @@ japan-trip/
 │   ├── weather.json           # 후보지 × 시기 기후 + 긴키 매우(梅雨) 평년·실적 + 교토 5/31~6/3 일별 강수 평년
 │   ├── flights.json           # 후보지 × 출발지 항공권 시세 스냅샷 (메타사이트 근사)
 │   ├── itinerary.json         # 단일 출처 (교토 3박4일 일정 — 일자·시간대·동선·메모 + route_candidates 대안 코스 3개)
-│   └── booking-checklist.json # 단일 출처 (예약 진행 상태 7 항목)
+│   ├── booking-checklist.json # 단일 출처 (예약 진행 상태 7 항목)
+│   └── design-tokens.json     # 단일 출처 (색·타이포·간격·반경, DESIGN.md §2~§6과 동기화)
 ├── docs/
 │   ├── candidates.md                      # 후보지 상세 비교
 │   ├── weather.md                         # 날씨 분석 (시기별 쾌적도 순위)
@@ -110,10 +113,10 @@ japan-trip/
 ├── scripts/
 │   ├── score.py         # 종합 점수 계산 (--json 지원)
 │   ├── budget.py        # 3M 예산 시나리오 평가 (--json 지원)
-│   ├── build_index.py   # index.html + viz/*.html(5개) + assets/og-*.svg(6장) 빌드 (--check)
-│   ├── validate.py      # 가격 필드·묵은 가격·SYNC 주석 무결성 검사
+│   ├── build_index.py   # index.html + viz/*.html(5개: itinerary·itinerary-table·lodging·checklist·archive) + assets/og-*.svg(6장) 빌드 (공통 토큰 주입, --check)
+│   ├── validate.py      # 가격 필드·묵은 가격·SYNC 주석·MD↔JSON·DESIGN 동기화 검사
 │   └── render-pdf.sh    # PDF 생성
-├── tests/               # unittest (validate·build_index·score·budget)
+├── tests/               # unittest (validate·build_index·design_tokens·score·budget)
 ├── .github/workflows/
 │   └── validate.yml     # PR 게이트: unittest + build_index --check + validate + score + budget
 └── reports/
@@ -126,6 +129,7 @@ japan-trip/
   - `data/itinerary.json` — 교토 3박4일 일정. `days`: 확정 코스 (일자·시간대·동선·메모·도보거리·보류). `route_candidates`: 대안 코스 3개 (여유형·서북 사찰 집중형·미식+문화 체험형). days[].items[].`arrive_from`(mode/duration_min/distance_km/route/source/source_fetched_at/data_quality)으로 장소 간 이동 출처 명시. data_quality는 `official_fare`/`researched_market_rate`/`tbd_needs_browser_mcp`(Playwright MCP 후속 세션 위임)
   - `data/booking-checklist.json` — 예약 진행 상태
   - `data/cost-options.json` — 항공·숙박·고정비·일회성·시나리오 (확정 금액은 `confirmed_booking` 라벨로 승격)
+  - `data/design-tokens.json` — 색·타이포·간격·반경 (DESIGN.md §2~§6과 동기화). `build_index.py`의 `render_css(tokens)`가 6개 산출물(`index.html`·`viz/itinerary.html`·`viz/itinerary-table.html`·`viz/lodging.html`·`viz/checklist.html`·`viz/archive.html`)의 인라인 CSS를 공통 생성
 - **아카이브 단일 출처(참조용)** — 의사결정 종료(2026-05-12) 시점의 입력 데이터. 신규 비교가 필요해질 때만 갱신:
   - `data/decision.json` — criteria·candidates·scores (MCDA 입력. 교토 확정 후 회귀 가드)
   - `data/weather.json` — 후보지×시기 기후 + `tsuyu_normals`(긴키 매우입·매우명 평년 + 최근 7년 실적) + `cities.kyoto.sub_monthly_precip`(순계열)·`trip_window_daily_precip`(5/31~6/3 일별). 원자료: JMA 매우 평년값·京都(47759) 일별 평년값 1991–2020. `docs/weather.md` §5와 동기화. 5/31~6/3 실측 기상 추적이 필요해지면 본 파일의 `cities.kyoto`에 새 키로 추가
@@ -153,7 +157,20 @@ japan-trip/
 | weather MD↔JSON 동기화 | `scripts/validate.py` (E) | `docs/weather.md`의 도시·시기 수치가 `data/weather.json`과 일치하지 않음 |
 | flights MD↔JSON 동기화 | `scripts/validate.py` (F) | `docs/flights.md`의 snapshot_date·시세 수치가 `data/flights.json`과 일치하지 않음 |
 | itinerary arrive_from 무결성 | `scripts/validate.py` (G) | `data/itinerary.json` arrive_from에 mode/source/source_fetched_at/data_quality 누락, mode·data_quality 화이트리스트 외, source_fetched_at > 60d(tbd_needs_browser_mcp 제외), days[].walking_km보다 도보 leg 합이 2km 이상 초과 |
-| 빌드 산출물 drift | `scripts/build_index.py --check` | `index.html`·`viz/itinerary.html`·`viz/checklist.html` 중 하나라도 빌드 결과와 다름 |
+| DESIGN MD↔JSON 동기화 | `scripts/validate.py` (H) | `DESIGN.md`의 hex가 `data/design-tokens.json`에 없거나 그 반대, theme_name·version drift |
+| 빌드 산출물 drift | `scripts/build_index.py --check` | `index.html`·`viz/itinerary.html`·`viz/itinerary-table.html`·`viz/lodging.html`·`viz/checklist.html` 중 하나라도 빌드 결과와 다름 |
+
+## 디자인 워크플로우
+
+6개 산출물(`index.html`·`viz/itinerary.html`·`viz/itinerary-table.html`·`viz/lodging.html`·`viz/checklist.html`·`viz/archive.html`)의 시각 변경 시:
+
+1. `DESIGN.md` 편집 (의도·규칙 먼저).
+2. `data/design-tokens.json` 동기화 (DESIGN.md §2~§6의 모든 hex·치수가 토큰에 반영되어야 함).
+3. `python scripts/build_index.py` 실행 → 6개 산출물이 공통 `render_css(tokens)`로 재생성.
+4. `python scripts/validate.py` (H 통과) + `python scripts/build_index.py --check` (drift 없음) 확인.
+5. `data/design-tokens.json`이 단일 출처. 인라인 hex 추가 금지 — 새 색은 반드시 토큰 키 추가 후 `var(--키)`로 참조.
+
+상세 가이드: `DESIGN.md` §9 (Agent Prompt Guide).
 
 ## 테스트 작성 규칙 (TDD)
 
