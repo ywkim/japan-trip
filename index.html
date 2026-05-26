@@ -110,7 +110,26 @@
   .badge {
     display: inline-block; padding: 0.1rem 0.45rem; border-radius: 4px;
     font-size: 0.75rem; border: 1px solid currentColor;
+    white-space: nowrap; flex-shrink: 0;
   }
+  /* ── 예약 체크리스트 ── */
+  .ck-head { display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; margin-bottom: 0.4rem; }
+  .ck-head .subtitle { margin: 0; }
+  .badge-done { color: var(--ok); border-color: var(--ok); }
+  .badge-pending { color: var(--warn); border-color: var(--warn); }
+  .badge-progress { color: var(--accent); border-color: var(--accent); }
+  .subcard.status-done { border-left: 3px solid var(--ok); }
+  .subcard.status-pending { border-left: 3px solid var(--warn); }
+  .subcard.status-progress { border-left: 3px solid var(--accent); }
+  .dday { font-size: 0.78rem; color: var(--muted); margin-left: 0.3rem; }
+  .dday.urgent { color: var(--danger); font-weight: 600; }
+  .dday.over { color: var(--muted); }
+  .doc-link {
+    display: inline-block; margin-top: 0.5rem; padding: 0.4rem 0.7rem;
+    border: 1px solid var(--border); border-radius: 6px;
+    text-decoration: none; color: var(--fg); font-size: 0.8rem;
+  }
+  .doc-link:hover { border-color: var(--accent); }
   footer { color: var(--muted); font-size: 0.75rem; margin-top: 1.5rem; text-align: center; }
   /* ── 하단 탭바 ── */
   body { padding-bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px)); }
@@ -169,8 +188,8 @@
   <div class="row"><span class="k">시기</span><span class="v">2026-05-31 (일) ~ 06-03 (수)</span></div>
   <div class="row"><span class="k">동반</span><span class="v">영욱·소연 + 시부모 (4인)</span></div>
   <div class="row"><span class="k">숙박</span><span class="v">에어비앤비 2박 + 카덴쇼 료칸 1박 (2명×2실)</span></div>
-  <div class="row"><span class="k">예상 비용</span><span class="v">₩3,019,837</span></div>
-  <div class="row"><span class="k">3M 캡</span><span class="v">₩19,837 초과</span></div>
+  <div class="row"><span class="k">예상 비용</span><span class="v">₩2,995,037</span></div>
+  <div class="row"><span class="k">3M 캡</span><span class="v">통과</span></div>
   <div class="sub" style="margin-top:0.5rem;">발권·예약 완료 (항공 A8YW58 · 시오 마치야 · 카덴쇼 트립닷컴). 출국 전 점검은 ☑ 예약 탭.</div>
 </section>
 
@@ -204,8 +223,12 @@
       <details class="leg"><summary>🚌 버스로 약 35분 (현지 확인)</summary><div class="leg-detail">점심 후 시오/니조 → JR 산인선 + 시버스 → 키요미즈 (니조 출발 약 35분. 교토역 출발 28분 대비 7분 가산) <a href="https://www.google.com/maps/dir/Shio+Machiya+Kyoto/Kiyomizu-dera" target="_blank" rel="noopener">경로 ↗</a></div></details>
     </div>
     <div class="day">
+      <div class="date"><span class="k">16:00</span> <a href="https://maps.google.com/?q=Maccha+House+Kiyomizu+Higashiyama" target="_blank" rel="noopener">MACCHA HOUSE 抹茶館 (말차 티라미수)</a></div>
+      <details class="leg"><summary>🚶 걸어서 10분 (0.6km)</summary><div class="leg-detail">키요미즈데라 → 산넨자카·니넨자카 하행 → 맛차하우스 (키요미즈 3초메 337, 도보 10분) <a href="https://maps.app.goo.gl/qnpCLBJxxeA7e5au6" target="_blank" rel="noopener">경로 ↗</a></div></details>
+    </div>
+    <div class="day">
       <div class="date"><span class="k">16:30</span> <a href="https://maps.google.com/?q=Gion+Kyoto" target="_blank" rel="noopener">산넨자카 → 야사카 신사 → 기온</a></div>
-      <details class="leg"><summary>🚶 걸어서 25분 (1.3km)</summary><div class="leg-detail">키요미즈→니넨자카·산넨자카→야사카신사 (1.3km, 20~26분, 경사 완만) <a href="https://en.kyotokk.com/course2.html" target="_blank" rel="noopener">경로 ↗</a></div></details>
+      <details class="leg"><summary>🚶 걸어서 5분 (0.3km)</summary><div class="leg-detail">맛차하우스 → 산넨자카 진입점 도보 5분 300m <a href="https://www.google.com/maps/dir/Maccha+House/Sannenzaka" target="_blank" rel="noopener">경로 ↗</a></div></details>
     </div>
     <div class="day">
       <div class="date"><span class="k">17:00</span> <a href="https://maps.google.com/?q=Philosopher&#x27;s+Path+Kyoto" target="_blank" rel="noopener">철학의 길 단축 구간 (난젠지~철학의 길 남단)</a></div>

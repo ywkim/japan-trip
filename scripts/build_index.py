@@ -16,6 +16,7 @@ from __future__ import annotations
 import argparse
 import html
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -60,6 +61,27 @@ def esc(s) -> str:
     if s is None:
         return ""
     return html.escape(str(s), quote=True)
+
+
+_URL_RE = re.compile(r"(https?://[^\s)]+)")
+
+
+def linkify(s) -> str:
+    """자유 텍스트를 HTML escape하되 http(s) URL은 클릭 가능한 <a> 링크로 변환.
+
+    체크리스트 노트 등 출처 URL이 모바일에서 탭으로 열리도록 한다.
+    """
+    if s is None:
+        return ""
+    parts = _URL_RE.split(str(s))
+    out = []
+    for i, part in enumerate(parts):
+        if i % 2 == 1:  # 캡처된 URL
+            url = esc(part)
+            out.append(f'<a href="{url}" target="_blank" rel="noopener">{url}</a>')
+        else:
+            out.append(esc(part))
+    return "".join(out)
 
 
 def won(n: int) -> str:
@@ -235,7 +257,26 @@ def render_css(tokens: dict) -> str:
   .badge {{
     display: inline-block; padding: 0.1rem 0.45rem; border-radius: 4px;
     font-size: 0.75rem; border: 1px solid currentColor;
+    white-space: nowrap; flex-shrink: 0;
   }}
+  /* ── 예약 체크리스트 ── */
+  .ck-head {{ display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; margin-bottom: 0.4rem; }}
+  .ck-head .subtitle {{ margin: 0; }}
+  .badge-done {{ color: var(--ok); border-color: var(--ok); }}
+  .badge-pending {{ color: var(--warn); border-color: var(--warn); }}
+  .badge-progress {{ color: var(--accent); border-color: var(--accent); }}
+  .subcard.status-done {{ border-left: 3px solid var(--ok); }}
+  .subcard.status-pending {{ border-left: 3px solid var(--warn); }}
+  .subcard.status-progress {{ border-left: 3px solid var(--accent); }}
+  .dday {{ font-size: 0.78rem; color: var(--muted); margin-left: 0.3rem; }}
+  .dday.urgent {{ color: var(--danger); font-weight: 600; }}
+  .dday.over {{ color: var(--muted); }}
+  .doc-link {{
+    display: inline-block; margin-top: 0.5rem; padding: 0.4rem 0.7rem;
+    border: 1px solid var(--border); border-radius: 6px;
+    text-decoration: none; color: var(--fg); font-size: 0.8rem;
+  }}
+  .doc-link:hover {{ border-color: var(--accent); }}
   footer {{ color: var(--muted); font-size: 0.75rem; margin-top: 1.5rem; text-align: center; }}
   /* ── 하단 탭바 ── */
   body {{ padding-bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px)); }}
@@ -661,25 +702,79 @@ def card_itinerary(d) -> str:
 """
 
 
-def card_checklist(d) -> str:
-    items = d["checklist"]["items"]
+_STATE_CLASS = {"확정": "done", "예약중": "progress", "미정": "pending"}
+
+
+def checklist_card(it) -> str:
+    """예약 항목 1개를 구조화 카드로 렌더.
+
+    제목+상태 배지 / 금액·마감(D-day)·예약번호·권장 행 / 출처 링크 / 접히는 상세 노트.
+    마감 D-day는 빌드 결정성을 위해 클라이언트 스크립트가 data-due에서 계산한다.
+    """
+    st = it.get("status", "미정")
+    state = _STATE_CLASS.get(st, "pending")
     rows = []
-    for it in items:
-        st = it["status"]
-        dim = "" if st == "확정" else ' style="color:var(--muted)"'
-        rows.append(f"""
-  <div class="subcard">
-    <div class="subtitle">{esc(it['label'])}</div>
-    <div class="row"><span class="k">상태</span><span class="v"{dim}>{esc(it['status'])}</span></div>
-    <div class="row"><span class="k">기한</span><span class="v">{esc(it['due_date'])}</span></div>
-    <div class="sub">{esc(it.get('note', ''))}</div>
-  </div>""")
+    if it.get("amount"):
+        rows.append(f'<div class="row"><span class="k">금액</span><span class="v">{esc(it["amount"])}</span></div>')
+    due = it.get("due_date", "")
+    if state != "done" and due:
+        rows.append(
+            f'<div class="row"><span class="k">마감</span>'
+            f'<span class="v">{esc(due)}<span class="dday" data-due="{esc(due)}"></span></span></div>'
+        )
+    if it.get("reference"):
+        rows.append(f'<div class="row"><span class="k">예약번호</span><span class="v">{esc(it["reference"])}</span></div>')
+    if it.get("action"):
+        rows.append(f'<div class="row"><span class="k">권장</span><span class="v">{esc(it["action"])}</span></div>')
+    link = it.get("link") or {}
+    link_html = ""
+    if link.get("url"):
+        link_html = (
+            f'\n    <a class="doc-link" href="{esc(link["url"])}" target="_blank" '
+            f'rel="noopener">{esc(link.get("label", "상세"))} ↗</a>'
+        )
+    note = it.get("note", "")
+    note_html = ""
+    if note:
+        note_html = "\n    " + fold("자세히", linkify(note))
+    return f"""
+  <div class="subcard status-{state}">
+    <div class="ck-head"><span class="subtitle">{esc(it['label'])}</span><span class="badge badge-{state}">{esc(st)}</span></div>
+    {''.join(rows)}{link_html}{note_html}
+  </div>"""
+
+
+def checklist_sort_key(it):
+    """처리 필요(미정·예약중)를 먼저, 그다음 마감일 이른 순."""
+    done = 1 if it.get("status") == "확정" else 0
+    return (done, it.get("due_date", "9999-99-99"))
+
+
+CHECKLIST_DDAY_SCRIPT = """
+<script>
+(function () {
+  var now = new Date(); now.setHours(0, 0, 0, 0);
+  document.querySelectorAll('.dday[data-due]').forEach(function (el) {
+    var due = new Date(el.getAttribute('data-due') + 'T00:00:00');
+    if (isNaN(due.getTime())) return;
+    var diff = Math.round((due - now) / 86400000);
+    el.textContent = diff < 0 ? '지남' : diff === 0 ? 'D-day' : 'D-' + diff;
+    if (diff < 0) el.classList.add('over');
+    else if (diff <= 2) el.classList.add('urgent');
+  });
+})();
+</script>"""
+
+
+def card_checklist(d) -> str:
+    items = sorted(d["checklist"]["items"], key=checklist_sort_key)
+    cards = "".join(checklist_card(it) for it in items)
     return f"""
 <!-- SYNC: data/booking-checklist.json -->
 <section id="checklist" class="card">
   <h2>예약 체크리스트 ({len(items)}개)</h2>
   <div class="sub" style="margin-bottom:0.5rem;">상세: <a href="viz/checklist.html">전체 체크리스트 화면 ↗</a></div>
-  {''.join(rows)}
+  {cards}
 </section>
 """
 
@@ -970,23 +1065,17 @@ def build_checklist(d) -> str:
     for it in items:
         counts[it.get("status", "미정")] = counts.get(it.get("status", "미정"), 0) + 1
 
+    badge_map = {"확정": "done", "예약중": "progress", "미정": "pending"}
     summary_rows = "".join(
-        f'<div class="row"><span class="k">{k}</span><span class="v">{counts[k]}개</span></div>'
+        f'<div class="row"><span class="k">'
+        f'<span class="badge badge-{badge_map[k]}">{k}</span></span>'
+        f'<span class="v">{counts[k]}개</span></div>'
         for k in ("확정", "예약중", "미정")
     )
 
-    sorted_items = sorted(items, key=lambda it: it.get("due_date", "9999-99-99"))
-    item_cards = []
-    for it in sorted_items:
-        st = it["status"]
-        badge_style = "" if st == "확정" else ' style="color:var(--muted)"'
-        item_cards.append(f"""
-  <div class="subcard">
-    <div class="subtitle">{esc(it['label'])}</div>
-    <div class="row"><span class="k">상태</span><span class="v"><span class="badge"{badge_style}>{esc(it['status'])}</span></span></div>
-    <div class="row"><span class="k">기한</span><span class="v">{esc(it.get('due_date',''))}</span></div>
-    {note_block(it.get('note',''))}
-  </div>""")
+    sorted_items = sorted(items, key=checklist_sort_key)
+    item_cards = [checklist_card(it) for it in sorted_items]
+
 
     body = f"""<h1>예약 체크리스트</h1>
 <div class="status">{counts.get('확정', 0)}개 확정 · {counts.get('미정', 0)}개 미정 · 총 {len(items)}개 항목</div>
@@ -998,12 +1087,13 @@ def build_checklist(d) -> str:
 </section>
 
 <section class="card">
-  <h2>항목 (기한 이른 순)</h2>
+  <h2>항목 (처리 필요 먼저 · 마감 이른 순)</h2>
   {''.join(item_cards)}
 </section>
 
 <footer>data/booking-checklist.json 단일 출처</footer>
 {tab_bar("checklist", in_viz=True)}
+{CHECKLIST_DDAY_SCRIPT}
 """
     return html_doc(
         "예약 체크리스트 · 교토 5/31~6/3",

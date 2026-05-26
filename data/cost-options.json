@@ -373,11 +373,12 @@
   "one_time": [
     {
       "id": "haruka_rt_4pax",
-      "label": "JR 하루카 KIX↔교토 왕복 4인",
+      "label": "JR 하루카 KIX↔교토 할인 편도권 왕복분 4인 (외국인 단기체재)",
       "category": "transport",
-      "krw": 192000,
-      "source": "JR 공식 ¥2,400 × 4 × 2",
-      "data_quality": "official_fare"
+      "krw": 167200,
+      "source": "JR West HARUKA 외국인 할인 편도권 ¥2,200/인 × 4 × 2 (japan-guide.com 2026-05-24 교차검증, FX 100엔=950원). 채택 결정: docs/decision-log/2026-05-19-haruka-discount-oneway-selected.md",
+      "data_quality": "official_fare",
+      "notes": "왕복분 계획 추정치(¥2,200/인 × 4 × 2). 실제 예약(소연 2026-05-25): Trip.com 온라인 e티켓 편도 4인 ₩70,300(₩18,500/인 −5%), 예약번호 1400827143412439, 상태 확인 중 — 발권 채널이 현장(ADR 04)에서 온라인으로 변경됨. 귀국편(6/3) 미예약. 단가가 본 추정(₩167,200 왕복)과 다르므로(편도 실측 ₩70,300) 확정 통보 + 귀국편 발권 후 krw·data_quality(confirmed_booking) 갱신 예정. 일지: docs/decision-log/2026-05-25-haruka-tripcom-online-booked.md."
     },
     {
       "id": "kyoto_local_transit_4pax",
