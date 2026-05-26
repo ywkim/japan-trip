@@ -486,7 +486,7 @@ def card_kadensho(d) -> str:
 <!-- SYNC: data/cost-options.json (lodging.kadensho_tripcom_no_meal_2026jun2) · data/booking-checklist.json (ryokan) -->
 <section id="kadensho" class="card">
   <h2>우메코지 카덴쇼 (6/2 1박)</h2>
-  <div class="sub" style="margin-bottom:0.5rem;">트립닷컴 예약번호 1400825991981904 · 2026-05-13 확정 · 숙소 현지결제.</div>
+  {note_block("트립닷컴 예약번호 1400825991981904 · 2026-05-13 확정 · 숙소 현지결제.", style="margin-bottom:0.5rem;")}
   {''.join(cards)}
 </section>
 """
@@ -613,6 +613,27 @@ def pass_block(text: str) -> str:
     return f'<div style="margin-top:0.25rem;">{fold("🎫 " + esc(head.strip()), esc(rest.strip()))}</div>'
 
 
+def detail_row(label: str, value: str) -> str:
+    """예약번호·권장처럼 길어지는 k/v 값을 짧으면 행, 길면 'label + 앞 토막 + 접기'로 렌더.
+
+    16자리 예약번호·PIN·취소정책 등 장문 운영값이 우측 정렬 셀(.row .v)을 넘쳐
+    모바일 레이아웃을 깨뜨리지 않도록, 식별용 앞 토막만 요약에 두고 나머지를 접는다.
+    """
+    value = (value or "").strip()
+    if not value:
+        return ""
+    if len(value) <= 44:
+        return f'<div class="row"><span class="k">{esc(label)}</span><span class="v">{esc(value)}</span></div>'
+    segs = [s for s in value.split(" · ") if s.strip()]
+    if len(segs) >= 2:
+        summary = esc(f"{label} · {segs[0]}")
+        detail = esc(" · ".join(segs[1:]))
+    else:
+        summary = esc(label)
+        detail = esc(value)
+    return "\n    " + fold(summary, detail)
+
+
 def transit_line(af) -> str:
     """도착 경로를 '아이콘 + 평이 요약(소요시간)' summary와 장문 route 상세로 렌더."""
     if not af:
@@ -723,9 +744,9 @@ def checklist_card(it) -> str:
             f'<span class="v">{esc(due)}<span class="dday" data-due="{esc(due)}"></span></span></div>'
         )
     if it.get("reference"):
-        rows.append(f'<div class="row"><span class="k">예약번호</span><span class="v">{esc(it["reference"])}</span></div>')
+        rows.append(detail_row("예약번호", it["reference"]))
     if it.get("action"):
-        rows.append(f'<div class="row"><span class="k">권장</span><span class="v">{esc(it["action"])}</span></div>')
+        rows.append(detail_row("권장", it["action"]))
     link = it.get("link") or {}
     link_html = ""
     if link.get("url"):

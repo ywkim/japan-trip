@@ -20,6 +20,9 @@ ALL_OG_SVGS = tuple(BASE / "assets" / f"og-{s}.svg" for s in OG_SLUGS)
 ALL_OUTPUTS = ALL_HTML_OUTPUTS + ALL_OG_SVGS
 SCRIPT = BASE / "scripts" / "build_index.py"
 
+sys.path.insert(0, str(BASE / "scripts"))
+import build_index  # noqa: E402
+
 
 def run(*args) -> subprocess.CompletedProcess:
     return subprocess.run([sys.executable, str(SCRIPT), *args], capture_output=True, text=True, cwd=BASE)
@@ -411,6 +414,51 @@ class NoteFoldTests(unittest.TestCase):
         html = CHECKLIST.read_text(encoding="utf-8")
         self.assertIn("PIN 5647", html, "checklist note detail (PIN) lost after fold")
         self.assertIn("20260513170241828", html, "checklist note detail (confirm no.) lost after fold")
+
+
+class ChecklistDetailFoldTests(unittest.TestCase):
+    """긴 예약번호·권장 값을 접어 모바일에서 우측 정렬 셀이 넘치지 않게 하는 회귀 가드.
+
+    PR #45가 lodging·checklist를 fold 비대상으로 두었던 것을, '모든 화면 접기' 요청에 따라
+    checklist 구조화 행(예약번호·권장)에도 확장한다.
+    """
+
+    SHORT = "에어서울 RS · A8YW58 · 발권"
+    LONG = ("Trip.com ① 1400827143416024 (성인2, ₩94,108) · ② 1400827143410570 "
+            "(성인2, PIN 2362) · 6/1 10:30 · LEE/SOYEON · 조건부 취소")
+
+    def test_short_value_stays_plain_row(self):
+        out = build_index.detail_row("예약번호", self.SHORT)
+        self.assertIn('class="row"', out)
+        self.assertIn(">예약번호<", out)
+        self.assertNotIn("<details", out)
+
+    def test_long_value_is_collapsible(self):
+        out = build_index.detail_row("예약번호", self.LONG)
+        self.assertIn('<details class="leg"', out,
+                      "long structured value should fold into <details class=\"leg\">")
+        self.assertNotIn('class="row"', out)
+
+    def test_long_value_detail_is_lossless(self):
+        out = build_index.detail_row("예약번호", self.LONG)
+        for tok in ("1400827143416024", "1400827143410570", "PIN 2362", "LEE/SOYEON", "조건부 취소"):
+            with self.subTest(tok=tok):
+                self.assertIn(tok, out, f"detail_row dropped {tok!r} after folding")
+
+    def test_empty_value_renders_nothing(self):
+        self.assertEqual(build_index.detail_row("예약번호", ""), "")
+        self.assertEqual(build_index.detail_row("예약번호", None), "")
+
+    def test_long_reference_folded_in_checklist_html(self):
+        """프로덕션 빌드에서 긴 예약번호(사이호지·트립닷컴 등)는 접기 요약으로 렌더돼야 한다."""
+        run()
+        html = CHECKLIST.read_text(encoding="utf-8")
+        self.assertIn("▸", html)  # leg summary 마커
+        self.assertIn("예약번호 ·", html,
+                      "long reference should fold with a '예약번호 · …' summary")
+        # 접어도 전체 예약번호 텍스트는 보존
+        self.assertIn("1400827143410570", html,
+                      "folded reference detail (saihoji 2nd booking) lost")
 
 
 class ItineraryTableTests(unittest.TestCase):
