@@ -128,11 +128,7 @@ def food_quality_html(fq) -> str:
         )
     src = esc((fq.get("source") or "").strip())
     src_html = f' <span style="opacity:0.65;">· 출처: {src}</span>' if src else ""
-    note = fq.get("note")
-    note_html = (
-        f'<div class="sub" style="font-size:0.8em;opacity:0.7;margin-top:0.1rem;">{esc(note)}</div>'
-        if note else ""
-    )
+    note_html = memo_block(fq.get("note"), style="font-size:0.8em;opacity:0.7;margin-top:0.1rem;")
     return (
         f'<div class="food-quality" style="font-size:0.85em;margin-top:0.25rem;color:var(--muted);">'
         f'{body}{src_html}</div>{note_html}'
@@ -634,6 +630,36 @@ def detail_row(label: str, value: str) -> str:
     return "\n    " + fold(summary, detail)
 
 
+def _lead_split(text: str):
+    """첫 문장(". ") 또는 첫 토막(" · ")을 요약 head로, 나머지를 detail로 분리.
+
+    앞 토막이 60자 밖이거나 구분자가 없으면 (None, None) — 통째 접기 폴백.
+    """
+    for sep in (". ", " · "):
+        idx = text.find(sep)
+        if 0 < idx < 60:
+            return text[:idx].strip(), text[idx + len(sep):].strip()
+    return None, None
+
+
+def memo_block(note: str, *, style: str = "", cls: str = "sub") -> str:
+    """일정 메모·맛집 상세 노트를 짧으면 평문, 길면 '첫 문장 요약 + 접기'로 렌더.
+
+    장소 팁·맛집 설명이 카드를 압도하지 않도록 첫 문장만 보이고 나머지를 접는다.
+    예약·숙박 메모용 note_block(' · ' 2항목 요약)과 달리 문장 단위 요약이 자연스럽다.
+    """
+    note = (note or "").strip()
+    if not note:
+        return ""
+    style_attr = f' style="{style}"' if style else ""
+    if len(note) <= 50:
+        return f'<div class="{cls}"{style_attr}>{esc(note)}</div>'
+    head, rest = _lead_split(note)
+    if head and rest:
+        return fold(esc(head), esc(rest))
+    return fold("상세 보기", esc(note))
+
+
 def transit_line(af) -> str:
     """도착 경로를 '아이콘 + 평이 요약(소요시간)' summary와 장문 route 상세로 렌더."""
     if not af:
@@ -945,7 +971,7 @@ def build_itinerary(d) -> str:
         item_rows = []
         for it in day["items"]:
             link = maps_link(it["maps_query"], it["title"]) if it.get("maps_query") else esc(it["title"])
-            note_html = f'<div class="sub">{esc(it["note"])}</div>' if it.get("note") else ""
+            note_html = memo_block(it.get("note"))
             transit = transit_line(it.get("arrive_from"))
             if it.get("image_url"):
                 img_html = (
@@ -1005,7 +1031,7 @@ def build_itinerary(d) -> str:
             item_rows = []
             for it in day["items"]:
                 link = maps_link(it["maps_query"], it["title"]) if it.get("maps_query") else esc(it["title"])
-                note_html = f'<div class="sub">{esc(it["note"])}</div>' if it.get("note") else ""
+                note_html = memo_block(it.get("note"))
                 food_html = food_quality_html(it.get("food_quality"))
                 item_rows.append(f"""
     <div class="day">
@@ -1198,7 +1224,7 @@ def build_itinerary_table(d) -> str:
             if i < len(col):
                 it = col[i]
                 link = maps_link(it["maps_query"], it["title"]) if it.get("maps_query") else esc(it["title"])
-                note_html = f'<span class="t-note">{esc(it["note"])}</span>' if it.get("note") else ""
+                note_html = memo_block(it.get("note"), cls="t-note")
                 transit = transit_line(it.get("arrive_from"))
                 if it.get("image_url"):
                     img_html = (
@@ -1223,7 +1249,7 @@ def build_itinerary_table(d) -> str:
         item_rows = []
         for it in day["items"]:
             link = maps_link(it["maps_query"], it["title"]) if it.get("maps_query") else esc(it["title"])
-            note_html = f'<div class="sub">{esc(it["note"])}</div>' if it.get("note") else ""
+            note_html = memo_block(it.get("note"))
             transit = transit_line(it.get("arrive_from"))
             if it.get("image_url"):
                 img_html = (

@@ -572,6 +572,57 @@ class FoodQualityRenderTests(unittest.TestCase):
         self.assertNotIn('class="food-quality"', index, "minimal index.html should not carry food-quality badges")
 
 
+class ItineraryMemoFoldTests(unittest.TestCase):
+    """일정 카드·시간표의 긴 장소 메모·맛집 상세 노트를 '첫 문장 요약 + 접기'로 렌더(모든 화면 fold 확장)."""
+
+    def test_short_memo_stays_plain(self):
+        out = build_index.memo_block("17:00 마감 주의")
+        self.assertIn('class="sub"', out)
+        self.assertNotIn("<details", out)
+
+    def test_long_memo_folds_with_first_sentence_summary(self):
+        memo = "시오 도보 10분. 외정원 30분, 본궁 입장(¥1,300/인)은 시간·체력 절약 차 생략 권장 — 5/31 당일 컨디션으로 결정"
+        out = build_index.memo_block(memo)
+        self.assertIn('<details class="leg"', out)
+        self.assertIn("시오 도보 10분</summary>", out, "first sentence should become the summary")
+        self.assertIn("5/31 당일 컨디션으로 결정", out, "memo tail lost after folding")
+
+    def test_long_memo_prefers_earlier_separator(self):
+        # 첫 ". "가 60자 밖이면 ' · '로 앞 토막을 가른다
+        memo = ("니넨자카 진입점 스타벅스 야사카차야점(100년 마치야 매장) · % 아라비카 교토 히가시야마점 — "
+                "둘 중 택1 카페 휴식 권장. 4인 좌석 대기 길 수 있음")
+        out = build_index.memo_block(memo)
+        self.assertIn('<details class="leg"', out)
+        self.assertIn("매장)</summary>", out)
+
+    def test_memo_without_separator_uses_generic_summary(self):
+        memo = "가" * 70
+        out = build_index.memo_block(memo)
+        self.assertIn('<details class="leg"', out)
+        self.assertIn("상세 보기", out)
+        self.assertIn("가" * 70, out, "memo body lost in generic fold")
+
+    def test_custom_class_preserved_for_short_memo(self):
+        out = build_index.memo_block("교토역 도보 5분", cls="t-note")
+        self.assertIn('class="t-note"', out)
+
+    def test_long_memo_folded_in_itinerary_views(self):
+        run()
+        for path in (ITINERARY, TABLE):
+            with self.subTest(path=path.name):
+                html = path.read_text(encoding="utf-8")
+                self.assertIn("닌넨자카·산넨자카 인근 말차 디저트 카페</summary>", html,
+                              "long place memo should fold into a first-sentence summary")
+                self.assertIn("영업 11:00~20:00", html, "memo tail lost (not lossless)")
+
+    def test_long_food_note_folded_but_rating_kept(self):
+        run()
+        html = ITINERARY.read_text(encoding="utf-8")
+        self.assertIn('class="food-quality"', html, "rating line must stay visible")
+        self.assertIn("쓰촨 중식</summary>", html, "long food note should fold to first sentence")
+        self.assertIn("1인 ¥4,000~5,000", html, "food note detail lost after folding")
+
+
 class TabBarTests(unittest.TestCase):
     TAB_PAGES = (INDEX, ITINERARY, TABLE, CHECKLIST, LODGING, ARCHIVE)
 
