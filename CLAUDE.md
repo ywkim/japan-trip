@@ -143,7 +143,9 @@ japan-trip/
 - `docs/kyoto-itinerary-may31-jun3-2026.md`는 `data/itinerary.json`의 사람용 마크다운 사본 (JSON이 정본). 일정 변경 시 JSON을 먼저 수정 → 마크다운 함께 갱신
 - `data/flights.json`은 **시점 스냅샷**. 시세 재조회 시 새 스냅샷으로 덮어쓰지 말고 snapshot_date 갱신 + 변경 사유를 `docs/decision-log/`에 새 일지로 기록
 - 카드 블록 위 `<!-- SYNC: <출처> -->` 주석으로 동기화 대상 명시 (예: `<!-- SYNC: reports/final-report.md §1 -->`). `scripts/validate.py`가 경로 유효성과 §N 절 번호를 검증
-- 외부 문서 링크는 GitHub blob URL(`https://github.com/ywkim/japan-trip/blob/main/...`) 사용 — Vercel(본 레포의 호스트)이 `.md` 파일을 자동 렌더하지 않고 raw text로 서빙하므로 상대 경로(`reports/final-report.md`)는 금지
+- **Vercel 산출물(HTML 6종: `index.html` + `viz/*.html`)에는 GitHub 링크 금지** (검사 J). 가족 공유 페이지에서 레포(소스·미렌더 `.md`)로 빠져나가는 링크를 막는다. 외부 문서는 ① 사이트 내 HTML 페이지(`viz/archive.html` 등)로 연결하거나 ② 없으면 일반 텍스트로 레포 경로(예: `docs/decision-log/`, `reports/`)만 표기. `github.com` 문자열은 링크든 raw URL이든 산출물에 남으면 CI(검사 J)가 차단
+  - 이전 정책(2026-05-26 이전): 외부 문서를 GitHub blob URL(`https://github.com/ywkim/japan-trip/blob/main/...`)로 링크 — Vercel이 `.md`를 raw text로 서빙해 상대 경로가 깨진다는 이유. **2026-05-26 정책 반전**: 받는 사람(시부모 포함)에게 레포 노출을 막기 위해 산출물에서 GitHub 링크 자체를 제거. 근거: `docs/decision-log/2026-05-26-vercel-no-github-links.md`
+  - `data/booking-checklist.json` 등 데이터의 `link.url`·`note`에도 GitHub URL 금지 — 레포 문서는 일반 텍스트 경로로 표기 (검사 J가 렌더 산출물에서 잡는다)
 
 ## CI 검증 (PR 게이트)
 
@@ -162,6 +164,7 @@ japan-trip/
 | itinerary arrive_from 무결성 | `scripts/validate.py` (G) | `data/itinerary.json` arrive_from에 mode/source/source_fetched_at/data_quality 누락, mode·data_quality 화이트리스트 외, source_fetched_at > 60d(tbd_needs_browser_mcp 제외), days[].walking_km보다 도보 leg 합이 2km 이상 초과 |
 | DESIGN MD↔JSON 동기화 | `scripts/validate.py` (H) | `DESIGN.md`의 hex가 `data/design-tokens.json`에 없거나 그 반대, theme_name·version drift |
 | itinerary food_quality 무결성 | `scripts/validate.py` (I) | `data/itinerary.json` 식사 항목 food_quality에 rating/source/source_fetched_at/data_quality 누락, data_quality 화이트리스트 외, source_fetched_at > 60d. food_quality 없는 항목(동네 끼니)은 면제. route_candidates도 순회 |
+| Vercel GitHub 링크 금지 | `scripts/validate.py` (J) | Vercel 산출물 HTML 6종(`index.html` + `viz/*.html`) 중 하나라도 `github.com` 문자열(링크·raw URL) 포함 |
 | 빌드 산출물 drift | `scripts/build_index.py --check` | `index.html`·`viz/itinerary.html`·`viz/itinerary-table.html`·`viz/lodging.html`·`viz/checklist.html` 중 하나라도 빌드 결과와 다름 |
 
 ## 디자인 워크플로우

@@ -26,6 +26,7 @@ def make_fixture(
     design_tokens: dict | None = None,
     design_md: str | None = None,
     itinerary: dict | None = None,
+    vercel_html: dict | None = None,
 ) -> Path:
     (tmp / "data").mkdir()
     (tmp / "reports").mkdir()
@@ -50,6 +51,11 @@ def make_fixture(
         (tmp / "DESIGN.md").write_text(design_md, encoding="utf-8")
     if itinerary is not None:
         (tmp / "data" / "itinerary.json").write_text(json.dumps(itinerary, ensure_ascii=False), encoding="utf-8")
+    if vercel_html is not None:
+        for rel, content in vercel_html.items():
+            path = tmp / rel
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(content, encoding="utf-8")
     return tmp
 
 
@@ -571,6 +577,40 @@ class FoodQualityTests(unittest.TestCase):
             base = self._base(td, itin)
             errs, _ = validate.run(base, date(2026, 5, 17))
             self.assertTrue(any(e.startswith("[I]") and "data_quality" in e for e in errs), errs)
+
+
+class NoGithubLinkTests(unittest.TestCase):
+    """검사 J: Vercel 산출물 HTML에 github.com 링크/URL이 없어야 함."""
+
+    def test_clean_outputs_pass(self):
+        with tempfile.TemporaryDirectory() as td:
+            base = make_fixture(
+                Path(td),
+                cost=VALID_COST,
+                index_html="<html><a href='viz/archive.html'>아카이브</a></html>",
+                vercel_html={"viz/checklist.html": "<html>리서치 상세: docs/booking-research-2026-05-24.md</html>"},
+            )
+            errs, _ = validate.run(base, date(2026, 5, 12))
+            self.assertEqual([e for e in errs if e.startswith("[J]")], [], errs)
+
+    def test_github_link_in_index_fails(self):
+        html = '<html><a href="https://github.com/ywkim/japan-trip/blob/main/reports/final-report.md">보고서</a></html>'
+        with tempfile.TemporaryDirectory() as td:
+            base = make_fixture(Path(td), cost=VALID_COST, index_html=html)
+            errs, _ = validate.run(base, date(2026, 5, 12))
+            self.assertTrue(any(e.startswith("[J]") and "index.html" in e for e in errs), errs)
+
+    def test_github_url_in_viz_output_fails(self):
+        html = "<html>출처: https://github.com/ywkim/japan-trip/blob/main/docs/x.md</html>"
+        with tempfile.TemporaryDirectory() as td:
+            base = make_fixture(
+                Path(td),
+                cost=VALID_COST,
+                index_html="<html></html>",
+                vercel_html={"viz/checklist.html": html},
+            )
+            errs, _ = validate.run(base, date(2026, 5, 12))
+            self.assertTrue(any(e.startswith("[J]") and "viz/checklist.html" in e for e in errs), errs)
 
 
 class ProductionDataTests(unittest.TestCase):

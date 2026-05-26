@@ -279,24 +279,27 @@ class BuildIndexTests(unittest.TestCase):
             self.assertIn(candidate_name, itin, f"candidate '{candidate_name}' missing in itinerary.html")
 
     def test_checklist_note_urls_rendered_as_links(self):
-        """data/booking-checklist.json 항목 note에 포함된 http URL이
-        viz/checklist.html에서 클릭 가능한 <a href> 링크로 렌더돼야 한다.
-        모바일 예약 탭에서 출처·상세 문서로 바로 이동하기 위한 회귀 가드.
+        """note에 포함된 http URL은 linkify가 클릭 가능한 <a href> 링크로 렌더해야 한다.
+        모바일 예약 탭에서 외부 출처로 바로 이동하기 위한 회귀 가드. (GitHub 링크는
+        검사 J가 별도 차단하므로 production note에는 URL이 없을 수 있어, linkify
+        동작은 격리 입력으로 직접 검증하고 production note URL은 조건부로 확인한다.)
         """
+        sys.path.insert(0, str(BASE / "scripts"))
+        import build_index
+        rendered = build_index.linkify("출처 https://example.com/doc 참고")
+        self.assertIn('<a href="https://example.com/doc"', rendered)
+
         run()
         import json as _json
         import re as _re
         data = _json.loads((BASE / "data" / "booking-checklist.json").read_text(encoding="utf-8"))
         url_re = _re.compile(r"https?://[^\s]+")
-        urls = []
-        for it in data["items"]:
-            urls.extend(url_re.findall(it.get("note", "")))
-        self.assertGreater(len(urls), 0, "fixture must have at least one note containing a URL")
         html = CHECKLIST.read_text(encoding="utf-8")
-        for url in urls:
-            with self.subTest(url=url):
-                self.assertIn(f'href="{url}"', html,
-                              f"note URL {url!r} not rendered as <a href> in checklist.html")
+        for it in data["items"]:
+            for url in url_re.findall(it.get("note", "")):
+                with self.subTest(url=url):
+                    self.assertIn(f'href="{url}"', html,
+                                  f"note URL {url!r} not rendered as <a href> in checklist.html")
 
     def test_checklist_badge_does_not_wrap(self):
         """상태 배지(미정/확정)가 좁은 폭에서 글자 단위로 세로 줄바꿈되지 않도록

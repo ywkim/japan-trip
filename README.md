@@ -58,7 +58,7 @@
 ### 6. 검증 (CI)
 
 - `python -m unittest discover tests` — 단위 테스트 (validate·build_index·design_tokens·score·budget)
-- `python scripts/validate.py` — 가격 필드 무결성(source·data_quality), 30/60일 묵은 가격 경고/실패, SYNC 주석 경로·절 번호 검증, `docs/weather.md`↔`data/weather.json`, `docs/flights.md`↔`data/flights.json`, `DESIGN.md`↔`data/design-tokens.json` 동기화 검증
+- `python scripts/validate.py` — 가격 필드 무결성(source·data_quality), 30/60일 묵은 가격 경고/실패, SYNC 주석 경로·절 번호 검증, `docs/weather.md`↔`data/weather.json`, `docs/flights.md`↔`data/flights.json`, `DESIGN.md`↔`data/design-tokens.json` 동기화 검증, Vercel 산출물 GitHub 링크 금지(검사 J — `index.html`·`viz/*.html`에 `github.com` 없음)
 - `python scripts/build_index.py --check` — 6 HTML + 6 OG SVG 빌드 산출물(`index.html`·`viz/itinerary.html`·`viz/itinerary-table.html`·`viz/lodging.html`·`viz/checklist.html`·`viz/archive.html`·`assets/og-*.svg`)이 데이터·토큰과 동기화 상태인지 (drift 시 exit 1)
 - `.github/workflows/validate.yml`이 PR마다 위를 실행
 

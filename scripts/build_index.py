@@ -29,7 +29,6 @@ OUT_INDEX = BASE / "index.html"
 OUT_ITINERARY = BASE / "viz" / "itinerary.html"
 OUT_CHECKLIST = BASE / "viz" / "checklist.html"
 
-GH_BLOB = "https://github.com/ywkim/japan-trip/blob/main"
 SCENARIO_ID = "kyoto_may31_kadensho_early_bird"
 SITE_URL = "https://nihon-trip.vercel.app"
 SITE_NAME = "교토 가족여행 2026"
@@ -798,7 +797,7 @@ def card_score(d) -> str:
 <section id="score" class="card">
   <h2>후보지 종합 점수</h2>
   <div class="sub" style="margin-bottom:0.3rem;">교토만 7기준 모두 입력. 나머지는 seasonality(2026-05)만.</div>
-  <div class="sub" style="margin-bottom:0.5rem;">교토는 1위(오사카·고베 9.0) 후보가 아니지만 시부모 동반·비용·이동 부담을 종합한 별도 의사결정. 사유: <a href="{GH_BLOB}/docs/decision-log/2026-05-11-may31-jun3-kyoto-update.md" target="_blank" rel="noopener">2026-05-11 결정 일지 ↗</a></div>
+  <div class="sub" style="margin-bottom:0.5rem;">교토는 1위(오사카·고베 9.0) 후보가 아니지만 시부모 동반·비용·이동 부담을 종합한 별도 의사결정. 사유: 2026-05-11 결정 일지 (레포 docs/decision-log/).</div>
   {''.join(rows)}
 </section>
 """
@@ -826,7 +825,7 @@ INDEX_FOOTER = f"""
   <a href="viz/archive.html">의사결정 아카이브 ↗</a>
 </div>
 
-<footer>2026-05-12 의사결정 종료 · 이 페이지는 확정 일정·예약 운영용. 결정 근거는 <a href="viz/archive.html" style="color:inherit;">아카이브</a>·<a href="{GH_BLOB}/reports/final-report.md" target="_blank" rel="noopener" style="color:inherit;">최종 보고서 ↗</a></footer>
+<footer>2026-05-12 의사결정 종료 · 이 페이지는 확정 일정·예약 운영용. 결정 근거는 <a href="viz/archive.html" style="color:inherit;">아카이브</a>에서 확인 (최종 보고서는 레포 reports/).</footer>
 """
 
 
@@ -868,13 +867,8 @@ def build_archive(d) -> str:
   <a href="#score">후보지 점수</a>
 </nav>
 """
-    footer = f"""
-<div class="links">
-  <a href="{GH_BLOB}/reports/final-report.md" target="_blank" rel="noopener">최종 보고서 ↗</a>
-  <a href="{GH_BLOB}/docs/decision-log/" target="_blank" rel="noopener">결정 일지 ↗</a>
-</div>
-
-<footer>data/decision.json · data/cost-options.json · data/weather.json 단일 출처</footer>
+    footer = """
+<footer>최종 보고서·결정 일지는 레포(reports/ · docs/decision-log/)에 보관 · data/decision.json · data/cost-options.json · data/weather.json 단일 출처</footer>
 """
     body = head + "\n".join(sections) + footer + tab_bar("home", in_viz=True)
     return html_doc(
@@ -1040,7 +1034,6 @@ def build_itinerary(d) -> str:
 
 <div class="links">
   <a href="itinerary-table.html">시간표 뷰</a>
-  <a href="{GH_BLOB}/{esc(itin.get('source_doc',''))}" target="_blank" rel="noopener">마크다운</a>
 </div>
 
 <footer>data/itinerary.json 단일 출처</footer>
