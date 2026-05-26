@@ -103,7 +103,8 @@ japan-trip/
 │   ├── jejuair-icn-kobe-june-2026.md      # 제주항공 인천-고베 신규 노선·가격 리서치
 │   ├── transit-pass-jr-kansai-2026.md     # JR 간사이 에어리어 패스 1/2/3/4일권 비교·권장 (booking-checklist transit_pass 근거)
 │   ├── transit-mcp-handoff.md             # 후속 세션(Playwright MCP) 위임 가이드 (tbd_needs_browser_mcp leg 측정)
-│   └── icoca-iphone-setup.md              # ICOCA 아이폰(Apple Wallet) 셋업 가이드 (사전 요건·등록·충전·트러블슈팅·체크리스트)
+│   ├── icoca-iphone-setup.md              # ICOCA 아이폰(Apple Wallet) 셋업 가이드 (사전 요건·등록·충전·트러블슈팅·체크리스트)
+│   └── soyeon-maps-list.md                # 소연 구글맵 저장 목록 41개 장소 (카테고리별 정리, 일정 참고용)
 ├── viz/
 │   ├── itinerary.html         # 일자별 카드 뷰 (build_index.py 산출물 — 직접 편집 금지)
 │   ├── itinerary-table.html   # 4일 시간표 뷰 (build_index.py 산출물 — 직접 편집 금지)
