@@ -26,6 +26,11 @@
      성립. theme_name·version 일치. (4개 산출물(index·itinerary·itinerary-table·
      checklist)의 CSS는 scripts/build_index.py가 tokens에서 생성하므로 별도
      sentinel 검증 불필요 — build_index.py --check가 drift를 잡는다.)
+  I. itinerary food_quality 무결성: data/itinerary.json의 식사 항목 food_quality에
+     rating·source·source_fetched_at·data_quality 존재. data_quality는
+     ITINERARY_QUALITY 화이트리스트. source_fetched_at > 60d 이고
+     data_quality != tbd_needs_browser_mcp 면 stale fail. food_quality가 없는
+     항목(동네 끼니 등)은 면제. route_candidates도 순회.
 
 exit 0 = 모두 통과 또는 경고만, exit 1 = 실패.
 
@@ -290,6 +295,52 @@ def check_design_sync(base: Path) -> list[str]:
     return errors
 
 
+def check_itinerary_food_quality(base: Path, today: date) -> tuple[list[str], list[str]]:
+    """검사 I: data/itinerary.json food_quality 무결성 (식사 항목 평점 출처).
+
+    식사 항목에 food_quality가 있을 때만 검사한다(동네/비식사 항목은 면제 — G와 동일
+    '있으면 검증' 패턴). rating·source·source_fetched_at·data_quality 필수.
+    data_quality는 ITINERARY_QUALITY 화이트리스트. source_fetched_at > 60d 이고
+    data_quality != tbd_needs_browser_mcp 면 stale fail. route_candidates도 순회.
+    """
+    errors: list[str] = []
+    warnings: list[str] = []
+    itin_path = base / "data" / "itinerary.json"
+    if not itin_path.exists():
+        return errors, warnings
+    data = json.loads(itin_path.read_text(encoding="utf-8"))
+
+    def scan(items, ctx):
+        for idx, item in enumerate(items):
+            fq = item.get("food_quality")
+            if fq is None:
+                continue
+            loc = f"{ctx}.items[{idx}].food_quality ({item.get('title', '?')})"
+            for field in ("rating", "source", "source_fetched_at", "data_quality"):
+                if not fq.get(field):
+                    errors.append(f"[I] {loc}: missing '{field}'")
+            qual = fq.get("data_quality")
+            if qual and qual not in ITINERARY_QUALITY:
+                errors.append(f"[I] {loc}: data_quality {qual!r} not in {sorted(ITINERARY_QUALITY)}")
+            fetched = fq.get("source_fetched_at")
+            if fetched and qual and qual != "tbd_needs_browser_mcp":
+                d = extract_date(fetched)
+                if d:
+                    age = (today - d).days
+                    if age > 60:
+                        errors.append(f"[I] {loc}: source_fetched_at stale {age}d — re-research required")
+                    elif age > 30:
+                        warnings.append(f"[I] {loc}: source_fetched_at aging {age}d")
+
+    for day in data.get("days", []):
+        scan(day.get("items", []), day.get("date") or day.get("day_label", "?"))
+    for rc in data.get("route_candidates", []):
+        rc_name = rc.get("id") or rc.get("name", "?")
+        for day in rc.get("days", []):
+            scan(day.get("items", []), f"{rc_name}/{day.get('date') or day.get('day_label', '?')}")
+    return errors, warnings
+
+
 def run(base: Path, today: date) -> tuple[list[str], list[str]]:
     errors: list[str] = []
     warnings: list[str] = []
@@ -303,6 +354,9 @@ def run(base: Path, today: date) -> tuple[list[str], list[str]]:
     errors.extend(e)
     warnings.extend(w)
     errors.extend(check_design_sync(base))
+    e, w = check_itinerary_food_quality(base, today)
+    errors.extend(e)
+    warnings.extend(w)
     return errors, warnings
 
 

@@ -21,11 +21,12 @@
 
 ### 1. 확정 정보 보기 (모바일·웹)
 
+- 배포: https://nihon-trip.vercel.app (Vercel, main 브랜치 자동 배포)
 - `index.html` — 🏠 홈 탭 (운영 모드): 요약 + 일자별 일정. 하단 고정 4탭 내비게이션. 인라인 데이터로 자기완결, 더블클릭 동작
-- `viz/itinerary.html` — 📅 일정 탭: 일자별 상세 일정 카드 뷰 (시간대·동선·메모·이미지). `data/itinerary.json` 단일 출처
+- `viz/itinerary.html` — 📅 일정 탭: 일자별 상세 일정 카드 뷰 (시간대·동선·메모·이미지). `data/itinerary.json` 단일 출처. 이동 설명은 평이 요약(예: "🚌 버스로 35분") + 접기(상세 경로·링크)로 표시 — 모바일에서 시간·장소가 먼저 읽히도록
 - `viz/itinerary-table.html` — 📅 일정 탭: 3박4일 **시간표 뷰** (4일 열 × 시간대 행, 모바일 카드/데스크탑 테이블 자동 전환). `data/itinerary.json` 단일 출처
 - `viz/lodging.html` — ✈️ 숙박·항공 탭: 에어비앤비·카덴쇼·항공편 확정 예약 내역. `data/cost-options.json` 단일 출처
-- `viz/checklist.html` — ✅ 예약 탭: 예약 진행 상태 (기한 이른 순 정렬, 상태별 카운트). `data/booking-checklist.json` 단일 출처
+- `viz/checklist.html` — ✅ 예약 탭: 예약 진행 상태 (기한 이른 순 정렬, 상태별 카운트). `data/booking-checklist.json` 단일 출처. 긴 메모(예약번호·PIN·탑승객 등)는 식별 요약 + 접기로 표시
 - `viz/archive.html` — 📦 의사결정 아카이브 (장마 확률·9 예산 시나리오·7 후보지 점수). 메인 페이지의 무게중심을 운영 정보로 유지하기 위해 분석·결정 자료는 이곳으로 분리
 - `assets/og-*.svg` — 6장의 OG/Twitter 카드 이미지 (1200×630). 카톡·Slack·X 공유 시 페이지별 썸네일·제목·설명 노출
 - **HTML 6개·SVG 6장 모두 `scripts/build_index.py` 빌드 산출물 — 직접 편집 금지**. 데이터(`data/*.json`)·스크립트 변경 후 `python scripts/build_index.py` 실행. CI(`build_index.py --check`)가 모든 산출물의 drift를 차단
@@ -41,6 +42,7 @@
 ### 3. 일정 갱신
 
 - `data/itinerary.json`의 해당 day(`days[*]`)에 시간대·동선·메모 갱신
+- 식사 항목은 `food_quality`(타베로그·구글·미쉐린 등 평점 + `source`·`data_quality`)로 맛집 근거 명시 — 추측 금지, 출처 없으면 머지 차단(검사 H)
 - `docs/kyoto-itinerary-may31-jun3-2026.md`(사람용 사본) 함께 갱신
 - `python scripts/build_index.py` 재빌드 → `viz/itinerary.html`·`viz/itinerary-table.html`·`index.html` 재생성
 
@@ -78,6 +80,7 @@
 - `docs/flights.md` — 4인 총액 비교, GMP 가용성
 - `docs/transit-pass-jr-kansai-2026.md` — JR 간사이 에어리어 패스 1/2/3/4일권 비교·권장 (예약 탭 `transit_pass` 근거)
 - `docs/breakfast-near-lodging.md` — 숙소(시오·카덴쇼) 인근 조식 옵션: 거리·영업시간·아침별(6/1·6/2·6/3) 권장
+- `docs/icoca-iphone-setup.md` — ICOCA 아이폰(Apple Wallet) 셋업 가이드 (4인 사전 요건·등록 단계·충전·트러블슈팅·5/30 체크리스트)
 - `reports/final-report.md` — 최종 권고 (교토·5/31~6/3·4인)
 - `scripts/score.py`·`scripts/budget.py` — 회귀 가드용
 
