@@ -81,6 +81,7 @@
 - `docs/transit-pass-jr-kansai-2026.md` — JR 간사이 에어리어 패스 1/2/3/4일권 비교·권장 (예약 탭 `transit_pass` 근거)
 - `docs/booking-research-2026-05-24.md` — 미정 예약 4항목(여행자보험·하루카 발권·eSIM·환전/트래블카드) 실시간 리서치·권장 발권 채널 (예약 탭 미정 항목 근거)
 - `docs/icoca-iphone-setup.md` — ICOCA 아이폰(Apple Wallet) 셋업 가이드 (4인 사전 요건·등록 단계·충전·트러블슈팅·5/30 체크리스트)
+- `docs/soyeon-maps-list.md` — 소연 구글맵 저장 목록 41개 장소 (카페·식사·명소·쇼핑 카테고리별 정리, 일정 참고용)
 - `reports/final-report.md` — 최종 권고 (교토·5/31~6/3·4인)
 - `scripts/score.py`·`scripts/budget.py` — 회귀 가드용
 
