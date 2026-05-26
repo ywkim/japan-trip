@@ -585,6 +585,26 @@ class BreakfastPageTests(unittest.TestCase):
         html = BREAKFAST.read_text(encoding="utf-8")
         self.assertNotIn("github.com", html, "breakfast.html (Vercel) must not contain GitHub links")
 
+    def test_breakfast_stores_are_clickable_map_links(self):
+        # 카페 등 모든 가게명은 모바일에서 탭하면 지도가 열려야 함.
+        import json as _json
+        run()
+        html = BREAKFAST.read_text(encoding="utf-8")
+        bf = _json.loads((BASE / "data" / "breakfast.json").read_text(encoding="utf-8"))
+        store_count = sum(
+            len(g.get("stores", []))
+            for lg in bf["lodgings"]
+            for g in lg["groups"]
+        )
+        self.assertGreaterEqual(store_count, 10, "fixture sanity: expected many stores")
+        map_links = html.count("google.com/maps/search")
+        self.assertGreaterEqual(
+            map_links, store_count,
+            f"every store should be a map link: {map_links} links < {store_count} stores",
+        )
+        # 대표 가게명이 앵커 안에 들어가야 함.
+        self.assertRegex(html, r'<a class="map-link"[^>]*>코메다[^<]*🗺</a>')
+
     def test_breakfast_page_standalone(self):
         run()
         html = BREAKFAST.read_text(encoding="utf-8")

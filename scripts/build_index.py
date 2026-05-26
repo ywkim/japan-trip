@@ -20,6 +20,7 @@ import re
 import subprocess
 import sys
 from pathlib import Path
+from urllib.parse import quote
 
 BASE = Path(__file__).resolve().parent.parent
 SCRIPTS = BASE / "scripts"
@@ -296,6 +297,8 @@ def render_css(tokens: dict) -> str:
     text-decoration: none; color: var(--fg); font-size: 0.8rem;
   }}
   .doc-link:hover {{ border-color: var(--accent); }}
+  .map-link {{ color: var(--accent); text-decoration: none; }}
+  .map-link:hover {{ text-decoration: underline; }}
   footer {{ color: var(--muted); font-size: 0.75rem; margin-top: 1.5rem; text-align: center; }}
   /* ── 하단 탭바 ── */
   body {{ padding-bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px)); }}
@@ -932,16 +935,25 @@ def build_lodging(d) -> str:
 BREAKFAST_TITLE = "숙소 인근 조식 옵션 · 교토 5/31~6/3"
 
 
-def _breakfast_store(store) -> str:
+def maps_search_url(query: str) -> str:
+    return "https://www.google.com/maps/search/?api=1&query=" + quote(query)
+
+
+def _breakfast_store(store, map_area: str) -> str:
     rows = "".join(
         f'<div class="row"><span class="k">{esc(k)}</span><span class="v">{esc(v)}</span></div>'
         for k, v in store.get("rows", [])
     )
     note = store.get("note", "")
     note_html = f'<div class="sub">{esc(note)}</div>' if note else ""
+    query = store.get("map_query") or " ".join(p for p in (store["name"], map_area) if p)
+    name_link = (
+        f'<a class="map-link" href="{esc(maps_search_url(query))}" target="_blank" '
+        f'rel="noopener">{esc(store["name"])} 🗺</a>'
+    )
     return (
         f'<div style="margin-top:0.5rem;">'
-        f'<div class="subtitle">{esc(store["name"])}</div>{rows}{note_html}</div>'
+        f'<div class="subtitle">{name_link}</div>{rows}{note_html}</div>'
     )
 
 
@@ -960,10 +972,11 @@ def build_breakfast(d) -> str:
 
     lodging_cards = []
     for lg in bf.get("lodgings", []):
+        map_area = lg.get("map_area", "")
         groups_html = []
         for g in lg.get("groups", []):
             if g.get("stores"):
-                inner = "".join(_breakfast_store(s) for s in g["stores"])
+                inner = "".join(_breakfast_store(s, map_area) for s in g["stores"])
             else:
                 items = "".join(f"<li>{esc(x)}</li>" for x in g.get("items", []))
                 inner = f'<ul style="margin:0.3rem 0 0 1.1rem;padding:0;">{items}</ul>'
