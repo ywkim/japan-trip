@@ -43,10 +43,10 @@
       "label": "데이터/연결성 (4인 — 부부 SKT·시부모 KT)",
       "status": "미정",
       "due_date": "2026-05-28",
-      "amount": "4인 합계 ≈ ₩75,000 (KT 데이터함께ON ₩33K + SKT baro 가족로밍 ₩42K)",
-      "action": "부부 SKT baro 가족로밍 가입 · 시부모 KT 데이터함께ON 1회선 공유 · 출국 전 설정, 도착 후 데이터 ON",
+      "amount": "옵션 ₩44K(전원 eSIM·각 4GB)~₩75K(부부 baro 8GB+시부모 KT 4GB·1인당 4·4·2·2GB) — 선택 대기",
+      "action": "1인당 GB·가격 비교 완료 → 부부 baro vs eSIM 선택 후 양사 가입(출국 전 설정, 도착 후 데이터 ON)",
       "link": {"label": "리서치 상세", "url": "https://github.com/ywkim/japan-trip/blob/main/docs/booking-research-2026-05-24.md"},
-      "note": "회선별 분리 결정(2026-05-26): 부부 SKT baro 가족로밍 + 시부모 KT 데이터함께ON, 합계 ≈ ₩75,000 · 시부모 2인은 KT 데이터함께ON 1개 공유 ₩33,000(번호 유지·eSIM 설치 불필요·아시아 4GB·통화 119원/분) · 부부 2인은 SKT baro 가족로밍 6GB(프로모션 8GB) ₩42,000(영욱 대표+소연 결합 +₩3,000, 번호 유지·baro 통화 무료·Club T 로밍 혜택: 공항버스 K리무진 ₩5,000·인천공항 푸드코트 ₩5,000·귀국 후 디저트 택1) · baro·데이터함께ON 모두 가입만으로는 과금 없음(해외 실사용 시 과금) · 대안: 부부가 baro 대신 Klook eSIM 2개(~₩22K) 시 합계 ~₩55K(SKT 번호 비활성·설치 필요), 전원 eSIM 일괄 ~₩44K는 시부모 설치 부담으로 비권장 · 상세·출처: https://github.com/ywkim/japan-trip/blob/main/docs/booking-research-2026-05-24.md"
+      "note": "1인당 GB 비교(2026-05-26, 4일·공유 균등환산): ①전원 Klook eSIM 4GB/인(영욱·소연·시부·시모 각 4GB)·합계 16GB·₩44,000 — 데이터 최다·최저가, 단 시부모 eSIM 설치 필요 · ②부부 baro 8GB 공유(≈4GB/인)+시부모 KT 데이터함께ON 4GB 공유(≈2GB/인)·합계 12GB·₩75,000 — 시부모 무설치·전원 번호 유지·baro 통화 무료·Club T 혜택(공항버스 ₩5K 등) · ③부부 eSIM+시부모 KT함께ON·합계 12GB·₩55,000 · 통신사 갈림(부부 SKT·시부모 KT)로 baro 가족로밍은 부부만 가능 · 로밍안은 데이터를 늘려주지 않고(시부모 2GB로 더 적음) 무설치·번호유지·통화·혜택의 대가 · 데이터·가성비 우선=①, 시부모 편의·번호 우선=② · 최종 선택 대기 · 상세·출처: https://github.com/ywkim/japan-trip/blob/main/docs/booking-research-2026-05-24.md"
     },
     {
       "id": "transit_pass",
