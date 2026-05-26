@@ -308,8 +308,8 @@
     },
     {
       "date": "2026-06-01",
-      "day_label": "6/1 (월) — 아라시야마 + 북서쪽",
-      "walking_km": 4,
+      "day_label": "6/1 (월) — 아라시야마 + 사이호지 + 북서쪽",
+      "walking_km": 5,
       "lodging": "에어비앤비 시오 (2박째)",
       "items": [
         {
@@ -342,7 +342,7 @@
           ]
         },
         {
-          "time": "09:45",
+          "time": "09:30",
           "title": "텐류지 정원",
           "maps_query": "Tenryu-ji Temple",
           "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Tenryuji%2C_Kyoto-_DSC06041.JPG?width=480",
@@ -370,6 +370,21 @@
           ]
         },
         {
+          "time": "10:30",
+          "title": "사이호지 (苔寺·이끼사찰) — 예약 확정",
+          "maps_query": "Saihoji Temple Kyoto",
+          "note": "Trip.com 사전 예약 확정 (6/1 10:30, 성인4 = 2건). 사경(写経)+정원 약 60분. 사경 어려우면 당일 직원 면제 상담 가능, 본당 의자석 있음(수량 제한 — 조기 입장 권장). 만 13세 이상·휠체어 불가. 예약번호는 예약 탭 참조. 상세: docs/saihoji-reservation-2026-06.md",
+          "arrive_from": {
+            "mode": "bus",
+            "duration_min": 18,
+            "distance_km": 3.0,
+            "route": "텐류지/아라시야마 → 교토버스 73계통 '苔寺・鈴虫寺' 정류장 → 도보 3분",
+            "source": "https://saihoji-kokedera.com/en/",
+            "source_fetched_at": "2026-05-26",
+            "data_quality": "tbd_needs_browser_mcp"
+          }
+        },
+        {
           "time": "12:00",
           "title": "두부 가이세키 점심 (쇼라이안 松籟庵)",
           "maps_query": "Shoraian Arashiyama",
@@ -385,13 +400,13 @@
           "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Japanese_SilkyTofu_%28Kinugoshi_Tofu%29.JPG?width=480",
           "image_credit": "Wikimedia Commons",
           "arrive_from": {
-            "mode": "walk",
-            "duration_min": 7,
-            "distance_km": 0.5,
-            "route": "텐류지 정문 → 도게쓰교 건너 가쓰라강 거슬러 → 쇼라이안(松籟庵, 아라시야마 공원 내) 도보 7분 500m",
-            "source": "https://www.google.com/maps/dir/Tenryu-ji+Temple,+Kyoto/松籟庵+Arashiyama",
-            "source_fetched_at": "2026-05-18",
-            "data_quality": "researched_market_rate"
+            "mode": "bus",
+            "duration_min": 20,
+            "distance_km": 3.2,
+            "route": "사이호지 → 교토버스 73계통 → 아라시야마(嵐山) → 쇼라이안(松籟庵, 아라시야마 공원 내) 도보",
+            "source": "https://saihoji-kokedera.com/en/",
+            "source_fetched_at": "2026-05-26",
+            "data_quality": "tbd_needs_browser_mcp"
           }
         },
         {

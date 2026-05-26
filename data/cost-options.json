@@ -397,6 +397,15 @@
       "data_quality": "official_fare"
     },
     {
+      "id": "saihoji_admission_4pax",
+      "label": "사이호지(苔寺) 입장 4인 (Trip.com, 6/1 10:30)",
+      "category": "activity",
+      "krw": 188216,
+      "source": "Trip.com 예약 ₩94,108 × 2건(성인2×2), 예약번호 1400827143416024·1400827143410570, 2026-05-25 결제(소연). 공식 ¥4,000+¥110/인 대비 플랫폼 마크업 포함",
+      "data_quality": "confirmed_booking",
+      "notes": "조건부 취소(건당 예상 수수료 ₩18,822). 일지: docs/decision-log/2026-05-26-03-saihoji-booked.md"
+    },
+    {
       "id": "kyoto_lodging_tax_2nights_4pax",
       "label": "교토시 숙박세 4인 × 2박",
       "category": "other",
@@ -549,9 +558,9 @@
       ],
       "one_time": [
         "haruka_rt_4pax", "kyoto_local_transit_4pax", "kyoto_temples_4pax",
-        "kyoto_lodging_tax_2nights_4pax", "airbnb_cleaning_fee"
+        "saihoji_admission_4pax", "kyoto_lodging_tax_2nights_4pax", "airbnb_cleaning_fee"
       ],
-      "notes": "에어비앤비 1·2박은 PR #16 소연 추천 #3 시오(Shio) 100년 마치야 채택 — ★4.95, 침실 3·욕실 2·화장실 2로 시부모·부부 완전 분리 가능. 카덴쇼는 트립닷컴 확정 식사 불포함(JPY 37,270, 2026-05-13) — 분석시 가정 ¥76,500(조기할인 조식 포함) 대비 ¥39,230 절감. 합계 약 ₩3.05M (3M 초과 최소화 — 자세한 차이는 docs/decision-log/2026-05-20-kakaotalk-sync-kadensho-booking.md)."
+      "notes": "에어비앤비 1·2박은 PR #16 소연 추천 #3 시오(Shio) 100년 마치야 채택 — ★4.95, 침실 3·욕실 2·화장실 2로 시부모·부부 완전 분리 가능. 카덴쇼는 트립닷컴 확정 식사 불포함(JPY 37,270, 2026-05-13) — 분석시 가정 ¥76,500(조기할인 조식 포함) 대비 ¥39,230 절감. 합계 약 ₩3.18M (사이호지 입장 ₩188K 편입 포함 — 2026-05-26-03-saihoji-booked.md; 카덴쇼 차이는 docs/decision-log/2026-05-20-kakaotalk-sync-kadensho-booking.md)."
     },
     {
       "id": "nagasaki_forest_villa_mid",
