@@ -41,12 +41,12 @@
     {
       "id": "esim",
       "label": "데이터/연결성 (4인 — 부부 SKT·시부모 KT)",
-      "status": "미정",
+      "status": "예약중",
       "due_date": "2026-05-28",
-      "amount": "영욱 1회선 ₩11,000~13,800(eSIM)~₩39,000(baro) + 나머지 핫스팟 (실사용 합계 ~4GB)",
-      "action": "영욱 baro 6GB(₩39K) / Airalo Moshi Moshi 5GB·7일 $10≈₩13,800(검증·핫스팟 OK) / Klook eSIM 4일 1GB/일 ~₩11K(추정·핫스팟 OK) 중 택1·가입 → 도착 후 데이터 ON+핫스팟 · 시부모 무가입(핫스팟)",
+      "amount": "영욱 Airalo Moshi Moshi 5GB/7일 $10≈₩13,800 (확정) + 소연·시부모 핫스팟 ₩0 = 4인 합계 ₩13,800",
+      "action": "영욱 출국 전 Airalo 앱에서 Moshi Moshi 5GB 구매·eSIM 설치 → 도착 후 데이터 ON+핫스팟 · 소연·시부모 핫스팟(₩0) · 결제·개통 완료 시 확정(confirmed_booking) 승격",
       "link": {"label": "리서치 상세", "url": "https://github.com/ywkim/japan-trip/blob/main/docs/booking-research-2026-05-24.md"},
-      "note": "실사용 right-sizing(2026-05-26): 합계 ≈ 4GB(영욱 ~88% 집중) → 영욱 1회선 + 나머지 핫스팟. 옵션: (a) SKT baro 6GB(프로모션 8GB) ₩39,000 — Club T 혜택·SKT 번호 native·baro 통화 (b) Airalo Moshi Moshi 5GB/7일 $10≈₩13,800 — Playwright MCP 직접 확인(airalo.com/japan-esim, 2026-05-26)·KDDI/Softbank·4G LTE·핫스팟 공식 허용(Airalo Help Center + esimsavvy 리뷰)·스크린샷 docs/screenshots/airalo-japan-2026-05-26.png (c) Klook eSIM 4일 1GB/일 ~₩11,000 — 추정(klook.com 봇 차단으로 KRW 직접 미검증, Holafly Klook 리뷰 esim.holafly.com/reviews/klook-esim-review 및 myhocance 캐시 기반)·Docomo/Softbank 5G·핫스팟 지원 명시. 예상 사용 영욱 3.5GB/소연 450MB/시부 55MB/시모 9MB · 시부모 64MB는 유료 요금제 불필요(핫스팟·숙소 WiFi), 소연도 핫스팟이면 ₩0 · 시부모 KT 수신전화 필요 시 음성 로밍만 별도 확인. 합계 ₩11,000~39,000(이전 ₩44~95K 대비 절감)·통신사 갈림(부부 SKT·시부모 KT). FX 가정 $1≈₩1,380. Klook 결제 직전 영욱 본인 브라우저에서 실제 KRW 재확인 후 confirmed_booking 승격. Saily(saily.com/destinations/japan-esim)·Nomad(nomadesim.com/en/destination/japan)는 2026-05-26 모두 404로 비교 제외. 상세·출처: https://github.com/ywkim/japan-trip/blob/main/docs/booking-research-2026-05-24.md"
+      "note": "영욱 라인 eSIM = 글로벌 마켓형 Airalo Moshi Moshi 5GB/7일 $10≈₩13,800 확정(2026-05-26) · 출국 전 Airalo 앱 구매·eSIM 설치 → 도착 후 데이터 ON+핫스팟, 소연·시부모 핫스팟 ₩0(4인 데이터 합계 ₩13,800) · 선정 근거: 가격·핫스팟 Playwright MCP 직접 검증(스크린샷 docs/screenshots/airalo-japan-2026-05-26.png)·5GB 통합이라 핫스팟 공유에도 일일 한도 없음·KDDI/Softbank 4G가 교토/오사카 도심에 충분(일본 5G는 転用5G라 관광 eSIM 체감 4G) · 미채택(차순위 보존): Klook(OTA·~₩11,000, 원화·QR 편의이나 가격 미검증·1GB/일 한도)·SKT baro(₩39,000, 번호 native·Club T이나 GB당 고가)·Ubigi/Holafly/현지 MVNO(대용량·무제한·장기향 오버사이즈, Holafly 핫스팟 500MB/일 제한) · 데이터 전용이라 영욱 SKT는 통화·SMS(OTP)용 이중유심 유지 · 예상 사용 영욱 3.5GB/소연 450MB/시부 55MB/시모 9MB · FX $1≈₩1,380 · 구매·결제 완료 시 confirmed_booking 승격 + 일지 · 상세·출처: https://github.com/ywkim/japan-trip/blob/main/docs/booking-research-2026-05-24.md"
     },
     {
       "id": "transit_pass",
