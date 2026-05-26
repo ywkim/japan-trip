@@ -28,8 +28,9 @@
 - `viz/lodging.html` — ✈️ 숙박·항공 탭: 에어비앤비·카덴쇼·항공편 확정 예약 내역. `data/cost-options.json` 단일 출처
 - `viz/checklist.html` — ✅ 예약 탭: 예약 진행 상태 (기한 이른 순 정렬, 상태별 카운트). `data/booking-checklist.json` 단일 출처. 긴 메모(예약번호·PIN·탑승객 등)는 식별 요약 + 접기로 표시
 - `viz/archive.html` — 📦 의사결정 아카이브 (장마 확률·9 예산 시나리오·7 후보지 점수). 메인 페이지의 무게중심을 운영 정보로 유지하기 위해 분석·결정 자료는 이곳으로 분리
+- `viz/breakfast.html` — 🍞 숙소 인근 조식 옵션 (아침 3회·숙소별 가게·영업시간·아침별 권장). `data/breakfast.json` 단일 출처. 일정 카드의 조식 슬롯에서 탭해 이동 (Vercel 화면은 외부 GitHub 링크 대신 사이트 내 페이지로 연결)
 - `assets/og-*.svg` — 6장의 OG/Twitter 카드 이미지 (1200×630). 카톡·Slack·X 공유 시 페이지별 썸네일·제목·설명 노출
-- **HTML 6개·SVG 6장 모두 `scripts/build_index.py` 빌드 산출물 — 직접 편집 금지**. 데이터(`data/*.json`)·스크립트 변경 후 `python scripts/build_index.py` 실행. CI(`build_index.py --check`)가 모든 산출물의 drift를 차단
+- **HTML 7개·SVG 6장 모두 `scripts/build_index.py` 빌드 산출물 — 직접 편집 금지**. 데이터(`data/*.json`)·스크립트 변경 후 `python scripts/build_index.py` 실행. CI(`build_index.py --check`)가 모든 산출물의 drift를 차단
 - 각 섹션 위 `<!-- SYNC: ... -->` 주석이 데이터 출처를 명시. CI(`scripts/validate.py`)가 경로 유효성과 §N 절 번호를 검증
 
 ### 2. 발권·예약 갱신
@@ -59,13 +60,13 @@
 
 - `python -m unittest discover tests` — 단위 테스트 (validate·build_index·design_tokens·score·budget)
 - `python scripts/validate.py` — 가격 필드 무결성(source·data_quality), 30/60일 묵은 가격 경고/실패, SYNC 주석 경로·절 번호 검증, `docs/weather.md`↔`data/weather.json`, `docs/flights.md`↔`data/flights.json`, `DESIGN.md`↔`data/design-tokens.json` 동기화 검증
-- `python scripts/build_index.py --check` — 6 HTML + 6 OG SVG 빌드 산출물(`index.html`·`viz/itinerary.html`·`viz/itinerary-table.html`·`viz/lodging.html`·`viz/checklist.html`·`viz/archive.html`·`assets/og-*.svg`)이 데이터·토큰과 동기화 상태인지 (drift 시 exit 1)
+- `python scripts/build_index.py --check` — 7 HTML + 6 OG SVG 빌드 산출물(`index.html`·`viz/itinerary.html`·`viz/itinerary-table.html`·`viz/lodging.html`·`viz/checklist.html`·`viz/archive.html`·`viz/breakfast.html`·`assets/og-*.svg`)이 데이터·토큰과 동기화 상태인지 (drift 시 exit 1)
 - `.github/workflows/validate.yml`이 PR마다 위를 실행
 
 ### 7. 시각 디자인 출처
 
 - `DESIGN.md` — 시각 디자인 컨벤션 (`voltagent/awesome-design-md` 9섹션). Quiet Ledger 테마: paper-white + slate-indigo accent. AI 에이전트가 UI 변경 작업 시 본 파일을 1차 참조
-- `data/design-tokens.json` — 색·타이포·간격·반경 단일 출처. `scripts/build_index.py`의 `render_css(tokens)`가 6개 산출물(`index.html`·`viz/itinerary.html`·`viz/itinerary-table.html`·`viz/lodging.html`·`viz/checklist.html`·`viz/archive.html`)의 인라인 CSS를 공통 생성
+- `data/design-tokens.json` — 색·타이포·간격·반경 단일 출처. `scripts/build_index.py`의 `render_css(tokens)`가 7개 산출물(`index.html`·`viz/itinerary.html`·`viz/itinerary-table.html`·`viz/lodging.html`·`viz/checklist.html`·`viz/archive.html`·`viz/breakfast.html`)의 인라인 CSS를 공통 생성
 - 동기화 게이트: `scripts/validate.py` (H)가 DESIGN.md ↔ tokens의 drift를 PR 단계에서 차단
 
 ## 아카이브 (참조용)
@@ -79,7 +80,7 @@
 - `docs/weather.md` — 시기별 쾌적도 순위, `seasonality`/`physical_burden` 점수 제안 + §5 교토 5/31~6/3 장마 정량 분석
 - `docs/flights.md` — 4인 총액 비교, GMP 가용성
 - `docs/transit-pass-jr-kansai-2026.md` — JR 간사이 에어리어 패스 1/2/3/4일권 비교·권장 (예약 탭 `transit_pass` 근거)
-- `docs/breakfast-near-lodging.md` — 숙소(시오·카덴쇼) 인근 조식 옵션: 거리·영업시간·아침별(6/1·6/2·6/3) 권장
+- `docs/breakfast-near-lodging.md` — 숙소(시오·카덴쇼) 인근 조식 옵션 사람용 사본 (단일 출처는 `data/breakfast.json` → `viz/breakfast.html`)
 - `docs/booking-research-2026-05-24.md` — 미정 예약 4항목(여행자보험·하루카 발권·eSIM·환전/트래블카드) 실시간 리서치·권장 발권 채널 (예약 탭 미정 항목 근거)
 - `docs/icoca-iphone-setup.md` — ICOCA 아이폰(Apple Wallet) 셋업 가이드 (4인 사전 요건·등록 단계·충전·트러블슈팅·5/30 체크리스트)
 - `docs/soyeon-maps-list.md` — 소연 구글맵 저장 목록 41개 장소 (카페·식사·명소·쇼핑 카테고리별 정리, 일정 참고용)

@@ -143,17 +143,18 @@ def doc_link_html(link) -> str:
     """일정 항목 참조 문서 링크 (data/itinerary.json item.link = {url, label}).
 
     조식 슬롯 등이 가리키는 문서를 화면에서 바로 탭해 열 수 있는 <a>로 렌더.
-    Vercel은 .md를 raw로 서빙하므로 url은 GitHub blob URL이어야 한다.
+    url이 사이트 내 상대 경로면 같은 탭 내비게이션, 외부(http)면 새 탭으로 연다.
+    Vercel은 .md를 raw로 서빙하므로 운영 화면 링크는 사이트 내 HTML 페이지를
+    가리킨다(예: 조식 슬롯 → breakfast.html). 외부 GitHub blob 링크 금지.
     """
     link = link or {}
     url = (link.get("url") or "").strip()
     if not url:
         return ""
     label = esc(link.get("label", "상세"))
-    return (
-        f'<a class="doc-link" href="{esc(url)}" target="_blank" '
-        f'rel="noopener">{label} ↗</a>'
-    )
+    external = url.startswith(("http://", "https://"))
+    attr = ' target="_blank" rel="noopener"' if external else ""
+    return f'<a class="doc-link" href="{esc(url)}"{attr}>{label} ↗</a>'
 
 
 def run_json(script: str) -> dict:
@@ -171,6 +172,7 @@ def load_data():
         "weather": json.loads((DATA / "weather.json").read_text(encoding="utf-8")),
         "itinerary": json.loads((DATA / "itinerary.json").read_text(encoding="utf-8")),
         "checklist": json.loads((DATA / "booking-checklist.json").read_text(encoding="utf-8")),
+        "breakfast": json.loads((DATA / "breakfast.json").read_text(encoding="utf-8")),
         "tokens": json.loads((DATA / "design-tokens.json").read_text(encoding="utf-8")),
         "score": run_json("score.py"),
         "budget": run_json("budget.py"),
@@ -925,6 +927,107 @@ def build_lodging(d) -> str:
     )
 
 
+# ─── viz/breakfast.html ────────────────────────────────────────────────────
+
+BREAKFAST_TITLE = "숙소 인근 조식 옵션 · 교토 5/31~6/3"
+
+
+def _breakfast_store(store) -> str:
+    rows = "".join(
+        f'<div class="row"><span class="k">{esc(k)}</span><span class="v">{esc(v)}</span></div>'
+        for k, v in store.get("rows", [])
+    )
+    note = store.get("note", "")
+    note_html = f'<div class="sub">{esc(note)}</div>' if note else ""
+    return (
+        f'<div style="margin-top:0.5rem;">'
+        f'<div class="subtitle">{esc(store["name"])}</div>{rows}{note_html}</div>'
+    )
+
+
+def build_breakfast(d) -> str:
+    bf = d["breakfast"]
+
+    morning_rows = "".join(
+        f'<div class="row"><span class="k">{esc(m["morning"])} · {esc(m["lodging"])}</span>'
+        f'<span class="v">{esc(m["first_plan"])} → {esc(m["leeway"])}</span></div>'
+        for m in bf.get("mornings", [])
+    )
+    mornings_card = (
+        f'<div class="subcard"><div class="subtitle">조식이 필요한 아침 3회</div>{morning_rows}'
+        f'<div class="sub" style="margin-top:0.4rem;">출발 시각이 옵션을 결정 — 카덴쇼는 조식 미포함(6/3 새벽 출국).</div></div>'
+    )
+
+    lodging_cards = []
+    for lg in bf.get("lodgings", []):
+        groups_html = []
+        for g in lg.get("groups", []):
+            if g.get("stores"):
+                inner = "".join(_breakfast_store(s) for s in g["stores"])
+            else:
+                items = "".join(f"<li>{esc(x)}</li>" for x in g.get("items", []))
+                inner = f'<ul style="margin:0.3rem 0 0 1.1rem;padding:0;">{items}</ul>'
+            groups_html.append(
+                f'<div style="margin-top:0.7rem;"><div class="sub" style="font-weight:600;">{esc(g["label"])}</div>{inner}</div>'
+            )
+        lodging_cards.append(
+            f'<div class="subcard"><div class="subtitle">{esc(lg["name"])}</div>'
+            f'<div class="sub">{esc(lg["access"])}</div>'
+            f'<div class="sub">{esc(lg.get("note",""))}</div>'
+            f'{"".join(groups_html)}</div>'
+        )
+
+    reco_rows = "".join(
+        f'<div class="row"><span class="k">{esc(r["morning"])}</span><span class="v">{esc(r["text"])}</span></div>'
+        for r in bf.get("recommendations", [])
+    )
+    reco_card = f'<div class="subcard"><div class="subtitle">아침별 권장</div>{reco_rows}</div>'
+
+    caution_items = "".join(f"<li>{esc(c)}</li>" for c in bf.get("caution", []))
+    caution_card = (
+        f'<div class="subcard"><div class="subtitle">주의 — 영업시간은 변동</div>'
+        f'<ul style="margin:0.3rem 0 0 1.1rem;padding:0;">{caution_items}</ul></div>'
+    )
+
+    sources = bf.get("sources", [])
+    sources_card = ""
+    if sources:
+        source_links = " · ".join(
+            f'<a href="{esc(s["url"])}" target="_blank" rel="noopener">{esc(s["label"])}</a>'
+            for s in sources
+        )
+        researched = esc(bf.get("researched_at", ""))
+        summary = f"📚 출처 {len(sources)}건 (리서치 {researched})"
+        sources_card = f'<div class="subcard">{fold(summary, source_links)}</div>'
+
+    head = f"""<h1>{esc(bf["title"])}</h1>
+<div class="status">{esc(bf.get("intro",""))}</div>
+
+<nav>
+  <a href="itinerary.html">← 일정으로</a>
+  <a href="itinerary-table.html">시간표</a>
+</nav>
+"""
+    body = (
+        head
+        + mornings_card
+        + "\n".join(lodging_cards)
+        + reco_card
+        + caution_card
+        + sources_card
+        + f'\n<footer>data/breakfast.json 단일 출처 · 사람용 사본 docs/breakfast-near-lodging.md</footer>\n'
+        + tab_bar("itinerary", in_viz=True)
+    )
+    return html_doc(
+        BREAKFAST_TITLE,
+        body,
+        tokens=d["tokens"],
+        description="시오·카덴쇼 인근 조식 — 거리·영업시간·아침별 권장 (4인 가족)",
+        og_slug="itinerary",
+        page_path="viz/breakfast.html",
+    )
+
+
 # ─── viz/itinerary.html ────────────────────────────────────────────────────
 
 def build_itinerary(d) -> str:
@@ -1333,6 +1436,7 @@ OUTPUTS = (
     ("viz/itinerary-table.html", lambda p: p / "viz" / "itinerary-table.html", build_itinerary_table),
     ("viz/lodging.html",         lambda p: p / "viz" / "lodging.html",         build_lodging),
     ("viz/archive.html",         lambda p: p / "viz" / "archive.html",         build_archive),
+    ("viz/breakfast.html",       lambda p: p / "viz" / "breakfast.html",       build_breakfast),
 ) + tuple(
     (
         f"assets/og-{slug}.svg",

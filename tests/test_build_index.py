@@ -14,7 +14,8 @@ CHECKLIST = BASE / "viz" / "checklist.html"
 TABLE = BASE / "viz" / "itinerary-table.html"
 LODGING = BASE / "viz" / "lodging.html"
 ARCHIVE = BASE / "viz" / "archive.html"
-ALL_HTML_OUTPUTS = (INDEX, ITINERARY, CHECKLIST, TABLE, LODGING, ARCHIVE)
+BREAKFAST = BASE / "viz" / "breakfast.html"
+ALL_HTML_OUTPUTS = (INDEX, ITINERARY, CHECKLIST, TABLE, LODGING, ARCHIVE, BREAKFAST)
 OG_SLUGS = ("home", "itinerary", "itinerary-table", "lodging", "checklist", "archive")
 ALL_OG_SVGS = tuple(BASE / "assets" / f"og-{s}.svg" for s in OG_SLUGS)
 ALL_OUTPUTS = ALL_HTML_OUTPUTS + ALL_OG_SVGS
@@ -553,15 +554,41 @@ class ItineraryDocLinkTests(unittest.TestCase):
                     f"item link {url!r} not rendered as <a href> in {path.name}",
                 )
 
-    def test_itinerary_doc_link_uses_github_blob_not_raw_md(self):
-        # Vercel은 .md를 raw로 서빙 → 상대 경로 금지, GitHub blob URL이어야 함.
+    def test_itinerary_doc_link_is_onsite_not_github_or_raw_md(self):
+        # Vercel 화면에서 GitHub 링크 금지 + .md raw 서빙 회피 → 사이트 내 HTML 페이지여야 함.
         urls = self._breakfast_link_urls()
         for url in urls:
-            if url.endswith(".md"):
-                self.assertTrue(
-                    url.startswith("https://github.com/"),
-                    f"doc link to .md must be a GitHub blob URL, got {url!r}",
-                )
+            self.assertNotIn("github.com", url, f"Vercel doc link must not point to GitHub: {url!r}")
+            self.assertFalse(url.endswith(".md"), f"doc link must not be a raw .md path: {url!r}")
+            self.assertTrue(url.endswith(".html"), f"doc link should be an on-site HTML page: {url!r}")
+
+    def test_breakfast_link_resolves_to_built_page(self):
+        # 일정의 조식 doc-link 대상이 실제 빌드되는 viz 페이지여야 함.
+        run()
+        urls = set(self._breakfast_link_urls())
+        for url in urls:
+            self.assertTrue(
+                (BASE / "viz" / url).exists(),
+                f"breakfast doc-link target {url!r} is not a built page",
+            )
+
+
+class BreakfastPageTests(unittest.TestCase):
+    def test_breakfast_page_built_with_key_content(self):
+        run()
+        html = BREAKFAST.read_text(encoding="utf-8")
+        for needle in ("코메다", "카덴쇼", "아침별 권장", "출처"):
+            self.assertIn(needle, html, f"breakfast.html missing {needle!r}")
+
+    def test_breakfast_page_has_no_github_links(self):
+        run()
+        html = BREAKFAST.read_text(encoding="utf-8")
+        self.assertNotIn("github.com", html, "breakfast.html (Vercel) must not contain GitHub links")
+
+    def test_breakfast_page_standalone(self):
+        run()
+        html = BREAKFAST.read_text(encoding="utf-8")
+        self.assertNotIn("fetch(", html, "breakfast.html must remain standalone (no fetch)")
 
 
 class TabBarTests(unittest.TestCase):
