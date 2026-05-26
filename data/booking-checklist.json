@@ -55,7 +55,7 @@
       "due_date": "2026-05-25",
       "amount": "편도 4인 ₩70,300 (Trip.com, ₩18,500/인 −5%) · 귀국편 별도",
       "reference": "Trip.com 1400827143412439 · KIX→교토 편도 4인 · LEE/SOYEON · 2026-05-25 예약(확인 중, PIN 별도)",
-      "action": "6/3 교토→KIX 귀국편 미예약 — 별도 발권 필요. WEST QR 계정 등록 → 전자티켓 바인딩 → 편명·좌석 예약 → 승차 당일 QR 활성화",
+      "action": "6/3 교토→KIX 귀국편 4인 미예약. 권장: 왕로와 동일 Trip.com 채널(추정 ~₩70,300/4인 — 발권 화면서 교토→KIX·6/3·성인4 실가 재확인). 대안: WEST QR 공식 외국인 할인 편도권 ¥2,200/인(지정석 포함)≈₩83,600/4인, 탑승 30일 전(5/4~)부터 좌석 예약. 에어서울 KIX 출발 시각 확정 후 좌석시각 역산(공항 3h 전 도착, 교토→KIX 약 75~80분).",
       "link": {"label": "리서치 상세", "url": "https://github.com/ywkim/japan-trip/blob/main/docs/booking-research-2026-05-24.md"},
       "note": "결정(소연, 2026-05-19): 하루카 편도권 채택, JR 간사이 패스 미채택. 교토 시내 JR·시버스는 4인 Apple Wallet ICOCA 단권(기확정). 발권 채널: 2026-05-24 KIX 현장 발권으로 결정(ADR 04)했으나, 2026-05-25 소연이 Trip.com 온라인 e티켓으로 실제 예약 — 편도 KIX→교토 4인, ₩70,300(기본 ₩74,000 = ₩18,500×4, 일본 액티비티 5% 할인 −3,700, TossPay), 예약번호 1400827143412439·PIN 별도, 예약자 LEE/SOYEON, 상태 확인 중(2026-05-25 17:43 확정 예정), 유효 예약 후 90일·1회. 사용법: WEST QR 계정 등록 → 전자티켓 바인딩 → 편명·좌석 예약 → 당일 QR 활성화. 미결: 6/3 교토→KIX 귀국편 미예약(별도 발권). cost-options 단가 정합은 확정 통보 후. 일지: docs/decision-log/2026-05-25-haruka-tripcom-online-booked.md · 비교 근거: https://github.com/ywkim/japan-trip/blob/main/docs/transit-pass-jr-kansai-2026.md · 리서치 상세: https://github.com/ywkim/japan-trip/blob/main/docs/booking-research-2026-05-24.md"
     },
