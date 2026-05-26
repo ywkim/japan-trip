@@ -110,7 +110,26 @@
   .badge {
     display: inline-block; padding: 0.1rem 0.45rem; border-radius: 4px;
     font-size: 0.75rem; border: 1px solid currentColor;
+    white-space: nowrap; flex-shrink: 0;
   }
+  /* ── 예약 체크리스트 ── */
+  .ck-head { display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; margin-bottom: 0.4rem; }
+  .ck-head .subtitle { margin: 0; }
+  .badge-done { color: var(--ok); border-color: var(--ok); }
+  .badge-pending { color: var(--warn); border-color: var(--warn); }
+  .badge-progress { color: var(--accent); border-color: var(--accent); }
+  .subcard.status-done { border-left: 3px solid var(--ok); }
+  .subcard.status-pending { border-left: 3px solid var(--warn); }
+  .subcard.status-progress { border-left: 3px solid var(--accent); }
+  .dday { font-size: 0.78rem; color: var(--muted); margin-left: 0.3rem; }
+  .dday.urgent { color: var(--danger); font-weight: 600; }
+  .dday.over { color: var(--muted); }
+  .doc-link {
+    display: inline-block; margin-top: 0.5rem; padding: 0.4rem 0.7rem;
+    border: 1px solid var(--border); border-radius: 6px;
+    text-decoration: none; color: var(--fg); font-size: 0.8rem;
+  }
+  .doc-link:hover { border-color: var(--accent); }
   footer { color: var(--muted); font-size: 0.75rem; margin-top: 1.5rem; text-align: center; }
   /* ── 하단 탭바 ── */
   body { padding-bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px)); }
