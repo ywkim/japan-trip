@@ -524,6 +524,46 @@ class FoodQualityRenderTests(unittest.TestCase):
         self.assertNotIn('class="food-quality"', index, "minimal index.html should not carry food-quality badges")
 
 
+class ItineraryDocLinkTests(unittest.TestCase):
+    """일정 항목의 link(url/label)가 화면에서 탭 가능한 <a> 앵커로 렌더되어야 함.
+
+    조식 슬롯이 참조하는 breakfast-near-lodging.md를 모바일 화면에서 바로 열 수 있도록.
+    """
+
+    def _breakfast_link_urls(self):
+        import json
+        data = json.loads((BASE / "data" / "itinerary.json").read_text(encoding="utf-8"))
+        urls = []
+        for day in data["days"]:
+            for it in day["items"]:
+                link = it.get("link") or {}
+                if link.get("url"):
+                    urls.append(link["url"])
+        return urls
+
+    def test_itinerary_link_rendered_as_anchor(self):
+        run()
+        urls = self._breakfast_link_urls()
+        self.assertGreater(len(urls), 0, "fixture must have at least one item with a link.url")
+        for path in (ITINERARY, TABLE):
+            html = path.read_text(encoding="utf-8")
+            for url in urls:
+                self.assertIn(
+                    f'href="{url}"', html,
+                    f"item link {url!r} not rendered as <a href> in {path.name}",
+                )
+
+    def test_itinerary_doc_link_uses_github_blob_not_raw_md(self):
+        # Vercel은 .md를 raw로 서빙 → 상대 경로 금지, GitHub blob URL이어야 함.
+        urls = self._breakfast_link_urls()
+        for url in urls:
+            if url.endswith(".md"):
+                self.assertTrue(
+                    url.startswith("https://github.com/"),
+                    f"doc link to .md must be a GitHub blob URL, got {url!r}",
+                )
+
+
 class TabBarTests(unittest.TestCase):
     TAB_PAGES = (INDEX, ITINERARY, TABLE, CHECKLIST, LODGING, ARCHIVE)
 

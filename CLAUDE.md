@@ -129,7 +129,7 @@ japan-trip/
 ## 데이터 동기화 규칙
 
 - **실행 단일 출처(정본)** — 본 레포의 현재 1차 데이터:
-  - `data/itinerary.json` — 교토 3박4일 일정. `days`: 확정 코스 (일자·시간대·동선·메모·도보거리·보류). `route_candidates`: 대안 코스 3개 (여유형·서북 사찰 집중형·미식+문화 체험형). days[].items[].`arrive_from`(mode/duration_min/distance_km/route/source/source_fetched_at/data_quality)으로 장소 간 이동 출처 명시. data_quality는 `official_fare`/`researched_market_rate`/`tbd_needs_browser_mcp`(Playwright MCP 후속 세션 위임). 식사 항목은 days[].items[].`food_quality`(rating/source/source_fetched_at/data_quality/note)로 맛집 근거(타베로그·구글·미쉐린 등 평점) 명시 — 추측 금지, 출처 없으면 검사 I가 머지 차단. 사람용 사본은 `docs/kyoto-itinerary-may31-jun3-2026.md`
+  - `data/itinerary.json` — 교토 3박4일 일정. `days`: 확정 코스 (일자·시간대·동선·메모·도보거리·보류). `route_candidates`: 대안 코스 3개 (여유형·서북 사찰 집중형·미식+문화 체험형). days[].items[].`arrive_from`(mode/duration_min/distance_km/route/source/source_fetched_at/data_quality)으로 장소 간 이동 출처 명시. data_quality는 `official_fare`/`researched_market_rate`/`tbd_needs_browser_mcp`(Playwright MCP 후속 세션 위임). 식사 항목은 days[].items[].`food_quality`(rating/source/source_fetched_at/data_quality/note)로 맛집 근거(타베로그·구글·미쉐린 등 평점) 명시 — 추측 금지, 출처 없으면 검사 I가 머지 차단. days[].items[].`link`(url/label)는 항목 참조 문서를 화면에서 탭 가능한 `doc-link` 앵커로 렌더(`build_index.py`의 `doc_link_html()`, 조식 슬롯 → `breakfast-near-lodging.md`). url은 Vercel raw 서빙 회피 차 **GitHub blob URL** 필수. 사람용 사본은 `docs/kyoto-itinerary-may31-jun3-2026.md`
   - `data/booking-checklist.json` — 예약 진행 상태
   - `data/cost-options.json` — 항공·숙박·고정비·일회성·시나리오 (확정 금액은 `confirmed_booking` 라벨로 승격)
   - `data/design-tokens.json` — 색·타이포·간격·반경 (DESIGN.md §2~§6과 동기화). `build_index.py`의 `render_css(tokens)`가 6개 산출물(`index.html`·`viz/itinerary.html`·`viz/itinerary-table.html`·`viz/lodging.html`·`viz/checklist.html`·`viz/archive.html`)의 인라인 CSS를 공통 생성

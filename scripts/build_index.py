@@ -139,6 +139,23 @@ def food_quality_html(fq) -> str:
     )
 
 
+def doc_link_html(link) -> str:
+    """일정 항목 참조 문서 링크 (data/itinerary.json item.link = {url, label}).
+
+    조식 슬롯 등이 가리키는 문서를 화면에서 바로 탭해 열 수 있는 <a>로 렌더.
+    Vercel은 .md를 raw로 서빙하므로 url은 GitHub blob URL이어야 한다.
+    """
+    link = link or {}
+    url = (link.get("url") or "").strip()
+    if not url:
+        return ""
+    label = esc(link.get("label", "상세"))
+    return (
+        f'<a class="doc-link" href="{esc(url)}" target="_blank" '
+        f'rel="noopener">{label} ↗</a>'
+    )
+
+
 def run_json(script: str) -> dict:
     res = subprocess.run(
         [sys.executable, str(SCRIPTS / script), "--json"],
@@ -936,11 +953,12 @@ def build_itinerary(d) -> str:
                 img_html = ""
             reviews_html = blog_reviews_html(it.get("blog_reviews", []))
             food_html = food_quality_html(it.get("food_quality"))
+            link_html = doc_link_html(it.get("link"))
             item_rows.append(f"""
     <div class="day">
       <div class="date"><span class="k">{esc(it['time'])}</span> {link}</div>
       {transit}
-      {note_html}{food_html}{img_html}{reviews_html}
+      {note_html}{food_html}{link_html}{img_html}{reviews_html}
     </div>""")
         day_cards.append(f"""
   <div class="subcard">
@@ -986,10 +1004,11 @@ def build_itinerary(d) -> str:
                 link = maps_link(it["maps_query"], it["title"]) if it.get("maps_query") else esc(it["title"])
                 note_html = f'<div class="sub">{esc(it["note"])}</div>' if it.get("note") else ""
                 food_html = food_quality_html(it.get("food_quality"))
+                link_html = doc_link_html(it.get("link"))
                 item_rows.append(f"""
     <div class="day">
       <div class="date"><span class="k">{esc(it['time'])}</span> {link}</div>
-      {note_html}{food_html}
+      {note_html}{food_html}{link_html}
     </div>""")
             cand_day_cards.append(f"""
   <div class="subcard">
@@ -1188,9 +1207,10 @@ def build_itinerary_table(d) -> str:
                 else:
                     img_html = ""
                 food_html = food_quality_html(it.get("food_quality"))
+                link_html = doc_link_html(it.get("link"))
                 cells.append(
                     f'<td><span class="t-time">{esc(it["time"])}</span>'
-                    f'<span class="t-title">{link}</span>{transit}{note_html}{food_html}{img_html}</td>'
+                    f'<span class="t-title">{link}</span>{transit}{note_html}{food_html}{link_html}{img_html}</td>'
                 )
             else:
                 cells.append("<td></td>")
@@ -1214,11 +1234,12 @@ def build_itinerary_table(d) -> str:
                 img_html = ""
             reviews_html = blog_reviews_html(it.get("blog_reviews", []))
             food_html = food_quality_html(it.get("food_quality"))
+            link_html = doc_link_html(it.get("link"))
             item_rows.append(f"""
     <div class="day">
       <div class="date"><span class="k">{esc(it["time"])}</span> {link}</div>
       {transit}
-      {note_html}{food_html}{img_html}{reviews_html}
+      {note_html}{food_html}{link_html}{img_html}{reviews_html}
     </div>""")
         mobile_cards.append(f"""
   <div class="subcard">
