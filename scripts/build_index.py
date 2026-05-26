@@ -957,6 +957,20 @@ def _breakfast_store(store, map_area: str) -> str:
     )
 
 
+def _breakfast_group(g, map_area: str) -> str:
+    """가게 그룹을 '라벨 + 개수' 요약 + 접힌 상세로 렌더 (모바일 가독성)."""
+    label = esc(g["label"])
+    if g.get("stores"):
+        inner = "".join(_breakfast_store(s, map_area) for s in g["stores"])
+        summary = f'{label} · {len(g["stores"])}곳'
+    else:
+        items = g.get("items", [])
+        lis = "".join(f"<li>{esc(x)}</li>" for x in items)
+        inner = f'<ul style="margin:0.3rem 0 0 1.1rem;padding:0;">{lis}</ul>'
+        summary = f'{label} · {len(items)}항목'
+    return fold(summary, inner)
+
+
 def build_breakfast(d) -> str:
     bf = d["breakfast"]
 
@@ -973,21 +987,12 @@ def build_breakfast(d) -> str:
     lodging_cards = []
     for lg in bf.get("lodgings", []):
         map_area = lg.get("map_area", "")
-        groups_html = []
-        for g in lg.get("groups", []):
-            if g.get("stores"):
-                inner = "".join(_breakfast_store(s, map_area) for s in g["stores"])
-            else:
-                items = "".join(f"<li>{esc(x)}</li>" for x in g.get("items", []))
-                inner = f'<ul style="margin:0.3rem 0 0 1.1rem;padding:0;">{items}</ul>'
-            groups_html.append(
-                f'<div style="margin-top:0.7rem;"><div class="sub" style="font-weight:600;">{esc(g["label"])}</div>{inner}</div>'
-            )
+        groups_html = "".join(_breakfast_group(g, map_area) for g in lg.get("groups", []))
         lodging_cards.append(
             f'<div class="subcard"><div class="subtitle">{esc(lg["name"])}</div>'
             f'<div class="sub">{esc(lg["access"])}</div>'
             f'<div class="sub">{esc(lg.get("note",""))}</div>'
-            f'{"".join(groups_html)}</div>'
+            f'{groups_html}</div>'
         )
 
     reco_rows = "".join(
@@ -996,11 +1001,15 @@ def build_breakfast(d) -> str:
     )
     reco_card = f'<div class="subcard"><div class="subtitle">아침별 권장</div>{reco_rows}</div>'
 
-    caution_items = "".join(f"<li>{esc(c)}</li>" for c in bf.get("caution", []))
-    caution_card = (
-        f'<div class="subcard"><div class="subtitle">주의 — 영업시간은 변동</div>'
-        f'<ul style="margin:0.3rem 0 0 1.1rem;padding:0;">{caution_items}</ul></div>'
-    )
+    caution = bf.get("caution", [])
+    caution_card = ""
+    if caution:
+        caution_items = "".join(f"<li>{esc(c)}</li>" for c in caution)
+        caution_detail = f'<ul style="margin:0.3rem 0 0 1.1rem;padding:0;">{caution_items}</ul>'
+        caution_card = (
+            f'<div class="subcard">'
+            f'{fold("⚠ 영업시간은 변동 — 출발 전 Google Maps 재확인", caution_detail)}</div>'
+        )
 
     sources = bf.get("sources", [])
     sources_card = ""

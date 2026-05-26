@@ -610,6 +610,22 @@ class BreakfastPageTests(unittest.TestCase):
         html = BREAKFAST.read_text(encoding="utf-8")
         self.assertNotIn("fetch(", html, "breakfast.html must remain standalone (no fetch)")
 
+    def test_breakfast_long_blocks_are_collapsible(self):
+        # 긴 가게 목록·주의는 <details>로 접혀 모바일 기본 화면이 간결해야 함.
+        import json as _json
+        run()
+        html = BREAKFAST.read_text(encoding="utf-8")
+        bf = _json.loads((BASE / "data" / "breakfast.json").read_text(encoding="utf-8"))
+        group_count = sum(len(lg["groups"]) for lg in bf["lodgings"])
+        # 각 가게 그룹 + 주의 블록이 fold(<details class="leg">)로 감싸져야 함.
+        details = html.count('<details class="leg"')
+        self.assertGreaterEqual(
+            details, group_count + 1,
+            f"expected >= {group_count + 1} folds (groups + caution), got {details}",
+        )
+        # 접힘 요약에 그룹 개수 표기가 들어가야 함 (예: "· 3곳").
+        self.assertRegex(html, r"<summary>[^<]*· \d+곳</summary>")
+
 
 class TabBarTests(unittest.TestCase):
     TAB_PAGES = (INDEX, ITINERARY, TABLE, CHECKLIST, LODGING, ARCHIVE)
