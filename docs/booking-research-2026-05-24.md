@@ -7,7 +7,7 @@
 | 항목 | 마감 | data_quality | 핵심 권장 |
 |---|---|---|---|
 | 여행자보험 | 2026-05-25 | researched_market_rate | 실손형 종합, 시부모 연령 입력 후 다이렉트 가입 |
-| 교통패스 발권 | 2026-05-25 | official_fare(운임)+researched_market_rate(채널) | KIX 현장 발권 (소연 결정 2026-05-24) |
+| 교통패스 발권 | 2026-05-25 | confirmed_booking(편도) | Trip.com 온라인 e티켓 편도 예약 완료 (소연 2026-05-25) · 귀국편 미예약 |
 | eSIM | 2026-05-28 | researched_market_rate | Klook 가성비 데이터 플랜, 출국 전 설치 |
 | 환전/트래블카드 | 2026-05-28 | researched_market_rate | 트래블로그(하나계좌) 또는 트래블월렛 |
 
@@ -56,9 +56,11 @@
 | (B) Klook | QR 바우처 사전 구매(유효 3개월) | 한국어 결제·할인 이벤트 가능 | 현장 교환/수령 절차가 채널별 상이 |
 | (C) KIX 현장 매표소 | 도착 후 교환 | 사전 준비 불요 | 도착 직후 대기열 — 시부모 동반 시 부담 |
 
-**결정 (소연, 2026-05-24)**: **(C) KIX 현장 발권으로 진행.** KIX 1F JR 매표소/간사이 관광정보센터(Kansai Tourist Information Center)에서 여권 제시 후 하루카 외국인 할인 편도권 ¥2,200/인 구매. 온라인 WEST QR e-티켓 사전 구매(아래 (A))는 **보류**(대안으로 보존). 참고 블로그(소연 제공): https://blog.naver.com/bomnarigom/223024559486
+**실제 예약 (소연, 2026-05-25)**: **Trip.com 온라인 e티켓으로 편도 예약 완료.** 간사이공항 → 교토역 · **편도** · 성인 ×4 · ₩70,300(기본 ₩74,000 = ₩18,500×4, 일본 액티비티 5% 할인 −3,700, TossPay) · 예약번호 1400827143412439(PIN 별도) · 예약자 LEE/SOYEON · 상태 확인 중(2026-05-25 17:43 확정 예정) · 유효 예약 후 90일·1회. 사용: WEST QR 계정 등록 → 전자티켓 바인딩 → 편명·좌석 예약 → 당일 QR 활성화. `confirmed_booking`.
 
-> 보류된 권장안 (A): JR West 온라인 WEST QR e-티켓 4인분 사전 구매 + 지정석 사전 예약 — 현장 교환 대기를 피하는 이점이 있으나, 소연이 현장 발권을 선택. 향후 재검토 시 대안으로 사용.
+> **미결**: 6/3 교토→KIX **귀국편 미예약** — Trip.com 동일 상품 또는 현장 발권으로 별도 진행 필요.
+>
+> 발권 채널 변경 이력: 2026-05-24 ADR(`-04-haruka-onsite-ticketing`)은 KIX **현장 발권**으로 결정했으나, 2026-05-25 실제로는 **Trip.com 온라인 e티켓**으로 예약. 일지 `2026-05-25-haruka-tripcom-online-booked.md`가 이를 기록. 이전 후보(KIX 현장 발권 / JR West 온라인 WEST QR 직접 구매)는 대안으로 보존.
 
 출처: japan-guide.com JR West One-Way Tickets, JR West 공식(westjr.co.jp) 2026 WEST QR e-티켓 안내, Rakuten/KKday 하루카 편도권 페이지 — 2026-05-24 검색. 발권 채널 결정은 소연(2026-05-24, PR #43 코멘트). 운임 `official_fare`, 채널 비교 `researched_market_rate`.
 
