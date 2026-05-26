@@ -243,6 +243,13 @@ def render_css(tokens: dict) -> str:
   .row:last-child {{ border-bottom: none; }}
   .row .k {{ color: var(--muted); flex-shrink: 0; }}
   .row .v {{ font-variant-numeric: tabular-nums; text-align: right; word-break: keep-all; }}
+  .bf-item {{ padding: 0.5rem 0; border-bottom: 1px solid var(--border); }}
+  .bf-item:last-child {{ border-bottom: none; }}
+  .bf-label {{ font-weight: 600; margin-bottom: 0.2rem; }}
+  .bf-body {{ line-height: 1.5; word-break: keep-all; }}
+  .bf-menu {{ margin-top: 0.3rem; font-size: 0.9rem; color: var(--fg); }}
+  .bf-store {{ padding: 0.55rem 0; border-bottom: 1px solid var(--border); }}
+  .bf-store:last-child {{ border-bottom: none; }}
   ul {{ padding-left: 1.2rem; margin: 0.3rem 0; }}
   li {{ margin: 0.2rem 0; }}
   .day {{ padding: 0.35rem 0; border-bottom: 1px solid var(--border); }}
@@ -944,6 +951,8 @@ def _breakfast_store(store, map_area: str) -> str:
         f'<div class="row"><span class="k">{esc(k)}</span><span class="v">{esc(v)}</span></div>'
         for k, v in store.get("rows", [])
     )
+    menu = store.get("menu", "")
+    menu_html = f'<div class="bf-menu">🍽 {esc(menu)}</div>' if menu else ""
     note = store.get("note", "")
     note_html = f'<div class="sub">{esc(note)}</div>' if note else ""
     query = store.get("map_query") or " ".join(p for p in (store["name"], map_area) if p)
@@ -952,12 +961,12 @@ def _breakfast_store(store, map_area: str) -> str:
         f'rel="noopener">{esc(store["name"])} 🗺</a>'
     )
     return (
-        f'<div style="margin-top:0.5rem;">'
-        f'<div class="subtitle">{name_link}</div>{rows}{note_html}</div>'
+        f'<div class="bf-store">'
+        f'<div class="subtitle">{name_link}</div>{rows}{menu_html}{note_html}</div>'
     )
 
 
-def _breakfast_group(g, map_area: str) -> str:
+def _breakfast_group(g, map_area: str, *, open: bool = False) -> str:
     """가게 그룹을 '라벨 + 개수' 요약 + 접힌 상세로 렌더 (모바일 가독성)."""
     label = esc(g["label"])
     if g.get("stores"):
@@ -968,26 +977,30 @@ def _breakfast_group(g, map_area: str) -> str:
         lis = "".join(f"<li>{esc(x)}</li>" for x in items)
         inner = f'<ul style="margin:0.3rem 0 0 1.1rem;padding:0;">{lis}</ul>'
         summary = f'{label} · {len(items)}항목'
-    return fold(summary, inner)
+    return fold(summary, inner, open=open)
 
 
 def build_breakfast(d) -> str:
     bf = d["breakfast"]
 
-    morning_rows = "".join(
-        f'<div class="row"><span class="k">{esc(m["morning"])} · {esc(m["lodging"])}</span>'
-        f'<span class="v">{esc(m["first_plan"])} → {esc(m["leeway"])}</span></div>'
+    morning_items = "".join(
+        f'<div class="bf-item"><div class="bf-label">{esc(m["morning"])} · {esc(m["lodging"])}</div>'
+        f'<div class="bf-body">{esc(m["first_plan"])}</div>'
+        f'<div class="sub">여유: {esc(m["leeway"])}</div></div>'
         for m in bf.get("mornings", [])
     )
     mornings_card = (
-        f'<div class="subcard"><div class="subtitle">조식이 필요한 아침 3회</div>{morning_rows}'
+        f'<div class="subcard"><div class="subtitle">조식이 필요한 아침 3회</div>{morning_items}'
         f'<div class="sub" style="margin-top:0.4rem;">출발 시각이 옵션을 결정 — 카덴쇼는 조식 미포함(6/3 새벽 출국).</div></div>'
     )
 
     lodging_cards = []
     for lg in bf.get("lodgings", []):
         map_area = lg.get("map_area", "")
-        groups_html = "".join(_breakfast_group(g, map_area) for g in lg.get("groups", []))
+        groups_html = "".join(
+            _breakfast_group(g, map_area, open=(i == 0))
+            for i, g in enumerate(lg.get("groups", []))
+        )
         lodging_cards.append(
             f'<div class="subcard"><div class="subtitle">{esc(lg["name"])}</div>'
             f'<div class="sub">{esc(lg["access"])}</div>'
@@ -995,11 +1008,12 @@ def build_breakfast(d) -> str:
             f'{groups_html}</div>'
         )
 
-    reco_rows = "".join(
-        f'<div class="row"><span class="k">{esc(r["morning"])}</span><span class="v">{esc(r["text"])}</span></div>'
+    reco_items = "".join(
+        f'<div class="bf-item"><div class="bf-label">{esc(r["morning"])}</div>'
+        f'<div class="bf-body">{esc(r["text"])}</div></div>'
         for r in bf.get("recommendations", [])
     )
-    reco_card = f'<div class="subcard"><div class="subtitle">아침별 권장</div>{reco_rows}</div>'
+    reco_card = f'<div class="subcard"><div class="subtitle">아침별 권장</div>{reco_items}</div>'
 
     caution = bf.get("caution", [])
     caution_card = ""

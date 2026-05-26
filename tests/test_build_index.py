@@ -610,6 +610,30 @@ class BreakfastPageTests(unittest.TestCase):
         html = BREAKFAST.read_text(encoding="utf-8")
         self.assertNotIn("fetch(", html, "breakfast.html must remain standalone (no fetch)")
 
+    def test_breakfast_shows_menu_and_price(self):
+        # 가격·메뉴가 전용 라인(.bf-menu)으로 노출돼야 함 (스크린샷 피드백 회귀 가드).
+        run()
+        html = BREAKFAST.read_text(encoding="utf-8")
+        self.assertIn("bf-menu", html, "menu line class missing")
+        for price in ("¥750", "¥650", "¥800", "¥1,660"):
+            with self.subTest(price=price):
+                self.assertIn(price, html, f"breakfast.html missing price {price!r}")
+
+    def test_breakfast_long_text_not_right_aligned_rows(self):
+        # 긴 텍스트(아침 표·아침별 권장)는 우측정렬 k/v 행이 아니라
+        # 좌측정렬 블록(.bf-item/.bf-body)으로 렌더돼야 함.
+        import json as _json
+        import re
+        run()
+        html = BREAKFAST.read_text(encoding="utf-8")
+        bf = _json.loads((BASE / "data" / "breakfast.json").read_text(encoding="utf-8"))
+        block_count = len(bf["mornings"]) + len(bf["recommendations"])
+        self.assertGreaterEqual(html.count('class="bf-item"'), block_count)
+        self.assertIn("bf-body", html)
+        # 권장 본문이 .v(우측정렬) 안에 들어가면 안 됨.
+        reco_text = bf["recommendations"][0]["text"][:20]
+        self.assertNotRegex(html, r'<span class="v">[^<]*' + re.escape(reco_text))
+
     def test_breakfast_long_blocks_are_collapsible(self):
         # 긴 가게 목록·주의는 <details>로 접혀 모바일 기본 화면이 간결해야 함.
         import json as _json
