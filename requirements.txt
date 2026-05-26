@@ -1,0 +1,4 @@
+# 빌드 의존성. scripts/build_index.py가 레포 마크다운(reports/·docs/)을
+# 사이트 내 HTML 문서 페이지(viz/*.html)로 렌더할 때 사용.
+# 정확 버전 핀: build_index.py --check 산출물 결정성(CI drift 가드) 보장.
+Markdown==3.7

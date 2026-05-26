@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#F7F6F2" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#161821" media="(prefers-color-scheme: dark)">
+<title>교토 일정 문서 · 5/31~6/3</title>
+<meta name="description" content="교토 3박 4일 일자별 시나리오 (사람용 문서)">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="교토 가족여행 2026">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:url" content="https://nihon-trip.vercel.app/viz/itinerary-doc.html">
+<meta property="og:title" content="교토 일정 문서 · 5/31~6/3">
+<meta property="og:description" content="교토 3박 4일 일자별 시나리오 (사람용 문서)">
+<meta property="og:image" content="https://nihon-trip.vercel.app/assets/og-itinerary.svg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="교토 일정 문서 · 5/31~6/3">
+<meta name="twitter:description" content="교토 3박 4일 일자별 시나리오 (사람용 문서)">
+<meta name="twitter:image" content="https://nihon-trip.vercel.app/assets/og-itinerary.svg">
+<style>
+  :root {
+    --bg: #F7F6F2; --fg: #1B1D24; --muted: #5B6070; --border: #D9D6CC;
+    --accent: #3E5C76; --accent-soft: #E3EAF3;
+    --card: #FFFFFF; --subcard: #EFEDE6;
+    --ok: #2F7D5B; --warn: #B5811F; --danger: #9A3B3B;
+    --bar-track: #E3EAF3;
+    --font-sans: -apple-system, "Apple SD Gothic Neo", "Pretendard Variable", BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #161821; --fg: #E8E6DE; --muted: #9A9DA8; --border: #2E3140;
+      --accent: #8AA8C7; --accent-soft: #262E3A;
+      --card: #1F222C; --subcard: #13151D;
+      --ok: #6FB58E; --warn: #D4B36A; --danger: #D08585;
+      --bar-track: #262E3A;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  body {
+    font-family: var(--font-sans);
+    background: var(--bg); color: var(--fg);
+    margin: 0 auto; padding: 1rem; max-width: 640px;
+    line-height: 1.5; font-size: 16px;
+  }
+  h1 { font-size: 1.4rem; margin: 0.5rem 0 0.25rem; }
+  h2 { font-size: 1rem; margin: 0 0 0.5rem; color: var(--muted); font-weight: 500; }
+  .status { color: var(--muted); font-size: 0.85rem; margin-bottom: 1rem; }
+  nav { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 1rem 0; }
+  nav a {
+    padding: 0.4rem 0.7rem; border: 1px solid var(--border); border-radius: 999px;
+    text-decoration: none; color: var(--fg); font-size: 0.8rem; background: var(--card);
+  }
+  nav a:hover { border-color: var(--accent); }
+  .card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+    padding: 1rem; margin: 0.75rem 0;
+  }
+  @media (prefers-color-scheme: dark) {
+    .card { box-shadow: 0 1px 0 rgba(0,0,0,0.25); }
+  }
+  .subcard {
+    background: var(--subcard); border: 1px solid var(--border); border-radius: 6px;
+    padding: 0.75rem; margin: 0.5rem 0;
+  }
+  .subtitle { font-weight: 600; margin-bottom: 0.4rem; font-size: 0.95rem; }
+  .big { font-size: 1.6rem; font-weight: 600; line-height: 1.2; }
+  .sub { color: var(--muted); font-size: 0.85rem; margin-top: 0.25rem; word-break: keep-all; }
+  .row {
+    display: flex; justify-content: space-between; gap: 0.5rem;
+    padding: 0.35rem 0; border-bottom: 1px solid var(--border);
+  }
+  .row:last-child { border-bottom: none; }
+  .row .k { color: var(--muted); flex-shrink: 0; }
+  .row .v { font-variant-numeric: tabular-nums; text-align: right; word-break: keep-all; }
+  ul { padding-left: 1.2rem; margin: 0.3rem 0; }
+  li { margin: 0.2rem 0; }
+  .day { padding: 0.35rem 0; border-bottom: 1px solid var(--border); }
+  .day:last-child { border-bottom: none; }
+  .day .date { font-size: 0.9rem; }
+  .day .date .k { display: inline-block; min-width: 3.2rem; color: var(--fg); font-weight: 600; font-variant-numeric: tabular-nums; }
+  /* ── 접기(쉬운 설명 + 펼침 상세) ── */
+  details.leg { margin: 0.15rem 0 0.35rem; }
+  details.leg > summary {
+    cursor: pointer; list-style: none; color: var(--muted);
+    font-size: 0.82rem; padding: 0.1rem 0; -webkit-tap-highlight-color: transparent;
+  }
+  details.leg > summary::-webkit-details-marker { display: none; }
+  details.leg > summary::before { content: '▸ '; color: var(--muted); }
+  details.leg[open] > summary::before { content: '▾ '; }
+  .leg-detail {
+    color: var(--muted); font-size: 0.8rem; line-height: 1.35;
+    padding: 0.2rem 0 0.1rem 0.9rem; margin-top: 0.2rem;
+    border-left: 2px solid var(--border);
+  }
+  .leg-detail a { color: var(--fg); }
+  .day a { color: var(--fg); text-decoration: underline; text-decoration-color: var(--border); }
+  .bar { height: 6px; background: var(--bar-track); border-radius: 3px; margin: 0.2rem 0 0.5rem; overflow: hidden; }
+  .bar-fill { height: 100%; background: var(--accent); }
+  .links { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.6rem; }
+  .links a {
+    flex: 1 1 auto; text-align: center; padding: 0.5rem 0.7rem;
+    background: transparent; color: var(--fg); border: 1px solid var(--border);
+    border-radius: 6px; text-decoration: none; font-size: 0.85rem;
+  }
+  .links a:hover { border-color: var(--accent); }
+  .badge {
+    display: inline-block; padding: 0.1rem 0.45rem; border-radius: 4px;
+    font-size: 0.75rem; border: 1px solid currentColor;
+    white-space: nowrap; flex-shrink: 0;
+  }
+  /* ── 예약 체크리스트 ── */
+  .ck-head { display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; margin-bottom: 0.4rem; }
+  .ck-head .subtitle { margin: 0; }
+  .badge-done { color: var(--ok); border-color: var(--ok); }
+  .badge-pending { color: var(--warn); border-color: var(--warn); }
+  .badge-progress { color: var(--accent); border-color: var(--accent); }
+  .subcard.status-done { border-left: 3px solid var(--ok); }
+  .subcard.status-pending { border-left: 3px solid var(--warn); }
+  .subcard.status-progress { border-left: 3px solid var(--accent); }
+  .dday { font-size: 0.78rem; color: var(--muted); margin-left: 0.3rem; }
+  .dday.urgent { color: var(--danger); font-weight: 600; }
+  .dday.over { color: var(--muted); }
+  .doc-link {
+    display: inline-block; margin-top: 0.5rem; padding: 0.4rem 0.7rem;
+    border: 1px solid var(--border); border-radius: 6px;
+    text-decoration: none; color: var(--fg); font-size: 0.8rem;
+  }
+  .doc-link:hover { border-color: var(--accent); }
+  footer { color: var(--muted); font-size: 0.75rem; margin-top: 1.5rem; text-align: center; }
+  /* ── 하단 탭바 ── */
+  body { padding-bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px)); }
+  .tab-bar {
+    position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+    width: 100%; max-width: 640px;
+    display: flex; background: var(--card); border-top: 1px solid var(--border);
+    z-index: 200; padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .tab-bar::after {
+    content: ''; position: absolute; top: 100%; left: 0; right: 0;
+    height: 80px; background: var(--card);
+  }
+  .tab-bar a {
+    flex: 1; display: flex; flex-direction: column; align-items: center;
+    padding: 0.6rem 0.25rem 0.45rem; text-decoration: none;
+    color: var(--muted); font-size: 0.68rem; gap: 0.2rem; line-height: 1.2;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .tab-bar a.active {
+    color: var(--fg); font-weight: 600;
+  }
+  .tab-bar a:active { opacity: 0.6; }
+  .tab-bar .tab-icon { font-size: 1.25rem; line-height: 1; }
+  /* ── 이미지 ── */
+  .place-img {
+    width: 100%; aspect-ratio: 16/9; object-fit: cover;
+    border-radius: 4px; display: block; margin-top: 0.35rem;
+    max-height: 200px;
+  }
+  .img-credit { color: var(--muted); font-size: 0.65rem; text-align: right; }
+  .blog-reviews { margin-top: 0.5rem; }
+  .blog-strip { display: flex; gap: 0.5rem; overflow-x: auto; padding-bottom: 0.3rem; -webkit-overflow-scrolling: touch; }
+  .blog-card { flex: 0 0 140px; text-decoration: none; color: var(--fg); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+  .blog-thumb { width: 140px; height: 100px; object-fit: cover; display: block; }
+  .blog-comment { font-size: 0.7rem; padding: 0.3rem; margin: 0; color: var(--muted); line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+
+  .doc { line-height: 1.6; word-break: keep-all; }
+  .doc h1 { font-size: 1.4rem; margin: 1rem 0 0.5rem; color: var(--fg); font-weight: 600; }
+  .doc h2 { font-size: 1.1rem; margin: 1.3rem 0 0.4rem; color: var(--fg); font-weight: 600;
+            border-bottom: 1px solid var(--border); padding-bottom: 0.2rem; }
+  .doc h3 { font-size: 1rem; margin: 1rem 0 0.3rem; color: var(--fg); font-weight: 600; }
+  .doc p { margin: 0.5rem 0; }
+  .doc ul, .doc ol { padding-left: 1.3rem; margin: 0.5rem 0; }
+  .doc li { margin: 0.25rem 0; }
+  .doc a { color: var(--accent); }
+  .doc strong { font-weight: 600; }
+  .doc code {
+    background: var(--subcard); border: 1px solid var(--border); border-radius: 4px;
+    padding: 0.05rem 0.3rem; font-size: 0.85em; word-break: break-all;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  .doc blockquote {
+    margin: 0.6rem 0; padding: 0.4rem 0.8rem; border-left: 3px solid var(--accent);
+    background: var(--subcard); color: var(--muted); border-radius: 0 4px 4px 0;
+  }
+  .doc blockquote p { margin: 0.3rem 0; }
+  .doc table {
+    border-collapse: collapse; width: 100%; margin: 0.6rem 0; font-size: 0.85rem;
+    display: block; overflow-x: auto; -webkit-overflow-scrolling: touch;
+  }
+  .doc th, .doc td { border: 1px solid var(--border); padding: 0.4rem 0.55rem; text-align: left; vertical-align: top; }
+  .doc th { background: var(--subcard); font-weight: 600; white-space: nowrap; }
+  .doc hr { border: none; border-top: 1px solid var(--border); margin: 1.2rem 0; }
+</style>
+</head>
+<body>
+<nav><a href="itinerary.html">← 일정</a><a href="../index.html">🏠 홈</a></nav><div class="doc">
+<h1>교토 3박4일 일정 (2026-05-31 → 06-03, 4인 시부모 동반)</h1>
+<h2>전제</h2>
+<ul>
+<li><strong>항공</strong>: 에어서울 RS · 예약번호 A8YW58 · ICN 13:15→KIX 15:15 / KIX 10:05→ICN 12:05 · 탑승객: KIM/BYUNGNAM, WANG/HAEJA, KIM/YOUNGWOOK, LEE/SOYEON</li>
+<li><strong>숙박</strong>:</li>
+<li>5/31, 6/1 2박: <strong>시오(Shio) 100년 마치야</strong> — 중교구 니조역 7분 (침실 3·욕실 2·화장실 2, 시부모/부부 분리)</li>
+<li>6/2 1박: <strong>우메코지 카덴쇼</strong> 료칸 (2명×2실, <strong>조식 미포함</strong> — 6/3 아침 일찍 출발, 6/2→6/3)</li>
+<li><strong>동반</strong>: 영욱 + 소연 + 시부모 (총 4인)</li>
+<li><strong>강도</strong>: 빡빡 (소연 취향 — 미감·디자인·사진 동선 우선)</li>
+<li><strong>시부모 동의</strong>: "소연이 원하는 스타일이면 좋다"</li>
+<li><strong>도보 거리 일자별 예상</strong>: 5/31 4km · 6/1 4km · 6/2 5km · 6/3 1km (5/31은 니조성·철학의 길 단축 편입 반영)</li>
+</ul>
+<h2>1. 일자별 코스</h2>
+<h3>1.1 5/31 (일) — 도착 + 니조성 + 동산 지구 + 철학의 길 단축</h3>
+<table>
+<thead>
+<tr>
+<th>시간대</th>
+<th>동선</th>
+<th>메모</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>09:05</td>
+<td>간사이공항 도착 → JR 하루카 → 교토역</td>
+<td>시부 예약 항공편 시간 확인 필요 (booking-checklist 항공편과 출도착 시간 정합성 별도 확인 필요 — §3)</td>
+</tr>
+<tr>
+<td>11:30</td>
+<td>니조역 → <strong>시오 짐 보관</strong></td>
+<td>에어비앤비 체크인 전 짐 맡기기 (시오 도보 7분). 점심은 니조성 외정원 산책 후 12:45</td>
+</tr>
+<tr>
+<td>12:00</td>
+<td><strong>니조성(二条城) 외정원 산책</strong></td>
+<td>시오 도보 10분 · 외정원 30분 · 본궁 입장(¥1,300/인)은 시간·체력 절약 차 생략 권장 — 5/31 당일 컨디션으로 결정</td>
+</tr>
+<tr>
+<td>12:45</td>
+<td>니조 인근 점심 — <strong>中華 大鵬</strong></td>
+<td><a href="https://tabelog.com/en/kyoto/A2601/A260203/26003254/">타베로그 3.76 · 미쉐린 빕구르망 2024</a>. 쓰촨 중식, 니조역 도보 5분(시오 인접). 키요미즈 13:30 출발 위해 45분 내. 일요일 영업·화·부정기수 휴무, 웨이팅 시 대안 京ゆば処 静家</td>
+</tr>
+<tr>
+<td>13:30</td>
+<td><strong>키요미즈데라 (清水寺)</strong></td>
+<td>17:00 마감 주의</td>
+</tr>
+<tr>
+<td>16:00</td>
+<td><strong>MACCHA HOUSE 抹茶館</strong> (말차 티라미수)</td>
+<td>키요미즈 3초메 337. 키요미즈데라 하행 후 산넨자카로 내려오는 동선. 시그니처: 말차 티라미수. 영업 11:00~20:00, 4인 좌석 대기 가능</td>
+</tr>
+<tr>
+<td>16:30</td>
+<td>산넨자카 → 야사카 신사 → 기온</td>
+<td>니넨자카 진입점 <strong>스타벅스 야사카차야점</strong>(100년 마치야 매장) · <strong>% 아라비카 교토 히가시야마점</strong> — 카페 옵션 (맛차하우스와 중복 시 택1)</td>
+</tr>
+<tr>
+<td>17:00</td>
+<td><strong>철학의 길 단축 구간</strong> (난젠지~철학의 길 남단)</td>
+<td>야사카→난젠지 도보 1.2km. 남단 200~500m 짧게. 시부모 피로 시 야사카에서 시버스 46/201로 가와라마치 직행 대안</td>
+</tr>
+<tr>
+<td>18:30</td>
+<td><strong>가와라마치 저녁 — 폰토초 豆八 (두부·오반자이)</strong></td>
+<td><a href="https://tabelog.com/en/kyoto/A2601/A260201/26021180/">타베로그 3.43(246)</a>. 4인 호리고타쓰 완전개실(시부모 좌식). 철학의 길 남단 → 시버스 46/201. 예약 권장</td>
+</tr>
+</tbody>
+</table>
+<h3>1.2 6/1 (월) — 아라시야마 + 북서쪽</h3>
+<table>
+<thead>
+<tr>
+<th>시간대</th>
+<th>동선</th>
+<th>메모</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>09:00</td>
+<td>죽림길 (지쿠린)</td>
+<td>일찍 출발(관광객 적음). 북측 출구 인근 <strong>교토 오르골당 아라시야마점</strong>(입장 무료) 텐류지 진입 전 5분 즉석 방문 가능</td>
+</tr>
+<tr>
+<td>09:45</td>
+<td>텐류지 정원</td>
+<td></td>
+</tr>
+<tr>
+<td>12:00</td>
+<td>두부 가이세키 점심 <strong>쇼라이안(松籟庵)</strong></td>
+<td><a href="https://tabelog.com/en/kyoto/A2601/A260403/26003826/">타베로그 3.59(353)</a>·점심 ¥3,800~. 수요일 휴무(6/1 월 영업). 4인 좌석 사전 예약</td>
+</tr>
+<tr>
+<td>14:00</td>
+<td>금각사 (鹿苑寺)</td>
+<td>시버스 11+59 환승 또는 놓치면 택시 22분(7.1km) 대안</td>
+</tr>
+<tr>
+<td>15:30</td>
+<td>료안지 석정원</td>
+<td></td>
+</tr>
+<tr>
+<td>18:30</td>
+<td><strong>폰토초 저녁 — まんざら亭</strong> (창작 교토요리)</td>
+<td><a href="https://tabelog.com/en/kyoto/A2601/A260201/26000957/">타베로그 3.30(92)</a>·130년 교마치야. 니시키 시장은 17:00 마감이라 낮에</td>
+</tr>
+</tbody>
+</table>
+<h3>1.3 6/2 (화) — 남/동쪽 + 료칸 체크인</h3>
+<table>
+<thead>
+<tr>
+<th>시간대</th>
+<th>동선</th>
+<th>메모</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>새벽~아침</td>
+<td>시오 출발 → <strong>후시미이나리</strong></td>
+<td>7~8시 도착 시 도리이 사진 명소 한산. 정상까지 안 가도 OK</td>
+</tr>
+<tr>
+<td>점심</td>
+<td>교토역 라멘코지 <strong>中村商店 (金の塩)</strong></td>
+<td><a href="https://tabelog.com/en/kyoto/A2601/A260101/26030811/">타베로그 3.56(603)</a> — 라멘코지 최고점. 짐 시오→카덴쇼 동선</td>
+</tr>
+<tr>
+<td>오후</td>
+<td><strong>산주산겐도 (1001 관음상) → 도후쿠지 (남정원)</strong></td>
+<td>두 곳 도보 권</td>
+</tr>
+<tr>
+<td>15:00~</td>
+<td>시오 체크아웃 (10:00~) → <strong>카덴쇼 료칸 체크인</strong></td>
+<td>짐 일찍 카덴쇼에 위탁 가능 여부 확인</td>
+</tr>
+<tr>
+<td>저녁</td>
+<td>카덴쇼: 온천 → <strong>가이세키 저녁</strong></td>
+<td>료칸 핵심 체험. 야후트래블 4.50/5(148)·<a href="https://www.ikyu.com/00002982/review/">一休 4.51(147)</a>·예약 료칸 포함 석식</td>
+</tr>
+</tbody>
+</table>
+<h3>1.4 6/3 (수) — 출국 (아침 일찍)</h3>
+<blockquote>
+<p>조식 미포함 — 일찍 체크아웃 후 바로 공항 동선. KIX 10:05 출발 (에어서울 A8YW58).</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>시간대</th>
+<th>동선</th>
+<th>메모</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>06:30</td>
+<td>카덴쇼 체크아웃 → 교토역</td>
+<td>KIX 10:05 출발. 교토역→KIX 하루카 약 75분 → 체크아웃 후 바로 출발</td>
+</tr>
+<tr>
+<td>시간 여유 시</td>
+<td><strong>토지(東寺) 오층탑</strong> 잠깐 (도보 15분) 또는 교토역 이세탄·도시락</td>
+<td>출국 시간 빠르면 생략</td>
+</tr>
+<tr>
+<td>10:05</td>
+<td>JR 하루카 → 간사이공항 → 인천 (12:05 도착)</td>
+<td>에어서울 A8YW58</td>
+</tr>
+</tbody>
+</table>
+<h2>2. 장소별 네이버 블로그 후기 (클릭 → 최신 후기)</h2>
+<blockquote>
+<p>자동 수집 불가(WebSearch 한국어 검색 제한) → 각 장소의 네이버 블로그 검색 URL을 정리. 클릭 시 최신 후기 10개 이상 즉시 표시.</p>
+</blockquote>
+<h3>2.1 5/31 동산 지구</h3>
+<ul>
+<li><strong>니조성(二条城)</strong> — <a href="https://search.naver.com/search.naver?where=blog&amp;query=%EA%B5%90%ED%86%A0%20%EB%8B%88%EC%A1%B0%EC%84%B1%20%ED%9B%84%EA%B8%B0">네이버 블로그 후기 검색</a></li>
+<li><strong>키요미즈데라</strong> — <a href="https://search.naver.com/search.naver?where=blog&amp;query=%EA%B5%90%ED%86%A0%20%ED%82%A4%EC%9A%94%EB%AF%B8%EC%A6%88%EB%8D%B0%EB%9D%BC%20%ED%9B%84%EA%B8%B0">네이버 블로그 후기 검색</a></li>
+<li><strong>산넨자카·니넨자카</strong> — <a href="https://search.naver.com/search.naver?where=blog&amp;query=%EA%B5%90%ED%86%A0%20%EC%82%B0%EB%84%A8%EC%9E%90%EC%B9%B4%20%EB%8B%88%EB%84%A8%EC%9E%90%EC%B9%B4">네이버 블로그 후기 검색</a></li>
+<li><strong>스타벅스 니넨자카 야사카차야점</strong>(100년 마치야) — <a href="https://search.naver.com/search.naver?where=blog&amp;query=%EA%B5%90%ED%86%A0%20%EC%8A%A4%ED%83%80%EB%B2%85%EC%8A%A4%20%EB%8B%88%EB%84%A8%EC%9E%90%EC%B9%B4">네이버 블로그 후기 검색</a></li>
+<li><strong>% 아라비카 교토 히가시야마점</strong> — <a href="https://search.naver.com/search.naver?where=blog&amp;query=%EA%B5%90%ED%86%A0%20%EC%95%84%EB%9D%BC%EB%B9%84%EC%B9%B4%20%ED%9E%88%EA%B0%80%EC%8B%9C%EC%95%BC%EB%A7%88">네이버 블로그 후기 검색</a></li>
+<li><strong>야사카 신사</strong> — <a href="https://search.naver.com/search.naver?where=blog&amp;query=%EA%B5%90%ED%86%A0%20%EC%95%BC%EC%82%AC%EC%B9%B4%20%EC%8B%A0%EC%82%AC%20%ED%9B%84%EA%B8%B0">네이버 블로그 후기 검색</a></li>
+<li><strong>기온 시라카와</strong> — <a href="https://search.naver.com/search.naver?where=blog&amp;query=%EA%B5%90%ED%86%A0%20%EA%B8%B0%EC%98%A8%20%EC%8B%9C%EB%9D%BC%EC%B9%B4%EC%99%80%20%EC%82%B0%EC%B1%85">네이버 블로그 후기 검색</a></li>
+<li><strong>철학의 길</strong>(난젠지~철학의 길 남단 단축) — <a href="https://search.naver.com/search.naver?where=blog&amp;query=%EA%B5%90%ED%86%A0%20%EC%B2%A0%ED%95%99%EC%9D%98%20%EA%B8%B8%20%EB%82%9C%EC%A0%A0%EC%A7%80">네이버 블로그 후기 검색</a></li>
+<li><strong>폰토초 거리</strong> — <a href="https://search.naver.com/search.naver?where=blog&amp;query=%EA%B5%90%ED%86%A0%20%ED%8F%B0%ED%86%A0%EC%B4%88%20%EA%B1%B0%EB%A6%AC%20%EC%A0%80%EB%85%81">네이버 블로그 후기 검색</a></li>
+</ul>
+<h3>2.2 6/1 서/북쪽</h3>
+<ul>
+<li><strong>아라시야마 대나무숲(죽림길)</strong> — <a href="https://search.naver.com/search.naver?where=blog&amp;query=%EA%B5%90%ED%86%A0%20%EC%95%84%EB%9D%BC%EC%8B%9C%EC%95%BC%EB%A7%88%20%EB%8C%80%EB%82%98%EB%AC%B4%EC%88%B2">네이버 블로그 후기 검색</a></li>
+<li><strong>교토 오르골당 아라시야마점</strong>(죽림길 출구) — <a href="https://search.naver.com/search.naver?where=blog&amp;query=%EA%B5%90%ED%86%A0%20%EC%98%A4%EB%A5%B4%EA%B3%A8%EB%8B%B9%20%EC%95%84%EB%9D%BC%EC%8B%9C%EC%95%BC%EB%A7%88">네이버 블로그 후기 검색</a></li>
+<li><strong>도게츠교</strong> — <a href="https://search.naver.com/search.naver?where=blog&amp;query=%EA%B5%90%ED%86%A0%20%EB%8F%84%EA%B2%8C%EC%B8%A0%EA%B5%90">네이버 블로그 후기 검색</a></li>
+<li><strong>텐류지 정원</strong> — <a href="https://search.naver.com/search.naver?where=blog&amp;query=%EA%B5%90%ED%86%A0%20%ED%85%90%EB%A5%98%EC%A7%80%20%EC%A0%95%EC%9B%90%20%ED%9B%84%EA%B8%B0">네이버 블로그 후기 검색</a></li>
+<li><strong>쇼라이안(松籟庵) 두부 가이세키 점심</strong> — <a href="https://search.naver.com/search.naver?where=blog&amp;query=%EA%B5%90%ED%86%A0%20%EC%87%BC%EB%9D%BC%EC%9D%B4%EC%95%88%20%EB%91%90%EB%B6%80">네이버 블로그 후기 검색</a></li>
+<li><strong>금각사</strong> — <a href="https://search.naver.com/search.naver?where=blog&amp;query=%EA%B5%90%ED%86%A0%20%EA%B8%88%EA%B0%81%EC%82%AC%20%ED%9B%84%EA%B8%B0">네이버 블로그 후기 검색</a></li>
+<li><strong>료안지 (석정원)</strong> — <a href="https://search.naver.com/search.naver?where=blog&amp;query=%EA%B5%90%ED%86%A0%20%EB%A3%8C%EC%95%88%EC%A7%80%20%EC%84%9D%EC%A0%95%EC%9B%90">네이버 블로그 후기 검색</a></li>
+<li><strong>니시키 시장</strong> — <a href="https://search.naver.com/search.naver?where=blog&amp;query=%EA%B5%90%ED%86%A0%20%EB%8B%88%EC%8B%9C%ED%82%A4%EC%8B%9C%EC%9E%A5%20%EB%A7%9B%EC%A7%91">네이버 블로그 후기 검색</a></li>
+</ul>
+<h3>2.3 6/2 남/동쪽 + 료칸</h3>
+<ul>
+<li><strong>후시미이나리 신사</strong> — <a href="https://search.naver.com/search.naver?where=blog&amp;query=%EA%B5%90%ED%86%A0%20%ED%9B%84%EC%8B%9C%EB%AF%B8%EC%9D%B4%EB%82%98%EB%A6%AC%20%EC%83%88%EB%B2%BD">네이버 블로그 후기 검색</a></li>
+<li><strong>산주산겐도</strong> — <a href="https://search.naver.com/search.naver?where=blog&amp;query=%EA%B5%90%ED%86%A0%20%EC%82%B0%EC%A3%BC%EC%82%B0%EA%B2%90%EB%8F%84">네이버 블로그 후기 검색</a></li>
+<li><strong>도후쿠지</strong> — <a href="https://search.naver.com/search.naver?where=blog&amp;query=%EA%B5%90%ED%86%A0%20%EB%8F%84%ED%9B%84%EC%BF%A0%EC%A7%80%20%EC%A0%95%EC%9B%90">네이버 블로그 후기 검색</a></li>
+<li><strong>우메코지 카덴쇼 료칸</strong> — <a href="https://search.naver.com/search.naver?where=blog&amp;query=%EC%9A%B0%EB%A9%94%EC%BD%94%EC%A7%80%20%EC%B9%B4%EB%8D%B4%EC%87%BC%20%EB%A3%8C%EC%B9%B8%20%ED%9B%84%EA%B8%B0">네이버 블로그 후기 검색</a></li>
+</ul>
+<h3>2.4 6/3 출국</h3>
+<ul>
+<li><strong>토지(東寺) 오층탑</strong> — <a href="https://search.naver.com/search.naver?where=blog&amp;query=%EA%B5%90%ED%86%A0%20%ED%86%A0%EC%A7%80%20%EB%8F%99%EC%82%AC%20%EC%98%A4%EC%B8%B5%ED%83%91">네이버 블로그 후기 검색</a></li>
+</ul>
+<h2>2.5 교통패스 권장 (일자별) — iPhone Apple Wallet ICOCA 단권 통일</h2>
+<blockquote>
+<p>출처: <code>data/cost-options.json</code> <code>kyoto_local_transit_4pax</code> + <code>data/itinerary.json</code> days[].pass_recommendation. 분석·정정 일지: <a href="./decision-log/2026-05-18-04-transit-pass-correction-icoca.md">2026-05-18-04-transit-pass-correction-icoca</a> (직전 <a href="./decision-log/2026-05-18-03-transit-pass-rightsizing.md">03 일지</a>는 ¥700 시버스 1일권 기준 — 폐지 반영 전).</p>
+</blockquote>
+<p><strong>결제 채널</strong>: 4인 모두 iPhone Apple Wallet에 <strong>ICOCA(또는 Suica/PASMO) 1장</strong>씩 추가 → 시버스·시영지하철·JR(산인·나라선) 모두 탭. 종이·발권기·앱 발권 없음. iPhone 8 이상·iOS 최신·Apple Account 2단계 인증 필요. 출국 전 초기 충전 권장 1인당 ¥3,000.<br>
+출처: <a href="https://support.apple.com/en-us/108772">Apple Support 108772</a> · <a href="https://www.insidekyoto.com/iphone-the-killer-japan-travel-hack">Inside Kyoto iPhone Hack</a> · <a href="https://www.tictivity.com/en/blog/japan-ic-card-guide">Tictivity Japan IC Card 2026</a>. ¥700 시버스 1일권 폐지: <a href="https://soranews24.com/2023/03/30/kyoto-will-abolish-one-day-bus-passes-to-combat-tourism-overcrowding/">SoraNews24</a> · <a href="https://www2.city.kyoto.lg.jp/kotsu/webguide/en/ticket/regular_1day_card_comm.html">교토시 공식</a>.</p>
+<table>
+<thead>
+<tr>
+<th>일자</th>
+<th>사용</th>
+<th>단권 합 (4인)</th>
+<th>통합 1일권 ¥1,100×4=¥4,400</th>
+<th>채택</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>5/31</td>
+<td>시버스 2회 (시오→키요미즈 + 철학의 길→가와라마치)</td>
+<td>¥1,840</td>
+<td>❌ 비효율</td>
+<td><strong>단권 ICOCA</strong></td>
+</tr>
+<tr>
+<td>6/1</td>
+<td>시버스 3회</td>
+<td>¥3,680</td>
+<td>❌ ¥720 비효율</td>
+<td><strong>단권 ICOCA</strong></td>
+</tr>
+<tr>
+<td>6/2</td>
+<td>JR 3 leg (잠정)</td>
+<td>¥800</td>
+<td>시영 미사용</td>
+<td><strong>단권 ICOCA</strong></td>
+</tr>
+<tr>
+<td>6/3</td>
+<td>도보 + 하루카</td>
+<td>¥0</td>
+<td>—</td>
+<td><strong>패스 불요</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>합계</strong>: ¥6,320 ≈ ₩65,700 (FX ¥1=₩10.4). 이전 3일 일괄 1일권(₩84,000) 대비 ₩18,300 절감. (cost-options.json <code>kyoto_local_transit_4pax</code> 동기화는 별도 PR — §3 참조)</p>
+<blockquote>
+<p>⚠️ <strong>¥700 시버스 단독 1일권은 2023-09 판매 종료 / 2024-03-31 사용 만료</strong> (교토시 오버투어리즘 대책). 현 통합 1일권 ¥1,100/인은 본전 미달이라 본 트립에선 채택 안 함.</p>
+</blockquote>
+<h2>3. 보류·확인 필요</h2>
+<ul>
+<li><strong>항공편 시간 정합성</strong>: <code>data/booking-checklist.json</code> 항공 항목은 ICN 13:15→KIX 15:15 / KIX 10:05→ICN 12:05. <code>data/itinerary.json</code> 5/31 도착은 09:05 (시부 예약 항공편 가정). 두 출처 단일화 필요 — 별도 PR.</li>
+<li><strong>쇼라이안(松籟庵) 예약</strong>: 4인 좌석 사전 확인 (아라시야마는 점심 시간 혼잡).</li>
+<li><strong>카덴쇼 짐 위탁</strong>: 6/2 오전 시오 체크아웃 후 짐을 카덴쇼에 일찍 맡길 수 있는지 확인 (체크인 15:00 전).</li>
+<li><strong>후시미이나리 정상</strong>: 시부모 동반이라 정상까지 X. 도리이 길 입구 ~5분 이내 사진 충분.</li>
+<li><strong>카덴쇼 가이세키 시간</strong>: 보통 17:30/18:00/18:30 중 선택. 6/3 아침 일찍 출발 위해 17:30~18:00 가장 빠른 시간 + 일찍 취침 권장.</li>
+<li><strong>6/3 토지·이세탄</strong>: KIX 출발 시간 따라 결정 (booking 10:05 vs itinerary 추정 — 위 정합성 보류 동기 해결 필요).</li>
+<li><strong>니조성 본궁 입장</strong>: 외정원만 산책 시 무료. 본궁(¥1,300/인 추정) 입장 여부는 5/31 당일 컨디션·시간으로 결정.</li>
+<li><strong>철학의 길 단축 구간</strong>: 시부모 피로 시 17:00 야사카에서 시버스 46/201로 가와라마치 직행 대안 (단축 산책 생략).</li>
+<li><strong>사이호지(이끼사찰) 예약 조사</strong>: <code>booking-checklist.json</code> <code>saihoji_research</code> 항목으로 추적. intosaihoji.com 포털에서 5/31~6/2 슬롯 가능 여부 + 정확한 입장료 확인 (5/24 현재 출국 7일 전, lead time 미공시). 예약 가능 확인 시 6/2 후시미이나리·토후쿠지 일정 일부 재배치 검토 — 별도 PR.</li>
+<li><strong>6/2·6/3 마크다운 사본 outdated</strong>: 본 PR은 5/31·6/1만 JSON과 동기화. 6/2(산주산겐도 등)·6/3 표는 itinerary.json과 차이 존재 → 별도 PR로 동기화 권장.</li>
+<li><strong><code>cost-options.json kyoto_local_transit_4pax</code> 동기화</strong>: 5/31 시버스 2회 반영 시 ¥920 → ¥1,840로 갱신 필요 — 별도 PR.</li>
+<li><strong>료쿠주안 시미즈</strong>: 소연 공유 구글지도 리스트에서 검토했으나 본점이 교토대학 근처(동산 동선 X)라 제외. 화과자 기념품 필요 시 산넨자카 기타 매장 대안.</li>
+</ul>
+<h2>4. 후보 코스 (동선 대안)</h2>
+<blockquote>
+<p>숙소·날짜(5/31~6/3)·항공 고정. 동선만 다른 대안 코스 3가지. 정본은 <code>data/itinerary.json</code>.</p>
+</blockquote>
+<h3>4.1 여유형 — 시부모 부담 최소화</h3>
+<p>하루 방문지 2~3개, 카페 휴식 포함. 총 도보 약 9km.</p>
+<table>
+<thead>
+<tr>
+<th>날짜</th>
+<th>코스</th>
+<th>포인트</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>5/31</td>
+<td>기요미즈데라 → 산넨자카 카페 휴식 → 야사카 신사 → 가와라마치 저녁</td>
+<td>니넨자카 카페 30~40분 여유</td>
+</tr>
+<tr>
+<td>6/1</td>
+<td>죽림길 → 텐류지 → 두부 가이세키 → 아라시야마 강변 자유시간 → 저녁</td>
+<td>느긋한 출발(09:30)</td>
+</tr>
+<tr>
+<td>6/2</td>
+<td>후시미이나리 입구(1구간만) → 도후쿠지 → 카덴쇼 일찍 체크인 → 대욕장</td>
+<td>시부모 무리 없는 보행량</td>
+</tr>
+<tr>
+<td>6/3</td>
+<td>교토역 이세탄 쇼핑 → 출국</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3>4.2 서북 사찰 집중형 — 세계유산 사찰 + 우지</h3>
+<p>금각사·료안지·닌나지·묘신지 서북 라인 + 우지 뵤도인. 총 도보 약 14km.</p>
+<table>
+<thead>
+<tr>
+<th>날짜</th>
+<th>코스</th>
+<th>포인트</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>5/31</td>
+<td>기요미즈데라 → 산넨자카 → 야사카 신사 → 폰토초 저녁</td>
+<td>(빡빡형과 동일 첫날)</td>
+</tr>
+<tr>
+<td>6/1</td>
+<td>금각사 → 료안지 → 닌나지(오무로 우동 점심) → 묘신지 → 란덴 전차 귀환</td>
+<td>대규모 선종 사찰 집중</td>
+</tr>
+<tr>
+<td>6/2</td>
+<td>후시미이나리 → 우지 뵤도인(세계유산, 10엔 동전 사찰) → 우지 말차 → 카덴쇼 체크인</td>
+<td>JR 나라선 우지역 이동</td>
+</tr>
+<tr>
+<td>6/3</td>
+<td>도지 오층탑 또는 이세탄 → 출국</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3>4.3 미식+문화 체험형 — 니시키 시장·도예·폰토초</h3>
+<p>니시키 시장·교토 도예 체험·오반자이 정식·폰토초 골목 중심. 총 도보 약 12km.</p>
+<table>
+<thead>
+<tr>
+<th>날짜</th>
+<th>코스</th>
+<th>포인트</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>5/31</td>
+<td>니시키 시장 점심 → 기요미즈데라+도자기 거리 → 야사카 신사 → 폰토초 이자카야</td>
+<td>도착 당일 미식 집중</td>
+</tr>
+<tr>
+<td>6/1</td>
+<td>죽림길 → 텐류지 → 두부 가이세키 → 도예 공방 체험 → 니시키 재방문 → 오반자이 저녁</td>
+<td>사가 도예 기념관 체험</td>
+</tr>
+<tr>
+<td>6/2</td>
+<td>후시미이나리 → 도지 오층탑 → 이세탄 식품관 점심 → 카덴쇼 체크인 → 우메코지 공원</td>
+<td>교토 철도박물관 선택 가능</td>
+</tr>
+<tr>
+<td>6/3</td>
+<td>교토역 포르타 기념품 → 출국</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2>5. 다음 단계</h2>
+<ol>
+<li>영욱·소연 동선 검토 후 시간 미세 조정.</li>
+<li>시그라쿠 토후·카덴쇼 가이세키 시간 사전 확정.</li>
+<li>출발 직전 토지·아라시야마 등 휴관일 재확인 (보통 무휴이지만 확인).</li>
+<li>시부모께 일자별 카드 출력해서 전달 (모바일 <code>index.html</code>도 갱신될 예정).</li>
+<li>후보 코스 중 최종 1개 또는 혼합 확정 → <code>data/itinerary.json</code>의 <code>days</code> 업데이트.</li>
+</ol>
+</div>
+<footer>레포 docs/kyoto-itinerary-may31-jun3-2026.md 의 사이트 내 사본 · 원본이 정본</footer>
+<nav class="tab-bar" aria-label="하단 탭"><a href="../index.html" data-tab="home"><span class="tab-icon">🏠</span><span>홈</span></a><a href="itinerary.html" class="active" data-tab="itinerary"><span class="tab-icon">📅</span><span>일정</span></a><a href="lodging.html" data-tab="lodging"><span class="tab-icon">✈️</span><span>숙박·항공</span></a><a href="checklist.html" data-tab="checklist"><span class="tab-icon">☑</span><span>예약</span></a></nav>
+</body>
+</html>

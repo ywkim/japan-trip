@@ -612,6 +612,19 @@ class NoGithubLinkTests(unittest.TestCase):
             errs, _ = validate.run(base, date(2026, 5, 12))
             self.assertTrue(any(e.startswith("[J]") and "viz/checklist.html" in e for e in errs), errs)
 
+    def test_github_in_new_viz_page_caught_by_glob(self):
+        """검사 J는 viz/*.html 전체를 glob하므로 신규 문서 페이지도 자동 포함."""
+        html = "<html>https://github.com/ywkim/japan-trip/blob/main/reports/final-report.md</html>"
+        with tempfile.TemporaryDirectory() as td:
+            base = make_fixture(
+                Path(td),
+                cost=VALID_COST,
+                index_html="<html></html>",
+                vercel_html={"viz/report.html": html},
+            )
+            errs, _ = validate.run(base, date(2026, 5, 12))
+            self.assertTrue(any(e.startswith("[J]") and "viz/report.html" in e for e in errs), errs)
+
 
 class ProductionDataTests(unittest.TestCase):
     """현재 레포 데이터가 validate를 통과하는지 회귀 검사."""

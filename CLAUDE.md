@@ -111,18 +111,25 @@ japan-trip/
 │   ├── itinerary-table.html   # 4일 시간표 뷰 (build_index.py 산출물 — 직접 편집 금지)
 │   ├── checklist.html         # 예약 체크리스트 화면 (build_index.py 산출물 — 직접 편집 금지)
 │   ├── lodging.html           # 숙박·항공 탭 화면 (build_index.py 산출물 — 직접 편집 금지)
-│   └── archive.html           # 의사결정 아카이브 (장마 확률·9 예산 시나리오·7 후보지 점수 — build_index.py 산출물 — 직접 편집 금지)
+│   ├── archive.html           # 의사결정 아카이브 (장마 확률·9 예산 시나리오·7 후보지 점수 — build_index.py 산출물 — 직접 편집 금지)
+│   ├── report.html            # 최종 보고서 렌더 페이지 (reports/final-report.md → HTML, build_index.py 산출물 — 직접 편집 금지)
+│   ├── itinerary-doc.html     # 일정 문서 렌더 페이지 (docs/kyoto-itinerary-may31-jun3-2026.md → HTML, 산출물)
+│   ├── research.html          # 예약 리서치 렌더 페이지 (docs/booking-research-2026-05-24.md → HTML, 산출물)
+│   ├── transit-pass.html      # 교통패스 비교 렌더 페이지 (docs/transit-pass-jr-kansai-2026.md → HTML, 산출물)
+│   ├── decision-kyoto.html    # 교토 변경 결정 렌더 페이지 (docs/decision-log/2026-05-11-...md → HTML, 산출물)
+│   └── decision-log.html      # 의사결정 일지 인덱스 (docs/decision-log/*.md 목록, build_index.py 산출물 — 직접 편집 금지)
+├── requirements.txt     # 빌드 의존성 (Markdown==3.7 — build_index.py 문서 렌더용, 버전 핀)
 ├── scripts/
 │   ├── score.py         # 종합 점수 계산 (--json 지원)
 │   ├── budget.py        # 3M 예산 시나리오 평가 (--json 지원)
-│   ├── build_index.py   # index.html + viz/*.html(5개: itinerary·itinerary-table·lodging·checklist·archive) + assets/og-*.svg(6장) 빌드 (공통 토큰 주입, --check)
-│   ├── validate.py      # 가격 필드·묵은 가격·SYNC 주석·MD↔JSON·DESIGN 동기화 검사
+│   ├── build_index.py   # index.html + viz/*.html(11개) + assets/og-*.svg(6장) 빌드 (공통 토큰 주입, DOC_PAGES 문서 렌더, --check)
+│   ├── validate.py      # 가격 필드·묵은 가격·SYNC 주석·MD↔JSON·DESIGN 동기화·GitHub 링크 검사
 │   └── render-pdf.sh    # PDF 생성
 ├── tests/               # unittest (validate·build_index·design_tokens·score·budget)
 ├── .github/workflows/
-│   └── validate.yml     # PR 게이트: unittest + build_index --check + validate + score + budget
+│   └── validate.yml     # PR 게이트: pip install + unittest + build_index --check + validate + score + budget
 └── reports/
-    └── final-report.md  # 최종 보고서 (PDF 변환 대상)
+    └── final-report.md  # 최종 보고서 (PDF 변환 대상 · viz/report.html로 렌더)
 ```
 
 ## 데이터 동기화 규칙
@@ -136,16 +143,28 @@ japan-trip/
   - `data/decision.json` — criteria·candidates·scores (MCDA 입력. 교토 확정 후 회귀 가드)
   - `data/weather.json` — 후보지×시기 기후 + `tsuyu_normals`(긴키 매우입·매우명 평년 + 최근 7년 실적) + `cities.kyoto.sub_monthly_precip`(순계열)·`trip_window_daily_precip`(5/31~6/3 일별). 원자료: JMA 매우 평년값·京都(47759) 일별 평년값 1991–2020. `docs/weather.md` §5와 동기화. 5/31~6/3 실측 기상 추적이 필요해지면 본 파일의 `cities.kyoto`에 새 키로 추가
   - `data/flights.json` — 후보지×출발지 항공권 시세 스냅샷 (시점 스냅샷, snapshot_date 명시). 발권은 별도 PR로 `data/booking-checklist.json`·`data/cost-options.json`에 기록
-- **`index.html`·`viz/itinerary.html`·`viz/itinerary-table.html`·`viz/checklist.html`·`viz/lodging.html`·`viz/archive.html`·`assets/og-*.svg`(6장)는 `scripts/build_index.py` 산출물 — 직접 편집 금지**. 데이터(`data/*.json`)·스크립트 변경 후 `python scripts/build_index.py` 실행. CI(`build_index.py --check`)가 6 HTML + 6 SVG = 12개 산출물의 drift를 PR 단계에서 차단
+- **`index.html`·`viz/*.html`(11개)·`assets/og-*.svg`(6장)는 `scripts/build_index.py` 산출물 — 직접 편집 금지**. 데이터(`data/*.json`)·스크립트·렌더 대상 `.md` 변경 후 `python scripts/build_index.py` 실행. CI(`build_index.py --check`)가 11 HTML + 6 SVG = 17개 산출물의 drift를 PR 단계에서 차단. **빌드에 `Markdown` 의존성 필요 — 먼저 `pip install -r requirements.txt`**
 - 모바일 가독성: 장문 블록(이동 경로 `arrive_from.route`·ICOCA 실행 단계·비선택 예산 시나리오·긴 예약/숙박 메모·일자별 교통패스 추천)은 `build_index.py`의 `fold(summary, detail)` 헬퍼로 "평이 요약 + `<details>` 접기"로 렌더. 이동은 모드별 한국어 동사(`MODE_VERBS`)+소요시간 요약, 상세에 원문 경로·출처 링크. 예약·숙박 메모는 `note_block()`이 60자 초과 시 `·` 앞 2개 항목을 요약으로 노출하고 나머지(예약번호·PIN·탑승객 등)를 접는다. 교통패스 추천은 `pass_block()`이 `' — '` 앞 추천명만 보이고 비용 근거를 접는다. 새 장문 정보도 이 패턴을 따른다
 - 메인 페이지(`index.html`)는 **운영 모드** — 요약·일자별 일정만. 분석·결정 자료(장마 확률·9 예산 시나리오·7 후보지 점수)는 `viz/archive.html`로 분리. 받는 사람에게 "아직 결정 중"으로 읽히는 콘텐츠는 메인에서 제외
 - `docs/weather.md`·`docs/flights.md`의 표는 각각 `data/weather.json`·`data/flights.json`의 사람용 사본 — JSON 수정 시 함께 갱신 (CI 게이트: `scripts/validate.py` E·F가 도시·시기 수치, snapshot_date, 시세 표기의 drift를 PR 단계에서 차단)
 - `docs/kyoto-itinerary-may31-jun3-2026.md`는 `data/itinerary.json`의 사람용 마크다운 사본 (JSON이 정본). 일정 변경 시 JSON을 먼저 수정 → 마크다운 함께 갱신
 - `data/flights.json`은 **시점 스냅샷**. 시세 재조회 시 새 스냅샷으로 덮어쓰지 말고 snapshot_date 갱신 + 변경 사유를 `docs/decision-log/`에 새 일지로 기록
 - 카드 블록 위 `<!-- SYNC: <출처> -->` 주석으로 동기화 대상 명시 (예: `<!-- SYNC: reports/final-report.md §1 -->`). `scripts/validate.py`가 경로 유효성과 §N 절 번호를 검증
-- **Vercel 산출물(HTML 6종: `index.html` + `viz/*.html`)에는 GitHub 링크 금지** (검사 J). 가족 공유 페이지에서 레포(소스·미렌더 `.md`)로 빠져나가는 링크를 막는다. 외부 문서는 ① 사이트 내 HTML 페이지(`viz/archive.html` 등)로 연결하거나 ② 없으면 일반 텍스트로 레포 경로(예: `docs/decision-log/`, `reports/`)만 표기. `github.com` 문자열은 링크든 raw URL이든 산출물에 남으면 CI(검사 J)가 차단
+- **Vercel 산출물(`index.html` + `viz/*.html` 전체)에는 GitHub 링크 금지** (검사 J). 가족 공유 페이지에서 레포(소스·미렌더 `.md`)로 빠져나가는 링크를 막는다. 외부 문서는 ① **레포 마크다운을 사이트 내 HTML로 렌더**(아래 "문서 렌더링" 절의 `DOC_PAGES`)해 그 페이지로 연결하거나 ② 등록 전이면 일반 텍스트로 레포 경로(예: `docs/decision-log/`, `reports/`)만 표기. `github.com` 문자열은 링크든 raw URL이든 산출물에 남으면 CI(검사 J)가 차단
   - 이전 정책(2026-05-26 이전): 외부 문서를 GitHub blob URL(`https://github.com/ywkim/japan-trip/blob/main/...`)로 링크 — Vercel이 `.md`를 raw text로 서빙해 상대 경로가 깨진다는 이유. **2026-05-26 정책 반전**: 받는 사람(시부모 포함)에게 레포 노출을 막기 위해 산출물에서 GitHub 링크 자체를 제거. 근거: `docs/decision-log/2026-05-26-vercel-no-github-links.md`
-  - `data/booking-checklist.json` 등 데이터의 `link.url`·`note`에도 GitHub URL 금지 — 레포 문서는 일반 텍스트 경로로 표기 (검사 J가 렌더 산출물에서 잡는다)
+  - **2026-05-26 보완**: GitHub 링크 금지는 유지하되, 참조 문서를 없애는 대신 레포 마크다운을 사이트 내 HTML(`viz/report.html` 등)로 렌더해 연결. 근거: `docs/decision-log/2026-05-26-02-vercel-docs-as-html-pages.md`
+  - `data/booking-checklist.json`의 `link.url`에 레포 마크다운 경로(예: `docs/booking-research-2026-05-24.md`)를 넣으면 `build_index.py`의 `DOC_SOURCE_TO_OUT`가 사이트 내 렌더 페이지로 치환. GitHub URL은 여전히 금지 (검사 J가 렌더 산출물에서 잡는다)
+
+## 문서 렌더링 (DOC_PAGES)
+
+> 레포 마크다운 문서를 가족 공유 사이트에서 열람 가능하게 하되 GitHub 노출은 막는다. (근거: `docs/decision-log/2026-05-26-02-vercel-docs-as-html-pages.md`)
+
+- **의존성**: `Markdown==3.7` (`requirements.txt`, 버전 핀). `build_index.py`가 `tables`·`sane_lists` 확장으로 변환. CI는 `pip install -r requirements.txt` 후 빌드/`--check` 실행. **버전 핀과 커밋된 HTML이 일치해야 `--check` 통과** — 재현성 위해 같은 버전 사용.
+- **단일 출처**: 레포 `.md`가 정본, `viz/*.html`은 빌드 산출물(직접 편집 금지). `.md` 수정 후 반드시 `python scripts/build_index.py` 재실행 (안 하면 `--check` drift로 머지 차단).
+- **렌더 대상 등록**: `build_index.py`의 `DOC_PAGES` 튜플에 `DocPage(source, out, title, description, og_slug, tab, back_href, back_label)` 1줄 추가. `og_slug`는 기존 OG 카드 슬러그 재사용(신규 SVG 불필요). 등록 즉시 `OUTPUTS`·검사 J(glob)가 자동 커버.
+- **현재 6 페이지**: `viz/report.html`(최종 보고서)·`viz/itinerary-doc.html`(일정 문서)·`viz/research.html`(예약 리서치)·`viz/transit-pass.html`(교통패스 비교)·`viz/decision-kyoto.html`(교토 변경 결정) + `viz/decision-log.html`(결정 일지 인덱스 — `docs/decision-log/*.md` 최신순 제목 목록, 교토 결정만 링크·나머지는 텍스트·본문 미게시).
+- **GitHub 링크 금지(검사 J) 유지**: 렌더 대상 `.md`에 `github.com`이 들어가면 산출물에 섞여 머지 차단. 새 문서 등록 시 사전 확인.
+- **링크 치환**: `link.url`/내부 참조에 레포 `.md` 경로를 쓰면 `DOC_SOURCE_TO_OUT`가 in-site 페이지로 치환 (`doc_href(out, in_viz)`가 루트/viz 상대경로 결정).
 
 ## CI 검증 (PR 게이트)
 
@@ -153,6 +172,7 @@ japan-trip/
 
 | 검사 | 스크립트 | 실패 조건 |
 |---|---|---|
+| 의존성 설치 | `pip install -r requirements.txt` | 설치 실패 (build_index.py가 `Markdown` import) |
 | 단위 테스트 | `python -m unittest discover tests` | 1개라도 실패 |
 | 점수 계산 동작 | `scripts/score.py` | exit ≠ 0 |
 | 예산 평가 동작 | `scripts/budget.py` | exit ≠ 0 |
@@ -164,8 +184,8 @@ japan-trip/
 | itinerary arrive_from 무결성 | `scripts/validate.py` (G) | `data/itinerary.json` arrive_from에 mode/source/source_fetched_at/data_quality 누락, mode·data_quality 화이트리스트 외, source_fetched_at > 60d(tbd_needs_browser_mcp 제외), days[].walking_km보다 도보 leg 합이 2km 이상 초과 |
 | DESIGN MD↔JSON 동기화 | `scripts/validate.py` (H) | `DESIGN.md`의 hex가 `data/design-tokens.json`에 없거나 그 반대, theme_name·version drift |
 | itinerary food_quality 무결성 | `scripts/validate.py` (I) | `data/itinerary.json` 식사 항목 food_quality에 rating/source/source_fetched_at/data_quality 누락, data_quality 화이트리스트 외, source_fetched_at > 60d. food_quality 없는 항목(동네 끼니)은 면제. route_candidates도 순회 |
-| Vercel GitHub 링크 금지 | `scripts/validate.py` (J) | Vercel 산출물 HTML 6종(`index.html` + `viz/*.html`) 중 하나라도 `github.com` 문자열(링크·raw URL) 포함 |
-| 빌드 산출물 drift | `scripts/build_index.py --check` | `index.html`·`viz/itinerary.html`·`viz/itinerary-table.html`·`viz/lodging.html`·`viz/checklist.html` 중 하나라도 빌드 결과와 다름 |
+| Vercel GitHub 링크 금지 | `scripts/validate.py` (J) | `index.html` + `viz/*.html`(glob 전체) 중 하나라도 `github.com` 문자열(링크·raw URL) 포함 |
+| 빌드 산출물 drift | `scripts/build_index.py --check` | `index.html`·`viz/*.html`(11개)·`assets/og-*.svg`(6장) 중 하나라도 빌드 결과와 다름 |
 
 ## 디자인 워크플로우
 
