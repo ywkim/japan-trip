@@ -20,6 +20,7 @@ import re
 import subprocess
 import sys
 from pathlib import Path
+from urllib.parse import quote
 
 BASE = Path(__file__).resolve().parent.parent
 SCRIPTS = BASE / "scripts"
@@ -139,6 +140,24 @@ def food_quality_html(fq) -> str:
     )
 
 
+def doc_link_html(link) -> str:
+    """일정 항목 참조 문서 링크 (data/itinerary.json item.link = {url, label}).
+
+    조식 슬롯 등이 가리키는 문서를 화면에서 바로 탭해 열 수 있는 <a>로 렌더.
+    url이 사이트 내 상대 경로면 같은 탭 내비게이션, 외부(http)면 새 탭으로 연다.
+    Vercel은 .md를 raw로 서빙하므로 운영 화면 링크는 사이트 내 HTML 페이지를
+    가리킨다(예: 조식 슬롯 → breakfast.html). 외부 GitHub blob 링크 금지.
+    """
+    link = link or {}
+    url = (link.get("url") or "").strip()
+    if not url:
+        return ""
+    label = esc(link.get("label", "상세"))
+    external = url.startswith(("http://", "https://"))
+    attr = ' target="_blank" rel="noopener"' if external else ""
+    return f'<a class="doc-link" href="{esc(url)}"{attr}>{label} ↗</a>'
+
+
 def run_json(script: str) -> dict:
     res = subprocess.run(
         [sys.executable, str(SCRIPTS / script), "--json"],
@@ -154,6 +173,7 @@ def load_data():
         "weather": json.loads((DATA / "weather.json").read_text(encoding="utf-8")),
         "itinerary": json.loads((DATA / "itinerary.json").read_text(encoding="utf-8")),
         "checklist": json.loads((DATA / "booking-checklist.json").read_text(encoding="utf-8")),
+        "breakfast": json.loads((DATA / "breakfast.json").read_text(encoding="utf-8")),
         "tokens": json.loads((DATA / "design-tokens.json").read_text(encoding="utf-8")),
         "score": run_json("score.py"),
         "budget": run_json("budget.py"),
@@ -223,6 +243,13 @@ def render_css(tokens: dict) -> str:
   .row:last-child {{ border-bottom: none; }}
   .row .k {{ color: var(--muted); flex-shrink: 0; }}
   .row .v {{ font-variant-numeric: tabular-nums; text-align: right; word-break: keep-all; }}
+  .bf-item {{ padding: 0.5rem 0; border-bottom: 1px solid var(--border); }}
+  .bf-item:last-child {{ border-bottom: none; }}
+  .bf-label {{ font-weight: 600; margin-bottom: 0.2rem; }}
+  .bf-body {{ line-height: 1.5; word-break: keep-all; }}
+  .bf-menu {{ margin-top: 0.3rem; font-size: 0.9rem; color: var(--fg); }}
+  .bf-store {{ padding: 0.55rem 0; border-bottom: 1px solid var(--border); }}
+  .bf-store:last-child {{ border-bottom: none; }}
   ul {{ padding-left: 1.2rem; margin: 0.3rem 0; }}
   li {{ margin: 0.2rem 0; }}
   .day {{ padding: 0.35rem 0; border-bottom: 1px solid var(--border); }}
@@ -277,6 +304,8 @@ def render_css(tokens: dict) -> str:
     text-decoration: none; color: var(--fg); font-size: 0.8rem;
   }}
   .doc-link:hover {{ border-color: var(--accent); }}
+  .map-link {{ color: var(--accent); text-decoration: none; }}
+  .map-link:hover {{ text-decoration: underline; }}
   footer {{ color: var(--muted); font-size: 0.75rem; margin-top: 1.5rem; text-align: center; }}
   /* ── 하단 탭바 ── */
   body {{ padding-bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px)); }}
@@ -908,6 +937,133 @@ def build_lodging(d) -> str:
     )
 
 
+# ─── viz/breakfast.html ────────────────────────────────────────────────────
+
+BREAKFAST_TITLE = "숙소 인근 조식 옵션 · 교토 5/31~6/3"
+
+
+def maps_search_url(query: str) -> str:
+    return "https://www.google.com/maps/search/?api=1&query=" + quote(query)
+
+
+def _breakfast_store(store, map_area: str) -> str:
+    rows = "".join(
+        f'<div class="row"><span class="k">{esc(k)}</span><span class="v">{esc(v)}</span></div>'
+        for k, v in store.get("rows", [])
+    )
+    menu = store.get("menu", "")
+    menu_html = f'<div class="bf-menu">🍽 {esc(menu)}</div>' if menu else ""
+    note = store.get("note", "")
+    note_html = f'<div class="sub">{esc(note)}</div>' if note else ""
+    query = store.get("map_query") or " ".join(p for p in (store["name"], map_area) if p)
+    name_link = (
+        f'<a class="map-link" href="{esc(maps_search_url(query))}" target="_blank" '
+        f'rel="noopener">{esc(store["name"])} 🗺</a>'
+    )
+    return (
+        f'<div class="bf-store">'
+        f'<div class="subtitle">{name_link}</div>{rows}{menu_html}{note_html}</div>'
+    )
+
+
+def _breakfast_group(g, map_area: str, *, open: bool = False) -> str:
+    """가게 그룹을 '라벨 + 개수' 요약 + 접힌 상세로 렌더 (모바일 가독성)."""
+    label = esc(g["label"])
+    if g.get("stores"):
+        inner = "".join(_breakfast_store(s, map_area) for s in g["stores"])
+        summary = f'{label} · {len(g["stores"])}곳'
+    else:
+        items = g.get("items", [])
+        lis = "".join(f"<li>{esc(x)}</li>" for x in items)
+        inner = f'<ul style="margin:0.3rem 0 0 1.1rem;padding:0;">{lis}</ul>'
+        summary = f'{label} · {len(items)}항목'
+    return fold(summary, inner, open=open)
+
+
+def build_breakfast(d) -> str:
+    bf = d["breakfast"]
+
+    morning_items = "".join(
+        f'<div class="bf-item"><div class="bf-label">{esc(m["morning"])} · {esc(m["lodging"])}</div>'
+        f'<div class="bf-body">{esc(m["first_plan"])}</div>'
+        f'<div class="sub">여유: {esc(m["leeway"])}</div></div>'
+        for m in bf.get("mornings", [])
+    )
+    mornings_card = (
+        f'<div class="subcard"><div class="subtitle">조식이 필요한 아침 3회</div>{morning_items}'
+        f'<div class="sub" style="margin-top:0.4rem;">출발 시각이 옵션을 결정 — 카덴쇼는 조식 미포함(6/3 새벽 출국).</div></div>'
+    )
+
+    lodging_cards = []
+    for lg in bf.get("lodgings", []):
+        map_area = lg.get("map_area", "")
+        groups_html = "".join(
+            _breakfast_group(g, map_area, open=(i == 0))
+            for i, g in enumerate(lg.get("groups", []))
+        )
+        lodging_cards.append(
+            f'<div class="subcard"><div class="subtitle">{esc(lg["name"])}</div>'
+            f'<div class="sub">{esc(lg["access"])}</div>'
+            f'<div class="sub">{esc(lg.get("note",""))}</div>'
+            f'{groups_html}</div>'
+        )
+
+    reco_items = "".join(
+        f'<div class="bf-item"><div class="bf-label">{esc(r["morning"])}</div>'
+        f'<div class="bf-body">{esc(r["text"])}</div></div>'
+        for r in bf.get("recommendations", [])
+    )
+    reco_card = f'<div class="subcard"><div class="subtitle">아침별 권장</div>{reco_items}</div>'
+
+    caution = bf.get("caution", [])
+    caution_card = ""
+    if caution:
+        caution_items = "".join(f"<li>{esc(c)}</li>" for c in caution)
+        caution_detail = f'<ul style="margin:0.3rem 0 0 1.1rem;padding:0;">{caution_items}</ul>'
+        caution_card = (
+            f'<div class="subcard">'
+            f'{fold("⚠ 영업시간은 변동 — 출발 전 Google Maps 재확인", caution_detail)}</div>'
+        )
+
+    sources = bf.get("sources", [])
+    sources_card = ""
+    if sources:
+        source_links = " · ".join(
+            f'<a href="{esc(s["url"])}" target="_blank" rel="noopener">{esc(s["label"])}</a>'
+            for s in sources
+        )
+        researched = esc(bf.get("researched_at", ""))
+        summary = f"📚 출처 {len(sources)}건 (리서치 {researched})"
+        sources_card = f'<div class="subcard">{fold(summary, source_links)}</div>'
+
+    head = f"""<h1>{esc(bf["title"])}</h1>
+<div class="status">{esc(bf.get("intro",""))}</div>
+
+<nav>
+  <a href="itinerary.html">← 일정으로</a>
+  <a href="itinerary-table.html">시간표</a>
+</nav>
+"""
+    body = (
+        head
+        + mornings_card
+        + "\n".join(lodging_cards)
+        + reco_card
+        + caution_card
+        + sources_card
+        + f'\n<footer>data/breakfast.json 단일 출처 · 사람용 사본 docs/breakfast-near-lodging.md</footer>\n'
+        + tab_bar("itinerary", in_viz=True)
+    )
+    return html_doc(
+        BREAKFAST_TITLE,
+        body,
+        tokens=d["tokens"],
+        description="시오·카덴쇼 인근 조식 — 거리·영업시간·아침별 권장 (4인 가족)",
+        og_slug="itinerary",
+        page_path="viz/breakfast.html",
+    )
+
+
 # ─── viz/itinerary.html ────────────────────────────────────────────────────
 
 def build_itinerary(d) -> str:
@@ -936,11 +1092,12 @@ def build_itinerary(d) -> str:
                 img_html = ""
             reviews_html = blog_reviews_html(it.get("blog_reviews", []))
             food_html = food_quality_html(it.get("food_quality"))
+            link_html = doc_link_html(it.get("link"))
             item_rows.append(f"""
     <div class="day">
       <div class="date"><span class="k">{esc(it['time'])}</span> {link}</div>
       {transit}
-      {note_html}{food_html}{img_html}{reviews_html}
+      {note_html}{food_html}{link_html}{img_html}{reviews_html}
     </div>""")
         day_cards.append(f"""
   <div class="subcard">
@@ -986,10 +1143,11 @@ def build_itinerary(d) -> str:
                 link = maps_link(it["maps_query"], it["title"]) if it.get("maps_query") else esc(it["title"])
                 note_html = f'<div class="sub">{esc(it["note"])}</div>' if it.get("note") else ""
                 food_html = food_quality_html(it.get("food_quality"))
+                link_html = doc_link_html(it.get("link"))
                 item_rows.append(f"""
     <div class="day">
       <div class="date"><span class="k">{esc(it['time'])}</span> {link}</div>
-      {note_html}{food_html}
+      {note_html}{food_html}{link_html}
     </div>""")
             cand_day_cards.append(f"""
   <div class="subcard">
@@ -1188,9 +1346,10 @@ def build_itinerary_table(d) -> str:
                 else:
                     img_html = ""
                 food_html = food_quality_html(it.get("food_quality"))
+                link_html = doc_link_html(it.get("link"))
                 cells.append(
                     f'<td><span class="t-time">{esc(it["time"])}</span>'
-                    f'<span class="t-title">{link}</span>{transit}{note_html}{food_html}{img_html}</td>'
+                    f'<span class="t-title">{link}</span>{transit}{note_html}{food_html}{link_html}{img_html}</td>'
                 )
             else:
                 cells.append("<td></td>")
@@ -1214,11 +1373,12 @@ def build_itinerary_table(d) -> str:
                 img_html = ""
             reviews_html = blog_reviews_html(it.get("blog_reviews", []))
             food_html = food_quality_html(it.get("food_quality"))
+            link_html = doc_link_html(it.get("link"))
             item_rows.append(f"""
     <div class="day">
       <div class="date"><span class="k">{esc(it["time"])}</span> {link}</div>
       {transit}
-      {note_html}{food_html}{img_html}{reviews_html}
+      {note_html}{food_html}{link_html}{img_html}{reviews_html}
     </div>""")
         mobile_cards.append(f"""
   <div class="subcard">
@@ -1312,6 +1472,7 @@ OUTPUTS = (
     ("viz/itinerary-table.html", lambda p: p / "viz" / "itinerary-table.html", build_itinerary_table),
     ("viz/lodging.html",         lambda p: p / "viz" / "lodging.html",         build_lodging),
     ("viz/archive.html",         lambda p: p / "viz" / "archive.html",         build_archive),
+    ("viz/breakfast.html",       lambda p: p / "viz" / "breakfast.html",       build_breakfast),
 ) + tuple(
     (
         f"assets/og-{slug}.svg",

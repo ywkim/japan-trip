@@ -76,6 +76,13 @@
   .row:last-child { border-bottom: none; }
   .row .k { color: var(--muted); flex-shrink: 0; }
   .row .v { font-variant-numeric: tabular-nums; text-align: right; word-break: keep-all; }
+  .bf-item { padding: 0.5rem 0; border-bottom: 1px solid var(--border); }
+  .bf-item:last-child { border-bottom: none; }
+  .bf-label { font-weight: 600; margin-bottom: 0.2rem; }
+  .bf-body { line-height: 1.5; word-break: keep-all; }
+  .bf-menu { margin-top: 0.3rem; font-size: 0.9rem; color: var(--fg); }
+  .bf-store { padding: 0.55rem 0; border-bottom: 1px solid var(--border); }
+  .bf-store:last-child { border-bottom: none; }
   ul { padding-left: 1.2rem; margin: 0.3rem 0; }
   li { margin: 0.2rem 0; }
   .day { padding: 0.35rem 0; border-bottom: 1px solid var(--border); }
@@ -130,6 +137,8 @@
     text-decoration: none; color: var(--fg); font-size: 0.8rem;
   }
   .doc-link:hover { border-color: var(--accent); }
+  .map-link { color: var(--accent); text-decoration: none; }
+  .map-link:hover { text-decoration: underline; }
   footer { color: var(--muted); font-size: 0.75rem; margin-top: 1.5rem; text-align: center; }
   /* ── 하단 탭바 ── */
   body { padding-bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px)); }
@@ -245,6 +254,10 @@
     <div class="subtitle">6/1 (월) — 아라시야마 + 북서쪽</div>
     
     <div class="day">
+      <div class="date"><span class="k">07:30</span> 조식 — 시오 마치야 (자취) 또는 코메다 京都二条駅前店</div>
+      
+    </div>
+    <div class="day">
       <div class="date"><span class="k">09:00</span> <a href="https://maps.google.com/?q=Arashiyama+Bamboo+Grove" target="_blank" rel="noopener">죽림길 (지쿠린)</a></div>
       <details class="leg"><summary>🚆 전철로 12분</summary><div class="leg-detail">JR 산인본선 (니조역 → 사가아라시야마역). 교토역→사가아라시야마 17분 기준 5분 차감 <a href="https://www.kyotostation.com/jr-sagano-line-for-nijo-uzumasa-saga-arashiyama/" target="_blank" rel="noopener">경로 ↗</a></div></details>
     </div>
@@ -275,6 +288,10 @@
     <div class="subtitle">6/2 (화) — 후시미 + 료칸 체크인</div>
     
     <div class="day">
+      <div class="date"><span class="k">06:45</span> 조식 — 시오 마치야 (자취·편의점, 빠르게)</div>
+      
+    </div>
+    <div class="day">
       <div class="date"><span class="k">07:30</span> <a href="https://maps.google.com/?q=Fushimi+Inari+Taisha" target="_blank" rel="noopener">후시미 이나리 신사</a></div>
       <details class="leg"><summary>🚆 전철로 20분</summary><div class="leg-detail">니조역 JR 산인본선(니조→교토) + JR 나라선(교토→이나리) 20분 ¥200 + 도보 5분 <a href="https://www.kyotostation.com/jr-nara-line-for-tofukuji-inari-uji-nara/" target="_blank" rel="noopener">경로 ↗</a></div></details>
     </div>
@@ -304,6 +321,10 @@
   <div class="subcard">
     <div class="subtitle">6/3 (수) — 출국 (아침 일찍)</div>
     
+    <div class="day">
+      <div class="date"><span class="k">출발 전</span> 조식 — 전날(6/2) 구매 에키벤·오니기리 (카덴쇼/하루카 차내)</div>
+      
+    </div>
     <div class="day">
       <div class="date"><span class="k">이른 아침</span> <a href="https://maps.google.com/?q=Kyoto+Station" target="_blank" rel="noopener">카덴쇼 체크아웃 → 교토역</a></div>
       <details class="leg"><summary>🚶 걸어서 8분 (0.6km)</summary><div class="leg-detail">카덴쇼 → 교토역 (역방향) <a href="https://livejapan.com/en/in-kansai/in-pref-kyoto/in-kyoto-station_to-ji-temple/spot-lj0091598/" target="_blank" rel="noopener">경로 ↗</a></div></details>
