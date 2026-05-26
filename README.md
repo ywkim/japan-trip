@@ -42,6 +42,7 @@
 ### 3. 일정 갱신
 
 - `data/itinerary.json`의 해당 day(`days[*]`)에 시간대·동선·메모 갱신
+- 식사 항목은 `food_quality`(타베로그·구글·미쉐린 등 평점 + `source`·`data_quality`)로 맛집 근거 명시 — 추측 금지, 출처 없으면 머지 차단(검사 H)
 - `docs/kyoto-itinerary-may31-jun3-2026.md`(사람용 사본) 함께 갱신
 - `python scripts/build_index.py` 재빌드 → `viz/itinerary.html`·`viz/itinerary-table.html`·`index.html` 재생성
 
@@ -79,6 +80,7 @@
 - `docs/flights.md` — 4인 총액 비교, GMP 가용성
 - `docs/transit-pass-jr-kansai-2026.md` — JR 간사이 에어리어 패스 1/2/3/4일권 비교·권장 (예약 탭 `transit_pass` 근거)
 - `docs/booking-research-2026-05-24.md` — 미정 예약 4항목(여행자보험·하루카 발권·eSIM·환전/트래블카드) 실시간 리서치·권장 발권 채널 (예약 탭 미정 항목 근거)
+- `docs/icoca-iphone-setup.md` — ICOCA 아이폰(Apple Wallet) 셋업 가이드 (4인 사전 요건·등록 단계·충전·트러블슈팅·5/30 체크리스트)
 - `reports/final-report.md` — 최종 권고 (교토·5/31~6/3·4인)
 - `scripts/score.py`·`scripts/budget.py` — 회귀 가드용
 
