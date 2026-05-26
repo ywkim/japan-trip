@@ -222,7 +222,7 @@ def render_css(tokens: dict) -> str:
   }}
   .row:last-child {{ border-bottom: none; }}
   .row .k {{ color: var(--muted); flex-shrink: 0; }}
-  .row .v {{ font-variant-numeric: tabular-nums; text-align: right; word-break: keep-all; }}
+  .row .v {{ font-variant-numeric: tabular-nums; text-align: right; word-break: keep-all; min-width: 0; overflow-wrap: anywhere; }}
   ul {{ padding-left: 1.2rem; margin: 0.3rem 0; }}
   li {{ margin: 0.2rem 0; }}
   .day {{ padding: 0.35rem 0; border-bottom: 1px solid var(--border); }}
