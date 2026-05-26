@@ -40,13 +40,13 @@
     },
     {
       "id": "esim",
-      "label": "eSIM / 데이터 (4인)",
+      "label": "데이터/연결성 (4인 — 부부 SKT·시부모 KT)",
       "status": "미정",
       "due_date": "2026-05-28",
-      "amount": "1인 ~₩11K (Klook 데이터 플랜)",
-      "action": "Klook 가성비 플랜 4인 · 출국 전 설치, 도착 후 활성화 (기기 eSIM 지원 확인)",
+      "amount": "4인 합계 ≈ ₩75,000 (KT 데이터함께ON ₩33K + SKT baro 가족로밍 ₩42K)",
+      "action": "부부 SKT baro 가족로밍 가입 · 시부모 KT 데이터함께ON 1회선 공유 · 출국 전 설정, 도착 후 데이터 ON",
       "link": {"label": "리서치 상세", "url": "https://github.com/ywkim/japan-trip/blob/main/docs/booking-research-2026-05-24.md"},
-      "note": "Klook·Trip.com 4일권 시세 ₩5~10K/인 · 리서치 완료(2026-05-24): Klook 일일 데이터 플랜 ~$2/일(8일 무제한 1GB/일 기준) → 4일 ~₩11K/인 내외, Airalo 5GB/7일 ~$10·Holafly 무제한은 고가. 권장: Klook 가성비 데이터 플랜, 출국 전 설치·도착 후 활성화(4인 각 기기 eSIM 지원 확인). 상세·출처: https://github.com/ywkim/japan-trip/blob/main/docs/booking-research-2026-05-24.md"
+      "note": "회선별 분리 결정(2026-05-26): 부부 SKT baro 가족로밍 + 시부모 KT 데이터함께ON, 합계 ≈ ₩75,000 · 시부모 2인은 KT 데이터함께ON 1개 공유 ₩33,000(번호 유지·eSIM 설치 불필요·아시아 4GB·통화 119원/분) · 부부 2인은 SKT baro 가족로밍 6GB(프로모션 8GB) ₩42,000(영욱 대표+소연 결합 +₩3,000, 번호 유지·baro 통화 무료·Club T 로밍 혜택: 공항버스 K리무진 ₩5,000·인천공항 푸드코트 ₩5,000·귀국 후 디저트 택1) · baro·데이터함께ON 모두 가입만으로는 과금 없음(해외 실사용 시 과금) · 대안: 부부가 baro 대신 Klook eSIM 2개(~₩22K) 시 합계 ~₩55K(SKT 번호 비활성·설치 필요), 전원 eSIM 일괄 ~₩44K는 시부모 설치 부담으로 비권장 · 상세·출처: https://github.com/ywkim/japan-trip/blob/main/docs/booking-research-2026-05-24.md"
     },
     {
       "id": "transit_pass",
