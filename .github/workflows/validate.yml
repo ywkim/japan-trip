@@ -12,8 +12,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: install uv + Python
-        uses: astral-sh/setup-uv@v8
+        uses: astral-sh/setup-uv@v6
         with:
+          version: "0.8.17"
           python-version: "3.11"
           enable-cache: true
 
