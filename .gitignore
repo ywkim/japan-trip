@@ -17,8 +17,11 @@ __pycache__/
 .vscode/
 .idea/
 
-# 생성물
+# 생성물 (build_index.py 산출물 — 배포 시점/로컬에서 빌드, 커밋하지 않음)
 reports/final-report.pdf
+/index.html
+/viz/*.html
+/assets/og-*.svg
 
 # 로컬 상태
 *.local
