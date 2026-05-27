@@ -21,7 +21,7 @@
 
 ### 1. 확정 정보 보기 (모바일·웹)
 
-- 배포: https://nihon-trip.vercel.app (Vercel, main 브랜치 자동 배포). 산출물(HTML·SVG)은 레포에 커밋하지 않고 배포 시점에 `vercel.json`의 `buildCommand`(`python3 scripts/build_index.py`)로 빌드
+- 배포: https://nihon-trip.vercel.app (Vercel, main 브랜치 자동 배포). 산출물(HTML·SVG)은 레포에 커밋하지 않고 배포 시점에 `vercel.json`의 `buildCommand`(`uv run python scripts/build_index.py`)로 빌드
 - `index.html` — 🏠 홈 탭 (운영 모드): 요약 + 일자별 일정. 하단 고정 4탭 내비게이션. 인라인 데이터로 자기완결, 더블클릭 동작
 - `viz/itinerary.html` — 📅 일정 탭: 일자별 상세 일정 카드 뷰 (시간대·동선·메모·이미지). `data/itinerary.json` 단일 출처. 이동 설명은 평이 요약(예: "🚌 버스로 35분") + 접기(상세 경로·링크)로 표시. 긴 장소 메모·맛집 상세 노트도 첫 문장 요약 + 접기(맛집 평점 줄은 항상 노출) — 모바일에서 시간·장소가 먼저 읽히도록
 - `viz/itinerary-table.html` — 📅 일정 탭: 3박4일 **시간표 뷰** (4일 열 × 시간대 행, 모바일 카드/데스크탑 테이블 자동 전환). `data/itinerary.json` 단일 출처
@@ -32,7 +32,7 @@
 - `viz/report.html`·`viz/itinerary-doc.html`·`viz/research.html`·`viz/transit-pass.html`·`viz/decision-kyoto.html` — 레포 마크다운 문서(최종 보고서·일정 문서·예약 리서치·교통패스 비교·교토 변경 결정)를 사이트 내 HTML로 렌더한 페이지. 가족 공유 시 GitHub 노출 없이 열람 (검사 J: `github.com` 링크 금지)
 - `viz/decision-log.html` — 결정 일지 인덱스 (`docs/decision-log/*.md` 최신순 제목 목록, 교토 변경 결정만 링크)
 - `assets/og-*.svg` — 6장의 OG/Twitter 카드 이미지 (1200×630). 카톡·Slack·X 공유 시 페이지별 썸네일·제목·설명 노출
-- **HTML 13개·SVG 6장 모두 `scripts/build_index.py` 빌드 산출물 — 직접 편집 금지**. **레포에 커밋하지 않는다(`.gitignore`)** — 배포(CD)와 소스를 분리해 PR 머지 충돌을 줄인다. 클론 직후 로컬에서 보려면 `uv run python scripts/build_index.py`를 1회 실행(`markdown` 의존 — uv가 자동 설치). 실제 배포는 Vercel이 매번 빌드(`buildCommand`에서 `markdown==3.7` 설치), CI도 검증 전에 빌드한다(재현성·콘텐츠 검사는 `tests/test_build_index.py`)
+- **HTML 13개·SVG 6장 모두 `scripts/build_index.py` 빌드 산출물 — 직접 편집 금지**. **레포에 커밋하지 않는다(`.gitignore`)** — 배포(CD)와 소스를 분리해 PR 머지 충돌을 줄인다. 클론 직후 로컬에서 보려면 `uv run python scripts/build_index.py`를 1회 실행(`markdown` 의존 — uv가 자동 설치). 실제 배포는 Vercel이 매번 빌드(`buildCommand`가 `uv run`으로 lockfile에서 markdown 설치), CI도 검증 전에 빌드한다(재현성·콘텐츠 검사는 `tests/test_build_index.py`)
 - 각 섹션 위 `<!-- SYNC: ... -->` 주석이 데이터 출처를 명시. CI(`scripts/validate.py`)가 경로 유효성과 §N 절 번호를 검증
 
 ### 2. 발권·예약 갱신

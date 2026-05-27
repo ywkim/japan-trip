@@ -1,5 +1,5 @@
 {
-  "buildCommand": "python3 -m pip install markdown==3.7 && python3 scripts/build_index.py",
+  "buildCommand": "uv run python scripts/build_index.py",
   "outputDirectory": ".",
   "framework": null
 }
