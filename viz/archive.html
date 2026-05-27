@@ -76,6 +76,13 @@
   .row:last-child { border-bottom: none; }
   .row .k { color: var(--muted); flex-shrink: 0; }
   .row .v { font-variant-numeric: tabular-nums; text-align: right; word-break: keep-all; }
+  .bf-item { padding: 0.5rem 0; border-bottom: 1px solid var(--border); }
+  .bf-item:last-child { border-bottom: none; }
+  .bf-label { font-weight: 600; margin-bottom: 0.2rem; }
+  .bf-body { line-height: 1.5; word-break: keep-all; }
+  .bf-menu { margin-top: 0.3rem; font-size: 0.9rem; color: var(--fg); }
+  .bf-store { padding: 0.55rem 0; border-bottom: 1px solid var(--border); }
+  .bf-store:last-child { border-bottom: none; }
   ul { padding-left: 1.2rem; margin: 0.3rem 0; }
   li { margin: 0.2rem 0; }
   .day { padding: 0.35rem 0; border-bottom: 1px solid var(--border); }
@@ -130,6 +137,8 @@
     text-decoration: none; color: var(--fg); font-size: 0.8rem;
   }
   .doc-link:hover { border-color: var(--accent); }
+  .map-link { color: var(--accent); text-decoration: none; }
+  .map-link:hover { text-decoration: underline; }
   footer { color: var(--muted); font-size: 0.75rem; margin-top: 1.5rem; text-align: center; }
   /* ── 하단 탭바 ── */
   body { padding-bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px)); }

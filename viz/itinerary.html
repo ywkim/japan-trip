@@ -76,6 +76,13 @@
   .row:last-child { border-bottom: none; }
   .row .k { color: var(--muted); flex-shrink: 0; }
   .row .v { font-variant-numeric: tabular-nums; text-align: right; word-break: keep-all; }
+  .bf-item { padding: 0.5rem 0; border-bottom: 1px solid var(--border); }
+  .bf-item:last-child { border-bottom: none; }
+  .bf-label { font-weight: 600; margin-bottom: 0.2rem; }
+  .bf-body { line-height: 1.5; word-break: keep-all; }
+  .bf-menu { margin-top: 0.3rem; font-size: 0.9rem; color: var(--fg); }
+  .bf-store { padding: 0.55rem 0; border-bottom: 1px solid var(--border); }
+  .bf-store:last-child { border-bottom: none; }
   ul { padding-left: 1.2rem; margin: 0.3rem 0; }
   li { margin: 0.2rem 0; }
   .day { padding: 0.35rem 0; border-bottom: 1px solid var(--border); }
@@ -130,6 +137,8 @@
     text-decoration: none; color: var(--fg); font-size: 0.8rem;
   }
   .doc-link:hover { border-color: var(--accent); }
+  .map-link { color: var(--accent); text-decoration: none; }
+  .map-link:hover { text-decoration: underline; }
   footer { color: var(--muted); font-size: 0.75rem; margin-top: 1.5rem; text-align: center; }
   /* ── 하단 탭바 ── */
   body { padding-bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px)); }
@@ -241,6 +250,11 @@
     <div class="subtitle">6/1 (월) — 아라시야마 + 사이호지 + 북서쪽</div>
     
     <div class="day">
+      <div class="date"><span class="k">07:30</span> 조식 — 시오 마치야 (자취) 또는 코메다 京都二条駅前店</div>
+      
+      <details class="leg"><summary>마치야 주방 활용</summary><div class="leg-detail">전날 니조역 인근 슈퍼(Fresco·Life)에서 빵·과일·커피 구비 권장. 외식 시 코메다 京都二条駅前店(니조역 도보 2분·07:00 오픈·음료 주문 시 토스트+삶은달걀 무료). 09:00 죽림길 출발 전 여유.</div></details><a class="doc-link" href="breakfast.html">조식 옵션·영업시간 ↗</a>
+    </div>
+    <div class="day">
       <div class="date"><span class="k">09:00</span> <a href="https://maps.google.com/?q=Arashiyama+Bamboo+Grove" target="_blank" rel="noopener">죽림길 (지쿠린)</a></div>
       <details class="leg"><summary>🚆 전철로 12분</summary><div class="leg-detail">JR 산인본선 (니조역 → 사가아라시야마역). 교토역→사가아라시야마 17분 기준 5분 차감 <a href="https://www.kyotostation.com/jr-sagano-line-for-nijo-uzumasa-saga-arashiyama/" target="_blank" rel="noopener">경로 ↗</a></div></details>
       <details class="leg"><summary>일찍 출발 (관광객 적음)</summary><div class="leg-detail">죽림길 북측 출구 인근 교토 오르골당 아라시야마점(입장 무료) 텐류지 진입 전 5분 즉석 방문 가능</div></details><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Sagano_Bamboo_forest%2C_Arashiyama%2C_Kyoto.jpg?width=480" alt="죽림길 (지쿠린)" class="place-img" loading="lazy"><div class="img-credit">Wikimedia Commons</div><div class="blog-reviews"><div class="blog-strip"><a href="https://m.blog.naver.com/mathian97/223963483537" target="_blank" rel="noopener" class="blog-card"><img src="https://postfiles.pstatic.net/MjAyNTA4MDhfNDEg/MDAxNzU0NTg0NTY4MjEx.yNA_jTyMPk_B3nZxWA-BDu7X49nmu0UwxKg-OVU6ajkg.zK6ozAAxsbnvSu4VHBi7ZkE6H6tOrsiBygtx4SwtiD4g.JPEG/900%EF%BC%BF20250721%EF%BC%BF144641.jpg?type=w800" class="blog-thumb" loading="lazy" alt=""><p class="blog-comment">부모님과 가볼만한곳. 강가 따라 걸으면 배 타는 사람들 구경 포함. 역에서 도보</p></a><a href="https://m.blog.naver.com/muse_jigelle/224072195788" target="_blank" rel="noopener" class="blog-card"><img src="https://postfiles.pstatic.net/MjAyNTA4MDhfMTY1/MDAxNzU0NTg0NzUwNjIy.Kw6AO_7M0Q93PGgAid33y-v8SjOL3IgToIN50Q1F-qMg.UTj8VvA5kaMbpKc27c4NKqNBe_3GIxy1hYjzL5AR0lgg.JPEG/900%EF%BC%BFGP017291%EF%BC%BF1753187331058.JPG?type=w800" class="blog-thumb" loading="lazy" alt=""><p class="blog-comment">낮 시간대 단체 관광객 많음. 아침 일찍 서두를 것. 비 오는 날도 운치 있음</p></a></div></div>
@@ -282,6 +296,11 @@
     <div class="subtitle">6/2 (화) — 후시미 + 료칸 체크인</div>
     
     <div class="day">
+      <div class="date"><span class="k">06:45</span> 조식 — 시오 마치야 (자취·편의점, 빠르게)</div>
+      
+      <details class="leg"><summary>07:30 후시미이나리 출발 전 식사</summary><div class="leg-detail">이 시각 카페 대부분 미오픈(코메다 07:00) → 전날 밤 슈퍼·편의점(로손·세븐일레븐) 미리 구비 권장. 후시미이나리 입구 상점가는 이른 시간 폐점이라 현지 조달 기대 금지.</div></details><a class="doc-link" href="breakfast.html">조식 옵션·영업시간 ↗</a>
+    </div>
+    <div class="day">
       <div class="date"><span class="k">07:30</span> <a href="https://maps.google.com/?q=Fushimi+Inari+Taisha" target="_blank" rel="noopener">후시미 이나리 신사</a></div>
       <details class="leg"><summary>🚆 전철로 20분</summary><div class="leg-detail">니조역 JR 산인본선(니조→교토) + JR 나라선(교토→이나리) 20분 ¥200 + 도보 5분 <a href="https://www.kyotostation.com/jr-nara-line-for-tofukuji-inari-uji-nara/" target="_blank" rel="noopener">경로 ↗</a></div></details>
       <div class="sub">이른 시간 인파 회피. 정상까지 안 가도 OK</div><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Torii_gates%E2%80%94Fushimi_Inari_Shrine_%289977683204%29.jpg?width=480" alt="후시미 이나리 신사" class="place-img" loading="lazy"><div class="img-credit">Wikimedia Commons</div><div class="blog-reviews"><div class="blog-strip"><a href="https://m.blog.naver.com/venus865/224203094040" target="_blank" rel="noopener" class="blog-card"><img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNjAyMThfMTAw%2FMDAxNzcxMzg1Njk5ODk1.sXpdzBEQxqP6O9CkFtzM0i4j1sZjc1mx9R2ytaXyIsIg.yud_v-ao3yYmlFtYuBQmp18d0p_p24mQa_jpN_BuY38g.JPEG%2F%25B0%25CB%25C1%25A4%25BB%25F6%25B0%25FA_%25C8%25F2%25BB%25F6_%25BD%25C9%25C7%25C3%25C7%25D1_%25BB%25E7%25C1%25F8_%25B9%25E8%25B0%25E6_SNS_%25BA%25ED%25B7%25CE%25B1%25D7_%25C4%25AB%25B5%25E5%25B4%25BA%25BD%25BA_%25BD%25E6%25B3%25D7%25C0%25CF_%25C5%25B8%25C0%25CC%25C6%25B2_%25C0%25CE%25BD%25BA%25C5%25B8%25B1%25D7%25B7%25A5_%25C6%25F7%25BD%25BA%25C6%25AE_%25281%2529.jpg%231080x1080&amp;type=f238_208" class="blog-thumb" loading="lazy" alt=""><p class="blog-comment">교토역에서 10분대 접근성 최고. 신사 주변만 약 1시간 소요. 2025 Travelers Choice Best</p></a><a href="https://m.blog.naver.com/dailyk_/224221544155" target="_blank" rel="noopener" class="blog-card"><img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNjAzMTZfMjMz%2FMDAxNzczNjM5NDgxMTY3.pcZXMz6fgO_bquJMvabIMlMXT0cjapOgDw3GKhe3pH4g.mD5V3qGiVwzI3eUcEAddlpyk3bLX6dhaySPkJcFl8P4g.JPEG%2F900%25A3%25DF1773639480341.jpg%23900x1260&amp;type=f238_208" class="blog-thumb" loading="lazy" alt=""><p class="blog-comment">골든위크 2년 연속 방문. 이른 아침 도리이 터널이 한산하고 신비로움. 시부모 동반 시 입구 구간만 추천</p></a><a href="https://m.blog.naver.com/venus865/224203094040" target="_blank" rel="noopener" class="blog-card"><img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNjAzMDJfMjE1%2FMDAxNzcyMzgwOTY1MjEw.1vZwvCCX2fcfd1wvFNpKuogaHUM1anFQKeuS6eySUBEg.HUZuNgga-E9L_Nst9H_3TH8VYCyPAsHZSn0wGIti2aIg.JPEG%2FIMG%25A3%25DF3176.JPG%23900x1200&amp;type=f238_208" class="blog-thumb" loading="lazy" alt=""><p class="blog-comment">천 개의 도리이 길 직접 걸어본 솔직 후기. 새벽~오전 7시 전 방문이 최적</p></a></div></div>
@@ -317,6 +336,11 @@
   <div class="subcard">
     <div class="subtitle">6/3 (수) — 출국 (아침 일찍)</div>
     
+    <div class="day">
+      <div class="date"><span class="k">출발 전</span> 조식 — 전날(6/2) 구매 에키벤·오니기리 (카덴쇼/하루카 차내)</div>
+      
+      <details class="leg"><summary>카덴쇼 조식 미포함 + 새벽 출국(첫 하루카 05:46·교토역 카페 07:00 오픈)이라 현장 조달 불가</summary><div class="leg-detail">6/2 밤 편의점·에키벤 미리 구매해 카덴쇼 또는 하루카 차내 식사. 빈속 새벽 이동+비행 방지. 하루카가 07:00 이후면 교토역 小川珈琲·CIAO PRESSO 모닝 가능.</div></details><a class="doc-link" href="breakfast.html">조식 옵션·영업시간 ↗</a>
+    </div>
     <div class="day">
       <div class="date"><span class="k">이른 아침</span> <a href="https://maps.google.com/?q=Kyoto+Station" target="_blank" rel="noopener">카덴쇼 체크아웃 → 교토역</a></div>
       <details class="leg"><summary>🚶 걸어서 8분 (0.6km)</summary><div class="leg-detail">카덴쇼 → 교토역 (역방향) <a href="https://livejapan.com/en/in-kansai/in-pref-kyoto/in-kyoto-station_to-ji-temple/spot-lj0091598/" target="_blank" rel="noopener">경로 ↗</a></div></details>
@@ -674,7 +698,7 @@
 
 <section class="card">
   <h2>보류·확인 필요</h2>
-  <ul><li>항공편 시간 (시부 예약 완료) — 5/31 오전·6/3 출국일 미세 조정</li><li>쇼라이안(松籟庵) 4인 좌석 사전 예약</li><li>카덴쇼 가이세키 시간 (17:30~18:00 권장)</li><li>카덴쇼 짐 위탁 (6/2 오전 시오 체크아웃 후 일찍 맡길 수 있는지)</li><li>후시미이나리 정상은 시부모 동반이라 X — 입구 ~5분 사진 충분</li><li>6/3 출국 시간에 따라 토지 산책·교토역 식사 가능 여부 결정</li><li>tbd_needs_browser_mcp 라벨 leg (시오→키요미즈 + 신규 4개: 시오→니조성, 니조성→점심, 야사카→철학의 길, 철학의 길→가와라마치) — Playwright MCP 보유 세션에서 Google Maps Directions로 분·거리·노선 확정 필요</li><li>철학의 길 — 시부모 피로 시 17:00 야사카에서 시버스 46/201로 가와라마치 직행 대안 (단축 산책 생략)</li><li>사이호지(이끼사찰) — intosaihoji.com 예약 가능성 별도 조사 (5/24 현재 출국 7일 전, lead time 미공시). booking-checklist saihoji_research 항목으로 추적. 예약 가능 확인 시 6/2 일정 분기 검토</li><li>니조성 본궁 입장료 ¥1,300/인 — 외정원만 산책 시 무료. 입장 여부 5/31 당일 컨디션·시간으로 결정</li></ul>
+  <ul><li>조식 식자재 사전 구비 — 6/1·6/2 시오 마치야용(니조역 슈퍼·편의점), 6/3용은 6/2 밤 교토역 편의점·에키벤 선구매 (6/2·6/3 아침은 카페 영업 전). 옵션은 조식 화면 참조.</li><li>항공편 시간 (시부 예약 완료) — 5/31 오전·6/3 출국일 미세 조정</li><li>쇼라이안(松籟庵) 4인 좌석 사전 예약</li><li>카덴쇼 가이세키 시간 (17:30~18:00 권장)</li><li>카덴쇼 짐 위탁 (6/2 오전 시오 체크아웃 후 일찍 맡길 수 있는지)</li><li>후시미이나리 정상은 시부모 동반이라 X — 입구 ~5분 사진 충분</li><li>6/3 출국 시간에 따라 토지 산책·교토역 식사 가능 여부 결정</li><li>tbd_needs_browser_mcp 라벨 leg (시오→키요미즈 + 신규 4개: 시오→니조성, 니조성→점심, 야사카→철학의 길, 철학의 길→가와라마치) — Playwright MCP 보유 세션에서 Google Maps Directions로 분·거리·노선 확정 필요</li><li>철학의 길 — 시부모 피로 시 17:00 야사카에서 시버스 46/201로 가와라마치 직행 대안 (단축 산책 생략)</li><li>사이호지(이끼사찰) — intosaihoji.com 예약 가능성 별도 조사 (5/24 현재 출국 7일 전, lead time 미공시). booking-checklist saihoji_research 항목으로 추적. 예약 가능 확인 시 6/2 일정 분기 검토</li><li>니조성 본궁 입장료 ¥1,300/인 — 외정원만 산책 시 무료. 입장 여부 5/31 당일 컨디션·시간으로 결정</li></ul>
 </section>
 
 <div class="links">
