@@ -81,9 +81,10 @@ japan-trip/
 ├── README.md            # 사람용 안내
 ├── CLAUDE.md            # AI 세션 지시
 ├── DESIGN.md            # 시각 디자인 단일 출처 (awesome-design-md 9섹션, Quiet Ledger 테마)
-├── index.html           # 메인 운영 페이지 — 요약·일자별 일정 (build_index.py 산출물 — 직접 편집 금지)
+├── vercel.json          # Vercel 배포 설정 (buildCommand: python3 scripts/build_index.py — 배포 시점 빌드)
+├── index.html           # 메인 운영 페이지 (build_index.py 산출물 — gitignore·배포 시 빌드, 직접 편집 금지)
 ├── assets/
-│   └── og-*.svg                 # OG/Twitter 카드 이미지 6장 (1200×630 SVG, build_index.py 산출물 — 직접 편집 금지)
+│   └── og-*.svg                 # OG/Twitter 카드 이미지 6장 (build_index.py 산출물 — gitignore·배포 시 빌드, 직접 편집 금지)
 ├── data/
 │   ├── decision.json          # 단일 출처 (criteria + candidates + scores)
 │   ├── cost-options.json      # 단일 출처 (flights/lodging/daily_fixed/one_time/scenarios)
@@ -115,12 +116,12 @@ japan-trip/
 ├── scripts/
 │   ├── score.py         # 종합 점수 계산 (--json 지원)
 │   ├── budget.py        # 3M 예산 시나리오 평가 (--json 지원)
-│   ├── build_index.py   # index.html + viz/*.html(5개: itinerary·itinerary-table·lodging·checklist·archive) + assets/og-*.svg(6장) 빌드 (공통 토큰 주입, --check)
+│   ├── build_index.py   # index.html + viz/*.html(5개) + assets/og-*.svg(6장) 빌드 (공통 토큰 주입, --check). 산출물은 gitignore — Vercel·CI·로컬에서 빌드
 │   ├── validate.py      # 가격 필드·묵은 가격·SYNC 주석·MD↔JSON·DESIGN 동기화 검사
 │   └── render-pdf.sh    # PDF 생성
 ├── tests/               # unittest (validate·build_index·design_tokens·score·budget)
 ├── .github/workflows/
-│   └── validate.yml     # PR 게이트: unittest + build_index --check + validate + score + budget
+│   └── validate.yml     # PR 게이트: build_index(산출물 생성) + unittest + validate + score + budget
 └── reports/
     └── final-report.md  # 최종 보고서 (PDF 변환 대상)
 ```
@@ -136,7 +137,7 @@ japan-trip/
   - `data/decision.json` — criteria·candidates·scores (MCDA 입력. 교토 확정 후 회귀 가드)
   - `data/weather.json` — 후보지×시기 기후 + `tsuyu_normals`(긴키 매우입·매우명 평년 + 최근 7년 실적) + `cities.kyoto.sub_monthly_precip`(순계열)·`trip_window_daily_precip`(5/31~6/3 일별). 원자료: JMA 매우 평년값·京都(47759) 일별 평년값 1991–2020. `docs/weather.md` §5와 동기화. 5/31~6/3 실측 기상 추적이 필요해지면 본 파일의 `cities.kyoto`에 새 키로 추가
   - `data/flights.json` — 후보지×출발지 항공권 시세 스냅샷 (시점 스냅샷, snapshot_date 명시). 발권은 별도 PR로 `data/booking-checklist.json`·`data/cost-options.json`에 기록
-- **`index.html`·`viz/itinerary.html`·`viz/itinerary-table.html`·`viz/checklist.html`·`viz/lodging.html`·`viz/archive.html`·`assets/og-*.svg`(6장)는 `scripts/build_index.py` 산출물 — 직접 편집 금지**. 데이터(`data/*.json`)·스크립트 변경 후 `python scripts/build_index.py` 실행. CI(`build_index.py --check`)가 6 HTML + 6 SVG = 12개 산출물의 drift를 PR 단계에서 차단
+- **`index.html`·`viz/itinerary.html`·`viz/itinerary-table.html`·`viz/checklist.html`·`viz/lodging.html`·`viz/archive.html`·`assets/og-*.svg`(6장)는 `scripts/build_index.py` 산출물 — 직접 편집 금지**. **이 6 HTML + 6 SVG = 12개 산출물은 레포에 커밋하지 않는다(`.gitignore`)** — 배포(CD)와 소스를 분리해 거대한 기계 생성 diff로 인한 PR 머지 충돌을 없앤다. 데이터(`data/*.json`)·스크립트 변경 후 `python scripts/build_index.py`로 로컬 빌드해 미리보기(클론 직후 1회 필요). 실제 배포는 Vercel이 `vercel.json`의 `buildCommand`(`python3 scripts/build_index.py`)로 매 배포 시점에 생성. CI는 검증 전에 `build_index.py`를 실행해 산출물을 만들고(빌드 무오류 자체가 가드), 재현성(idempotent)·drift·콘텐츠 검사는 `tests/test_build_index.py`가 담당(`--check`는 로컬 재현성 확인용으로 유지)
 - 모바일 가독성: 장문 블록(이동 경로 `arrive_from.route`·ICOCA 실행 단계·비선택 예산 시나리오·긴 예약/숙박 메모·일자별 교통패스 추천)은 `build_index.py`의 `fold(summary, detail)` 헬퍼로 "평이 요약 + `<details>` 접기"로 렌더. 이동은 모드별 한국어 동사(`MODE_VERBS`)+소요시간 요약, 상세에 원문 경로·출처 링크. 예약·숙박 메모는 `note_block()`이 60자 초과 시 `·` 앞 2개 항목을 요약으로 노출하고 나머지(예약번호·PIN·탑승객 등)를 접는다. 교통패스 추천은 `pass_block()`이 `' — '` 앞 추천명만 보이고 비용 근거를 접는다. 새 장문 정보도 이 패턴을 따른다
 - 메인 페이지(`index.html`)는 **운영 모드** — 요약·일자별 일정만. 분석·결정 자료(장마 확률·9 예산 시나리오·7 후보지 점수)는 `viz/archive.html`로 분리. 받는 사람에게 "아직 결정 중"으로 읽히는 콘텐츠는 메인에서 제외
 - `docs/weather.md`·`docs/flights.md`의 표는 각각 `data/weather.json`·`data/flights.json`의 사람용 사본 — JSON 수정 시 함께 갱신 (CI 게이트: `scripts/validate.py` E·F가 도시·시기 수치, snapshot_date, 시세 표기의 drift를 PR 단계에서 차단)
@@ -162,7 +163,7 @@ japan-trip/
 | itinerary arrive_from 무결성 | `scripts/validate.py` (G) | `data/itinerary.json` arrive_from에 mode/source/source_fetched_at/data_quality 누락, mode·data_quality 화이트리스트 외, source_fetched_at > 60d(tbd_needs_browser_mcp 제외), days[].walking_km보다 도보 leg 합이 2km 이상 초과 |
 | DESIGN MD↔JSON 동기화 | `scripts/validate.py` (H) | `DESIGN.md`의 hex가 `data/design-tokens.json`에 없거나 그 반대, theme_name·version drift |
 | itinerary food_quality 무결성 | `scripts/validate.py` (I) | `data/itinerary.json` 식사 항목 food_quality에 rating/source/source_fetched_at/data_quality 누락, data_quality 화이트리스트 외, source_fetched_at > 60d. food_quality 없는 항목(동네 끼니)은 면제. route_candidates도 순회 |
-| 빌드 산출물 drift | `scripts/build_index.py --check` | `index.html`·`viz/itinerary.html`·`viz/itinerary-table.html`·`viz/lodging.html`·`viz/checklist.html` 중 하나라도 빌드 결과와 다름 |
+| 빌드 실행 (산출물 생성) | `scripts/build_index.py` | exit ≠ 0 (빌드 오류). 산출물은 gitignore이므로 검증 전에 생성. 재현성·drift·콘텐츠 검사는 `tests/test_build_index.py`(unittest)가 담당 |
 
 ## 디자인 워크플로우
 
@@ -171,7 +172,7 @@ japan-trip/
 1. `DESIGN.md` 편집 (의도·규칙 먼저).
 2. `data/design-tokens.json` 동기화 (DESIGN.md §2~§6의 모든 hex·치수가 토큰에 반영되어야 함).
 3. `python scripts/build_index.py` 실행 → 6개 산출물이 공통 `render_css(tokens)`로 재생성.
-4. `python scripts/validate.py` (H 통과) + `python scripts/build_index.py --check` (drift 없음) 확인.
+4. `python scripts/validate.py` (H 통과) + `python scripts/build_index.py --check` (로컬 재현성·drift 없음) 확인. 산출물은 gitignore이므로 커밋하지 않는다.
 5. `data/design-tokens.json`이 단일 출처. 인라인 hex 추가 금지 — 새 색은 반드시 토큰 키 추가 후 `var(--키)`로 참조.
 
 상세 가이드: `DESIGN.md` §9 (Agent Prompt Guide).
