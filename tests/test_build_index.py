@@ -14,7 +14,8 @@ CHECKLIST = BASE / "viz" / "checklist.html"
 TABLE = BASE / "viz" / "itinerary-table.html"
 LODGING = BASE / "viz" / "lodging.html"
 ARCHIVE = BASE / "viz" / "archive.html"
-ALL_HTML_OUTPUTS = (INDEX, ITINERARY, CHECKLIST, TABLE, LODGING, ARCHIVE)
+BREAKFAST = BASE / "viz" / "breakfast.html"
+ALL_HTML_OUTPUTS = (INDEX, ITINERARY, CHECKLIST, TABLE, LODGING, ARCHIVE, BREAKFAST)
 OG_SLUGS = ("home", "itinerary", "itinerary-table", "lodging", "checklist", "archive")
 ALL_OG_SVGS = tuple(BASE / "assets" / f"og-{s}.svg" for s in OG_SLUGS)
 ALL_OUTPUTS = ALL_HTML_OUTPUTS + ALL_OG_SVGS
@@ -531,6 +532,132 @@ class FoodQualityRenderTests(unittest.TestCase):
         run()
         index = INDEX.read_text(encoding="utf-8")
         self.assertNotIn('class="food-quality"', index, "minimal index.html should not carry food-quality badges")
+
+
+class ItineraryDocLinkTests(unittest.TestCase):
+    """일정 항목의 link(url/label)가 화면에서 탭 가능한 <a> 앵커로 렌더되어야 함.
+
+    조식 슬롯이 참조하는 breakfast-near-lodging.md를 모바일 화면에서 바로 열 수 있도록.
+    """
+
+    def _breakfast_link_urls(self):
+        import json
+        data = json.loads((BASE / "data" / "itinerary.json").read_text(encoding="utf-8"))
+        urls = []
+        for day in data["days"]:
+            for it in day["items"]:
+                link = it.get("link") or {}
+                if link.get("url"):
+                    urls.append(link["url"])
+        return urls
+
+    def test_itinerary_link_rendered_as_anchor(self):
+        run()
+        urls = self._breakfast_link_urls()
+        self.assertGreater(len(urls), 0, "fixture must have at least one item with a link.url")
+        for path in (ITINERARY, TABLE):
+            html = path.read_text(encoding="utf-8")
+            for url in urls:
+                self.assertIn(
+                    f'href="{url}"', html,
+                    f"item link {url!r} not rendered as <a href> in {path.name}",
+                )
+
+    def test_itinerary_doc_link_is_onsite_not_github_or_raw_md(self):
+        # Vercel 화면에서 GitHub 링크 금지 + .md raw 서빙 회피 → 사이트 내 HTML 페이지여야 함.
+        urls = self._breakfast_link_urls()
+        for url in urls:
+            self.assertNotIn("github.com", url, f"Vercel doc link must not point to GitHub: {url!r}")
+            self.assertFalse(url.endswith(".md"), f"doc link must not be a raw .md path: {url!r}")
+            self.assertTrue(url.endswith(".html"), f"doc link should be an on-site HTML page: {url!r}")
+
+    def test_breakfast_link_resolves_to_built_page(self):
+        # 일정의 조식 doc-link 대상이 실제 빌드되는 viz 페이지여야 함.
+        run()
+        urls = set(self._breakfast_link_urls())
+        for url in urls:
+            self.assertTrue(
+                (BASE / "viz" / url).exists(),
+                f"breakfast doc-link target {url!r} is not a built page",
+            )
+
+
+class BreakfastPageTests(unittest.TestCase):
+    def test_breakfast_page_built_with_key_content(self):
+        run()
+        html = BREAKFAST.read_text(encoding="utf-8")
+        for needle in ("코메다", "카덴쇼", "아침별 권장", "출처"):
+            self.assertIn(needle, html, f"breakfast.html missing {needle!r}")
+
+    def test_breakfast_page_has_no_github_links(self):
+        run()
+        html = BREAKFAST.read_text(encoding="utf-8")
+        self.assertNotIn("github.com", html, "breakfast.html (Vercel) must not contain GitHub links")
+
+    def test_breakfast_stores_are_clickable_map_links(self):
+        # 카페 등 모든 가게명은 모바일에서 탭하면 지도가 열려야 함.
+        import json as _json
+        run()
+        html = BREAKFAST.read_text(encoding="utf-8")
+        bf = _json.loads((BASE / "data" / "breakfast.json").read_text(encoding="utf-8"))
+        store_count = sum(
+            len(g.get("stores", []))
+            for lg in bf["lodgings"]
+            for g in lg["groups"]
+        )
+        self.assertGreaterEqual(store_count, 10, "fixture sanity: expected many stores")
+        map_links = html.count("google.com/maps/search")
+        self.assertGreaterEqual(
+            map_links, store_count,
+            f"every store should be a map link: {map_links} links < {store_count} stores",
+        )
+        # 대표 가게명이 앵커 안에 들어가야 함.
+        self.assertRegex(html, r'<a class="map-link"[^>]*>코메다[^<]*🗺</a>')
+
+    def test_breakfast_page_standalone(self):
+        run()
+        html = BREAKFAST.read_text(encoding="utf-8")
+        self.assertNotIn("fetch(", html, "breakfast.html must remain standalone (no fetch)")
+
+    def test_breakfast_shows_menu_and_price(self):
+        # 가격·메뉴가 전용 라인(.bf-menu)으로 노출돼야 함 (스크린샷 피드백 회귀 가드).
+        run()
+        html = BREAKFAST.read_text(encoding="utf-8")
+        self.assertIn("bf-menu", html, "menu line class missing")
+        for price in ("¥750", "¥650", "¥800", "¥1,660"):
+            with self.subTest(price=price):
+                self.assertIn(price, html, f"breakfast.html missing price {price!r}")
+
+    def test_breakfast_long_text_not_right_aligned_rows(self):
+        # 긴 텍스트(아침 표·아침별 권장)는 우측정렬 k/v 행이 아니라
+        # 좌측정렬 블록(.bf-item/.bf-body)으로 렌더돼야 함.
+        import json as _json
+        import re
+        run()
+        html = BREAKFAST.read_text(encoding="utf-8")
+        bf = _json.loads((BASE / "data" / "breakfast.json").read_text(encoding="utf-8"))
+        block_count = len(bf["mornings"]) + len(bf["recommendations"])
+        self.assertGreaterEqual(html.count('class="bf-item"'), block_count)
+        self.assertIn("bf-body", html)
+        # 권장 본문이 .v(우측정렬) 안에 들어가면 안 됨.
+        reco_text = bf["recommendations"][0]["text"][:20]
+        self.assertNotRegex(html, r'<span class="v">[^<]*' + re.escape(reco_text))
+
+    def test_breakfast_long_blocks_are_collapsible(self):
+        # 긴 가게 목록·주의는 <details>로 접혀 모바일 기본 화면이 간결해야 함.
+        import json as _json
+        run()
+        html = BREAKFAST.read_text(encoding="utf-8")
+        bf = _json.loads((BASE / "data" / "breakfast.json").read_text(encoding="utf-8"))
+        group_count = sum(len(lg["groups"]) for lg in bf["lodgings"])
+        # 각 가게 그룹 + 주의 블록이 fold(<details class="leg">)로 감싸져야 함.
+        details = html.count('<details class="leg"')
+        self.assertGreaterEqual(
+            details, group_count + 1,
+            f"expected >= {group_count + 1} folds (groups + caution), got {details}",
+        )
+        # 접힘 요약에 그룹 개수 표기가 들어가야 함 (예: "· 3곳").
+        self.assertRegex(html, r"<summary>[^<]*· \d+곳</summary>")
 
 
 class TabBarTests(unittest.TestCase):
