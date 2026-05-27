@@ -76,6 +76,13 @@
   .row:last-child { border-bottom: none; }
   .row .k { color: var(--muted); flex-shrink: 0; }
   .row .v { font-variant-numeric: tabular-nums; text-align: right; word-break: keep-all; }
+  .bf-item { padding: 0.5rem 0; border-bottom: 1px solid var(--border); }
+  .bf-item:last-child { border-bottom: none; }
+  .bf-label { font-weight: 600; margin-bottom: 0.2rem; }
+  .bf-body { line-height: 1.5; word-break: keep-all; }
+  .bf-menu { margin-top: 0.3rem; font-size: 0.9rem; color: var(--fg); }
+  .bf-store { padding: 0.55rem 0; border-bottom: 1px solid var(--border); }
+  .bf-store:last-child { border-bottom: none; }
   ul { padding-left: 1.2rem; margin: 0.3rem 0; }
   li { margin: 0.2rem 0; }
   .day { padding: 0.35rem 0; border-bottom: 1px solid var(--border); }
@@ -130,6 +137,8 @@
     text-decoration: none; color: var(--fg); font-size: 0.8rem;
   }
   .doc-link:hover { border-color: var(--accent); }
+  .map-link { color: var(--accent); text-decoration: none; }
+  .map-link:hover { text-decoration: underline; }
   footer { color: var(--muted); font-size: 0.75rem; margin-top: 1.5rem; text-align: center; }
   /* ── 하단 탭바 ── */
   body { padding-bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px)); }
@@ -213,10 +222,10 @@
   <div class="sub" style="margin-bottom:0.5rem;">확정 항목만 기준. 굵은 테두리 = 현재 선택 시나리오.</div>
   
   <div class="subcard" style="border-color: var(--accent); border-width: 2px;">
-    <div class="subtitle">통과 [확정] 교토 3박4일 5/31~6/3 (시오 2박 + 카덴쇼 식사 불포함 1박)</div>
-    <div class="row"><span class="k">확정 합계</span><span class="v">₩2,995,037</span></div>
-    <div class="row"><span class="k">3M 여유</span><span class="v">₩4,963</span></div>
-    <div class="row"><span class="k">항공</span><span class="v" style="color:var(--muted)">₩1,012,000 (33.7%)</span></div><div class="row"><span class="k">숙박</span><span class="v" style="font-weight:600">₩1,084,437 (36.1%)</span></div><div class="row"><span class="k">식비</span><span class="v">₩456,000 (15.2%)</span></div><div class="row"><span class="k">지역 교통</span><span class="v" style="color:var(--muted)">₩223,200 (7.4%)</span></div><div class="row"><span class="k">활동·입장</span><span class="v" style="color:var(--muted)">₩124,000 (4.1%)</span></div><div class="row"><span class="k">기타 (세금·청소비·예비)</span><span class="v">₩95,400 (3.2%)</span></div>
+    <div class="subtitle">초과 [확정] 교토 3박4일 5/31~6/3 (시오 2박 + 카덴쇼 식사 불포함 1박)</div>
+    <div class="row"><span class="k">확정 합계</span><span class="v">₩3,183,253</span></div>
+    <div class="row"><span class="k">3M 여유</span><span class="v">−₩183,253</span></div>
+    <div class="row"><span class="k">항공</span><span class="v" style="color:var(--muted)">₩1,012,000 (33.7%)</span></div><div class="row"><span class="k">숙박</span><span class="v" style="font-weight:600">₩1,084,437 (36.1%)</span></div><div class="row"><span class="k">식비</span><span class="v">₩456,000 (15.2%)</span></div><div class="row"><span class="k">지역 교통</span><span class="v" style="color:var(--muted)">₩223,200 (7.4%)</span></div><div class="row"><span class="k">활동·입장</span><span class="v" style="font-weight:600">₩312,216 (10.4%)</span></div><div class="row"><span class="k">기타 (세금·청소비·예비)</span><span class="v">₩95,400 (3.2%)</span></div>
   </div>
   <details class="leg"><summary>다른 예산 시나리오 7개 보기</summary><div class="leg-detail">
   <div class="subcard">

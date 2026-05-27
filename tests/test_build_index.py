@@ -14,11 +14,15 @@ CHECKLIST = BASE / "viz" / "checklist.html"
 TABLE = BASE / "viz" / "itinerary-table.html"
 LODGING = BASE / "viz" / "lodging.html"
 ARCHIVE = BASE / "viz" / "archive.html"
-ALL_HTML_OUTPUTS = (INDEX, ITINERARY, CHECKLIST, TABLE, LODGING, ARCHIVE)
+BREAKFAST = BASE / "viz" / "breakfast.html"
+ALL_HTML_OUTPUTS = (INDEX, ITINERARY, CHECKLIST, TABLE, LODGING, ARCHIVE, BREAKFAST)
 OG_SLUGS = ("home", "itinerary", "itinerary-table", "lodging", "checklist", "archive")
 ALL_OG_SVGS = tuple(BASE / "assets" / f"og-{s}.svg" for s in OG_SLUGS)
 ALL_OUTPUTS = ALL_HTML_OUTPUTS + ALL_OG_SVGS
 SCRIPT = BASE / "scripts" / "build_index.py"
+
+sys.path.insert(0, str(BASE / "scripts"))
+import build_index  # noqa: E402
 
 
 def run(*args) -> subprocess.CompletedProcess:
@@ -416,6 +420,51 @@ class NoteFoldTests(unittest.TestCase):
         self.assertIn("20260513170241828", html, "checklist note detail (confirm no.) lost after fold")
 
 
+class ChecklistDetailFoldTests(unittest.TestCase):
+    """긴 예약번호·권장 값을 접어 모바일에서 우측 정렬 셀이 넘치지 않게 하는 회귀 가드.
+
+    PR #45가 lodging·checklist를 fold 비대상으로 두었던 것을, '모든 화면 접기' 요청에 따라
+    checklist 구조화 행(예약번호·권장)에도 확장한다.
+    """
+
+    SHORT = "에어서울 RS · A8YW58 · 발권"
+    LONG = ("Trip.com ① 1400827143416024 (성인2, ₩94,108) · ② 1400827143410570 "
+            "(성인2, PIN 2362) · 6/1 10:30 · LEE/SOYEON · 조건부 취소")
+
+    def test_short_value_stays_plain_row(self):
+        out = build_index.detail_row("예약번호", self.SHORT)
+        self.assertIn('class="row"', out)
+        self.assertIn(">예약번호<", out)
+        self.assertNotIn("<details", out)
+
+    def test_long_value_is_collapsible(self):
+        out = build_index.detail_row("예약번호", self.LONG)
+        self.assertIn('<details class="leg"', out,
+                      "long structured value should fold into <details class=\"leg\">")
+        self.assertNotIn('class="row"', out)
+
+    def test_long_value_detail_is_lossless(self):
+        out = build_index.detail_row("예약번호", self.LONG)
+        for tok in ("1400827143416024", "1400827143410570", "PIN 2362", "LEE/SOYEON", "조건부 취소"):
+            with self.subTest(tok=tok):
+                self.assertIn(tok, out, f"detail_row dropped {tok!r} after folding")
+
+    def test_empty_value_renders_nothing(self):
+        self.assertEqual(build_index.detail_row("예약번호", ""), "")
+        self.assertEqual(build_index.detail_row("예약번호", None), "")
+
+    def test_long_reference_folded_in_checklist_html(self):
+        """프로덕션 빌드에서 긴 예약번호(사이호지·트립닷컴 등)는 접기 요약으로 렌더돼야 한다."""
+        run()
+        html = CHECKLIST.read_text(encoding="utf-8")
+        self.assertIn("▸", html)  # leg summary 마커
+        self.assertIn("예약번호 ·", html,
+                      "long reference should fold with a '예약번호 · …' summary")
+        # 접어도 전체 예약번호 텍스트는 보존
+        self.assertIn("1400827143410570", html,
+                      "folded reference detail (saihoji 2nd booking) lost")
+
+
 class ItineraryTableTests(unittest.TestCase):
     def test_table_file_is_generated(self):
         run()
@@ -525,6 +574,183 @@ class FoodQualityRenderTests(unittest.TestCase):
         run()
         index = INDEX.read_text(encoding="utf-8")
         self.assertNotIn('class="food-quality"', index, "minimal index.html should not carry food-quality badges")
+
+
+class ItineraryMemoFoldTests(unittest.TestCase):
+    """일정 카드·시간표의 긴 장소 메모·맛집 상세 노트를 '첫 문장 요약 + 접기'로 렌더(모든 화면 fold 확장)."""
+
+    def test_short_memo_stays_plain(self):
+        out = build_index.memo_block("17:00 마감 주의")
+        self.assertIn('class="sub"', out)
+        self.assertNotIn("<details", out)
+
+    def test_long_memo_folds_with_first_sentence_summary(self):
+        memo = "시오 도보 10분. 외정원 30분, 본궁 입장(¥1,300/인)은 시간·체력 절약 차 생략 권장 — 5/31 당일 컨디션으로 결정"
+        out = build_index.memo_block(memo)
+        self.assertIn('<details class="leg"', out)
+        self.assertIn("시오 도보 10분</summary>", out, "first sentence should become the summary")
+        self.assertIn("5/31 당일 컨디션으로 결정", out, "memo tail lost after folding")
+
+    def test_long_memo_prefers_earlier_separator(self):
+        # 첫 ". "가 60자 밖이면 ' · '로 앞 토막을 가른다
+        memo = ("니넨자카 진입점 스타벅스 야사카차야점(100년 마치야 매장) · % 아라비카 교토 히가시야마점 — "
+                "둘 중 택1 카페 휴식 권장. 4인 좌석 대기 길 수 있음")
+        out = build_index.memo_block(memo)
+        self.assertIn('<details class="leg"', out)
+        self.assertIn("매장)</summary>", out)
+
+    def test_memo_without_separator_uses_generic_summary(self):
+        memo = "가" * 70
+        out = build_index.memo_block(memo)
+        self.assertIn('<details class="leg"', out)
+        self.assertIn("상세 보기", out)
+        self.assertIn("가" * 70, out, "memo body lost in generic fold")
+
+    def test_custom_class_preserved_for_short_memo(self):
+        out = build_index.memo_block("교토역 도보 5분", cls="t-note")
+        self.assertIn('class="t-note"', out)
+
+    def test_long_memo_folded_in_itinerary_views(self):
+        run()
+        for path in (ITINERARY, TABLE):
+            with self.subTest(path=path.name):
+                html = path.read_text(encoding="utf-8")
+                self.assertIn("닌넨자카·산넨자카 인근 말차 디저트 카페</summary>", html,
+                              "long place memo should fold into a first-sentence summary")
+                self.assertIn("영업 11:00~20:00", html, "memo tail lost (not lossless)")
+
+    def test_long_food_note_folded_but_rating_kept(self):
+        run()
+        html = ITINERARY.read_text(encoding="utf-8")
+        self.assertIn('class="food-quality"', html, "rating line must stay visible")
+        self.assertIn("쓰촨 중식</summary>", html, "long food note should fold to first sentence")
+        self.assertIn("1인 ¥4,000~5,000", html, "food note detail lost after folding")
+
+
+class ItineraryDocLinkTests(unittest.TestCase):
+    """일정 항목의 link(url/label)가 화면에서 탭 가능한 <a> 앵커로 렌더되어야 함.
+
+    조식 슬롯이 참조하는 breakfast-near-lodging.md를 모바일 화면에서 바로 열 수 있도록.
+    """
+
+    def _breakfast_link_urls(self):
+        import json
+        data = json.loads((BASE / "data" / "itinerary.json").read_text(encoding="utf-8"))
+        urls = []
+        for day in data["days"]:
+            for it in day["items"]:
+                link = it.get("link") or {}
+                if link.get("url"):
+                    urls.append(link["url"])
+        return urls
+
+    def test_itinerary_link_rendered_as_anchor(self):
+        run()
+        urls = self._breakfast_link_urls()
+        self.assertGreater(len(urls), 0, "fixture must have at least one item with a link.url")
+        for path in (ITINERARY, TABLE):
+            html = path.read_text(encoding="utf-8")
+            for url in urls:
+                self.assertIn(
+                    f'href="{url}"', html,
+                    f"item link {url!r} not rendered as <a href> in {path.name}",
+                )
+
+    def test_itinerary_doc_link_is_onsite_not_github_or_raw_md(self):
+        # Vercel 화면에서 GitHub 링크 금지 + .md raw 서빙 회피 → 사이트 내 HTML 페이지여야 함.
+        urls = self._breakfast_link_urls()
+        for url in urls:
+            self.assertNotIn("github.com", url, f"Vercel doc link must not point to GitHub: {url!r}")
+            self.assertFalse(url.endswith(".md"), f"doc link must not be a raw .md path: {url!r}")
+            self.assertTrue(url.endswith(".html"), f"doc link should be an on-site HTML page: {url!r}")
+
+    def test_breakfast_link_resolves_to_built_page(self):
+        # 일정의 조식 doc-link 대상이 실제 빌드되는 viz 페이지여야 함.
+        run()
+        urls = set(self._breakfast_link_urls())
+        for url in urls:
+            self.assertTrue(
+                (BASE / "viz" / url).exists(),
+                f"breakfast doc-link target {url!r} is not a built page",
+            )
+
+
+class BreakfastPageTests(unittest.TestCase):
+    def test_breakfast_page_built_with_key_content(self):
+        run()
+        html = BREAKFAST.read_text(encoding="utf-8")
+        for needle in ("코메다", "카덴쇼", "아침별 권장", "출처"):
+            self.assertIn(needle, html, f"breakfast.html missing {needle!r}")
+
+    def test_breakfast_page_has_no_github_links(self):
+        run()
+        html = BREAKFAST.read_text(encoding="utf-8")
+        self.assertNotIn("github.com", html, "breakfast.html (Vercel) must not contain GitHub links")
+
+    def test_breakfast_stores_are_clickable_map_links(self):
+        # 카페 등 모든 가게명은 모바일에서 탭하면 지도가 열려야 함.
+        import json as _json
+        run()
+        html = BREAKFAST.read_text(encoding="utf-8")
+        bf = _json.loads((BASE / "data" / "breakfast.json").read_text(encoding="utf-8"))
+        store_count = sum(
+            len(g.get("stores", []))
+            for lg in bf["lodgings"]
+            for g in lg["groups"]
+        )
+        self.assertGreaterEqual(store_count, 10, "fixture sanity: expected many stores")
+        map_links = html.count("google.com/maps/search")
+        self.assertGreaterEqual(
+            map_links, store_count,
+            f"every store should be a map link: {map_links} links < {store_count} stores",
+        )
+        # 대표 가게명이 앵커 안에 들어가야 함.
+        self.assertRegex(html, r'<a class="map-link"[^>]*>코메다[^<]*🗺</a>')
+
+    def test_breakfast_page_standalone(self):
+        run()
+        html = BREAKFAST.read_text(encoding="utf-8")
+        self.assertNotIn("fetch(", html, "breakfast.html must remain standalone (no fetch)")
+
+    def test_breakfast_shows_menu_and_price(self):
+        # 가격·메뉴가 전용 라인(.bf-menu)으로 노출돼야 함 (스크린샷 피드백 회귀 가드).
+        run()
+        html = BREAKFAST.read_text(encoding="utf-8")
+        self.assertIn("bf-menu", html, "menu line class missing")
+        for price in ("¥750", "¥650", "¥800", "¥1,660"):
+            with self.subTest(price=price):
+                self.assertIn(price, html, f"breakfast.html missing price {price!r}")
+
+    def test_breakfast_long_text_not_right_aligned_rows(self):
+        # 긴 텍스트(아침 표·아침별 권장)는 우측정렬 k/v 행이 아니라
+        # 좌측정렬 블록(.bf-item/.bf-body)으로 렌더돼야 함.
+        import json as _json
+        import re
+        run()
+        html = BREAKFAST.read_text(encoding="utf-8")
+        bf = _json.loads((BASE / "data" / "breakfast.json").read_text(encoding="utf-8"))
+        block_count = len(bf["mornings"]) + len(bf["recommendations"])
+        self.assertGreaterEqual(html.count('class="bf-item"'), block_count)
+        self.assertIn("bf-body", html)
+        # 권장 본문이 .v(우측정렬) 안에 들어가면 안 됨.
+        reco_text = bf["recommendations"][0]["text"][:20]
+        self.assertNotRegex(html, r'<span class="v">[^<]*' + re.escape(reco_text))
+
+    def test_breakfast_long_blocks_are_collapsible(self):
+        # 긴 가게 목록·주의는 <details>로 접혀 모바일 기본 화면이 간결해야 함.
+        import json as _json
+        run()
+        html = BREAKFAST.read_text(encoding="utf-8")
+        bf = _json.loads((BASE / "data" / "breakfast.json").read_text(encoding="utf-8"))
+        group_count = sum(len(lg["groups"]) for lg in bf["lodgings"])
+        # 각 가게 그룹 + 주의 블록이 fold(<details class="leg">)로 감싸져야 함.
+        details = html.count('<details class="leg"')
+        self.assertGreaterEqual(
+            details, group_count + 1,
+            f"expected >= {group_count + 1} folds (groups + caution), got {details}",
+        )
+        # 접힘 요약에 그룹 개수 표기가 들어가야 함 (예: "· 3곳").
+        self.assertRegex(html, r"<summary>[^<]*· \d+곳</summary>")
 
 
 class TabBarTests(unittest.TestCase):

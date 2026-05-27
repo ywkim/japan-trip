@@ -378,7 +378,7 @@
       "krw": 167200,
       "source": "JR West HARUKA 외국인 할인 편도권 ¥2,200/인 × 4 × 2 (japan-guide.com 2026-05-24 교차검증, FX 100엔=950원). 채택 결정: docs/decision-log/2026-05-19-haruka-discount-oneway-selected.md",
       "data_quality": "official_fare",
-      "notes": "왕복분 계획 추정치(¥2,200/인 × 4 × 2). 실제 예약(소연 2026-05-25): Trip.com 온라인 e티켓 편도 4인 ₩70,300(₩18,500/인 −5%), 예약번호 1400827143412439, 상태 확인 중 — 발권 채널이 현장(ADR 04)에서 온라인으로 변경됨. 귀국편(6/3) 미예약. 단가가 본 추정(₩167,200 왕복)과 다르므로(편도 실측 ₩70,300) 확정 통보 + 귀국편 발권 후 krw·data_quality(confirmed_booking) 갱신 예정. 일지: docs/decision-log/2026-05-25-haruka-tripcom-online-booked.md."
+      "notes": "왕복분 계획 추정치(¥2,200/인 × 4 × 2). 왕로 실제 예약(소연 2026-05-25): Trip.com 온라인 e티켓 편도 4인 ₩70,300(₩18,500/인 −5%), 예약번호 1400827143412439, 상태 확인 중. 귀국편(6/3 교토→KIX) 미예약 — 리서치(2026-05-26): Trip.com 동일 채널 ~₩70,300/4인(추정, 발권 화면 재확인 필요) 또는 WEST QR 공식 외국인 할인 편도권 ¥2,200/인(지정석 포함)≈₩83,600/4인(official_fare). 실측 왕복 추정 ≈ ₩140,600(Trip.com)~₩153,900(WEST QR 복로), 본 추정(₩167,200)보다 낮음. 확정 통보 + 귀국편 발권 후 krw·data_quality(confirmed_booking) 갱신 예정. 일지: docs/decision-log/2026-05-25-haruka-tripcom-online-booked.md·2026-05-26-haruka-return-leg-research.md."
     },
     {
       "id": "kyoto_local_transit_4pax",
@@ -395,6 +395,15 @@
       "krw": 124000,
       "source": "각 사찰 공식 약 ¥3,100 × 4",
       "data_quality": "official_fare"
+    },
+    {
+      "id": "saihoji_admission_4pax",
+      "label": "사이호지(苔寺) 입장 4인 (Trip.com, 6/1 10:30)",
+      "category": "activity",
+      "krw": 188216,
+      "source": "Trip.com 예약 ₩94,108 × 2건(성인2×2), 예약번호 1400827143416024·1400827143410570, 2026-05-25 결제(소연). 공식 ¥4,000+¥110/인 대비 플랫폼 마크업 포함",
+      "data_quality": "confirmed_booking",
+      "notes": "조건부 취소(건당 예상 수수료 ₩18,822). 일지: docs/decision-log/2026-05-26-03-saihoji-booked.md"
     },
     {
       "id": "kyoto_lodging_tax_2nights_4pax",
@@ -549,9 +558,9 @@
       ],
       "one_time": [
         "haruka_rt_4pax", "kyoto_local_transit_4pax", "kyoto_temples_4pax",
-        "kyoto_lodging_tax_2nights_4pax", "airbnb_cleaning_fee"
+        "saihoji_admission_4pax", "kyoto_lodging_tax_2nights_4pax", "airbnb_cleaning_fee"
       ],
-      "notes": "에어비앤비 1·2박은 PR #16 소연 추천 #3 시오(Shio) 100년 마치야 채택 — ★4.95, 침실 3·욕실 2·화장실 2로 시부모·부부 완전 분리 가능. 카덴쇼는 트립닷컴 확정 식사 불포함(JPY 37,270, 2026-05-13) — 분석시 가정 ¥76,500(조기할인 조식 포함) 대비 ¥39,230 절감. 합계 약 ₩3.05M (3M 초과 최소화 — 자세한 차이는 docs/decision-log/2026-05-20-kakaotalk-sync-kadensho-booking.md)."
+      "notes": "에어비앤비 1·2박은 PR #16 소연 추천 #3 시오(Shio) 100년 마치야 채택 — ★4.95, 침실 3·욕실 2·화장실 2로 시부모·부부 완전 분리 가능. 카덴쇼는 트립닷컴 확정 식사 불포함(JPY 37,270, 2026-05-13) — 분석시 가정 ¥76,500(조기할인 조식 포함) 대비 ¥39,230 절감. 합계 약 ₩3.18M (사이호지 입장 ₩188K 편입 포함 — 2026-05-26-03-saihoji-booked.md; 카덴쇼 차이는 docs/decision-log/2026-05-20-kakaotalk-sync-kadensho-booking.md)."
     },
     {
       "id": "nagasaki_forest_villa_mid",
