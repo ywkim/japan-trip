@@ -83,6 +83,18 @@
       "lodging": "에어비앤비 시오",
       "items": [
         {
+          "time": "07:00",
+          "title": "아침식사 (집에서 간단히)",
+          "maps_query": "집",
+          "note": "공항 출발 전 간단하게. 에너지바·샌드위치 등 가볍게"
+        },
+        {
+          "time": "08:00",
+          "title": "집 출발 → 인천공항 T1",
+          "maps_query": "Incheon International Airport Terminal 1",
+          "note": "에어서울 A8YW58 ICN 13:15 출발. 2.5시간 전 체크인 카운터 오픈"
+        },
+        {
           "time": "09:05",
           "title": "간사이공항 도착 → JR 하루카 → 교토역",
           "maps_query": "Kansai International Airport",
@@ -180,7 +192,7 @@
           "time": "16:00",
           "title": "MACCHA HOUSE 抹茶館 (말차 티라미수)",
           "maps_query": "Maccha House Kiyomizu Higashiyama",
-          "note": "닌넨자카·산넨자카 인근 말차 디저트 카페. 시그니처: 말차 티라미수(잘 알려진 한국 SNS 명소). 키요미즈데라 하행 후 산넨자카로 내려오는 동선에 자연 편입. 4인 좌석 대기 가능 — 16시 전후 빠른 시간 권장. 영업 11:00~20:00",
+          "note": "닌넨자카·산넨자카 인근 말차 디저트 카페. 시그니처: 말차 티라미수(잘 알려진 한국 SNS 명소). 키요미즈데라 하행 후 산넨자카로 내려오는 동선에 자연 편입. 4인 좌석 대기 가능 — 16시 전후 빠른 시간 권장. 영업 11:00~20:00 — 30도 더위 대책: 냉방 카페에서 30~40분 충분히 휴식",
           "arrive_from": {
             "mode": "walk",
             "duration_min": 10,
@@ -222,7 +234,7 @@
           "time": "16:30",
           "title": "산넨자카 → 야사카 신사 → 기온",
           "maps_query": "Gion Kyoto",
-          "note": "니넨자카 진입점 스타벅스 야사카차야점(100년 마치야 매장) · % 아라비카 교토 히가시야마점 — 둘 중 택1 카페 휴식 권장. 4인 좌석 대기 길 수 있음",
+          "note": "기온시조역 인근 마츠모토키요시·코쿠민 드럭스토어 약국 방문 가능 — 니넨자카 진입점 스타벅스 야사카차야점(100년 마치야 매장) · % 아라비카 교토 히가시야마점 — 둘 중 택1 카페 휴식 권장. 4인 좌석 대기 길 수 있음",
           "arrive_from": {
             "mode": "walk",
             "duration_min": 5,
@@ -313,19 +325,19 @@
       "lodging": "에어비앤비 시오 (2박째)",
       "items": [
         {
-          "time": "07:30",
+          "time": "07:00",
           "title": "조식 — 시오 마치야 (자취) 또는 코메다 京都二条駅前店",
-          "note": "마치야 주방 활용. 전날 니조역 인근 슈퍼(Fresco·Life)에서 빵·과일·커피 구비 권장. 외식 시 코메다 京都二条駅前店(니조역 도보 2분·07:00 오픈·음료 주문 시 토스트+삶은달걀 무료). 09:00 죽림길 출발 전 여유.",
+          "note": "마치야 주방 활용. 전날 니조역 인근 슈퍼(Fresco·Life)에서 빵·과일·커피 구비 권장. 외식 시 코메다 京都二条駅前店(니조역 도보 2분·07:00 오픈·음료 주문 시 토스트+삶은달걀 무료). 08:00 출발 전 여유.",
           "link": {
             "url": "breakfast.html",
             "label": "조식 옵션·영업시간"
           }
         },
         {
-          "time": "09:00",
+          "time": "08:00",
           "title": "죽림길 (지쿠린)",
           "maps_query": "Arashiyama Bamboo Grove",
-          "note": "일찍 출발 (관광객 적음). 죽림길 북측 출구 인근 교토 오르골당 아라시야마점(입장 무료) 텐류지 진입 전 5분 즉석 방문 가능",
+          "note": "일찍 출발 (관광객 적음). 죽림길 북측 출구 인근 교토 오르골당 아라시야마점(입장 무료) 텐류지 진입 전 5분 즉석 방문 가능 — 30도 더위 피해 이른 아침 출발",
           "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Sagano_Bamboo_forest%2C_Arashiyama%2C_Kyoto.jpg?width=480",
           "image_credit": "Wikimedia Commons",
           "arrive_from": {
@@ -395,31 +407,89 @@
         },
         {
           "time": "12:00",
-          "title": "두부 가이세키 점심 (쇼라이안 松籟庵)",
-          "maps_query": "Shoraian Arashiyama",
-          "note": "4인 좌석 사전 확인",
-          "food_quality": {
-            "rating": "타베로그 3.59 (353) · 점심 코스 ¥3,800~",
-            "source": "Tabelog 2026-05-24",
-            "source_fetched_at": "2026-05-24",
-            "data_quality": "researched_market_rate",
-            "url": "https://tabelog.com/en/kyoto/A2601/A260403/26003826/",
-            "note": "두부 가이세키. 호즈가와 강변석. 수요일 휴무(6/1 월 영업·11~17시). 4인 좌석 사전 예약 필수"
-          },
-          "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Japanese_SilkyTofu_%28Kinugoshi_Tofu%29.JPG?width=480",
-          "image_credit": "Wikimedia Commons",
-          "arrive_from": {
-            "mode": "bus",
-            "duration_min": 20,
-            "distance_km": 3.2,
-            "route": "사이호지 → 교토버스 73계통 → 아라시야마(嵐山) → 쇼라이안(松籟庵, 아라시야마 공원 내) 도보",
-            "source": "https://saihoji-kokedera.com/en/",
-            "source_fetched_at": "2026-05-26",
-            "data_quality": "tbd_needs_browser_mcp"
-          }
+          "title": "eX cafe 京都嵐山本店 — 당고 직화구이 & 냉방 휴식",
+          "maps_query": "eX cafe 京都嵐山本店",
+          "note": "아라시야마역 1분. 100년 목조 가옥 + 일본 정원, 완전 실내 냉방. 시그니처 호쿠호쿠 당고 세트(미니 화로 직화구이·말차·소스 2종, ¥1,320). 여름 한정 말차 빙수(대형, 4인 쉐어 가능)도 인기. 09:00~18:00, 1인 1오더 필수, 예약 불가. 후보 4곳: ② % Arabica 강변뷰 커피(09~18시), ③ 嵯峨野湯 팬케이크·파스타(11~19시), ④ パンとエスプレッソと嵐山庭園 빵+커피 고택(08~18시), ⑤ 雲ノ茶カフェ 말차라떼·빙수(10~17:30).",
+          "blog_reviews": [
+            {
+              "url": "https://m.blog.naver.com/ramu0527/223959935624",
+              "img": "http://blogthumb.pstatic.net/MjAxOTA1MDVfMTA1/MDAxNTU3MDQ5MDYyNzA2.-uDIBqRRT9NVhHdgz1-hdOg8w2jEB5LgAOjKIOPa9p0g.4bylF-b-5bE32APT0kSmzoCTFVWYvqfbXglcBRKFwOQg.JPEG.m0846/IMG_9263.JPG?type=w2",
+              "comment": "[eX cafe] 당고 세트+말차 파르페 실식 후기. 미니 화로 직화구이 체험, 일본 정원 뷰 좌석 추천"
+            },
+            {
+              "url": "https://blog.naver.com/khy7804755",
+              "img": "http://blogthumb.pstatic.net/MjAxOTA1MDlfMTEg/MDAxNTU3Mzc4MDk3Mzk4.TjIk7Qu6-Gg4QS3BPGKQ3aRdD_F7lnUeYjap8Ff9A6Eg.l3YL9_A1neca_9jzqBTLEmUC_NNl8hEa7BnRIiUKyosg.JPEG.khy7804755/D0E7D7A8-FC53-4C05-A109-22913123ADCC.jpg?type=w2",
+              "comment": "[eX cafe] 100년 가옥 개조 카페. 여름 한정 말차 빙수 대형 사이즈. 아라시야마역 1분"
+            },
+            {
+              "url": "https://blog.naver.com/whataday_",
+              "img": "http://blogthumb.pstatic.net/MjAxOTAyMDhfNjcg/MDAxNTQ5NjA5NDc1NjA4.dUcS3CFtksPZn9BqS4BvvETT_WxHdiPm9U2mjh-8tIIg.Y2jboZIugMKDGmbQC5d3eLKOhEEm37y234Utz7N6uYg.JPEG.whataday_/IMG_7880.jpg?type=w2",
+              "comment": "[eX cafe] 09:00~18:00. 다다미방 or 테라스 좌석 선택. 조용하고 넓어 시부모님과 최적"
+            },
+            {
+              "url": "https://blog.naver.com/minji5153",
+              "img": "http://blogthumb.pstatic.net/MjAxODAxMjJfMTIz/MDAxNTQ4MTQ0NjkxNjE0.s3TTDkxUspCha-sZzLJHTgEO0_pMS6jFcm2rOLvGHeMg.r0PZUZg1daZzBwFAmo0EXI8yIVrqNitiVuxINgmuzu8g.JPEG.minji5153/P20181109_094918601_8EE49C2C-AB59-4CE5-86D0-A074ACB7D6E4.JPG",
+              "comment": "[% Arabica] 교토 아라시야마 스페셜티 커피. 강변 뷰 테이크아웃 최고. 교토 라떼 600엔"
+            },
+            {
+              "url": "https://blog.naver.com/sjm2014",
+              "img": "http://blogthumb.pstatic.net/MjAxOTA2MjlfNjcg/MDAxNTYxNzM3MDAxNTQz.RJBPX-whRCehUcwjTZdQGJGD5Nq5YxEYdfdYtkRQ4hIg.H_TWMp1h64CnMlJtLWhesDD5aCY1av5nq0rBUZZZbTcg.JPEG.sjm2014/NaverBlog_20190629_005001_39.jpg",
+              "comment": "[% Arabica] 08:00~18:00 조기 오픈. 도게츠교 바로 앞. 입구 계단 포토스팟 필수"
+            },
+            {
+              "url": "https://blog.naver.com/danakimm",
+              "img": "http://blogthumb.pstatic.net/MjAxOTA2MDZfMzQg/MDAxNTU5ODEzODYyMzAw.NekDtKoIOhBdQd_4bbujEyxlmV-hjYjx9H-TvjIKeNUg.qLrjFIf_q8asVkFyRer_WRnbKC6ZGEg.JPEG.danakimm/IMG_3948.JPG",
+              "comment": "[% Arabica] 아이스 라떼+강가 산책 세트. 아라비카 교토 아라시야마점 — 응커피로도 유명"
+            },
+            {
+              "url": "https://search.naver.com/search.naver?where=blog&query=사가노유+교토+아라시야마",
+              "img": "https://tblg.k-img.com/restaurant/images/Rvw/143335/640x640_rect_143335243.jpg",
+              "comment": "[嵯峨野湯] 다이쇼 시대 목욕탕 개조 카페. 팬케이크+파스타. 아라시야마역 1분 — tabelog 3.56"
+            },
+            {
+              "url": "https://search.naver.com/search.naver?where=blog&query=사가노유+교토+팬케이크+후기",
+              "img": "https://tblg.k-img.com/restaurant/images/Rvw/773/640x640_rect_773527.jpg",
+              "comment": "[嵯峨野湯] 목욕탕 레트로 인테리어 포토스팟. 런치 메뉴 가격 합리적 — 11:00~19:00"
+            },
+            {
+              "url": "https://search.naver.com/search.naver?where=blog&query=嵯峨野湯+cafe+교토+여행",
+              "img": "https://tblg.k-img.com/restaurant/images/Rvw/241163/640x640_rect_83531f4dc1f285800e3be22adbb685d2.jpg",
+              "comment": "[嵯峨野湯] 완전 실내 냉방. 아라시야마 죽림길 인근 도보 2분 — 네이버 블로그 후기 검색"
+            },
+            {
+              "url": "https://search.naver.com/search.naver?where=blog&query=파인투에스프레소+아라시야마+정원+교토",
+              "img": "https://tblg.k-img.com/restaurant/images/Rvw/198251/640x640_rect_969bf5f1a23d9eb61ea30cb3a0220137.jpg",
+              "comment": "[パン&エスプ] 210년 고택 문화재 카페. 빵+에스프레소. 08:00~18:00 — tabelog 3.39"
+            },
+            {
+              "url": "https://search.naver.com/search.naver?where=blog&query=パンとエスプレッソ+嵐山庭園+교토+카페",
+              "img": "https://tblg.k-img.com/restaurant/images/Rvw/198251/640x640_rect_3d4fafe127d9ccd34de64eb8a824ef61.jpg",
+              "comment": "[パン&エスプ] 목조 고택 중정 뷰. 드라이 가든+아침 8시 오픈 — 아라시야마역 도보 5분"
+            },
+            {
+              "url": "https://search.naver.com/search.naver?where=blog&query=파인투에스프레소+교토+빵+후기",
+              "img": "https://tblg.k-img.com/restaurant/images/Rvw/300038/640x640_rect_8dcfe5e0b19a73f02c03250ff91f57ce.jpg",
+              "comment": "[パン&エスプ] 식빵+에스프레소 조합. 완전 실내 냉방, 반려동물 동반 가능 — 네이버 검색"
+            },
+            {
+              "url": "https://search.naver.com/search.naver?where=blog&query=쿠모노차+雲ノ茶+교토+아라시야마+카페",
+              "img": "https://tblg.k-img.com/restaurant/images/Rvw/190496/640x640_rect_d5f3ce77b7ba43e7b1cd63f5c5d5b2a6.jpg",
+              "comment": "[雲ノ茶] 대나무 테마 일본 차 카페. 시그니처 대나무통 티라미수. 10:00~17:30"
+            },
+            {
+              "url": "https://search.naver.com/search.naver?where=blog&query=雲ノ茶カフェ+아라시야마+교토+후기",
+              "img": "https://tblg.k-img.com/restaurant/images/Rvw/190496/640x640_rect_aecb45b77bfad837661ffac0a35455d6.jpg",
+              "comment": "[雲ノ茶] 말차라떼·호지차라떼. 실내 완전 냉방, 죽림길 도보 2분 — tabelog 3.13"
+            },
+            {
+              "url": "https://search.naver.com/search.naver?where=blog&query=쿠모노차+교토+카페+말차+후기",
+              "img": "https://tblg.k-img.com/restaurant/images/Rvw/252182/150x150_square_f94fd442b1a0a87a9a66ae39c99d5f90.jpg",
+              "comment": "[雲ノ茶] 두유·귀리우유 변경 가능. 와가시 디저트 세트. 아라시야마역 도보 3분"
+            }
+          ]
         },
         {
-          "time": "14:00",
+          "time": "13:30",
           "title": "금각사 (鹿苑寺)",
           "maps_query": "Kinkaku-ji",
           "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Kinkaku-ji_the_Golden_Temple_in_Kyoto_overlooking_the_lake_-_high_rez.JPG?width=480",
@@ -452,7 +522,7 @@
           ]
         },
         {
-          "time": "15:30",
+          "time": "15:00",
           "title": "료안지 석정원",
           "maps_query": "Ryoan-ji",
           "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/RyoanJi-Dry_garden.jpg?width=480",
@@ -595,6 +665,12 @@
             "source_fetched_at": "2026-05-17",
             "data_quality": "researched_market_rate"
           }
+        },
+        {
+          "time": "12:30",
+          "title": "드럭스토어·약국 (교토역 인근)",
+          "maps_query": "マツモトキヨシ 京都駅",
+          "note": "교토역 인근 마츠모토키요시 또는 코쿠민 드럭스토어. 필요 약품 구매 후 산주산겐도로 이동"
         },
         {
           "time": "13:30",
