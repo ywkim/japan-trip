@@ -129,11 +129,7 @@ def food_quality_html(fq) -> str:
         )
     src = esc((fq.get("source") or "").strip())
     src_html = f' <span style="opacity:0.65;">· 출처: {src}</span>' if src else ""
-    note = fq.get("note")
-    note_html = (
-        f'<div class="sub" style="font-size:0.8em;opacity:0.7;margin-top:0.1rem;">{esc(note)}</div>'
-        if note else ""
-    )
+    note_html = memo_block(fq.get("note"), style="font-size:0.8em;opacity:0.7;margin-top:0.1rem;")
     return (
         f'<div class="food-quality" style="font-size:0.85em;margin-top:0.25rem;color:var(--muted);">'
         f'{body}{src_html}</div>{note_html}'
@@ -515,7 +511,7 @@ def card_kadensho(d) -> str:
 <!-- SYNC: data/cost-options.json (lodging.kadensho_tripcom_no_meal_2026jun2) · data/booking-checklist.json (ryokan) -->
 <section id="kadensho" class="card">
   <h2>우메코지 카덴쇼 (6/2 1박)</h2>
-  <div class="sub" style="margin-bottom:0.5rem;">트립닷컴 예약번호 1400825991981904 · 2026-05-13 확정 · 숙소 현지결제.</div>
+  {note_block("트립닷컴 예약번호 1400825991981904 · 2026-05-13 확정 · 숙소 현지결제.", style="margin-bottom:0.5rem;")}
   {''.join(cards)}
 </section>
 """
@@ -642,6 +638,57 @@ def pass_block(text: str) -> str:
     return f'<div style="margin-top:0.25rem;">{fold("🎫 " + esc(head.strip()), esc(rest.strip()))}</div>'
 
 
+def detail_row(label: str, value: str) -> str:
+    """예약번호·권장처럼 길어지는 k/v 값을 짧으면 행, 길면 'label + 앞 토막 + 접기'로 렌더.
+
+    16자리 예약번호·PIN·취소정책 등 장문 운영값이 우측 정렬 셀(.row .v)을 넘쳐
+    모바일 레이아웃을 깨뜨리지 않도록, 식별용 앞 토막만 요약에 두고 나머지를 접는다.
+    """
+    value = (value or "").strip()
+    if not value:
+        return ""
+    if len(value) <= 44:
+        return f'<div class="row"><span class="k">{esc(label)}</span><span class="v">{esc(value)}</span></div>'
+    segs = [s for s in value.split(" · ") if s.strip()]
+    if len(segs) >= 2:
+        summary = esc(f"{label} · {segs[0]}")
+        detail = esc(" · ".join(segs[1:]))
+    else:
+        summary = esc(label)
+        detail = esc(value)
+    return "\n    " + fold(summary, detail)
+
+
+def _lead_split(text: str):
+    """첫 문장(". ") 또는 첫 토막(" · ")을 요약 head로, 나머지를 detail로 분리.
+
+    앞 토막이 60자 밖이거나 구분자가 없으면 (None, None) — 통째 접기 폴백.
+    """
+    for sep in (". ", " · "):
+        idx = text.find(sep)
+        if 0 < idx < 60:
+            return text[:idx].strip(), text[idx + len(sep):].strip()
+    return None, None
+
+
+def memo_block(note: str, *, style: str = "", cls: str = "sub") -> str:
+    """일정 메모·맛집 상세 노트를 짧으면 평문, 길면 '첫 문장 요약 + 접기'로 렌더.
+
+    장소 팁·맛집 설명이 카드를 압도하지 않도록 첫 문장만 보이고 나머지를 접는다.
+    예약·숙박 메모용 note_block(' · ' 2항목 요약)과 달리 문장 단위 요약이 자연스럽다.
+    """
+    note = (note or "").strip()
+    if not note:
+        return ""
+    style_attr = f' style="{style}"' if style else ""
+    if len(note) <= 50:
+        return f'<div class="{cls}"{style_attr}>{esc(note)}</div>'
+    head, rest = _lead_split(note)
+    if head and rest:
+        return fold(esc(head), esc(rest))
+    return fold("상세 보기", esc(note))
+
+
 def transit_line(af) -> str:
     """도착 경로를 '아이콘 + 평이 요약(소요시간)' summary와 장문 route 상세로 렌더."""
     if not af:
@@ -752,9 +799,9 @@ def checklist_card(it) -> str:
             f'<span class="v">{esc(due)}<span class="dday" data-due="{esc(due)}"></span></span></div>'
         )
     if it.get("reference"):
-        rows.append(f'<div class="row"><span class="k">예약번호</span><span class="v">{esc(it["reference"])}</span></div>')
+        rows.append(detail_row("예약번호", it["reference"]))
     if it.get("action"):
-        rows.append(f'<div class="row"><span class="k">권장</span><span class="v">{esc(it["action"])}</span></div>')
+        rows.append(detail_row("권장", it["action"]))
     link = it.get("link") or {}
     link_html = ""
     if link.get("url"):
@@ -1080,7 +1127,7 @@ def build_itinerary(d) -> str:
         item_rows = []
         for it in day["items"]:
             link = maps_link(it["maps_query"], it["title"]) if it.get("maps_query") else esc(it["title"])
-            note_html = f'<div class="sub">{esc(it["note"])}</div>' if it.get("note") else ""
+            note_html = memo_block(it.get("note"))
             transit = transit_line(it.get("arrive_from"))
             if it.get("image_url"):
                 img_html = (
@@ -1141,7 +1188,7 @@ def build_itinerary(d) -> str:
             item_rows = []
             for it in day["items"]:
                 link = maps_link(it["maps_query"], it["title"]) if it.get("maps_query") else esc(it["title"])
-                note_html = f'<div class="sub">{esc(it["note"])}</div>' if it.get("note") else ""
+                note_html = memo_block(it.get("note"))
                 food_html = food_quality_html(it.get("food_quality"))
                 link_html = doc_link_html(it.get("link"))
                 item_rows.append(f"""
@@ -1335,7 +1382,7 @@ def build_itinerary_table(d) -> str:
             if i < len(col):
                 it = col[i]
                 link = maps_link(it["maps_query"], it["title"]) if it.get("maps_query") else esc(it["title"])
-                note_html = f'<span class="t-note">{esc(it["note"])}</span>' if it.get("note") else ""
+                note_html = memo_block(it.get("note"), cls="t-note")
                 transit = transit_line(it.get("arrive_from"))
                 if it.get("image_url"):
                     img_html = (
@@ -1361,7 +1408,7 @@ def build_itinerary_table(d) -> str:
         item_rows = []
         for it in day["items"]:
             link = maps_link(it["maps_query"], it["title"]) if it.get("maps_query") else esc(it["title"])
-            note_html = f'<div class="sub">{esc(it["note"])}</div>' if it.get("note") else ""
+            note_html = memo_block(it.get("note"))
             transit = transit_line(it.get("arrive_from"))
             if it.get("image_url"):
                 img_html = (
