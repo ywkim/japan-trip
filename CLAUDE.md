@@ -118,7 +118,8 @@ japan-trip/
 │   ├── transit-pass.html      # 교통패스 비교 렌더 페이지 (docs/transit-pass-jr-kansai-2026.md → HTML, 산출물)
 │   ├── decision-kyoto.html    # 교토 변경 결정 렌더 페이지 (docs/decision-log/2026-05-11-...md → HTML, 산출물)
 │   └── decision-log.html      # 의사결정 일지 인덱스 (docs/decision-log/*.md 목록, build_index.py 산출물 — 직접 편집 금지)
-├── requirements.txt     # 빌드 의존성 (Markdown==3.7 — build_index.py 문서 렌더용, 버전 핀)
+├── pyproject.toml       # 프로젝트 메타 + 빌드 의존성 (markdown==3.7 — build_index.py 문서 렌더용). uv virtual project
+├── uv.lock              # uv 잠금 파일 (markdown 정확 버전·해시 고정 — --check 결정성)
 ├── scripts/
 │   ├── score.py         # 종합 점수 계산 (--json 지원)
 │   ├── budget.py        # 3M 예산 시나리오 평가 (--json 지원)
@@ -127,7 +128,7 @@ japan-trip/
 │   └── render-pdf.sh    # PDF 생성
 ├── tests/               # unittest (validate·build_index·design_tokens·score·budget)
 ├── .github/workflows/
-│   └── validate.yml     # PR 게이트: pip install + unittest + build_index --check + validate + score + budget
+│   └── validate.yml     # PR 게이트: uv sync --locked + unittest + build_index --check + validate + score + budget
 └── reports/
     └── final-report.md  # 최종 보고서 (PDF 변환 대상 · viz/report.html로 렌더)
 ```
@@ -143,7 +144,7 @@ japan-trip/
   - `data/decision.json` — criteria·candidates·scores (MCDA 입력. 교토 확정 후 회귀 가드)
   - `data/weather.json` — 후보지×시기 기후 + `tsuyu_normals`(긴키 매우입·매우명 평년 + 최근 7년 실적) + `cities.kyoto.sub_monthly_precip`(순계열)·`trip_window_daily_precip`(5/31~6/3 일별). 원자료: JMA 매우 평년값·京都(47759) 일별 평년값 1991–2020. `docs/weather.md` §5와 동기화. 5/31~6/3 실측 기상 추적이 필요해지면 본 파일의 `cities.kyoto`에 새 키로 추가
   - `data/flights.json` — 후보지×출발지 항공권 시세 스냅샷 (시점 스냅샷, snapshot_date 명시). 발권은 별도 PR로 `data/booking-checklist.json`·`data/cost-options.json`에 기록
-- **`index.html`·`viz/*.html`(11개)·`assets/og-*.svg`(6장)는 `scripts/build_index.py` 산출물 — 직접 편집 금지**. 데이터(`data/*.json`)·스크립트·렌더 대상 `.md` 변경 후 `python scripts/build_index.py` 실행. CI(`build_index.py --check`)가 11 HTML + 6 SVG = 17개 산출물의 drift를 PR 단계에서 차단. **빌드에 `Markdown` 의존성 필요 — 먼저 `pip install -r requirements.txt`**
+- **`index.html`·`viz/*.html`(11개)·`assets/og-*.svg`(6장)는 `scripts/build_index.py` 산출물 — 직접 편집 금지**. 데이터(`data/*.json`)·스크립트·렌더 대상 `.md` 변경 후 `uv run python scripts/build_index.py` 실행. CI(`build_index.py --check`)가 11 HTML + 6 SVG = 17개 산출물의 drift를 PR 단계에서 차단. **빌드에 `markdown` 의존성 필요 — 먼저 `uv sync`** (`uv run`으로 실행하면 자동 동기화)
 - 모바일 가독성: 장문 블록(이동 경로 `arrive_from.route`·ICOCA 실행 단계·비선택 예산 시나리오·긴 예약/숙박 메모·일자별 교통패스 추천)은 `build_index.py`의 `fold(summary, detail)` 헬퍼로 "평이 요약 + `<details>` 접기"로 렌더. 이동은 모드별 한국어 동사(`MODE_VERBS`)+소요시간 요약, 상세에 원문 경로·출처 링크. 예약·숙박 메모는 `note_block()`이 60자 초과 시 `·` 앞 2개 항목을 요약으로 노출하고 나머지(예약번호·PIN·탑승객 등)를 접는다. 교통패스 추천은 `pass_block()`이 `' — '` 앞 추천명만 보이고 비용 근거를 접는다. 새 장문 정보도 이 패턴을 따른다
 - 메인 페이지(`index.html`)는 **운영 모드** — 요약·일자별 일정만. 분석·결정 자료(장마 확률·9 예산 시나리오·7 후보지 점수)는 `viz/archive.html`로 분리. 받는 사람에게 "아직 결정 중"으로 읽히는 콘텐츠는 메인에서 제외
 - `docs/weather.md`·`docs/flights.md`의 표는 각각 `data/weather.json`·`data/flights.json`의 사람용 사본 — JSON 수정 시 함께 갱신 (CI 게이트: `scripts/validate.py` E·F가 도시·시기 수치, snapshot_date, 시세 표기의 drift를 PR 단계에서 차단)
@@ -159,7 +160,7 @@ japan-trip/
 
 > 레포 마크다운 문서를 가족 공유 사이트에서 열람 가능하게 하되 GitHub 노출은 막는다. (근거: `docs/decision-log/2026-05-26-02-vercel-docs-as-html-pages.md`)
 
-- **의존성**: `Markdown==3.7` (`requirements.txt`, 버전 핀). `build_index.py`가 `tables`·`sane_lists` 확장으로 변환. CI는 `pip install -r requirements.txt` 후 빌드/`--check` 실행. **버전 핀과 커밋된 HTML이 일치해야 `--check` 통과** — 재현성 위해 같은 버전 사용.
+- **의존성**: `markdown==3.7` (`pyproject.toml` + `uv.lock`, 정확 버전·해시 고정). `build_index.py`가 `tables`·`sane_lists` 확장으로 변환. 로컬·CI 모두 uv 사용: `uv sync --locked` 후 `uv run python ...`. CI는 `astral-sh/setup-uv` + `uv sync --locked`. **잠금 버전과 커밋된 HTML이 일치해야 `--check` 통과** — 의존성 갱신 시 `uv lock` 재실행 + 빌드 재실행 + 일지화.
 - **단일 출처**: 레포 `.md`가 정본, `viz/*.html`은 빌드 산출물(직접 편집 금지). `.md` 수정 후 반드시 `python scripts/build_index.py` 재실행 (안 하면 `--check` drift로 머지 차단).
 - **렌더 대상 등록**: `build_index.py`의 `DOC_PAGES` 튜플에 `DocPage(source, out, title, description, og_slug, tab, back_href, back_label)` 1줄 추가. `og_slug`는 기존 OG 카드 슬러그 재사용(신규 SVG 불필요). 등록 즉시 `OUTPUTS`·검사 J(glob)가 자동 커버.
 - **현재 6 페이지**: `viz/report.html`(최종 보고서)·`viz/itinerary-doc.html`(일정 문서)·`viz/research.html`(예약 리서치)·`viz/transit-pass.html`(교통패스 비교)·`viz/decision-kyoto.html`(교토 변경 결정) + `viz/decision-log.html`(결정 일지 인덱스 — `docs/decision-log/*.md` 최신순 제목 목록, 교토 결정만 링크·나머지는 텍스트·본문 미게시).
@@ -172,7 +173,7 @@ japan-trip/
 
 | 검사 | 스크립트 | 실패 조건 |
 |---|---|---|
-| 의존성 설치 | `pip install -r requirements.txt` | 설치 실패 (build_index.py가 `Markdown` import) |
+| 의존성 설치 | `uv sync --locked` (astral-sh/setup-uv) | 설치 실패 또는 uv.lock이 pyproject와 불일치(`--locked`) |
 | 단위 테스트 | `python -m unittest discover tests` | 1개라도 실패 |
 | 점수 계산 동작 | `scripts/score.py` | exit ≠ 0 |
 | 예산 평가 동작 | `scripts/budget.py` | exit ≠ 0 |
@@ -205,7 +206,7 @@ japan-trip/
 - 테스트는 `unittest` 표준 라이브러리만 사용. 외부 의존성 추가 금지 (CI 단순화).
 - 데이터 변경(JSON·MD)은 테스트 작성 의무에서 제외 — 단, 데이터 스키마 변경(필드 추가/제거)은 `validate.py` 화이트리스트와 함께 테스트 갱신.
 - 테스트가 production 데이터에 의존하는 케이스(`ProductionDataTests`)는 회귀 가드로만 사용. 새 규칙 검증은 `tempfile` 기반 fixture로 격리.
-- 로컬 실행: `python -m unittest discover -s tests -v`. CI도 동일 명령으로 실행.
+- 로컬 실행: `uv run python -m unittest discover -s tests -v`. CI도 동일 명령으로 실행 (`uv sync --locked` 후).
 
 ## 점수 입력 규칙
 
