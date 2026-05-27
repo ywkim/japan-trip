@@ -21,6 +21,9 @@ jobs:
       - name: install dependencies (locked)
         run: uv sync --locked
 
+      - name: build_index.py (산출물은 gitignore — 검증 전에 생성)
+        run: uv run python scripts/build_index.py
+
       - name: unit tests
         run: uv run python -m unittest discover -s tests -v
 
@@ -30,8 +33,5 @@ jobs:
       - name: budget.py runs
         run: uv run python scripts/budget.py
 
-      - name: validate.py (price fields, stale prices, SYNC paths)
+      - name: validate.py (price fields, stale prices, SYNC paths, GitHub link ban)
         run: uv run python scripts/validate.py
-
-      - name: build_index.py --check (index.html sync with data sources)
-        run: uv run python scripts/build_index.py --check

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -628,6 +629,17 @@ class NoGithubLinkTests(unittest.TestCase):
 
 class ProductionDataTests(unittest.TestCase):
     """현재 레포 데이터가 validate를 통과하는지 회귀 검사."""
+
+    @classmethod
+    def setUpClass(cls):
+        # 산출물(index.html 등)은 gitignore되어 fresh checkout에 없을 수 있다.
+        # 검사 D가 index.html을 읽으므로, 없으면 빌드해 테스트를 자기완결화한다.
+        base = Path(__file__).resolve().parent.parent
+        if not (base / "index.html").exists():
+            subprocess.run(
+                [sys.executable, str(base / "scripts" / "build_index.py")],
+                cwd=base, check=True, capture_output=True,
+            )
 
     def test_repo_data_validates(self):
         base = Path(__file__).resolve().parent.parent

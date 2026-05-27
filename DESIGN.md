@@ -127,7 +127,7 @@
 4. 새 컴포넌트인가? → §4의 기존 컴포넌트(Card·Subcard·Row·Pill·Bar·Button)로 조합 가능한지 먼저 확인.
 
 **구현 규칙**
-- `index.html`·`viz/itinerary.html`·`viz/itinerary-table.html`·`viz/lodging.html`·`viz/checklist.html`·`viz/archive.html`은 모두 `scripts/build_index.py` 산출물. 직접 편집 금지. CSS는 공통 `render_css(tokens)` 함수가 design-tokens.json에서 생성 → `html_doc(title, body, tokens=...)`이 주입.
+- `index.html`·`viz/itinerary.html`·`viz/itinerary-table.html`·`viz/lodging.html`·`viz/checklist.html`·`viz/archive.html`은 모두 `scripts/build_index.py` 산출물. 직접 편집 금지. **레포에 커밋하지 않고(gitignore) 로컬·CI·배포(Vercel) 시점에 빌드**한다. CSS는 공통 `render_css(tokens)` 함수가 design-tokens.json에서 생성 → `html_doc(title, body, tokens=...)`이 주입.
 - 새 색·간격·반경을 도입할 때: (1) tokens.json에 키 추가 → (2) DESIGN.md §2~§6 갱신 → (3) `render_css`가 var()로 노출 → (4) 사용처에서 `var(--키)` 참조.
 
 **금지 패턴 (자동 거부)**
