@@ -403,7 +403,19 @@
             "source": "https://saihoji-kokedera.com/en/",
             "source_fetched_at": "2026-05-26",
             "data_quality": "tbd_needs_browser_mcp"
-          }
+          },
+          "blog_reviews": [
+            {
+              "url": "https://m.blog.naver.com/hhj1191804/223125546006",
+              "img": "https://phinf.pstatic.net/image.nmv/blog_2023_06_09_167/807328cd-068d-11ee-84f4-505dacfba98a_02.jpg?type=w2",
+              "comment": "안녕하세요. 교토 여행 둘째 날입니다. 지장원 地蔵院에 이어 다음 일정은 서방사 西芳寺사이호지 코스! 지..."
+            },
+            {
+              "url": "https://m.blog.naver.com/in_ocean/223648150851",
+              "img": "https://blogthumb.pstatic.net/MjAyNDExMDVfOSAg/MDAxNzMwNzk3MTIwMzcz.1uog7B1_He0phY4YZnFNij7XBjZh2PMjg56dcvWqMRgg.K_zwZSAlAczgWa8AdHRZnj2oqq-xO7goyYFZZDHfpJAg.JPEG/IMG_6668.jpg?type=w2",
+              "comment": "여행 계획 부터 그 날 비가 오기를 바랐던 건 처음이다. 하지만 이끼 정원이라니. 그럼 이끼가 촉촉해야 더..."
+            }
+          ]
         },
         {
           "time": "12:00",
