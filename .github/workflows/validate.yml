@@ -15,6 +15,9 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: build_index.py (산출물은 gitignore — 검증 전에 생성)
+        run: python scripts/build_index.py
+
       - name: unit tests
         run: python -m unittest discover -s tests -v
 
@@ -26,6 +29,3 @@ jobs:
 
       - name: validate.py (price fields, stale prices, SYNC paths)
         run: python scripts/validate.py
-
-      - name: build_index.py --check (index.html sync with data sources)
-        run: python scripts/build_index.py --check
