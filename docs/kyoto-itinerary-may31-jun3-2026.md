@@ -37,10 +37,9 @@
 | 08:00 | 죽림길 (지쿠린) | **30도 더위 피해 이른 아침 출발** — 일찍 출발(관광객 적음). 북측 출구 인근 **교토 오르골당 아라시야마점**(입장 무료) 텐류지 진입 전 5분 즉석 방문 가능 |
 | 08:45 | 텐류지 정원 | |
 | 10:30 | **사이호지(苔寺·이끼사찰)** — 예약 확정 | Trip.com 6/1 10:30 성인4(2건, 총 ₩188,216). 사경+정원 약 60분, 사경 면제 당일 상담·의자석 있음, 휠체어 불가. 교토버스 73계통. [상세](https://github.com/ywkim/japan-trip/blob/main/docs/saihoji-reservation-2026-06.md) |
-| 12:00 | 두부 가이세키 점심 **쇼라이안(松籟庵)** | [타베로그 3.59(353)](https://tabelog.com/en/kyoto/A2601/A260403/26003826/)·점심 ¥3,800~. 수요일 휴무(6/1 월 영업). 4인 좌석 사전 예약 |
-| 13:15 | **아라시야마 카페 휴식 (냉방 — 더위 대책)** | 쇼라이안 식사 후 냉방 카페에서 30도 더위 피하기. % Arabica 아라시야마점 또는 강변 카페 — 14:20까지 충분히 쉬고 금각사로 이동 |
-| 14:30 | 금각사 (鹿苑寺) | 시버스 11+59 환승 또는 놓치면 택시 22분(7.1km) 대안 |
-| 16:00 | 료안지 석정원 | |
+| 12:00 | **아라시야마 카페 휴식 (냉방 — 더위 대책)** | 사이호지 종료 후 아라시야마로 이동, 냉방 카페에서 점심 겸 더위 피하기. % Arabica 아라시야마점 또는 강변 카페 — 13:30까지 휴식 후 금각사로 이동 |
+| 13:30 | 금각사 (鹿苑寺) | 시버스 11+59 환승 또는 놓치면 택시 22분(7.1km) 대안 |
+| 15:00 | 료안지 석정원 | |
 | 18:30 | **폰토초 저녁 — まんざら亭** (창작 교토요리) | [타베로그 3.30(92)](https://tabelog.com/en/kyoto/A2601/A260201/26000957/)·130년 교마치야. 니시키 시장은 17:00 마감이라 낮에 |
 
 ### 1.3 6/2 (화) — 남/동쪽 + 료칸 체크인
@@ -50,6 +49,7 @@
 | 06:45 | **조식** — 시오 마치야 자취·편의점 (빠르게) | 07:30 출발 전. 카페 미오픈 → 전날 밤 편의점 구비 필수. [조식 문서](./breakfast-near-lodging.md) |
 | 새벽~아침 | 시오 출발 → **후시미이나리** | 7~8시 도착 시 도리이 사진 명소 한산. 정상까지 안 가도 OK |
 | 점심 | 교토역 라멘코지 **中村商店 (金の塩)** | [타베로그 3.56(603)](https://tabelog.com/en/kyoto/A2601/A260101/26030811/) — 라멘코지 최고점. 짐 시오→카덴쇼 동선 |
+| 12:30 | **드럭스토어·약국 (교토역 인근)** | 교토역 인근 마츠모토키요시 또는 코쿠민 드럭스토어. 필요 약품 구매 후 산주산겐도로 이동 |
 | 오후 | **산주산겐도 (1001 관음상) → 도후쿠지 (남정원)** | 두 곳 도보 권 |
 | 15:00~ | 시오 체크아웃 (10:00~) → **카덴쇼 료칸 체크인** | 짐 일찍 카덴쇼에 위탁 가능 여부 확인 |
 | 저녁 | 카덴쇼: 온천 → **가이세키 저녁** | 료칸 핵심 체험. 야후트래블 4.50/5(148)·[一休 4.51(147)](https://www.ikyu.com/00002982/review/)·예약 료칸 포함 석식 |
@@ -81,11 +81,10 @@
 - **폰토초 거리** — [네이버 블로그 후기 검색](https://search.naver.com/search.naver?where=blog&query=%EA%B5%90%ED%86%A0%20%ED%8F%B0%ED%86%A0%EC%B4%88%20%EA%B1%B0%EB%A6%AC%20%EC%A0%80%EB%85%81)
 
 ### 2.2 6/1 서/북쪽
+- **사이호지(西芳寺·코케데라, 이끼 사찰)** — [네이버 블로그 후기 검색](https://search.naver.com/search.naver?where=blog&query=%EA%B5%90%ED%86%A0%20%EC%82%AC%EC%9D%B4%ED%98%B8%EC%A7%80%20%EC%9D%B4%EB%81%BC%EC%82%AC%EC%B0%B0)
+- **요시무라(嵐山よしむら) 소바** — [네이버 블로그 후기 검색](https://search.naver.com/search.naver?where=blog&query=%EA%B5%90%ED%86%A0%20%EC%9A%94%EC%8B%9C%EB%AC%B4%EB%9D%BC%20%EC%86%8C%EB%B0%94)
 - **아라시야마 대나무숲(죽림길)** — [네이버 블로그 후기 검색](https://search.naver.com/search.naver?where=blog&query=%EA%B5%90%ED%86%A0%20%EC%95%84%EB%9D%BC%EC%8B%9C%EC%95%BC%EB%A7%88%20%EB%8C%80%EB%82%98%EB%AC%B4%EC%88%B2)
-- **교토 오르골당 아라시야마점**(죽림길 출구) — [네이버 블로그 후기 검색](https://search.naver.com/search.naver?where=blog&query=%EA%B5%90%ED%86%A0%20%EC%98%A4%EB%A5%B4%EA%B3%A8%EB%8B%B9%20%EC%95%84%EB%9D%BC%EC%8B%9C%EC%95%BC%EB%A7%88)
-- **도게츠교** — [네이버 블로그 후기 검색](https://search.naver.com/search.naver?where=blog&query=%EA%B5%90%ED%86%A0%20%EB%8F%84%EA%B2%8C%EC%B8%A0%EA%B5%90)
 - **텐류지 정원** — [네이버 블로그 후기 검색](https://search.naver.com/search.naver?where=blog&query=%EA%B5%90%ED%86%A0%20%ED%85%90%EB%A5%98%EC%A7%80%20%EC%A0%95%EC%9B%90%20%ED%9B%84%EA%B8%B0)
-- **쇼라이안(松籟庵) 두부 가이세키 점심** — [네이버 블로그 후기 검색](https://search.naver.com/search.naver?where=blog&query=%EA%B5%90%ED%86%A0%20%EC%87%BC%EB%9D%BC%EC%9D%B4%EC%95%88%20%EB%91%90%EB%B6%80)
 - **금각사** — [네이버 블로그 후기 검색](https://search.naver.com/search.naver?where=blog&query=%EA%B5%90%ED%86%A0%20%EA%B8%88%EA%B0%81%EC%82%AC%20%ED%9B%84%EA%B8%B0)
 - **료안지 (석정원)** — [네이버 블로그 후기 검색](https://search.naver.com/search.naver?where=blog&query=%EA%B5%90%ED%86%A0%20%EB%A3%8C%EC%95%88%EC%A7%80%20%EC%84%9D%EC%A0%95%EC%9B%90)
 - **니시키 시장** — [네이버 블로그 후기 검색](https://search.naver.com/search.naver?where=blog&query=%EA%B5%90%ED%86%A0%20%EB%8B%88%EC%8B%9C%ED%82%A4%EC%8B%9C%EC%9E%A5%20%EB%A7%9B%EC%A7%91)
