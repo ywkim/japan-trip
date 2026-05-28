@@ -1,0 +1,16 @@
+[project]
+name = "japan-trip"
+version = "0"
+description = "교토 가족여행 2026 실행·운영 — 일정·예약 데이터에서 정적 사이트(index.html·viz/*.html) 빌드"
+requires-python = ">=3.11"
+dependencies = [
+    # build_index.py가 레포 마크다운(reports/·docs/)을 사이트 내 HTML 문서
+    # 페이지(viz/*.html)로 렌더할 때 사용. 정확 버전 핀 + uv.lock으로
+    # build_index.py --check 산출물 결정성(CI drift 가드) 보장.
+    "markdown==3.7",
+]
+
+[tool.uv]
+# 이 레포는 설치 가능한 패키지가 아니라 스크립트 모음(virtual project).
+# uv가 루트를 빌드/설치하지 않고 의존성만 .venv로 관리하도록 한다.
+package = false

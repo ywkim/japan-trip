@@ -1,0 +1,5 @@
+{
+  "buildCommand": "uv run python scripts/build_index.py",
+  "outputDirectory": ".",
+  "framework": null
+}

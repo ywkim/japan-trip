@@ -19,8 +19,11 @@ import json
 import re
 import subprocess
 import sys
+from collections import namedtuple
 from pathlib import Path
 from urllib.parse import quote
+
+import markdown
 
 BASE = Path(__file__).resolve().parent.parent
 SCRIPTS = BASE / "scripts"
@@ -30,7 +33,6 @@ OUT_INDEX = BASE / "index.html"
 OUT_ITINERARY = BASE / "viz" / "itinerary.html"
 OUT_CHECKLIST = BASE / "viz" / "checklist.html"
 
-GH_BLOB = "https://github.com/ywkim/japan-trip/blob/main"
 SCENARIO_ID = "kyoto_may31_kadensho_early_bird"
 SITE_URL = "https://nihon-trip.vercel.app"
 SITE_NAME = "교토 가족여행 2026"
@@ -56,6 +58,53 @@ def tab_bar(active: str, in_viz: bool = False) -> str:
             f'<span>{esc(label)}</span></a>'
         )
     return f'<nav class="tab-bar" aria-label="하단 탭">{"".join(items)}</nav>'
+
+
+# ─── 문서 렌더 페이지 (레포 마크다운 → 사이트 내 HTML) ───────────────────────
+# Vercel 산출물에는 GitHub 링크 금지(검사 J). 외부 참조 문서는 레포로 빠져나가는
+# 대신 여기 등록한 마크다운을 사이트 내부 HTML로 렌더해 그 페이지로 연결한다.
+DocPage = namedtuple("DocPage", "source out title description og_slug tab back_href back_label")
+
+DOC_PAGES = (
+    DocPage(
+        "reports/final-report.md", "viz/report.html",
+        "최종 보고서 · 교토 가족여행 2026",
+        "2026-05-12 의사결정 종료 시점 최종 보고서 (아카이브)",
+        "archive", "home", "archive.html", "← 아카이브",
+    ),
+    DocPage(
+        "docs/kyoto-itinerary-may31-jun3-2026.md", "viz/itinerary-doc.html",
+        "교토 일정 문서 · 5/31~6/3",
+        "교토 3박 4일 일자별 시나리오 (사람용 문서)",
+        "itinerary", "itinerary", "itinerary.html", "← 일정",
+    ),
+    DocPage(
+        "docs/booking-research-2026-05-24.md", "viz/research.html",
+        "예약 리서치 · 보험·eSIM·환전",
+        "미정 예약 4항목 실시간 리서치 (2026-05-24)",
+        "checklist", "checklist", "checklist.html", "← 예약",
+    ),
+    DocPage(
+        "docs/transit-pass-jr-kansai-2026.md", "viz/transit-pass.html",
+        "JR 간사이 패스 비교",
+        "JR 간사이 에어리어 패스 1/2/3/4일권 비교·권장",
+        "checklist", "checklist", "checklist.html", "← 예약",
+    ),
+    DocPage(
+        "docs/decision-log/2026-05-11-may31-jun3-kyoto-update.md", "viz/decision-kyoto.html",
+        "교토 일정 변경 결정 (2026-05-11)",
+        "5/24~27 → 5/31~6/3 변경 + 카덴쇼 가용 재확인",
+        "archive", "home", "decision-log.html", "← 결정 일지",
+    ),
+)
+
+DOC_SOURCE_TO_OUT = {p.source: p.out for p in DOC_PAGES}
+DECISION_LOG_OUT = "viz/decision-log.html"
+
+
+def doc_href(out_rel: str, in_viz: bool) -> str:
+    """문서 페이지(viz/*.html)로의 상대 링크. 루트(index.html)면 그대로, viz/ 페이지면 prefix 제거."""
+    return out_rel.split("/", 1)[1] if in_viz else out_rel
 
 
 def esc(s) -> str:
@@ -129,11 +178,7 @@ def food_quality_html(fq) -> str:
         )
     src = esc((fq.get("source") or "").strip())
     src_html = f' <span style="opacity:0.65;">· 출처: {src}</span>' if src else ""
-    note = fq.get("note")
-    note_html = (
-        f'<div class="sub" style="font-size:0.8em;opacity:0.7;margin-top:0.1rem;">{esc(note)}</div>'
-        if note else ""
-    )
+    note_html = memo_block(fq.get("note"), style="font-size:0.8em;opacity:0.7;margin-top:0.1rem;")
     return (
         f'<div class="food-quality" style="font-size:0.85em;margin-top:0.25rem;color:var(--muted);">'
         f'{body}{src_html}</div>{note_html}'
@@ -242,7 +287,7 @@ def render_css(tokens: dict) -> str:
   }}
   .row:last-child {{ border-bottom: none; }}
   .row .k {{ color: var(--muted); flex-shrink: 0; }}
-  .row .v {{ font-variant-numeric: tabular-nums; text-align: right; word-break: keep-all; }}
+  .row .v {{ font-variant-numeric: tabular-nums; text-align: right; word-break: keep-all; min-width: 0; overflow-wrap: anywhere; }}
   .bf-item {{ padding: 0.5rem 0; border-bottom: 1px solid var(--border); }}
   .bf-item:last-child {{ border-bottom: none; }}
   .bf-label {{ font-weight: 600; margin-bottom: 0.2rem; }}
@@ -515,7 +560,7 @@ def card_kadensho(d) -> str:
 <!-- SYNC: data/cost-options.json (lodging.kadensho_tripcom_no_meal_2026jun2) · data/booking-checklist.json (ryokan) -->
 <section id="kadensho" class="card">
   <h2>우메코지 카덴쇼 (6/2 1박)</h2>
-  <div class="sub" style="margin-bottom:0.5rem;">트립닷컴 예약번호 1400825991981904 · 2026-05-13 확정 · 숙소 현지결제.</div>
+  {note_block("트립닷컴 예약번호 1400825991981904 · 2026-05-13 확정 · 숙소 현지결제.", style="margin-bottom:0.5rem;")}
   {''.join(cards)}
 </section>
 """
@@ -642,6 +687,57 @@ def pass_block(text: str) -> str:
     return f'<div style="margin-top:0.25rem;">{fold("🎫 " + esc(head.strip()), esc(rest.strip()))}</div>'
 
 
+def detail_row(label: str, value: str) -> str:
+    """예약번호·권장처럼 길어지는 k/v 값을 짧으면 행, 길면 'label + 앞 토막 + 접기'로 렌더.
+
+    16자리 예약번호·PIN·취소정책 등 장문 운영값이 우측 정렬 셀(.row .v)을 넘쳐
+    모바일 레이아웃을 깨뜨리지 않도록, 식별용 앞 토막만 요약에 두고 나머지를 접는다.
+    """
+    value = (value or "").strip()
+    if not value:
+        return ""
+    if len(value) <= 44:
+        return f'<div class="row"><span class="k">{esc(label)}</span><span class="v">{esc(value)}</span></div>'
+    segs = [s for s in value.split(" · ") if s.strip()]
+    if len(segs) >= 2:
+        summary = esc(f"{label} · {segs[0]}")
+        detail = esc(" · ".join(segs[1:]))
+    else:
+        summary = esc(label)
+        detail = esc(value)
+    return "\n    " + fold(summary, detail)
+
+
+def _lead_split(text: str):
+    """첫 문장(". ") 또는 첫 토막(" · ")을 요약 head로, 나머지를 detail로 분리.
+
+    앞 토막이 60자 밖이거나 구분자가 없으면 (None, None) — 통째 접기 폴백.
+    """
+    for sep in (". ", " · "):
+        idx = text.find(sep)
+        if 0 < idx < 60:
+            return text[:idx].strip(), text[idx + len(sep):].strip()
+    return None, None
+
+
+def memo_block(note: str, *, style: str = "", cls: str = "sub") -> str:
+    """일정 메모·맛집 상세 노트를 짧으면 평문, 길면 '첫 문장 요약 + 접기'로 렌더.
+
+    장소 팁·맛집 설명이 카드를 압도하지 않도록 첫 문장만 보이고 나머지를 접는다.
+    예약·숙박 메모용 note_block(' · ' 2항목 요약)과 달리 문장 단위 요약이 자연스럽다.
+    """
+    note = (note or "").strip()
+    if not note:
+        return ""
+    style_attr = f' style="{style}"' if style else ""
+    if len(note) <= 50:
+        return f'<div class="{cls}"{style_attr}>{esc(note)}</div>'
+    head, rest = _lead_split(note)
+    if head and rest:
+        return fold(esc(head), esc(rest))
+    return fold("상세 보기", esc(note))
+
+
 def transit_line(af) -> str:
     """도착 경로를 '아이콘 + 평이 요약(소요시간)' summary와 장문 route 상세로 렌더."""
     if not af:
@@ -752,14 +848,19 @@ def checklist_card(it) -> str:
             f'<span class="v">{esc(due)}<span class="dday" data-due="{esc(due)}"></span></span></div>'
         )
     if it.get("reference"):
-        rows.append(f'<div class="row"><span class="k">예약번호</span><span class="v">{esc(it["reference"])}</span></div>')
+        rows.append(detail_row("예약번호", it["reference"]))
     if it.get("action"):
-        rows.append(f'<div class="row"><span class="k">권장</span><span class="v">{esc(it["action"])}</span></div>')
+        rows.append(detail_row("권장", it["action"]))
     link = it.get("link") or {}
     link_html = ""
     if link.get("url"):
+        url = link["url"]
+        # 레포 문서 경로는 사이트 내 렌더 페이지로 치환 (GitHub 링크 금지·검사 J).
+        # 체크리스트는 viz/checklist.html에서만 렌더되므로 in_viz=True.
+        if url in DOC_SOURCE_TO_OUT:
+            url = doc_href(DOC_SOURCE_TO_OUT[url], in_viz=True)
         link_html = (
-            f'\n    <a class="doc-link" href="{esc(link["url"])}" target="_blank" '
+            f'\n    <a class="doc-link" href="{esc(url)}" target="_blank" '
             f'rel="noopener">{esc(link.get("label", "상세"))} ↗</a>'
         )
     note = it.get("note", "")
@@ -827,7 +928,7 @@ def card_score(d) -> str:
 <section id="score" class="card">
   <h2>후보지 종합 점수</h2>
   <div class="sub" style="margin-bottom:0.3rem;">교토만 7기준 모두 입력. 나머지는 seasonality(2026-05)만.</div>
-  <div class="sub" style="margin-bottom:0.5rem;">교토는 1위(오사카·고베 9.0) 후보가 아니지만 시부모 동반·비용·이동 부담을 종합한 별도 의사결정. 사유: <a href="{GH_BLOB}/docs/decision-log/2026-05-11-may31-jun3-kyoto-update.md" target="_blank" rel="noopener">2026-05-11 결정 일지 ↗</a></div>
+  <div class="sub" style="margin-bottom:0.5rem;">교토는 1위(오사카·고베 9.0) 후보가 아니지만 시부모 동반·비용·이동 부담을 종합한 별도 의사결정. 사유: <a href="decision-kyoto.html" style="color:inherit;text-decoration:underline;">2026-05-11 결정 일지</a>.</div>
   {''.join(rows)}
 </section>
 """
@@ -855,7 +956,7 @@ INDEX_FOOTER = f"""
   <a href="viz/archive.html">의사결정 아카이브 ↗</a>
 </div>
 
-<footer>2026-05-12 의사결정 종료 · 이 페이지는 확정 일정·예약 운영용. 결정 근거는 <a href="viz/archive.html" style="color:inherit;">아카이브</a>·<a href="{GH_BLOB}/reports/final-report.md" target="_blank" rel="noopener" style="color:inherit;">최종 보고서 ↗</a></footer>
+<footer>2026-05-12 의사결정 종료 · 이 페이지는 확정 일정·예약 운영용. 결정 근거는 <a href="viz/archive.html" style="color:inherit;">아카이브</a> · <a href="viz/report.html" style="color:inherit;">최종 보고서</a>에서 확인.</footer>
 """
 
 
@@ -897,13 +998,8 @@ def build_archive(d) -> str:
   <a href="#score">후보지 점수</a>
 </nav>
 """
-    footer = f"""
-<div class="links">
-  <a href="{GH_BLOB}/reports/final-report.md" target="_blank" rel="noopener">최종 보고서 ↗</a>
-  <a href="{GH_BLOB}/docs/decision-log/" target="_blank" rel="noopener">결정 일지 ↗</a>
-</div>
-
-<footer>data/decision.json · data/cost-options.json · data/weather.json 단일 출처</footer>
+    footer = """
+<footer><a href="report.html" style="color:inherit;">최종 보고서</a> · <a href="decision-log.html" style="color:inherit;">결정 일지</a> · data/decision.json · data/cost-options.json · data/weather.json 단일 출처</footer>
 """
     body = head + "\n".join(sections) + footer + tab_bar("home", in_viz=True)
     return html_doc(
@@ -1080,7 +1176,7 @@ def build_itinerary(d) -> str:
         item_rows = []
         for it in day["items"]:
             link = maps_link(it["maps_query"], it["title"]) if it.get("maps_query") else esc(it["title"])
-            note_html = f'<div class="sub">{esc(it["note"])}</div>' if it.get("note") else ""
+            note_html = memo_block(it.get("note"))
             transit = transit_line(it.get("arrive_from"))
             if it.get("image_url"):
                 img_html = (
@@ -1141,7 +1237,7 @@ def build_itinerary(d) -> str:
             item_rows = []
             for it in day["items"]:
                 link = maps_link(it["maps_query"], it["title"]) if it.get("maps_query") else esc(it["title"])
-                note_html = f'<div class="sub">{esc(it["note"])}</div>' if it.get("note") else ""
+                note_html = memo_block(it.get("note"))
                 food_html = food_quality_html(it.get("food_quality"))
                 link_html = doc_link_html(it.get("link"))
                 item_rows.append(f"""
@@ -1198,7 +1294,7 @@ def build_itinerary(d) -> str:
 
 <div class="links">
   <a href="itinerary-table.html">시간표 뷰</a>
-  <a href="{GH_BLOB}/{esc(itin.get('source_doc',''))}" target="_blank" rel="noopener">마크다운</a>
+  <a href="itinerary-doc.html">문서 보기</a>
 </div>
 
 <footer>data/itinerary.json 단일 출처</footer>
@@ -1335,7 +1431,7 @@ def build_itinerary_table(d) -> str:
             if i < len(col):
                 it = col[i]
                 link = maps_link(it["maps_query"], it["title"]) if it.get("maps_query") else esc(it["title"])
-                note_html = f'<span class="t-note">{esc(it["note"])}</span>' if it.get("note") else ""
+                note_html = memo_block(it.get("note"), cls="t-note")
                 transit = transit_line(it.get("arrive_from"))
                 if it.get("image_url"):
                     img_html = (
@@ -1361,7 +1457,7 @@ def build_itinerary_table(d) -> str:
         item_rows = []
         for it in day["items"]:
             link = maps_link(it["maps_query"], it["title"]) if it.get("maps_query") else esc(it["title"])
-            note_html = f'<div class="sub">{esc(it["note"])}</div>' if it.get("note") else ""
+            note_html = memo_block(it.get("note"))
             transit = transit_line(it.get("arrive_from"))
             if it.get("image_url"):
                 img_html = (
@@ -1430,6 +1526,136 @@ def build_itinerary_table(d) -> str:
     )
 
 
+# ─── 문서 페이지 렌더 (마크다운 → HTML) ─────────────────────────────────────
+
+DOC_CSS = """
+  .doc { line-height: 1.6; word-break: keep-all; }
+  .doc h1 { font-size: 1.4rem; margin: 1rem 0 0.5rem; color: var(--fg); font-weight: 600; }
+  .doc h2 { font-size: 1.1rem; margin: 1.3rem 0 0.4rem; color: var(--fg); font-weight: 600;
+            border-bottom: 1px solid var(--border); padding-bottom: 0.2rem; }
+  .doc h3 { font-size: 1rem; margin: 1rem 0 0.3rem; color: var(--fg); font-weight: 600; }
+  .doc p { margin: 0.5rem 0; }
+  .doc ul, .doc ol { padding-left: 1.3rem; margin: 0.5rem 0; }
+  .doc li { margin: 0.25rem 0; }
+  .doc a { color: var(--accent); }
+  .doc strong { font-weight: 600; }
+  .doc code {
+    background: var(--subcard); border: 1px solid var(--border); border-radius: 4px;
+    padding: 0.05rem 0.3rem; font-size: 0.85em; word-break: break-all;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  .doc blockquote {
+    margin: 0.6rem 0; padding: 0.4rem 0.8rem; border-left: 3px solid var(--accent);
+    background: var(--subcard); color: var(--muted); border-radius: 0 4px 4px 0;
+  }
+  .doc blockquote p { margin: 0.3rem 0; }
+  .doc table {
+    border-collapse: collapse; width: 100%; margin: 0.6rem 0; font-size: 0.85rem;
+    display: block; overflow-x: auto; -webkit-overflow-scrolling: touch;
+  }
+  .doc th, .doc td { border: 1px solid var(--border); padding: 0.4rem 0.55rem; text-align: left; vertical-align: top; }
+  .doc th { background: var(--subcard); font-weight: 600; white-space: nowrap; }
+  .doc hr { border: none; border-top: 1px solid var(--border); margin: 1.2rem 0; }
+"""
+
+_FRONTMATTER_RE = re.compile(r"\A---\n.*?\n---\n", re.DOTALL)
+
+
+def strip_frontmatter(text: str) -> str:
+    """선두 YAML frontmatter(---...---) 블록 제거. 없으면 원문 그대로."""
+    return _FRONTMATTER_RE.sub("", text, count=1)
+
+
+def render_markdown_body(md_text: str) -> str:
+    html_body = markdown.markdown(
+        strip_frontmatter(md_text),
+        extensions=["tables", "sane_lists"],
+        output_format="html",
+    )
+    return f'<div class="doc">\n{html_body}\n</div>'
+
+
+def build_doc_page(d, page: DocPage) -> str:
+    md_text = (BASE / page.source).read_text(encoding="utf-8")
+    nav = (
+        f'<nav><a href="{esc(page.back_href)}">{esc(page.back_label)}</a>'
+        f'<a href="../index.html">🏠 홈</a></nav>'
+    )
+    body = (
+        nav
+        + render_markdown_body(md_text)
+        + f"\n<footer>레포 {esc(page.source)} 의 사이트 내 사본 · 원본이 정본</footer>\n"
+        + tab_bar(page.tab, in_viz=True)
+    )
+    return html_doc(
+        page.title,
+        body,
+        tokens=d["tokens"],
+        description=page.description,
+        og_slug=page.og_slug,
+        page_path=page.out,
+        extra_css=DOC_CSS,
+    )
+
+
+def _first_heading(md_text: str) -> str:
+    for line in md_text.splitlines():
+        s = line.strip()
+        if s.startswith("# "):
+            return s[2:].strip()
+    return ""
+
+
+def build_decision_log_index(d) -> str:
+    entries = sorted(
+        (p for p in (DOCS / "decision-log").glob("*.md") if p.name != "README.md"),
+        key=lambda p: p.name,
+        reverse=True,
+    )
+    linked = {
+        p.source.rsplit("/", 1)[-1]: p.out
+        for p in DOC_PAGES
+        if p.source.startswith("docs/decision-log/")
+    }
+    rows = []
+    for p in entries:
+        title = _first_heading(p.read_text(encoding="utf-8")) or p.stem
+        if p.name in linked:
+            href = doc_href(linked[p.name], in_viz=True)
+            label = f'<a href="{esc(href)}">{esc(title)}</a>'
+        else:
+            label = esc(title)
+        rows.append(
+            f'<li><b style="font-variant-numeric:tabular-nums;">{esc(p.name[:10])}</b> — {label}</li>'
+        )
+    body = f"""<h1>의사결정 일지</h1>
+<div class="status">{len(entries)}개 항목 · 최신순 · 본문은 레포 docs/decision-log/ 에 보관</div>
+
+<nav>
+  <a href="archive.html">← 아카이브</a>
+  <a href="../index.html">🏠 홈</a>
+</nav>
+
+<section class="card">
+  <h2>전체 일지 ({len(entries)}개)</h2>
+  <div class="sub" style="margin-bottom:0.5rem;">교토 변경 결정만 사이트 내 문서로 연결 · 나머지는 제목만 표기 (원본은 레포 docs/decision-log/).</div>
+  <div class="doc"><ul>{''.join(rows)}</ul></div>
+</section>
+
+<footer>docs/decision-log/ 단일 출처 · ADR(Nygard) 형식</footer>
+{tab_bar("home", in_viz=True)}
+"""
+    return html_doc(
+        "의사결정 일지 · 교토 가족여행 2026",
+        body,
+        tokens=d["tokens"],
+        description="의사결정 일지 전체 목록 (최신순)",
+        og_slug="archive",
+        page_path=DECISION_LOG_OUT,
+        extra_css=DOC_CSS,
+    )
+
+
 # ─── OG SVG 자산 (1200×630) ────────────────────────────────────────────────
 
 OG_FONT_STACK = "-apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif"
@@ -1473,6 +1699,15 @@ OUTPUTS = (
     ("viz/lodging.html",         lambda p: p / "viz" / "lodging.html",         build_lodging),
     ("viz/archive.html",         lambda p: p / "viz" / "archive.html",         build_archive),
     ("viz/breakfast.html",       lambda p: p / "viz" / "breakfast.html",       build_breakfast),
+) + tuple(
+    (
+        page.out,
+        lambda p, rel=page.out: p / rel,
+        lambda d, pg=page: build_doc_page(d, pg),
+    )
+    for page in DOC_PAGES
+) + (
+    (DECISION_LOG_OUT, lambda p: p / "viz" / "decision-log.html", build_decision_log_index),
 ) + tuple(
     (
         f"assets/og-{slug}.svg",

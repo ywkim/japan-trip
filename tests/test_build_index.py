@@ -21,6 +21,9 @@ ALL_OG_SVGS = tuple(BASE / "assets" / f"og-{s}.svg" for s in OG_SLUGS)
 ALL_OUTPUTS = ALL_HTML_OUTPUTS + ALL_OG_SVGS
 SCRIPT = BASE / "scripts" / "build_index.py"
 
+sys.path.insert(0, str(BASE / "scripts"))
+import build_index  # noqa: E402
+
 
 def run(*args) -> subprocess.CompletedProcess:
     return subprocess.run([sys.executable, str(SCRIPT), *args], capture_output=True, text=True, cwd=BASE)
@@ -280,24 +283,27 @@ class BuildIndexTests(unittest.TestCase):
             self.assertIn(candidate_name, itin, f"candidate '{candidate_name}' missing in itinerary.html")
 
     def test_checklist_note_urls_rendered_as_links(self):
-        """data/booking-checklist.json 항목 note에 포함된 http URL이
-        viz/checklist.html에서 클릭 가능한 <a href> 링크로 렌더돼야 한다.
-        모바일 예약 탭에서 출처·상세 문서로 바로 이동하기 위한 회귀 가드.
+        """note에 포함된 http URL은 linkify가 클릭 가능한 <a href> 링크로 렌더해야 한다.
+        모바일 예약 탭에서 외부 출처로 바로 이동하기 위한 회귀 가드. (GitHub 링크는
+        검사 J가 별도 차단하므로 production note에는 URL이 없을 수 있어, linkify
+        동작은 격리 입력으로 직접 검증하고 production note URL은 조건부로 확인한다.)
         """
+        sys.path.insert(0, str(BASE / "scripts"))
+        import build_index
+        rendered = build_index.linkify("출처 https://example.com/doc 참고")
+        self.assertIn('<a href="https://example.com/doc"', rendered)
+
         run()
         import json as _json
         import re as _re
         data = _json.loads((BASE / "data" / "booking-checklist.json").read_text(encoding="utf-8"))
         url_re = _re.compile(r"https?://[^\s]+")
-        urls = []
-        for it in data["items"]:
-            urls.extend(url_re.findall(it.get("note", "")))
-        self.assertGreater(len(urls), 0, "fixture must have at least one note containing a URL")
         html = CHECKLIST.read_text(encoding="utf-8")
-        for url in urls:
-            with self.subTest(url=url):
-                self.assertIn(f'href="{url}"', html,
-                              f"note URL {url!r} not rendered as <a href> in checklist.html")
+        for it in data["items"]:
+            for url in url_re.findall(it.get("note", "")):
+                with self.subTest(url=url):
+                    self.assertIn(f'href="{url}"', html,
+                                  f"note URL {url!r} not rendered as <a href> in checklist.html")
 
     def test_checklist_badge_does_not_wrap(self):
         """상태 배지(미정/확정)가 좁은 폭에서 글자 단위로 세로 줄바꿈되지 않도록
@@ -306,6 +312,15 @@ class BuildIndexTests(unittest.TestCase):
         html = CHECKLIST.read_text(encoding="utf-8")
         self.assertRegex(html, r"\.badge\s*\{[^}]*white-space:\s*nowrap")
         self.assertRegex(html, r"\.badge\s*\{[^}]*flex-shrink:\s*0")
+
+    def test_checklist_value_cell_wraps_long_text(self):
+        """금액·권장 등 긴 값(.row .v)이 모바일 폭에서 가로 오버플로/클리핑되지
+        않도록 flex 자식이 줄어들 수 있어야 한다(min-width:0 + overflow-wrap).
+        긴 amount가 카드 밖으로 잘리던 회귀 가드."""
+        run()
+        html = CHECKLIST.read_text(encoding="utf-8")
+        self.assertRegex(html, r"\.row\s+\.v\s*\{[^}]*min-width:\s*0")
+        self.assertRegex(html, r"\.row\s+\.v\s*\{[^}]*overflow-wrap:\s*anywhere")
 
     def test_checklist_status_is_color_coded(self):
         """예약 탭 항목은 상태별 색상 클래스(badge·subcard accent)로 구분돼야 한다.
@@ -412,6 +427,51 @@ class NoteFoldTests(unittest.TestCase):
         html = CHECKLIST.read_text(encoding="utf-8")
         self.assertIn("PIN 5647", html, "checklist note detail (PIN) lost after fold")
         self.assertIn("20260513170241828", html, "checklist note detail (confirm no.) lost after fold")
+
+
+class ChecklistDetailFoldTests(unittest.TestCase):
+    """긴 예약번호·권장 값을 접어 모바일에서 우측 정렬 셀이 넘치지 않게 하는 회귀 가드.
+
+    PR #45가 lodging·checklist를 fold 비대상으로 두었던 것을, '모든 화면 접기' 요청에 따라
+    checklist 구조화 행(예약번호·권장)에도 확장한다.
+    """
+
+    SHORT = "에어서울 RS · A8YW58 · 발권"
+    LONG = ("Trip.com ① 1400827143416024 (성인2, ₩94,108) · ② 1400827143410570 "
+            "(성인2, PIN 2362) · 6/1 10:30 · LEE/SOYEON · 조건부 취소")
+
+    def test_short_value_stays_plain_row(self):
+        out = build_index.detail_row("예약번호", self.SHORT)
+        self.assertIn('class="row"', out)
+        self.assertIn(">예약번호<", out)
+        self.assertNotIn("<details", out)
+
+    def test_long_value_is_collapsible(self):
+        out = build_index.detail_row("예약번호", self.LONG)
+        self.assertIn('<details class="leg"', out,
+                      "long structured value should fold into <details class=\"leg\">")
+        self.assertNotIn('class="row"', out)
+
+    def test_long_value_detail_is_lossless(self):
+        out = build_index.detail_row("예약번호", self.LONG)
+        for tok in ("1400827143416024", "1400827143410570", "PIN 2362", "LEE/SOYEON", "조건부 취소"):
+            with self.subTest(tok=tok):
+                self.assertIn(tok, out, f"detail_row dropped {tok!r} after folding")
+
+    def test_empty_value_renders_nothing(self):
+        self.assertEqual(build_index.detail_row("예약번호", ""), "")
+        self.assertEqual(build_index.detail_row("예약번호", None), "")
+
+    def test_long_reference_folded_in_checklist_html(self):
+        """프로덕션 빌드에서 긴 예약번호(사이호지·트립닷컴 등)는 접기 요약으로 렌더돼야 한다."""
+        run()
+        html = CHECKLIST.read_text(encoding="utf-8")
+        self.assertIn("▸", html)  # leg summary 마커
+        self.assertIn("예약번호 ·", html,
+                      "long reference should fold with a '예약번호 · …' summary")
+        # 접어도 전체 예약번호 텍스트는 보존
+        self.assertIn("1400827143410570", html,
+                      "folded reference detail (saihoji 2nd booking) lost")
 
 
 class ItineraryTableTests(unittest.TestCase):
@@ -523,6 +583,57 @@ class FoodQualityRenderTests(unittest.TestCase):
         run()
         index = INDEX.read_text(encoding="utf-8")
         self.assertNotIn('class="food-quality"', index, "minimal index.html should not carry food-quality badges")
+
+
+class ItineraryMemoFoldTests(unittest.TestCase):
+    """일정 카드·시간표의 긴 장소 메모·맛집 상세 노트를 '첫 문장 요약 + 접기'로 렌더(모든 화면 fold 확장)."""
+
+    def test_short_memo_stays_plain(self):
+        out = build_index.memo_block("17:00 마감 주의")
+        self.assertIn('class="sub"', out)
+        self.assertNotIn("<details", out)
+
+    def test_long_memo_folds_with_first_sentence_summary(self):
+        memo = "시오 도보 10분. 외정원 30분, 본궁 입장(¥1,300/인)은 시간·체력 절약 차 생략 권장 — 5/31 당일 컨디션으로 결정"
+        out = build_index.memo_block(memo)
+        self.assertIn('<details class="leg"', out)
+        self.assertIn("시오 도보 10분</summary>", out, "first sentence should become the summary")
+        self.assertIn("5/31 당일 컨디션으로 결정", out, "memo tail lost after folding")
+
+    def test_long_memo_prefers_earlier_separator(self):
+        # 첫 ". "가 60자 밖이면 ' · '로 앞 토막을 가른다
+        memo = ("니넨자카 진입점 스타벅스 야사카차야점(100년 마치야 매장) · % 아라비카 교토 히가시야마점 — "
+                "둘 중 택1 카페 휴식 권장. 4인 좌석 대기 길 수 있음")
+        out = build_index.memo_block(memo)
+        self.assertIn('<details class="leg"', out)
+        self.assertIn("매장)</summary>", out)
+
+    def test_memo_without_separator_uses_generic_summary(self):
+        memo = "가" * 70
+        out = build_index.memo_block(memo)
+        self.assertIn('<details class="leg"', out)
+        self.assertIn("상세 보기", out)
+        self.assertIn("가" * 70, out, "memo body lost in generic fold")
+
+    def test_custom_class_preserved_for_short_memo(self):
+        out = build_index.memo_block("교토역 도보 5분", cls="t-note")
+        self.assertIn('class="t-note"', out)
+
+    def test_long_memo_folded_in_itinerary_views(self):
+        run()
+        for path in (ITINERARY, TABLE):
+            with self.subTest(path=path.name):
+                html = path.read_text(encoding="utf-8")
+                self.assertIn("닌넨자카·산넨자카 인근 말차 디저트 카페</summary>", html,
+                              "long place memo should fold into a first-sentence summary")
+                self.assertIn("영업 11:00~20:00", html, "memo tail lost (not lossless)")
+
+    def test_long_food_note_folded_but_rating_kept(self):
+        run()
+        html = ITINERARY.read_text(encoding="utf-8")
+        self.assertIn('class="food-quality"', html, "rating line must stay visible")
+        self.assertIn("쓰촨 중식</summary>", html, "long food note should fold to first sentence")
+        self.assertIn("1인 ¥4,000~5,000", html, "food note detail lost after folding")
 
 
 class ItineraryDocLinkTests(unittest.TestCase):
@@ -685,6 +796,78 @@ class TabBarTests(unittest.TestCase):
         html = LODGING.read_text(encoding="utf-8")
         for keyword in ("에어비앤비", "카덴쇼", "항공"):
             self.assertIn(keyword, html, f"lodging.html missing '{keyword}'")
+
+
+DOC_PAGE_OUTPUTS = (
+    BASE / "viz" / "report.html",
+    BASE / "viz" / "itinerary-doc.html",
+    BASE / "viz" / "research.html",
+    BASE / "viz" / "transit-pass.html",
+    BASE / "viz" / "decision-kyoto.html",
+    BASE / "viz" / "decision-log.html",
+)
+
+
+class DocPageTests(unittest.TestCase):
+    """레포 마크다운 → 사이트 내 HTML 렌더 페이지 (GitHub 링크 대체)."""
+
+    def test_all_doc_pages_generated(self):
+        run()
+        for path in DOC_PAGE_OUTPUTS:
+            with self.subTest(path=path.name):
+                self.assertTrue(path.exists(), f"{path.relative_to(BASE)} not generated")
+
+    def test_doc_pages_have_no_github_links(self):
+        """검사 J 핵심: 렌더된 문서 페이지에 github.com이 남으면 안 된다."""
+        run()
+        for path in DOC_PAGE_OUTPUTS:
+            with self.subTest(path=path.name):
+                self.assertNotIn("github.com", path.read_text(encoding="utf-8"))
+
+    def test_report_renders_markdown_table_and_strips_frontmatter(self):
+        run()
+        html = (BASE / "viz" / "report.html").read_text(encoding="utf-8")
+        self.assertIn("<table>", html, "GFM table should render from final-report.md")
+        self.assertIn('<div class="doc">', html, "doc body wrapper missing")
+        self.assertNotIn("title: 일본 여행 결정", html, "YAML frontmatter should be stripped")
+
+    def test_decision_log_index_links_kyoto_entry(self):
+        run()
+        html = (BASE / "viz" / "decision-log.html").read_text(encoding="utf-8")
+        self.assertIn('href="decision-kyoto.html"', html, "kyoto decision entry should link to its page")
+        entries = sorted(
+            p for p in (BASE / "docs" / "decision-log").glob("*.md") if p.name != "README.md"
+        )
+        self.assertEqual(html.count("<li>"), len(entries), "every decision-log entry should be listed")
+
+    def test_checklist_doc_links_rewritten_to_in_site_pages(self):
+        """booking-checklist.json의 레포 문서 경로 link.url이 사이트 내 페이지로 치환되어야 한다."""
+        run()
+        html = CHECKLIST.read_text(encoding="utf-8")
+        self.assertIn('href="research.html"', html, "research doc link should resolve in-site")
+        self.assertIn('href="transit-pass.html"', html, "transit-pass doc link should resolve in-site")
+        self.assertNotIn("docs/booking-research-2026-05-24.md\"", html,
+                         "raw repo md path should not be used as href")
+
+    def test_doc_pages_have_og_meta(self):
+        run()
+        for path in DOC_PAGE_OUTPUTS:
+            with self.subTest(path=path.name):
+                html = path.read_text(encoding="utf-8")
+                self.assertIn('property="og:title"', html)
+                self.assertIn("/assets/og-", html)
+
+    def test_doc_pages_drift_detected_by_check(self):
+        run()
+        for path in DOC_PAGE_OUTPUTS:
+            with self.subTest(path=path.name):
+                original = path.read_text(encoding="utf-8")
+                try:
+                    path.write_text(original + "<!-- drift -->", encoding="utf-8")
+                    r = run("--check")
+                    self.assertEqual(r.returncode, 1, f"--check should fail on drift in {path.name}")
+                finally:
+                    path.write_text(original, encoding="utf-8")
 
 
 if __name__ == "__main__":

@@ -31,6 +31,10 @@
      ITINERARY_QUALITY 화이트리스트. source_fetched_at > 60d 이고
      data_quality != tbd_needs_browser_mcp 면 stale fail. food_quality가 없는
      항목(동네 끼니 등)은 면제. route_candidates도 순회.
+  J. Vercel 산출물 GitHub 링크 금지: Vercel이 서빙하는 HTML(index.html +
+     viz/*.html 전체)에 'github.com' 문자열(링크·raw URL 모두)이 등장하면 fail.
+     가족 공유 페이지에서 레포 노출 방지 — 외부 문서는 사이트 내 HTML로 연결하거나
+     일반 텍스트(레포 경로)로만 표기.
 
 exit 0 = 모두 통과 또는 경고만, exit 1 = 실패.
 
@@ -341,6 +345,29 @@ def check_itinerary_food_quality(base: Path, today: date) -> tuple[list[str], li
     return errors, warnings
 
 
+def check_no_github_links(base: Path) -> list[str]:
+    """검사 J: Vercel 산출물 HTML에 github.com 링크/URL이 없어야 함.
+
+    가족과 공유하는 페이지에서 레포(소스·미렌더 .md)로 빠져나가는 링크를 막는다.
+    index.html + viz/*.html 전체를 glob으로 스캔하므로 새 viz 페이지(문서 렌더
+    페이지 등)도 자동 포함. 존재하지 않는 산출물은 silent-skip (격리 fixture 대응).
+    """
+    errors: list[str] = []
+    targets: list[str] = []
+    if (base / "index.html").exists():
+        targets.append("index.html")
+    targets.extend(
+        sorted(str(p.relative_to(base).as_posix()) for p in (base / "viz").glob("*.html"))
+    )
+    for rel in targets:
+        if "github.com" in (base / rel).read_text(encoding="utf-8"):
+            errors.append(
+                f"[J] {rel}: github.com 참조 발견 — Vercel 산출물에는 GitHub 링크 금지 "
+                f"(사이트 내 HTML로 연결하거나 일반 텍스트로 표기)"
+            )
+    return errors
+
+
 def run(base: Path, today: date) -> tuple[list[str], list[str]]:
     errors: list[str] = []
     warnings: list[str] = []
@@ -357,6 +384,7 @@ def run(base: Path, today: date) -> tuple[list[str], list[str]]:
     e, w = check_itinerary_food_quality(base, today)
     errors.extend(e)
     warnings.extend(w)
+    errors.extend(check_no_github_links(base))
     return errors, warnings
 
 

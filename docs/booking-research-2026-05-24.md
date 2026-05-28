@@ -8,7 +8,7 @@
 |---|---|---|---|
 | 여행자보험 | 2026-05-25 | researched_market_rate | 실손형 종합, 시부모 연령 입력 후 다이렉트 가입 |
 | 교통패스 발권 | 2026-05-25 | confirmed_booking(편도) | Trip.com 온라인 e티켓 편도 예약 완료 (소연 2026-05-25) · 귀국편 미예약 |
-| eSIM | 2026-05-28 | researched_market_rate | Klook 가성비 데이터 플랜, 출국 전 설치 |
+| 데이터/연결성 | 2026-05-28 | researched_market_rate | **확정: 영욱 = 글로벌 마켓형 Airalo Moshi Moshi 5GB ₩13,800**(2026-05-26), 소연·시부모 핫스팟 ₩0 → 4인 합계 ₩13,800. 구매·개통 시 confirmed_booking 승격 |
 | 환전/트래블카드 | 2026-05-28 | researched_market_rate | 트래블로그(하나계좌) 또는 트래블월렛 |
 
 ---
@@ -64,26 +64,75 @@
 
 출처: japan-guide.com JR West One-Way Tickets, JR West 공식(westjr.co.jp) 2026 WEST QR e-티켓 안내, Rakuten/KKday 하루카 편도권 페이지 — 2026-05-24 검색. 발권 채널 결정은 소연(2026-05-24, PR #43 코멘트). 운임 `official_fare`, 채널 비교 `researched_market_rate`.
 
+### 2-1. 귀국편(6/3 교토→KIX) 채널 비교 (리서치 2026-05-26)
+
+왕로(편도)만 예약된 상태에서 **복로(교토→KIX, 성인 4인, 2026-06-03)** 발권 옵션. 환율 가정 100엔=950원.
+
+| 채널 | 1인 운임 | 4인 총액 | 지정석 | 리드타임/취소 | data_quality | 출처(2026-05-26) |
+|---|---|---|---|---|---|---|
+| Trip.com 동일 상품 | ~₩18,500(왕로 동일 추정) | ~₩70,300(−5% 시) | 별도 | 즉시 확정·당일 00:00까지 무료취소 | `researched_market_rate` | kr.trip.com/things-to-do/detail/17263458 |
+| WEST QR 공식 외국인 할인 편도 | **¥2,200** | **¥8,800 ≈ ₩83,600** | **포함** | 탑승 30일 전(5/4~)·이용버튼 누르기 전 환불 | `official_fare` | westjr.co.jp/global/en/ticket/westqr/haruka |
+| 현장 정상 자유석 | ¥3,060 | ¥12,240 ≈ ₩116,280 | 없음 | 당일 | `official_fare` | japan-guide.com/e/e2363.html |
+
+- **편도 단독 구매 가능**(왕복 강제 아님, 1회용). 왕로를 Trip.com 편도로 산 상태에서 복로만 추가 구매 OK. 자격: 외국인 단기체재 + 여권.
+- **권장**: 왕로와 동일 **Trip.com 채널**로 통일(e티켓·여권 매칭 일원화, 당일 무료취소로 항공 시각 확정 전 유연). 단 발권 직전 "교토→KIX·6/3·성인4" 조건으로 **실제 표시가 재확인 필수**(페이지 최저가 ₩10,850은 방향·날짜 미지정 값이라 신뢰 불가). 공식 WEST QR(¥2,200=₩20,900/인, 지정석 포함)과 비교해 동등 이하면 채널 통일.
+- **미결**: 에어서울 KIX 출발 시각 미정 → 하루카 지정석 시각은 항공편 확정 후 역산(공항 약 3h 전 도착, 교토→KIX 75~80분).
+
+출처: JR West 공식(westjr.co.jp WEST QR HARUKA·one-way), kr.trip.com(상품 17263458), japan-guide.com(e2363) — 2026-05-26 검색. 일지 `2026-05-26-haruka-return-leg-research.md`.
+
 ---
 
-## 3. eSIM (마감 2026-05-28)
+## 3. 데이터/연결성 (마감 2026-05-28)
 
-**상황**: 4인 데이터. 4일(5/31~6/3) 일본 체류. 기기별 eSIM 지원 사전 확인 필요.
+**상황**: 4인 데이터. 4일(5/31~6/3) 일본 체류. **통신사가 갈린다 — 부부(영욱·소연) SKT, 시부모 KT** (2026-05-26 확인). 시부모는 고령으로 폰 eSIM 설치·이중유심 전환·기기 미지원 리스크가 부담 → **번호 유지·무설치**를 우선한다. 따라서 단일 eSIM 일괄안보다 **회선별 최적안**으로 분리한다.
 
-**시세 (2026)**
+**통신사 로밍·eSIM 시세 (2026-05-26 재검색)**
 
-| 제공처 | 대표 플랜 | 가격 | 4일 환산 1인 |
-|---|---|---|---|
-| **Klook** | 일일 데이터(1GB/일 고속, 무제한 throttle) | 약 $2/일 | 약 ₩11,000 내외 |
-| Airalo | 5GB / 7일 | 약 $10 | 약 ₩13,800 (잔여 용량 낭비) |
-| Holafly | 무제한 15일 $3.39/일·30일 $2.5/일 | 고가 | 4일 단기엔 비효율 |
+| 방식 | 데이터 | 가격 | 공유/테더링 | 비고 |
+|---|---|---|---|---|
+| SKT baro 6GB (프로모션 →8GB) | 8GB | ₩39,000 | 가족로밍 +₩3,000, 최대 5명(전원 SKT) · 핫스팟 OK | 최대 30일·소진 후 400Kbps, baro 통화 무료 |
+| SKT baro 3GB | 3GB | ₩29,000 | 동일 | 단기·소량 |
+| KT 데이터함께ON | 아시아 4GB | ₩33,000 | **같은 KT 2명 공유** · 핫스팟 OK | 15일·통화 119원/분·문자 22원/건 |
+| KT 중국/일본 알뜰 | 3GB + 통화 30분 | ₩25,000 | 단일 회선 | 5일·일본 전용 |
+| **Airalo eSIM (Moshi Moshi)** | 5GB/7일 | **$10 ≈ ₩13,800** | **핫스팟 OK (무제한·무료)** | KDDI/Softbank · 데이터 전용 · 4G/LTE(5G 미지원) · 직접 가격 확인 2026-05-26 |
+| Airalo eSIM (대안) | 3GB/7일 / 1GB/3일 | $8 / $4 | 핫스팟 OK | 3GB(₩11,040)·1GB(₩5,520) · 동일 조건 |
+| Klook eSIM (DOCOMO/Softbank) | 1GB/일 ~ 무제한 | $1.15~$88.45 범위 · 4일 1GB/일 ≈ **₩11,000~14,000/인 추정** | **핫스팟 지원**(Holafly 리뷰 명시) | Docomo/Softbank 5G · 한국 페이지(klook.com/ko) 봇 차단으로 직접 KRW 미검증 — 시세는 myhocance·Holafly 리뷰 기준 |
 
-- Klook은 바우처 설치~LTE까지 약 4분, 핫스팟 허용. 지원은 앱 채팅.
-- Airalo·Holafly는 마케팅 프리미엄으로 동급 대비 비싼 편(리서치 일관 지적).
+> SKT baro·KT 데이터함께ON·24GB급 등은 진행 중 프로모션(SKT 2026-04-23~08-21 데이터 증정: 6GB→8GB·12GB→16GB·24GB→32GB)으로 같은 가격에 용량이 늘어날 수 있다. SKT·KT 하루종일 무제한형(₩15,000~19,000/일)은 4일 환산 ₩60,000~76,000/인으로 본 단기 여행엔 고가 — 버킷형이 유리.
+>
+> **eSIM 핫스팟 명시 확인 (2026-05-26)**: ① Airalo 공식 FAQ + Moshi Moshi 리뷰(esimsavvy) — 추가 과금 없이 핫스팟 작동 ② Klook eSIM 리뷰(Holafly esim.holafly.com/reviews/klook-esim-review) — "Both options support hotspot sharing" 명시. **영욱 라인 → 가족 3명 핫스팟 공유** 요건 충족.
+>
+> **Klook 직접 검증 실패 사유**: klook.com/en-US 및 /ko 모두 2026-05-26 본 세션에서 봇 차단(Akamai "request blocked")으로 페이지 로드 불가 → KRW 가격은 myhocance.com 블로그 캐시·Holafly 리뷰의 USD 환산($1≈₩1,380 가정) 기반 추정. 결제 직전 영욱이 본인 브라우저에서 재확인 후 `confirmed_booking` 승격 필요.
 
-**권장**: **Klook 가성비 데이터 플랜**(4일/4~8일권) 4인분. 출국 전 설치 → 도착 후 활성화. 시부모 기기 eSIM 지원·iOS 버전 사전 확인(미지원 시 해당 인원만 포켓 와이파이/물리 SIM 대안).
+**실사용 추정 (사용자 제시, 2026-05-26)**
 
-출처: Klook(klook.com), Tokyo Cheapo eSIM Japan, MATCHA Best eSIM, 비교 리서치(findingalexx·japanapparently 등) — 2026-05-24 검색. `researched_market_rate`.
+| 사람 | 4일 예상 데이터 |
+|---|---|
+| 영욱 | ~3.5GB |
+| 소연 | ~450MB |
+| 시부 | ~55MB |
+| 시모 | ~9MB |
+| **합계** | **≈ 4GB** (영욱 ~88%) |
+
+→ 4인 총 수요가 **~4GB**에 불과하고 영욱에 집중. **시부모 합계 64MB는 자기 요금제가 불필요**(핫스팟·숙소 WiFi로 충분), 소연 450MB도 핫스팟 수준. 따라서 4인 각자 플랜(12~20GB·₩44K~95K)은 과대 — **영욱 1회선 데이터 + 나머지 핫스팟**으로 충분.
+
+**권장 (실사용 right-sizing — 2026-05-26)**
+
+> **확정 (2026-05-26): (b) Airalo Moshi Moshi 5GB 채택.** 시장 분석상 본 프로필(총 ~4GB·핫스팟·도심·4일)의 스위트스팟은 "소량 GB 버킷 + 테더링 허용 + 도심망" = 글로벌 마켓형. Airalo는 가격·핫스팟을 직접 검증했고 5GB 통합형이라 핫스팟 공유에도 일일 한도가 없어, (c)Klook(가격 미검증·1GB/일 한도)·(a)baro(GB당 고가)에 우선한다. 출국 전 구매·개통만 잔여. 일지: `docs/decision-log/2026-05-26-03-esim-global-marketplace-airalo.md`.
+
+- **영욱 1회선만 데이터 플랜(~4GB급), 소연·시부모는 핫스팟.** 영욱 라인이 본인 3.5GB + 핫스팟 ~0.5GB ≈ 4GB를 감당.
+  - (a) **영욱 baro 6GB(프로모션 8GB) ₩39,000** — SKT 번호 native·baro 통화·**Club T 혜택**(공항버스 ₩5,000 등). 8GB로 여유, 핫스팟 허용.
+  - (b) ✅ **[확정] 영욱 Airalo Moshi Moshi 5GB/7일 $10 ≈ ₩13,800** — 핫스팟 공식 허용·KDDI/Softbank·당사 직접 가격 확인(2026-05-26). 데이터만 eSIM, SKT는 통화·SMS(OTP) 유지(이중유심). 5GB는 4GB 실사용에 여유. **글로벌 마켓형 채택.**
+  - (c) **영욱 Klook eSIM 4일 1GB/일 ~₩11,000** — 추정 최저가, Docomo/Softbank, 핫스팟 OK(Holafly 리뷰). 직접 KRW 미검증(Klook 봇 차단) — 결제 직전 본인 브라우저로 재확인 필요. baro 3GB(₩29,000)는 4GB엔 빠듯(초과분 400Kbps).
+- **소연 자기 라인 원하면**: baro 가족결합 +₩3,000(전원 SKT) 또는 별도 eSIM ~₩11,000. 핫스팟이면 ₩0.
+- **시부모(KT)**: 55MB·9MB는 무시 가능 → **유료 요금제 불필요·핫스팟 ₩0**. 본인 KT 번호로 수신전화가 필요하면 KT 음성 로밍만 별도 확인(데이터는 핫스팟).
+- **합계: ₩13,800 (확정 — 영욱 Airalo 5GB, 소연·시부모 핫스팟 ₩0).** 후보 범위였던 ₩11,000(Klook 추정)~₩39,000(baro) 중 검증·유연성 우선으로 Airalo 채택. 이전 4인 각자 플랜 ₩44~95K 대비 대폭 절감.
+
+> 참고(과거 비교, 플랜이 제공하는 1인당 GB — 실사용 ~4GB 대비 과대): ①전원 eSIM 4GB/인·합계 16GB·₩44,000 · ②부부 baro 8GB 공유+시부모 KT함께ON 4GB 공유·12GB·₩75,000 · ③부부 eSIM+시부모 KT함께ON·12GB·₩55,000 · ④부부 baro 16GB 공유+시부모 KT함께ON·20GB·₩95,000. 시부모 거의 미사용이 확인되며 4인 각자 플랜은 비효율.
+
+**다음 행동** (확정: Airalo): 영욱이 출국 전 Airalo 앱에서 Moshi Moshi 5GB를 구매·eSIM 설치 → 도착 후 데이터 ON + 핫스팟 켜기. 소연·시부모는 핫스팟(₩0). 결제·개통 완료 시 `data/booking-checklist.json` esim 항목을 `확정`(`confirmed_booking`) 승격 + `2026-05-XX-esim-confirmed.md` 일지 추가.
+
+출처: SKT T로밍 baro(troaming.tworld.co.kr, m.tworld.co.kr NA00007668), SKT 뉴스룸 로밍 프로모션(news.sktelecom.com/224368), KT 글로벌로밍(globalroaming.kt.com — 데이터함께ON·중국/일본 알뜰), Holafly 일본 로밍 가이드(esim.holafly.com) — 2026-05-26 검색. **eSIM 직접 검증(Playwright MCP, 2026-05-26)**: Airalo Japan(airalo.com/japan-esim) 5GB/7일 $10·핫스팟 허용 확인(스크린샷 `docs/screenshots/airalo-japan-2026-05-26.png`). Klook(klook.com/en-US, /ko)는 봇 차단(Akamai)으로 직접 로드 불가 → 가격은 Holafly Klook 리뷰(esim.holafly.com/reviews/klook-esim-review) 및 myhocance 블로그 캐시 기반 추정. 테더링 허용 근거: Airalo Help Center "Can I use tethering (Personal Hotspot)?"(airalo.com/help) + Airalo blog "Can You Hotspot with an eSIM?" + Holafly Klook 리뷰 "Both options support hotspot sharing". Saily(saily.com/destinations/japan-esim)·Nomad(nomadesim.com/en/destination/japan)는 2026-05-26 모두 404 — 경로 변경 추정. `researched_market_rate`.
 
 ---
 
