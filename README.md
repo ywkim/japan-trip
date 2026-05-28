@@ -21,7 +21,7 @@
 
 ### 1. 확정 정보 보기 (모바일·웹)
 
-- 배포: https://nihon-trip.vercel.app (Vercel, main 브랜치 자동 배포). 산출물(HTML·SVG)은 레포에 커밋하지 않고 배포 시점에 `vercel.json`의 `buildCommand`(`python3 scripts/build_index.py`)로 빌드
+- 배포: https://nihon-trip.vercel.app (Vercel, main 브랜치 자동 배포). 산출물(HTML·SVG)은 레포에 커밋하지 않고 배포 시점에 `vercel.json`의 `buildCommand`(`uv run python scripts/build_index.py`)로 빌드
 - `index.html` — 🏠 홈 탭 (운영 모드): 요약 + 일자별 일정. 하단 고정 4탭 내비게이션. 인라인 데이터로 자기완결, 더블클릭 동작
 - `viz/itinerary.html` — 📅 일정 탭: 일자별 상세 일정 카드 뷰 (시간대·동선·메모·이미지). `data/itinerary.json` 단일 출처. 이동 설명은 평이 요약(예: "🚌 버스로 35분") + 접기(상세 경로·링크)로 표시. 긴 장소 메모·맛집 상세 노트도 첫 문장 요약 + 접기(맛집 평점 줄은 항상 노출) — 모바일에서 시간·장소가 먼저 읽히도록
 - `viz/itinerary-table.html` — 📅 일정 탭: 3박4일 **시간표 뷰** (4일 열 × 시간대 행, 모바일 카드/데스크탑 테이블 자동 전환). `data/itinerary.json` 단일 출처
@@ -29,8 +29,10 @@
 - `viz/checklist.html` — ✅ 예약 탭: 예약 진행 상태 (기한 이른 순 정렬, 상태별 카운트). `data/booking-checklist.json` 단일 출처. 긴 메모·예약번호·권장(예약번호·PIN·취소정책 등)은 식별 요약 + 접기로 표시 — 짧은 값은 k/v 행, 44자 초과 값만 접어 모바일 셀 오버플로 방지
 - `viz/archive.html` — 📦 의사결정 아카이브 (장마 확률·9 예산 시나리오·7 후보지 점수). 메인 페이지의 무게중심을 운영 정보로 유지하기 위해 분석·결정 자료는 이곳으로 분리
 - `viz/breakfast.html` — 🍞 숙소 인근 조식 옵션 (아침 3회·숙소별 가게·영업시간·아침별 권장). `data/breakfast.json` 단일 출처. 일정 카드의 조식 슬롯에서 탭해 이동 (Vercel 화면은 외부 GitHub 링크 대신 사이트 내 페이지로 연결). 가게명은 모바일에서 탭하면 구글 지도가 열린다
+- `viz/report.html`·`viz/itinerary-doc.html`·`viz/research.html`·`viz/transit-pass.html`·`viz/decision-kyoto.html` — 레포 마크다운 문서(최종 보고서·일정 문서·예약 리서치·교통패스 비교·교토 변경 결정)를 사이트 내 HTML로 렌더한 페이지. 가족 공유 시 GitHub 노출 없이 열람 (검사 J: `github.com` 링크 금지)
+- `viz/decision-log.html` — 결정 일지 인덱스 (`docs/decision-log/*.md` 최신순 제목 목록, 교토 변경 결정만 링크)
 - `assets/og-*.svg` — 6장의 OG/Twitter 카드 이미지 (1200×630). 카톡·Slack·X 공유 시 페이지별 썸네일·제목·설명 노출
-- **HTML 7개·SVG 6장 모두 `scripts/build_index.py` 빌드 산출물 — 직접 편집 금지**. **레포에 커밋하지 않는다(`.gitignore`)** — 배포(CD)와 소스를 분리해 PR 머지 충돌을 줄인다. 클론 직후 로컬에서 보려면 `python scripts/build_index.py`를 1회 실행. 실제 배포는 Vercel이 매번 빌드하고, CI도 검증 전에 빌드한다(재현성·drift·콘텐츠 검사는 `tests/test_build_index.py`)
+- **HTML 13개·SVG 6장 모두 `scripts/build_index.py` 빌드 산출물 — 직접 편집 금지**. **레포에 커밋하지 않는다(`.gitignore`)** — 배포(CD)와 소스를 분리해 PR 머지 충돌을 줄인다. 클론 직후 로컬에서 보려면 `uv run python scripts/build_index.py`를 1회 실행(`markdown` 의존 — uv가 자동 설치). 실제 배포는 Vercel이 매번 빌드(`buildCommand`가 `uv run`으로 lockfile에서 markdown 설치), CI도 검증 전에 빌드한다(재현성·콘텐츠 검사는 `tests/test_build_index.py`)
 - 각 섹션 위 `<!-- SYNC: ... -->` 주석이 데이터 출처를 명시. CI(`scripts/validate.py`)가 경로 유효성과 §N 절 번호를 검증
 
 ### 2. 발권·예약 갱신
@@ -38,14 +40,14 @@
 - `data/booking-checklist.json`의 항목별 `status`·`reference`(예약번호)·`confirmed_at`(확정일) 갱신
 - 확정 금액은 `data/cost-options.json`에 반영 — `researched_market_rate` 라벨을 `confirmed_booking`으로 승격하고 `source`에 예약 사이트·확정일 기록
 - 변경 사유는 `docs/decision-log/`에 새 파일 추가 (`YYYY-MM-DD-slug.md`)
-- 점검: `python scripts/build_index.py` (산출물 생성) + `python -m unittest discover tests` + `python scripts/validate.py`
+- 점검: `uv run python scripts/build_index.py` (산출물 생성) + `uv run python -m unittest discover tests` + `uv run python scripts/validate.py`
 
 ### 3. 일정 갱신
 
 - `data/itinerary.json`의 해당 day(`days[*]`)에 시간대·동선·메모 갱신
 - 식사 항목은 `food_quality`(타베로그·구글·미쉐린 등 평점 + `source`·`data_quality`)로 맛집 근거 명시 — 추측 금지, 출처 없으면 머지 차단(검사 H)
 - `docs/kyoto-itinerary-may31-jun3-2026.md`(사람용 사본) 함께 갱신
-- `python scripts/build_index.py` 재빌드 → `viz/itinerary.html`·`viz/itinerary-table.html`·`index.html` 재생성
+- `uv run python scripts/build_index.py` 재빌드 → `viz/itinerary.html`·`viz/itinerary-table.html`·`index.html` 재생성
 
 ### 4. 현지 운영 (예정)
 
@@ -58,10 +60,10 @@
 
 ### 6. 검증 (CI)
 
-- `python scripts/build_index.py` — 산출물(7 HTML + 6 OG SVG)은 gitignore이므로 검증 전에 빌드(빌드 무오류 자체가 가드). 재현성(idempotent)·drift·콘텐츠 검사는 단위 테스트 `tests/test_build_index.py`가 담당. 로컬 재현성 확인은 `python scripts/build_index.py --check`(drift 시 exit 1)
-- `python -m unittest discover tests` — 단위 테스트 (validate·build_index·design_tokens·score·budget)
-- `python scripts/validate.py` — 가격 필드 무결성(source·data_quality), 30/60일 묵은 가격 경고/실패, SYNC 주석 경로·절 번호 검증, `docs/weather.md`↔`data/weather.json`, `docs/flights.md`↔`data/flights.json`, `DESIGN.md`↔`data/design-tokens.json` 동기화 검증
-- `.github/workflows/validate.yml`이 PR마다 위를 실행
+- `uv run python scripts/build_index.py` — 산출물(13 HTML + 6 OG SVG)은 gitignore이므로 검증 전에 빌드(빌드 무오류 자체가 가드). 재현성(idempotent)·콘텐츠 검사는 단위 테스트 `tests/test_build_index.py`가 담당. 로컬 재현성 확인은 `uv run python scripts/build_index.py --check`(drift 시 exit 1)
+- `uv run python -m unittest discover tests` — 단위 테스트 (validate·build_index·design_tokens·score·budget)
+- `uv run python scripts/validate.py` — 가격 필드 무결성(source·data_quality), 30/60일 묵은 가격 경고/실패, SYNC 주석 경로·절 번호 검증, `docs/weather.md`↔`data/weather.json`, `docs/flights.md`↔`data/flights.json`, `DESIGN.md`↔`data/design-tokens.json` 동기화 검증, Vercel 산출물 GitHub 링크 금지(검사 J — `index.html`·`viz/*.html`에 `github.com` 없음)
+- `.github/workflows/validate.yml`이 PR마다 위를 실행 (`uv sync --locked` 선행, `astral-sh/setup-uv`)
 
 ### 7. 시각 디자인 출처
 
@@ -98,8 +100,9 @@ DESIGN.md    # 시각 디자인 컨벤션 (awesome-design-md 9섹션, Quiet Ledg
 vercel.json  # Vercel 배포 설정 (buildCommand로 배포 시점 빌드)
 data/        # itinerary·booking-checklist·cost-options·design-tokens (실행 단일 출처) + decision·weather·flights (아카이브)
 docs/        # 일정·후보·날씨·항공 분석, 의사결정 일지(decision-log/)
-viz/         # itinerary.html·itinerary-table.html·lodging.html·checklist.html·archive.html·breakfast.html (build_index.py 산출물 — gitignore)
+viz/         # itinerary·itinerary-table·lodging·checklist·archive·breakfast + 문서 렌더(report·itinerary-doc·research·transit-pass·decision-kyoto·decision-log) (build_index.py 산출물 — gitignore)
 assets/      # og-*.svg (OG/Twitter 카드 이미지 6장, build_index.py 산출물 — gitignore)
+pyproject.toml + uv.lock  # 빌드 의존성 (markdown==3.7 — 문서 렌더용, uv virtual project)
 scripts/     # build_index·validate·score·budget·render-pdf
 tests/       # unittest (validate·build_index·design_tokens·score·budget)
 reports/     # 최종 보고서 (아카이브)
@@ -108,7 +111,8 @@ index.html   # 운영 페이지 — 요약·일자별 일정 (build_index.py 산
 
 ## 환경 요구
 
-- Python 3 (빌드·점수·예산)
+- [uv](https://docs.astral.sh/uv/) (Python·의존성 관리). `uv sync` → `uv run python ...`
+- Python 3.11+ (uv가 관리)
 - pandoc 또는 Chrome (PDF 변환, 선택)
 - 브라우저 (`index.html`·`viz/*.html` 더블클릭)
 

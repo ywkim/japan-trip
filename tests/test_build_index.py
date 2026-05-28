@@ -283,24 +283,27 @@ class BuildIndexTests(unittest.TestCase):
             self.assertIn(candidate_name, itin, f"candidate '{candidate_name}' missing in itinerary.html")
 
     def test_checklist_note_urls_rendered_as_links(self):
-        """data/booking-checklist.json 항목 note에 포함된 http URL이
-        viz/checklist.html에서 클릭 가능한 <a href> 링크로 렌더돼야 한다.
-        모바일 예약 탭에서 출처·상세 문서로 바로 이동하기 위한 회귀 가드.
+        """note에 포함된 http URL은 linkify가 클릭 가능한 <a href> 링크로 렌더해야 한다.
+        모바일 예약 탭에서 외부 출처로 바로 이동하기 위한 회귀 가드. (GitHub 링크는
+        검사 J가 별도 차단하므로 production note에는 URL이 없을 수 있어, linkify
+        동작은 격리 입력으로 직접 검증하고 production note URL은 조건부로 확인한다.)
         """
+        sys.path.insert(0, str(BASE / "scripts"))
+        import build_index
+        rendered = build_index.linkify("출처 https://example.com/doc 참고")
+        self.assertIn('<a href="https://example.com/doc"', rendered)
+
         run()
         import json as _json
         import re as _re
         data = _json.loads((BASE / "data" / "booking-checklist.json").read_text(encoding="utf-8"))
         url_re = _re.compile(r"https?://[^\s]+")
-        urls = []
-        for it in data["items"]:
-            urls.extend(url_re.findall(it.get("note", "")))
-        self.assertGreater(len(urls), 0, "fixture must have at least one note containing a URL")
         html = CHECKLIST.read_text(encoding="utf-8")
-        for url in urls:
-            with self.subTest(url=url):
-                self.assertIn(f'href="{url}"', html,
-                              f"note URL {url!r} not rendered as <a href> in checklist.html")
+        for it in data["items"]:
+            for url in url_re.findall(it.get("note", "")):
+                with self.subTest(url=url):
+                    self.assertIn(f'href="{url}"', html,
+                                  f"note URL {url!r} not rendered as <a href> in checklist.html")
 
     def test_checklist_badge_does_not_wrap(self):
         """상태 배지(미정/확정)가 좁은 폭에서 글자 단위로 세로 줄바꿈되지 않도록
@@ -793,6 +796,78 @@ class TabBarTests(unittest.TestCase):
         html = LODGING.read_text(encoding="utf-8")
         for keyword in ("에어비앤비", "카덴쇼", "항공"):
             self.assertIn(keyword, html, f"lodging.html missing '{keyword}'")
+
+
+DOC_PAGE_OUTPUTS = (
+    BASE / "viz" / "report.html",
+    BASE / "viz" / "itinerary-doc.html",
+    BASE / "viz" / "research.html",
+    BASE / "viz" / "transit-pass.html",
+    BASE / "viz" / "decision-kyoto.html",
+    BASE / "viz" / "decision-log.html",
+)
+
+
+class DocPageTests(unittest.TestCase):
+    """레포 마크다운 → 사이트 내 HTML 렌더 페이지 (GitHub 링크 대체)."""
+
+    def test_all_doc_pages_generated(self):
+        run()
+        for path in DOC_PAGE_OUTPUTS:
+            with self.subTest(path=path.name):
+                self.assertTrue(path.exists(), f"{path.relative_to(BASE)} not generated")
+
+    def test_doc_pages_have_no_github_links(self):
+        """검사 J 핵심: 렌더된 문서 페이지에 github.com이 남으면 안 된다."""
+        run()
+        for path in DOC_PAGE_OUTPUTS:
+            with self.subTest(path=path.name):
+                self.assertNotIn("github.com", path.read_text(encoding="utf-8"))
+
+    def test_report_renders_markdown_table_and_strips_frontmatter(self):
+        run()
+        html = (BASE / "viz" / "report.html").read_text(encoding="utf-8")
+        self.assertIn("<table>", html, "GFM table should render from final-report.md")
+        self.assertIn('<div class="doc">', html, "doc body wrapper missing")
+        self.assertNotIn("title: 일본 여행 결정", html, "YAML frontmatter should be stripped")
+
+    def test_decision_log_index_links_kyoto_entry(self):
+        run()
+        html = (BASE / "viz" / "decision-log.html").read_text(encoding="utf-8")
+        self.assertIn('href="decision-kyoto.html"', html, "kyoto decision entry should link to its page")
+        entries = sorted(
+            p for p in (BASE / "docs" / "decision-log").glob("*.md") if p.name != "README.md"
+        )
+        self.assertEqual(html.count("<li>"), len(entries), "every decision-log entry should be listed")
+
+    def test_checklist_doc_links_rewritten_to_in_site_pages(self):
+        """booking-checklist.json의 레포 문서 경로 link.url이 사이트 내 페이지로 치환되어야 한다."""
+        run()
+        html = CHECKLIST.read_text(encoding="utf-8")
+        self.assertIn('href="research.html"', html, "research doc link should resolve in-site")
+        self.assertIn('href="transit-pass.html"', html, "transit-pass doc link should resolve in-site")
+        self.assertNotIn("docs/booking-research-2026-05-24.md\"", html,
+                         "raw repo md path should not be used as href")
+
+    def test_doc_pages_have_og_meta(self):
+        run()
+        for path in DOC_PAGE_OUTPUTS:
+            with self.subTest(path=path.name):
+                html = path.read_text(encoding="utf-8")
+                self.assertIn('property="og:title"', html)
+                self.assertIn("/assets/og-", html)
+
+    def test_doc_pages_drift_detected_by_check(self):
+        run()
+        for path in DOC_PAGE_OUTPUTS:
+            with self.subTest(path=path.name):
+                original = path.read_text(encoding="utf-8")
+                try:
+                    path.write_text(original + "<!-- drift -->", encoding="utf-8")
+                    r = run("--check")
+                    self.assertEqual(r.returncode, 1, f"--check should fail on drift in {path.name}")
+                finally:
+                    path.write_text(original, encoding="utf-8")
 
 
 if __name__ == "__main__":
