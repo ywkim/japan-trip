@@ -149,7 +149,7 @@ def blog_reviews_html(reviews: list) -> str:
         return ""
     cards = "".join(
         f'<a href="{esc(r["url"])}" target="_blank" rel="noopener" class="blog-card">'
-        f'<img src="{esc(r["img"])}" class="blog-thumb" loading="lazy" alt="">'
+        f'<img src="{esc(r["img"])}" class="blog-thumb" loading="lazy" alt="" referrerpolicy="no-referrer">'
         f'<p class="blog-comment">{esc(r["comment"])}</p>'
         f'</a>'
         for r in reviews
