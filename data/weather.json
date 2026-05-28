@@ -16,6 +16,7 @@
   "tsuyu_normals": {
     "region": "긴키(近畿) — 교토·오사카·고베 포함",
     "source": "JMA 매우 평년값 (1991–2020). https://www.data.jma.go.jp/cpd/baiu/kako_baiu07.html (2026-05-14 조회)",
+    "source_verified_at": "2026-05-28",
     "iri_normal": "6월 6일경",
     "ake_normal": "7월 19일경",
     "recent_history": [
@@ -32,6 +33,7 @@
       "snapshot_date": "2026-05-14",
       "page_updated_at": "令和8年5月4日 (2026-05-04)",
       "source": "JMA 令和8年の梅雨入りと梅雨明け(速報値). https://www.data.jma.go.jp/cpd/baiu/sokuhou_baiu.html — Playwright DOM·스크린샷 검증 (docs/screenshots/jma-sokuhou-2026-05-14-*.png)",
+      "source_verified_at": "2026-05-28",
       "verification_method": "Playwright로 HTML 표 셀 단위 추출. 헤더 2단(地方/令和8年[時期·階級·平年差·昨年差]/平年の時期/昨年[時期·階級]) 구조에서 令和8年 4셀이 공란이면 미발표로 판정.",
       "kinki_iri": null,
       "kinki_iri_status": "미발표 (令和8年 4셀 모두 공란)",
