@@ -479,7 +479,7 @@ class ItineraryTableTests(unittest.TestCase):
     def test_table_has_key_activities(self):
         run()
         html = TABLE.read_text(encoding="utf-8")
-        for activity in ("키요미즈데라", "죽림길", "후시미", "카덴쇼"):
+        for activity in ("폰토초", "죽림길", "후시미", "카덴쇼"):
             self.assertIn(activity, html, f"activity '{activity}' missing in itinerary-table.html")
 
     def test_table_is_standalone(self):
@@ -517,7 +517,7 @@ class BlogReviewsTests(unittest.TestCase):
         self.assertGreaterEqual(itin.count('class="blog-reviews"'), 1, "no blog-reviews sections rendered")
         self.assertGreaterEqual(itin.count('class="blog-card"'), 3, "expected at least 3 blog cards")
         # Key places should have reviews
-        for place in ("키요미즈데라", "죽림길", "후시미"):
+        for place in ("폰토초", "죽림길", "후시미"):
             self.assertIn(place, itin, f"'{place}' missing from itinerary.html")
 
     def test_blog_reviews_link_to_naver(self):
@@ -615,15 +615,15 @@ class ItineraryMemoFoldTests(unittest.TestCase):
         for path in (ITINERARY, TABLE):
             with self.subTest(path=path.name):
                 html = path.read_text(encoding="utf-8")
-                self.assertIn("닌넨자카·산넨자카 인근 말차 디저트 카페</summary>", html,
+                self.assertIn("아라시야마역 1분</summary>", html,
                               "long place memo should fold into a first-sentence summary")
-                self.assertIn("영업 11:00~20:00", html, "memo tail lost (not lossless)")
+                self.assertIn("100년 목조 가옥", html, "memo tail lost (not lossless)")
 
     def test_long_food_note_folded_but_rating_kept(self):
         run()
         html = ITINERARY.read_text(encoding="utf-8")
         self.assertIn('class="food-quality"', html, "rating line must stay visible")
-        self.assertIn("쓰촨 중식</summary>", html, "long food note should fold to first sentence")
+        self.assertIn("4인 호리고타쓰 완전개실(시부모 좌식 편함)</summary>", html, "long food note should fold to first sentence")
         self.assertIn("1인 ¥4,000~5,000", html, "food note detail lost after folding")
 
 
