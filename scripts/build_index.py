@@ -813,21 +813,34 @@ def transit_line(af) -> str:
 def card_itinerary(d) -> str:
     itin = d["itinerary"]
     trip = itin.get("trip", {})
-    days = []
+    day_cards = []
     for day in itin["days"]:
-        items_html = []
+        item_rows = []
         for it in day["items"]:
             link = maps_link(it["maps_query"], it["title"]) if it.get("maps_query") else esc(it["title"])
+            note_html = memo_block(it.get("note"))
             transit = transit_line(it.get("arrive_from"))
-            items_html.append(f"""
+            if it.get("image_url"):
+                img_html = (
+                    f'<img src="{esc(it["image_url"])}" alt="{esc(it["title"])}" '
+                    f'class="place-img" loading="lazy">'
+                    f'<div class="img-credit">{esc(it.get("image_credit",""))}</div>'
+                )
+            else:
+                img_html = ""
+            reviews_html = blog_reviews_html(it.get("blog_reviews", []))
+            food_html = food_quality_html(it.get("food_quality"))
+            link_html = doc_link_html(it.get("link"))
+            item_rows.append(f"""
     <div class="day">
       <div class="date"><span class="k">{esc(it['time'])}</span> {link}</div>
       {transit}
+      {note_html}{food_html}{link_html}{img_html}{reviews_html}
     </div>""")
-        days.append(f"""
+        day_cards.append(f"""
   <div class="subcard">
     <div class="subtitle">{esc(day['day_label'])}</div>
-    {''.join(items_html)}
+    {''.join(item_rows)}
     <div class="sub" style="margin-top:0.4rem;">도보 약 {day['walking_km']}km · 숙박: {esc(day['lodging'])}</div>
     {pass_block(day.get("pass_recommendation"))}
   </div>""")
@@ -861,12 +874,14 @@ def card_itinerary(d) -> str:
 <!-- SYNC: data/itinerary.json · docs/kyoto-itinerary-may31-jun3-2026.md -->
 <section id="itinerary" class="card">
   <h2>일자별 일정</h2>
-  <div class="sub" style="margin-bottom:0.5rem;">장소 탭 → 구글맵. 상세: <a href="viz/itinerary.html">카드 뷰 ↗</a> · <a href="viz/itinerary-table.html">시간표 뷰 ↗</a></div>
-  {''.join(days)}
+  <div class="sub" style="margin-bottom:0.5rem;">장소 탭 → 구글맵 · 이동 경로 ▸ 탭하면 펼침</div>
+  {''.join(day_cards)}
   {playbook_html}
   {pass_sources_html}
 </section>
 """
+
+
 
 
 _STATE_CLASS = {"확정": "done", "예약중": "progress", "미정": "pending"}
@@ -1251,7 +1266,6 @@ def build_breakfast(d) -> str:
 
 <nav>
   <a href="itinerary.html">← 일정으로</a>
-  <a href="itinerary-table.html">시간표</a>
 </nav>
 """
     body = (
@@ -1407,7 +1421,6 @@ def build_itinerary(d) -> str:
 </section>
 
 <div class="links">
-  <a href="itinerary-table.html">시간표 뷰</a>
   <a href="itinerary-doc.html">문서 보기</a>
 </div>
 
@@ -1796,7 +1809,6 @@ def build_og_svg(*, tokens: dict, eyebrow: str, title: str, subtitle: str) -> st
 OG_CARDS = (
     ("home",            "교토 가족여행 · 2026",     "교토 5/31~6/3 · 4인 가족",     "부부 + 시부모 · 3박 4일 · 확정"),
     ("itinerary",       "일자별 코스",              "교토 3박 4일 일정",            "5/31~6/3 · 청수사·아라시야마·후시미"),
-    ("itinerary-table", "4일 시간표",               "교토 3박 4일 · 한눈에",        "5/31 일 · 6/1 월 · 6/2 화 · 6/3 수"),
     ("lodging",         "숙박 · 항공",              "시오 2박 + 카덴쇼 1박",        "에어서울 인천↔간사이 4인 발권"),
     ("checklist",       "예약 체크리스트",          "예약 진행 상태",               "확정 3 · 미정 4 항목"),
     ("archive",         "의사결정 아카이브",        "장마·예산·후보지 점수",        "2026-05-12 결정 종료 · 회귀 가드"),
@@ -1809,7 +1821,6 @@ OUTPUTS = (
     ("index.html",               lambda p: p / "index.html",                   build_index),
     ("viz/itinerary.html",       lambda p: p / "viz" / "itinerary.html",       build_itinerary),
     ("viz/checklist.html",       lambda p: p / "viz" / "checklist.html",       build_checklist),
-    ("viz/itinerary-table.html", lambda p: p / "viz" / "itinerary-table.html", build_itinerary_table),
     ("viz/lodging.html",         lambda p: p / "viz" / "lodging.html",         build_lodging),
     ("viz/archive.html",         lambda p: p / "viz" / "archive.html",         build_archive),
     ("viz/breakfast.html",       lambda p: p / "viz" / "breakfast.html",       build_breakfast),
