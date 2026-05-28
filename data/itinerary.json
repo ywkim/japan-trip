@@ -78,8 +78,8 @@
   "days": [
     {
       "date": "2026-05-31",
-      "day_label": "5/31 (일) — 도착 + 니조성 + 동산 지구 + 철학의 길 단축",
-      "walking_km": 4,
+      "day_label": "5/31 (일) — 오후 도착 + 시오 체크인 + 가까운 저녁",
+      "walking_km": 1,
       "lodging": "에어비앤비 시오",
       "items": [
         {
@@ -95,228 +95,55 @@
           "note": "에어서울 A8YW58 ICN 13:15 출발. 2.5시간 전 체크인 카운터 오픈"
         },
         {
-          "time": "09:05",
-          "title": "간사이공항 도착 → JR 하루카 → 교토역",
+          "time": "15:15",
+          "title": "간사이공항(KIX) 도착 — 입국심사·수하물",
           "maps_query": "Kansai International Airport",
-          "note": "시부 예약 항공편 시간 확인 필요"
+          "note": "에어서울 A8YW58 KIX 15:15 도착. 입국심사+수하물 수취 약 45~60분 → 16:15경 JR 하루카 승차. 한일 시차 없음(둘 다 UTC+9)."
         },
         {
-          "time": "11:30",
-          "title": "니조역 → 시오 짐 보관",
+          "time": "17:45",
+          "title": "니조역 → 시오 체크인 + 짐 풀기",
           "maps_query": "Nijo Station Kyoto",
-          "note": "에어비앤비 체크인 전 짐 맡기기 (시오 도보 7분). 점심은 니조성 외정원 산책 후 12:45",
+          "note": "JR 하루카(KIX→교토역) + JR 산인본선(교토→니조) + 도보 7분. 오후 도착편 피로를 고려해 첫날은 체크인·짐 정리 후 인근 저녁만. 동산 관광은 6/2 오후로 이동.",
           "arrive_from": {
             "mode": "airport_express",
-            "duration_min": 87,
+            "duration_min": 90,
             "distance_km": 99,
-            "route": "JR 하루카 KIX→교토역 75분 + JR 산인본선 교토→니조 5분 + 도보 니조역→시오 7분 0.5km",
-            "source": "JR 서일본 공식 (haruka_rt_4pax cost-options 인용) + 5/31 동선 수정 PR #26",
-            "source_fetched_at": "2026-05-17",
-            "data_quality": "official_fare"
+            "route": "입국·수하물 후 JR 하루카 KIX→교토역 75분 + JR 산인본선 교토→니조 5분 + 도보 니조역→시오 7분 0.5km",
+            "source": "JR 서일본 공식 (haruka_rt_4pax cost-options 인용) + 5/31 오후 도착 동선 수정",
+            "source_fetched_at": "2026-05-28",
+            "data_quality": "official_fare",
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Kansai+International+Airport&destination=Nijo+Station,+Kyoto&travelmode=transit"
           }
         },
         {
-          "time": "12:00",
-          "title": "니조성 (二条城) 외정원 산책",
-          "maps_query": "Nijo Castle",
-          "note": "시오 도보 10분. 외정원 30분, 본궁 입장(¥1,300/인)은 시간·체력 절약 차 생략 권장 — 5/31 당일 컨디션으로 결정",
-          "arrive_from": {
-            "mode": "walk",
-            "duration_min": 12,
-            "distance_km": 0.7,
-            "route": "시오 마치야 → 니조성 동대수문 (堀川通 경유 700m)",
-            "source": "https://www.google.com/maps/dir/Shio+Machiya+Kyoto/Nijo+Castle",
-            "source_fetched_at": "2026-05-24",
-            "data_quality": "tbd_needs_browser_mcp"
-          }
-        },
-        {
-          "time": "12:45",
-          "title": "니조 인근 점심 (中華 大鵬)",
+          "time": "18:30",
+          "title": "시오 인근 저녁 (中華 大鵬 — 쓰촨 중식)",
           "maps_query": "Taiho Nijo Kyoto",
-          "note": "니조성→시오 도보권. 키요미즈 13:30 출발 위해 45분 내",
+          "note": "시오 도보권(니조역 도보 5분). 도착일 피로 최소화 — 이동 없이 가까운 저녁. 인기점이라 예약·웨이팅 가능, 도착편 지연 시 대안: 京ゆば処 静家(유바).",
           "food_quality": {
             "rating": "타베로그 3.76 · 미쉐린 빕구르망 2024 · 中国料理WEST百名店2024",
-            "source": "Tabelog 2026-05-24 · 미쉐린 가이드 교토 2024",
-            "source_fetched_at": "2026-05-24",
+            "source": "Tabelog · Hot Pepper(영업시간) 2026-05-28 · 미쉐린 가이드 교토 2024",
+            "source_fetched_at": "2026-05-28",
             "data_quality": "researched_market_rate",
             "url": "https://tabelog.com/en/kyoto/A2601/A260203/26003254/",
             "michelin_url": "https://guide.michelin.com/us/en/kyoto-region/restaurants/bib-gourmand",
-            "note": "쓰촨 중식. 니조역 도보 5분(시오 인접). 5/31 일요일 영업·화·부정기수 휴무. 인기점 웨이팅 가능 — 도착편 지연 시 대안: 京ゆば処 静家(유바). 1인 ¥4,000~5,000"
+            "note": "쓰촨 중식. 西ノ京星池町149(니조역 도보 5분·시오 인접). 일요일 디너 17:30~21:00(L.O.20:30)·화·격주 수 휴무. 1인 ¥4,000~5,000"
           },
           "arrive_from": {
             "mode": "walk",
             "duration_min": 8,
             "distance_km": 0.5,
-            "route": "니조성 → 大鵬 (시오 도보권 500m 내)",
+            "route": "시오 마치야 → 大鵬 (니조역 인근 西ノ京星池町, 시오 도보권 500m)",
             "source": "https://www.google.com/maps/search/restaurants+near+Shio+Machiya+Kyoto",
-            "source_fetched_at": "2026-05-24",
-            "data_quality": "tbd_needs_browser_mcp"
+            "source_fetched_at": "2026-05-28",
+            "data_quality": "tbd_needs_browser_mcp",
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Nijo+Station,+Kyoto&destination=%E5%A4%A7%E9%B5%AC+Kyoto&travelmode=walking"
           }
-        },
-        {
-          "time": "13:30",
-          "title": "키요미즈데라 (清水寺)",
-          "maps_query": "Kiyomizu-dera",
-          "note": "17:00 마감 주의",
-          "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Kyoto-Kiyomizu_Temple-2.JPG?width=480",
-          "image_credit": "Wikimedia Commons",
-          "arrive_from": {
-            "mode": "bus",
-            "duration_min": 35,
-            "distance_km": 5.5,
-            "route": "점심 후 시오/니조 → JR 산인선 + 시버스 → 키요미즈 (니조 출발 약 35분. 교토역 출발 28분 대비 7분 가산)",
-            "source": "https://www.google.com/maps/dir/Shio+Machiya+Kyoto/Kiyomizu-dera",
-            "source_fetched_at": "2026-05-18",
-            "data_quality": "tbd_needs_browser_mcp"
-          },
-          "blog_reviews": [
-            {
-              "url": "https://m.blog.naver.com/boyoung7810/223958997644",
-              "img": "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTEwMThfMzIg%2FMDAxNzYwNzg5NTAwNDk1.pJ-CpqIXEgOd38BaXA6lNFq4ilsv8hbzoC9LzaLiAnIg.Sg2DuOrptsK0ThQm1MwlODy5kdOelsbU05QU0oM0NU8g.JPEG%2FIMG%25A3%25DF6164.JPG%23900x1200&type=f238_208",
-              "comment": "주말 오전 7시 방문 — 관광객 거의 없어 한산. 6:00~18:00, 500엔. 이른 아침 추천"
-            },
-            {
-              "url": "https://m.blog.naver.com/hana99_snw/223866415377",
-              "img": "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTEwMjNfMjA2%2FMDAxNzYxMjAyNjIxNDcx.8IkAX2Jlj0c79meNjw0JF5b0OAhYvgt5bSadyuaZZWUg.wpWzf_l4DHB7Kmt6mZ9BQVWXLr9_SY1ewxiwZtLL_Ncg.JPEG%2FIMG%25A3%25DF5014.jpg%23900x1200&type=f238_208",
-              "comment": "추천 방문시간 오전 6~8시. 나무 무대 위 포토스팟 필수. 현지인 맛집도 근처에"
-            },
-            {
-              "url": "https://m.blog.naver.com/boyoung7810/223958997644",
-              "img": "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTEwMjZfMjEy%2FMDAxNzYxNDQzNjY3MTI0.ej_nQhiQ8c8QmTrwigmtnOUqU_iBdqBwpFhr6Ez8_nsg.xIHTpWocgnTxiG22wC1gQXjjo5YzEWTswXcHESQexRsg.PNG%2Fimage.png%23752x671&type=f238_208",
-              "comment": "단풍·벚꽃 시즌엔 입장 대기 1시간+. 비수기 6월은 여유롭게 관람 가능"
-            }
-          ]
-        },
-        {
-          "time": "16:00",
-          "title": "MACCHA HOUSE 抹茶館 (말차 티라미수)",
-          "maps_query": "Maccha House Kiyomizu Higashiyama",
-          "note": "닌넨자카·산넨자카 인근 말차 디저트 카페. 시그니처: 말차 티라미수(잘 알려진 한국 SNS 명소). 키요미즈데라 하행 후 산넨자카로 내려오는 동선에 자연 편입. 4인 좌석 대기 가능 — 16시 전후 빠른 시간 권장. 영업 11:00~20:00 — 30도 더위 대책: 냉방 카페에서 30~40분 충분히 휴식",
-          "arrive_from": {
-            "mode": "walk",
-            "duration_min": 10,
-            "distance_km": 0.6,
-            "route": "키요미즈데라 → 산넨자카·니넨자카 하행 → 맛차하우스 (키요미즈 3초메 337, 도보 10분)",
-            "source": "https://maps.app.goo.gl/qnpCLBJxxeA7e5au6",
-            "source_fetched_at": "2026-05-25",
-            "data_quality": "researched_market_rate"
-          },
-          "blog_reviews": [
-            {
-              "url": "https://m.blog.naver.com/rhkdtjq5426/224069735375",
-              "img": "https://phinf.pstatic.net/image.nmv/blog_2025_11_09_113/8WSNQKRKQC_01.jpg?type=w2",
-              "comment": "쇼츠에 나와서 먹어보고 싶었던 맛차하우스 청수사에서 기온시조 가는길에 있어서 동선적으로 이덕 앞에 메..."
-            },
-            {
-              "url": "https://m.blog.naver.com/soksok15/223970099348",
-              "img": "https://blogthumb.pstatic.net/MjAyNTA4MTNfMTUy/MDAxNzU1MDU0MzM1NDAw.BmwRLj5svGHjzkRAhC-1nz3NSEn9lWSrOGcOqqM9uuIg.L-zJ8ZSdeVGQp8Tfg7-f2j3r1Pe4Co9oITM3viISRrkg.JPEG/%B8%BB%C2%F7%C6%BC%B6%F3%B9%CC%BC%F6.jpg?type=w2",
-              "comment": "일본에서 즐기는 진한 말차 일본 하면 녹차, 그중에서도 진한 말차가 떠오른다. 말차의 나라답게 일본에는 ..."
-            },
-            {
-              "url": "https://m.blog.naver.com/luxetlex_ctc/224068054801",
-              "img": "https://blogthumb.pstatic.net/MjAyNTExMDdfOTQg/MDAxNzYyNDkzNTgxMDQz.e5aZJ2Ota4C-jbC4jf0RdceMliHJUSndNd-Po8TiyVcg.cU2dMWP7Br0u_ti_p81GqfelGqkPgl3fIn2Y_vw9NAwg.JPEG/900%A3%DF1762493580288.jpg?type=w2",
-              "comment": "교토와 오사카 전역에 보이는 맛차하우스 늦은 시간이어서 들어가자마자 이거 마시면 못 자는거 아니야? 하..."
-            },
-            {
-              "url": "https://m.blog.naver.com/hyeoni9796/223776462285",
-              "img": "https://blogthumb.pstatic.net/MjAyNTAyMjdfNTEg/MDAxNzQwNjMzNzM4MDc1.-ds04iw9cTBpJ1Ed716R2v-abHA7WTp_rQCeKlhdt2Yg.CU3gfF_HTrBq4Zptl_WnJJQq5ate3KVbBj6mStF9fmwg.JPEG/IMG_9976.jpg?type=w2",
-              "comment": "말차 하우스 11:00 - 20:00 오사카 여행 하면서는 카페를 많이 안갔다! 카페 2곳을 갔는데. .2곳 다 교토에..."
-            },
-            {
-              "url": "https://m.blog.naver.com/ehqkr2022/223732449348",
-              "img": "https://blogthumb.pstatic.net/MjAyNTAxMjFfMTQ3/MDAxNzM3NDE5OTI1NjM4.T5CCyhpI8A2n7xQrgnseGb3PkklZvXqXM0el6K7YBhcg.dQbMA6_6o9QpmcfQQ_W4FgH0LjmSkQg7LH5E3NrYwcYg.JPEG/IMG_5886.jpg?type=w2",
-              "comment": "말차하우스 닌넨자카에는 맛집, 카페가 정말 많은데 그중에서도 이미 유명한 &amp;quot;말차하우스&amp;quot;에 다..."
-            }
-          ]
-        },
-        {
-          "time": "16:30",
-          "title": "산넨자카 → 야사카 신사 → 기온",
-          "maps_query": "Gion Kyoto",
-          "note": "기온시조역 인근 마츠모토키요시·코쿠민 드럭스토어 약국 방문 가능 — 니넨자카 진입점 스타벅스 야사카차야점(100년 마치야 매장) · % 아라비카 교토 히가시야마점 — 둘 중 택1 카페 휴식 권장. 4인 좌석 대기 길 수 있음",
-          "arrive_from": {
-            "mode": "walk",
-            "duration_min": 5,
-            "distance_km": 0.3,
-            "route": "맛차하우스 → 산넨자카 진입점 도보 5분 300m",
-            "source": "https://www.google.com/maps/dir/Maccha+House/Sannenzaka",
-            "source_fetched_at": "2026-05-25",
-            "data_quality": "researched_market_rate"
-          },
-          "blog_reviews": [
-            {
-              "url": "https://m.blog.naver.com/ryujin2919/223927313226",
-              "img": "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTA3MDlfMjM1%2FMDAxNzUyMDM0NTU0NzU1.66yxCHOORmMsGdZUWOCmMWN5qSC49xYqHTtn4SWldaEg.M55rWzP7TFBpDr2W3MAdmiEGixIIYRLT59TTcsvFufYg.JPEG%2FIMG%25A3%25DF9256.jpg%23900x1028&type=f238_208",
-              "comment": "기온시조역 → 야사카 신사 → 산넨자카 → 니넨자카 → 기요미즈데라 산책 코스. 야경 명소 연결"
-            },
-            {
-              "url": "https://m.blog.naver.com/lazy_kei/223845434271",
-              "img": "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTA0MjNfOTAg%2FMDAxNzQ1MzkwODUwNzcy.zlsBBfvdi9tVj5_YGldsAL7nJ1thVngXmPsFFNiU6TYg.S61zXC_QsonfnKuEMXk21_FkBeDjvNi-aHcPDIGnDtIg.JPEG%2FDSCF8271.JPG%23640x960&type=f238_208",
-              "comment": "산넨자카·니넨자카 이토켄 x 소우소우 방문. 야사카탑(호칸지)이 대표 랜드마크"
-            },
-            {
-              "url": "https://m.blog.naver.com/dzgx0750/223965904799",
-              "img": "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTA4MjlfMTgy%2FMDAxNzU2NDU0ODI2MTk3.Kdm4EONisJpTNhOOBiHPuA7O6zfzfo-5BEjinl_c0xMg.owcZGLUCLyyJzSjl2vT9deYG0Tz906Qb3DKjnxas2Bsg.JPEG%2FIMG_7754.JPG%233024x4032&type=f238_208",
-              "comment": "오사카 도톤보리와 분위기 다른 고즈넉한 기온 거리. 야사카 신사 도리이 포토스팟 추천"
-            }
-          ]
-        },
-        {
-          "time": "17:00",
-          "title": "철학의 길 단축 구간 (난젠지~철학의 길 남단)",
-          "maps_query": "Philosopher's Path Kyoto",
-          "note": "야사카→난젠지 도보 1.2km. 철학의 길 남단 200~500m 짧게 산책 후 가와라마치행 버스. 시부모 피로 시 야사카에서 시버스 46/201로 가와라마치 직행 대안",
-          "arrive_from": {
-            "mode": "walk",
-            "duration_min": 15,
-            "distance_km": 1.2,
-            "route": "야사카 신사 → 난젠지 정문 → 철학의 길 남단 (1.2km, 동산 북부)",
-            "source": "https://www.google.com/maps/dir/Yasaka+Shrine/Philosopher%27s+Path+Kyoto",
-            "source_fetched_at": "2026-05-24",
-            "data_quality": "tbd_needs_browser_mcp"
-          }
-        },
-        {
-          "time": "18:30",
-          "title": "가와라마치 저녁 (폰토초 豆八 — 두부·오반자이)",
-          "maps_query": "Mametetsu Pontocho Kyoto",
-          "note": "철학의 길 남단에서 시버스 46/201 → 가와라마치. 폰토초 골목 야간 분위기 최고",
-          "food_quality": {
-            "rating": "타베로그 3.43 (246)",
-            "source": "Tabelog 2026-05-24",
-            "source_fetched_at": "2026-05-24",
-            "data_quality": "researched_market_rate",
-            "url": "https://tabelog.com/en/kyoto/A2601/A260201/26021180/",
-            "note": "4인 호리고타쓰 완전개실(시부모 좌식 편함). 두부·교토 오반자이. 기온시조역 도보 5분. 예약 권장. 대안: まんざら亭(3.30). 1인 ¥4,000~5,000"
-          },
-          "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/JP-Kyoto-Gion-Area-Traditional-House-Night-View.JPG?width=480",
-          "image_credit": "Wikimedia Commons",
-          "arrive_from": {
-            "mode": "bus",
-            "duration_min": 20,
-            "distance_km": 4.0,
-            "route": "철학의 길 남단 → 市バス 46 또는 201 → 四条河原町 (도보 1km + 버스 15분 가산)",
-            "source": "https://www.google.com/maps/dir/Philosopher%27s+Path+Kyoto/Kawaramachi",
-            "source_fetched_at": "2026-05-24",
-            "data_quality": "tbd_needs_browser_mcp"
-          },
-          "blog_reviews": [
-            {
-              "url": "https://m.blog.naver.com/bluedirty/224020904089",
-              "img": "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTA5MjRfMTM3%2FMDAxNzU4NjQxMzgwNTQy.aE_2kqKSPbY8Vg3I6foA7PCj7Z8ZLY3vfL73FHCo5NQg.kFpI3TliJWxj8YB2tMCuGxwjAmajIuaxDfWVeG1uMlIg.JPEG%2FKakaoTalk_20250923_214426866_22.jpg%233024x4032&type=f238_208",
-              "comment": "폰토초 골목 야경 분위기 최고. 강변 테라스 식당은 사전 예약 필수. 저녁 7시 이후 인파 절정"
-            },
-            {
-              "url": "https://m.blog.naver.com/bluedirty/224020904089",
-              "img": "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTA5MjRfMjk5%2FMDAxNzU4NjQwNzk2NDU2.hhR1SHyt_eoY78UeoLHCI53Q-crXjm476vzPWEHEKEcg.zE1OtLnhIyeJdEP-i5RSCTjjddXJtXErnPuiC6zlIHsg.JPEG%2FKakaoTalk_20250923_214426866_29.jpg%233024x4032&type=f238_208",
-              "comment": "기온·가와라마치 3만보 코스 리얼 후기. 가와라마치역 근처 분위기가 특히 좋음"
-            }
-          ]
         }
       ],
-      "walking_km_source": "items[].arrive_from[mode=walk] 합(~3.7km: 니조성 0.7 + 점심 0.5 + 산넨자카 1.3 + 철학의 길 1.2) + 키요미즈 경내·니조성 외정원·기온 산책 추정",
-      "pass_recommendation": "iPhone Apple Wallet ICOCA 단권 — 시버스 2회(시오→키요미즈 ¥230, 철학의 길→가와라마치 ¥230) ¥460×4=¥1,840. 통합 1일권 ¥1,100×4=¥4,400 본전 미달."
+      "walking_km_source": "items[].arrive_from[mode=walk] 합(~0.5km: 시오→大鵬) + 니조역·교토역 환승 도보 추정. 오후 도착으로 첫날 관광 없음(동산 코스는 6/2로 이동).",
+      "pass_recommendation": "iPhone Apple Wallet ICOCA 단권 — JR 하루카는 별도 왕복권(¥2,400/인). 교토역→니조 JR 산인선만 ICOCA 탭(약 ¥190). 시버스·관광 이동 없음."
     },
     {
       "date": "2026-06-01",
@@ -347,7 +174,8 @@
             "route": "JR 산인본선 (니조역 → 사가아라시야마역). 교토역→사가아라시야마 17분 기준 5분 차감",
             "source": "https://www.kyotostation.com/jr-sagano-line-for-nijo-uzumasa-saga-arashiyama/",
             "source_fetched_at": "2026-05-17",
-            "data_quality": "researched_market_rate"
+            "data_quality": "researched_market_rate",
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Nijo+Station,+Kyoto&destination=Arashiyama+Bamboo+Grove,+Kyoto&travelmode=transit"
           },
           "blog_reviews": [
             {
@@ -375,7 +203,8 @@
             "route": "죽림길 → 텐류지 북문 (竹林の小径 경유 7m, Maps 1분; 정원 경내 진입 도보 ~3분 가산)",
             "source": "https://www.google.com/maps/dir/Arashiyama+Bamboo+Grove/Tenryu-ji",
             "source_fetched_at": "2026-05-18",
-            "data_quality": "researched_market_rate"
+            "data_quality": "researched_market_rate",
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Arashiyama+Bamboo+Grove,+Kyoto&destination=Tenryu-ji+Temple,+Kyoto&travelmode=walking"
           },
           "blog_reviews": [
             {
@@ -402,7 +231,8 @@
             "route": "텐류지/아라시야마 → 교토버스 73계통 '苔寺・鈴虫寺' 정류장 → 도보 3분",
             "source": "https://saihoji-kokedera.com/en/",
             "source_fetched_at": "2026-05-26",
-            "data_quality": "tbd_needs_browser_mcp"
+            "data_quality": "tbd_needs_browser_mcp",
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Tenryu-ji+Temple,+Kyoto&destination=Saihoji+Temple,+Kyoto&travelmode=transit"
           },
           "blog_reviews": [
             {
@@ -498,7 +328,17 @@
               "img": "https://tblg.k-img.com/restaurant/images/Rvw/252182/150x150_square_f94fd442b1a0a87a9a66ae39c99d5f90.jpg",
               "comment": "[雲ノ茶] 두유·귀리우유 변경 가능. 와가시 디저트 세트. 아라시야마역 도보 3분"
             }
-          ]
+          ],
+          "arrive_from": {
+            "mode": "bus",
+            "duration_min": 20,
+            "distance_km": 3.0,
+            "route": "교토버스 73계통 역방향 (苔寺・鈴虫寺 → 嵐山天龍寺前) 15분 ¥260 + 도보 2분. 사이호지 관람 후 동일 정류장에서 탑승",
+            "source": "https://saihoji-kokedera.com/en/ + 교토버스 73계통 노선도",
+            "source_fetched_at": "2026-05-28",
+            "data_quality": "researched_market_rate",
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Saihoji+Temple,+Kyoto&destination=eX+cafe+%E4%BA%AC%E9%83%BD%E5%B5%90%E5%B1%B1%E6%9C%AC%E5%BA%97,+Kyoto&travelmode=transit"
+          }
         },
         {
           "time": "13:30",
@@ -513,7 +353,8 @@
             "route": "市バス 11(嵐山天龍寺前→山越中町) 11분 + 환승도보 6분 + 市バス 59(山越中町→金閣寺道) 18분 + 도보 2분 ¥460. 단 11번 40분 간격 · 놓치면 택시 22분(7.1km) 대안",
             "source": "https://www.google.com/maps/dir/Tenryu-ji+Temple,+Kyoto/Kinkaku-ji+Temple,+Kyoto",
             "source_fetched_at": "2026-05-18",
-            "data_quality": "researched_market_rate"
+            "data_quality": "researched_market_rate",
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Tenryu-ji+Temple,+Kyoto&destination=Kinkaku-ji,+Kyoto&travelmode=transit"
           },
           "blog_reviews": [
             {
@@ -546,7 +387,8 @@
             "route": "市バス 59 (金閣寺道 → 竜安寺前). 12~15분 간격 운행",
             "source": "https://kinukake.com/en/day-tour.html · https://www.tripadvisor.com/ShowTopic-g298564-i2712-k6637145",
             "source_fetched_at": "2026-05-17",
-            "data_quality": "researched_market_rate"
+            "data_quality": "researched_market_rate",
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Kinkaku-ji,+Kyoto&destination=Ryoan-ji,+Kyoto&travelmode=transit"
           }
         },
         {
@@ -571,7 +413,8 @@
             "route": "市バス 59 (竜安寺前 → 四条河原町). 직행 + 도보 2분 ¥230",
             "source": "https://www.google.com/maps/dir/Ryoan-ji/Kawaramachi",
             "source_fetched_at": "2026-05-18",
-            "data_quality": "researched_market_rate"
+            "data_quality": "researched_market_rate",
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Ryoan-ji,+Kyoto&destination=Pontocho+Alley,+Kyoto&travelmode=transit"
           }
         }
       ],
@@ -580,8 +423,8 @@
     },
     {
       "date": "2026-06-02",
-      "day_label": "6/2 (화) — 후시미 + 료칸 체크인",
-      "walking_km": 5,
+      "day_label": "6/2 (화) — 후시미 + 동산(키요미즈·기온) + 카덴쇼",
+      "walking_km": 7,
       "lodging": "우메코지 카덴쇼 (2명×2실)",
       "items": [
         {
@@ -607,7 +450,8 @@
             "route": "니조역 JR 산인본선(니조→교토) + JR 나라선(교토→이나리) 20분 ¥200 + 도보 5분",
             "source": "https://www.kyotostation.com/jr-nara-line-for-tofukuji-inari-uji-nara/",
             "source_fetched_at": "2026-05-18",
-            "data_quality": "researched_market_rate"
+            "data_quality": "researched_market_rate",
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Nijo+Station,+Kyoto&destination=Fushimi+Inari+Taisha,+Kyoto&travelmode=transit"
           },
           "blog_reviews": [
             {
@@ -640,7 +484,8 @@
             "route": "JR 나라선 (이나리역 → 토후쿠지역). 1정거장 + 토후쿠지역 도보 10분",
             "source": "https://www.kyotostation.com/jr-nara-line-for-tofukuji-inari-uji-nara/",
             "source_fetched_at": "2026-05-17",
-            "data_quality": "researched_market_rate"
+            "data_quality": "researched_market_rate",
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Fushimi+Inari+Taisha,+Kyoto&destination=Tofuku-ji,+Kyoto&travelmode=transit"
           },
           "blog_reviews": [
             {
@@ -656,7 +501,7 @@
           ]
         },
         {
-          "time": "11:30",
+          "time": "11:00",
           "title": "교토역 라멘코지 점심 (中村商店 — 金の塩)",
           "maps_query": "Nakamura Shoten Kyoto Ramen Koji",
           "note": "짐 시오→카덴쇼 이동 동선",
@@ -675,20 +520,15 @@
             "route": "JR 나라선 (토후쿠지역 → 교토역). 1정거장",
             "source": "https://www.kyotostation.com/jr-nara-line-for-tofukuji-inari-uji-nara/",
             "source_fetched_at": "2026-05-17",
-            "data_quality": "researched_market_rate"
+            "data_quality": "researched_market_rate",
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Tofuku-ji,+Kyoto&destination=Kyoto+Station,+Kyoto&travelmode=transit"
           }
         },
         {
-          "time": "12:30",
-          "title": "드럭스토어·약국 (교토역 인근)",
-          "maps_query": "マツモトキヨシ 京都駅",
-          "note": "교토역 인근 마츠모토키요시 또는 코쿠민 드럭스토어. 필요 약품 구매 후 산주산겐도로 이동"
-        },
-        {
-          "time": "13:30",
-          "title": "우메코지 카덴쇼 체크인",
+          "time": "12:00",
+          "title": "우메코지 카덴쇼 짐 위탁 (조기 체크인)",
           "maps_query": "Umekoji Kadensho",
-          "note": "짐 일찍 위탁 가능 여부 확인. 13:30~17:00 자유시간 — 박일정님 아들 선물 포켓몬 카드 일본판 낱팩(보이면 매수, 안 보이면 패스) 매장 탐색 옵션은 영욱·소연 단독. 시부모는 료칸 정원·객실 휴식.",
+          "note": "오전 짐 위탁(룸 체크인 15:00 전이면 짐만) 후 오후 동산 코스. 객실·대욕장은 저녁 복귀 시. 짐 일찍 위탁 가능 여부 확인.",
           "arrive_from": {
             "mode": "walk",
             "duration_min": 8,
@@ -696,13 +536,136 @@
             "route": "교토역 → JR 우메코지-교토니시역 인근 카덴쇼. JR 1정거장도 가능",
             "source": "https://livejapan.com/en/in-kansai/in-pref-kyoto/in-kyoto-station_to-ji-temple/spot-lj0091598/",
             "source_fetched_at": "2026-05-17",
-            "data_quality": "researched_market_rate"
+            "data_quality": "researched_market_rate",
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Kyoto+Station,+Kyoto&destination=Umekoji+Kadensho,+Kyoto&travelmode=walking"
           }
         },
         {
-          "time": "17:00",
+          "time": "13:00",
+          "title": "키요미즈데라 (清水寺)",
+          "maps_query": "Kiyomizu-dera",
+          "note": "17:00 마감 주의. 카덴쇼 짐 위탁 후 오후 동산 코스 시작점. 6월 비수기 여유롭게 관람",
+          "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Kyoto-Kiyomizu_Temple-2.JPG?width=480",
+          "image_credit": "Wikimedia Commons",
+          "arrive_from": {
+            "mode": "bus",
+            "duration_min": 28,
+            "distance_km": 4.5,
+            "route": "카덴쇼/교토역 → 市バス 206 → 五条坂/清水道 정류장 → 도보 10분 키요미즈자카",
+            "source": "https://www.google.com/maps/dir/Kyoto+Station/Kiyomizu-dera",
+            "source_fetched_at": "2026-05-28",
+            "data_quality": "tbd_needs_browser_mcp",
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Umekoji+Kadensho,+Kyoto&destination=Kiyomizu-dera,+Kyoto&travelmode=transit"
+          },
+          "blog_reviews": [
+            {
+              "url": "https://m.blog.naver.com/boyoung7810/223958997644",
+              "img": "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTEwMThfMzIg%2FMDAxNzYwNzg5NTAwNDk1.pJ-CpqIXEgOd38BaXA6lNFq4ilsv8hbzoC9LzaLiAnIg.Sg2DuOrptsK0ThQm1MwlODy5kdOelsbU05QU0oM0NU8g.JPEG%2FIMG%25A3%25DF6164.JPG%23900x1200&type=f238_208",
+              "comment": "주말 오전 7시 방문 — 관광객 거의 없어 한산. 6:00~18:00, 500엔. 이른 아침 추천"
+            },
+            {
+              "url": "https://m.blog.naver.com/hana99_snw/223866415377",
+              "img": "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTEwMjNfMjA2%2FMDAxNzYxMjAyNjIxNDcx.8IkAX2Jlj0c79meNjw0JF5b0OAhYvgt5bSadyuaZZWUg.wpWzf_l4DHB7Kmt6mZ9BQVWXLr9_SY1ewxiwZtLL_Ncg.JPEG%2FIMG%25A3%25DF5014.jpg%23900x1200&type=f238_208",
+              "comment": "추천 방문시간 오전 6~8시. 나무 무대 위 포토스팟 필수. 현지인 맛집도 근처에"
+            },
+            {
+              "url": "https://m.blog.naver.com/boyoung7810/223958997644",
+              "img": "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTEwMjZfMjEy%2FMDAxNzYxNDQzNjY3MTI0.ej_nQhiQ8c8QmTrwigmtnOUqU_iBdqBwpFhr6Ez8_nsg.xIHTpWocgnTxiG22wC1gQXjjo5YzEWTswXcHESQexRsg.PNG%2Fimage.png%23752x671&type=f238_208",
+              "comment": "단풍·벚꽃 시즌엔 입장 대기 1시간+. 비수기 6월은 여유롭게 관람 가능"
+            }
+          ]
+        },
+        {
+          "time": "14:30",
+          "title": "MACCHA HOUSE 抹茶館 (말차 티라미수)",
+          "maps_query": "Maccha House Kiyomizu Higashiyama",
+          "note": "닌넨자카·산넨자카 인근 말차 디저트 카페. 시그니처: 말차 티라미수(잘 알려진 한국 SNS 명소). 키요미즈데라 하행 후 산넨자카로 내려오는 동선에 자연 편입. 4인 좌석 대기 가능 — 16시 전후 빠른 시간 권장. 영업 11:00~20:00 — 30도 더위 대책: 냉방 카페에서 30~40분 충분히 휴식",
+          "arrive_from": {
+            "mode": "walk",
+            "duration_min": 10,
+            "distance_km": 0.6,
+            "route": "키요미즈데라 → 산넨자카·니넨자카 하행 → 맛차하우스 (키요미즈 3초메 337, 도보 10분)",
+            "source": "https://maps.app.goo.gl/qnpCLBJxxeA7e5au6",
+            "source_fetched_at": "2026-05-25",
+            "data_quality": "researched_market_rate",
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Kiyomizu-dera,+Kyoto&destination=Maccha+House+%E6%8A%B9%E8%8C%B6%E9%A4%A8+Kiyomizu,+Kyoto&travelmode=walking"
+          },
+          "blog_reviews": [
+            {
+              "url": "https://m.blog.naver.com/rhkdtjq5426/224069735375",
+              "img": "https://phinf.pstatic.net/image.nmv/blog_2025_11_09_113/8WSNQKRKQC_01.jpg?type=w2",
+              "comment": "쇼츠에 나와서 먹어보고 싶었던 맛차하우스 청수사에서 기온시조 가는길에 있어서 동선적으로 이덕 앞에 메..."
+            },
+            {
+              "url": "https://m.blog.naver.com/soksok15/223970099348",
+              "img": "https://blogthumb.pstatic.net/MjAyNTA4MTNfMTUy/MDAxNzU1MDU0MzM1NDAw.BmwRLj5svGHjzkRAhC-1nz3NSEn9lWSrOGcOqqM9uuIg.L-zJ8ZSdeVGQp8Tfg7-f2j3r1Pe4Co9oITM3viISRrkg.JPEG/%B8%BB%C2%F7%C6%BC%B6%F3%B9%CC%BC%F6.jpg?type=w2",
+              "comment": "일본에서 즐기는 진한 말차 일본 하면 녹차, 그중에서도 진한 말차가 떠오른다. 말차의 나라답게 일본에는 ..."
+            },
+            {
+              "url": "https://m.blog.naver.com/luxetlex_ctc/224068054801",
+              "img": "https://blogthumb.pstatic.net/MjAyNTExMDdfOTQg/MDAxNzYyNDkzNTgxMDQz.e5aZJ2Ota4C-jbC4jf0RdceMliHJUSndNd-Po8TiyVcg.cU2dMWP7Br0u_ti_p81GqfelGqkPgl3fIn2Y_vw9NAwg.JPEG/900%A3%DF1762493580288.jpg?type=w2",
+              "comment": "교토와 오사카 전역에 보이는 맛차하우스 늦은 시간이어서 들어가자마자 이거 마시면 못 자는거 아니야? 하..."
+            },
+            {
+              "url": "https://m.blog.naver.com/hyeoni9796/223776462285",
+              "img": "https://blogthumb.pstatic.net/MjAyNTAyMjdfNTEg/MDAxNzQwNjMzNzM4MDc1.-ds04iw9cTBpJ1Ed716R2v-abHA7WTp_rQCeKlhdt2Yg.CU3gfF_HTrBq4Zptl_WnJJQq5ate3KVbBj6mStF9fmwg.JPEG/IMG_9976.jpg?type=w2",
+              "comment": "말차 하우스 11:00 - 20:00 오사카 여행 하면서는 카페를 많이 안갔다! 카페 2곳을 갔는데. .2곳 다 교토에..."
+            },
+            {
+              "url": "https://m.blog.naver.com/ehqkr2022/223732449348",
+              "img": "https://blogthumb.pstatic.net/MjAyNTAxMjFfMTQ3/MDAxNzM3NDE5OTI1NjM4.T5CCyhpI8A2n7xQrgnseGb3PkklZvXqXM0el6K7YBhcg.dQbMA6_6o9QpmcfQQ_W4FgH0LjmSkQg7LH5E3NrYwcYg.JPEG/IMG_5886.jpg?type=w2",
+              "comment": "말차하우스 닌넨자카에는 맛집, 카페가 정말 많은데 그중에서도 이미 유명한 &amp;quot;말차하우스&amp;quot;에 다..."
+            }
+          ]
+        },
+        {
+          "time": "15:15",
+          "title": "산넨자카 → 야사카 신사 → 기온",
+          "maps_query": "Gion Kyoto",
+          "note": "기온시조역 인근 마츠모토키요시·코쿠민 드럭스토어 약국 방문 가능 — 니넨자카 진입점 스타벅스 야사카차야점(100년 마치야 매장) · % 아라비카 교토 히가시야마점 — 둘 중 택1 카페 휴식 권장. 4인 좌석 대기 길 수 있음",
+          "arrive_from": {
+            "mode": "walk",
+            "duration_min": 5,
+            "distance_km": 0.3,
+            "route": "맛차하우스 → 산넨자카 진입점 도보 5분 300m",
+            "source": "https://www.google.com/maps/dir/Maccha+House/Sannenzaka",
+            "source_fetched_at": "2026-05-25",
+            "data_quality": "researched_market_rate",
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Maccha+House+%E6%8A%B9%E8%8C%B6%E9%A4%A8+Kiyomizu,+Kyoto&destination=Yasaka+Shrine,+Kyoto&travelmode=walking"
+          },
+          "blog_reviews": [
+            {
+              "url": "https://m.blog.naver.com/ryujin2919/223927313226",
+              "img": "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTA3MDlfMjM1%2FMDAxNzUyMDM0NTU0NzU1.66yxCHOORmMsGdZUWOCmMWN5qSC49xYqHTtn4SWldaEg.M55rWzP7TFBpDr2W3MAdmiEGixIIYRLT59TTcsvFufYg.JPEG%2FIMG%25A3%25DF9256.jpg%23900x1028&type=f238_208",
+              "comment": "기온시조역 → 야사카 신사 → 산넨자카 → 니넨자카 → 기요미즈데라 산책 코스. 야경 명소 연결"
+            },
+            {
+              "url": "https://m.blog.naver.com/lazy_kei/223845434271",
+              "img": "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTA0MjNfOTAg%2FMDAxNzQ1MzkwODUwNzcy.zlsBBfvdi9tVj5_YGldsAL7nJ1thVngXmPsFFNiU6TYg.S61zXC_QsonfnKuEMXk21_FkBeDjvNi-aHcPDIGnDtIg.JPEG%2FDSCF8271.JPG%23640x960&type=f238_208",
+              "comment": "산넨자카·니넨자카 이토켄 x 소우소우 방문. 야사카탑(호칸지)이 대표 랜드마크"
+            },
+            {
+              "url": "https://m.blog.naver.com/dzgx0750/223965904799",
+              "img": "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTA4MjlfMTgy%2FMDAxNzU2NDU0ODI2MTk3.Kdm4EONisJpTNhOOBiHPuA7O6zfzfo-5BEjinl_c0xMg.owcZGLUCLyyJzSjl2vT9deYG0Tz906Qb3DKjnxas2Bsg.JPEG%2FIMG_7754.JPG%233024x4032&type=f238_208",
+              "comment": "오사카 도톤보리와 분위기 다른 고즈넉한 기온 거리. 야사카 신사 도리이 포토스팟 추천"
+            }
+          ]
+        },
+        {
+          "time": "17:15",
           "title": "료칸 대욕장 (천연식 온천)",
-          "maps_query": "Umekoji Kadensho"
+          "maps_query": "Umekoji Kadensho",
+          "note": "동산 코스 후 카덴쇼 복귀. 가이세키 전 온천 휴식.",
+          "arrive_from": {
+            "mode": "bus",
+            "duration_min": 35,
+            "distance_km": 6.5,
+            "route": "기온시조 → 市バス 206/86 또는 京阪+JR 환승 → 교토역 → 도보 카덴쇼",
+            "source": "https://www.google.com/maps/dir/Gion+Kyoto/Umekoji+Kadensho",
+            "source_fetched_at": "2026-05-28",
+            "data_quality": "tbd_needs_browser_mcp",
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Yasaka+Shrine,+Kyoto&destination=Umekoji+Kadensho,+Kyoto&travelmode=transit"
+          }
         },
         {
           "time": "18:00",
@@ -719,8 +682,8 @@
           }
         }
       ],
-      "walking_km_source": "items[].arrive_from[mode=walk] 합(~0.6km) + 후시미이나리 도리이길·토후쿠지·산주산겐도 경내 산책 추정(~4.4km)",
-      "pass_recommendation": "iPhone Apple Wallet ICOCA 단권 — JR 나라선 leg 합산 잠정 ¥800/4인(정확액은 후속 측정 보류). 시영 미사용."
+      "walking_km_source": "items[].arrive_from[mode=walk] 합(~1.5km: 카덴쇼 0.6 + 맛차하우스 0.6 + 산넨자카 0.3) + 후시미이나리 도리이길·토후쿠지·키요미즈 경내·기온 산책 추정(~5.5km)",
+      "pass_recommendation": "iPhone Apple Wallet ICOCA 단권 — JR 나라선 leg(니조→이나리→토후쿠지→교토역) + 시버스 2회(교토역→키요미즈 ¥230, 기온→교토역 ¥230). 통합 1일권 ¥1,100×4는 시버스 2회(¥460/인)만으론 본전 미달(JR 미커버). 정확액 후속 측정."
     },
     {
       "date": "2026-06-03",
@@ -738,10 +701,10 @@
           }
         },
         {
-          "time": "이른 아침",
+          "time": "06:15",
           "title": "카덴쇼 체크아웃 → 교토역",
           "maps_query": "Kyoto Station",
-          "note": "조식 미포함. 출국 시간 따라 산책·식사 모두 생략 가능",
+          "note": "KIX 10:05 출발(에어서울 A8YW58)이라 06:45 하루카 탑승 목표. 조식 미포함 — 전날 구매분으로 차내 식사. 토지 산책은 시간 빠듯하면 생략.",
           "arrive_from": {
             "mode": "walk",
             "duration_min": 8,
@@ -749,7 +712,8 @@
             "route": "카덴쇼 → 교토역 (역방향)",
             "source": "https://livejapan.com/en/in-kansai/in-pref-kyoto/in-kyoto-station_to-ji-temple/spot-lj0091598/",
             "source_fetched_at": "2026-05-17",
-            "data_quality": "researched_market_rate"
+            "data_quality": "researched_market_rate",
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Umekoji+Kadensho,+Kyoto&destination=Kyoto+Station,+Kyoto&travelmode=walking"
           }
         },
         {
@@ -764,14 +728,15 @@
             "route": "교토역 하치조서구 → 토지 케이가몬 (1.2km, 약 16분)",
             "source": "https://kyoto.travel/en/getting-around/comfortable-access-to-around-kyoto-station-to-ji-temple/ · https://www.japan-guide.com/e/e3919.html",
             "source_fetched_at": "2026-05-17",
-            "data_quality": "researched_market_rate"
+            "data_quality": "researched_market_rate",
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Kyoto+Station,+Kyoto&destination=To-ji+Temple,+Kyoto&travelmode=walking"
           }
         },
         {
-          "time": "출국",
+          "time": "06:45",
           "title": "JR 하루카 → 간사이공항 → 인천",
           "maps_query": "Kansai International Airport",
-          "note": "시부 예약 항공편 시간 확인 필요",
+          "note": "에어서울 A8YW58 KIX 10:05 출발 → ICN 12:05 도착. 국제선 2시간 전(약 08:00) KIX 도착 위해 교토역 06:45 하루카 탑승(약 75분). 시부모 동반이라 여유 버퍼 확보.",
           "arrive_from": {
             "mode": "airport_express",
             "duration_min": 75,
@@ -779,7 +744,8 @@
             "route": "JR 하루카 (교토역 → KIX)",
             "source": "JR 서일본 공식 (haruka_rt_4pax cost-options 인용)",
             "source_fetched_at": "2026-05-09",
-            "data_quality": "official_fare"
+            "data_quality": "official_fare",
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Kyoto+Station,+Kyoto&destination=Kansai+International+Airport&travelmode=transit"
           }
         }
       ],
@@ -801,10 +767,10 @@
           "lodging": "에어비앤비 시오",
           "items": [
             {
-              "time": "09:05",
+              "time": "15:15",
               "title": "간사이공항 도착 → JR 하루카 → 교토역",
               "maps_query": "Kansai International Airport",
-              "note": "시부 예약 항공편 시간 확인 필요"
+              "note": "에어서울 A8YW58 KIX 15:15 도착 (확정). 이후 시각은 오후 도착 반영 전 스케치 — 확정 일정은 상단 days 참조."
             },
             {
               "time": "11:30",
@@ -847,7 +813,7 @@
             },
             {
               "time": "12:30",
-              "title": "두부 가이세키 점심 (시그라쿠 토후)",
+              "title": "아라시야마 점심 (4인 좌석 가능 식당)",
               "maps_query": "Arashiyama Tofu",
               "note": "4인 좌석 사전 확인"
             },
@@ -945,10 +911,10 @@
           "lodging": "에어비앤비 시오",
           "items": [
             {
-              "time": "09:05",
+              "time": "15:15",
               "title": "간사이공항 도착 → JR 하루카 → 교토역",
               "maps_query": "Kansai International Airport",
-              "note": "시부 예약 항공편 시간 확인 필요"
+              "note": "에어서울 A8YW58 KIX 15:15 도착 (확정). 이후 시각은 오후 도착 반영 전 스케치 — 확정 일정은 상단 days 참조."
             },
             {
               "time": "11:30",
@@ -1093,10 +1059,10 @@
           "lodging": "에어비앤비 시오",
           "items": [
             {
-              "time": "09:05",
+              "time": "15:15",
               "title": "간사이공항 도착 → JR 하루카 → 교토역",
               "maps_query": "Kansai International Airport",
-              "note": "시부 예약 항공편 시간 확인 필요"
+              "note": "에어서울 A8YW58 KIX 15:15 도착 (확정). 이후 시각은 오후 도착 반영 전 스케치 — 확정 일정은 상단 days 참조."
             },
             {
               "time": "11:30",
@@ -1105,7 +1071,7 @@
             },
             {
               "time": "12:30",
-              "title": "니시키 시장 점심 — 교토 길거리 음식 (두부 꼬치·교토 절임·말차)",
+              "title": "니시키 시장 점심 — 교토 길거리 음식 (교토 절임·말차·꼬치)",
               "maps_query": "Nishiki Market Kyoto"
             },
             {
@@ -1143,7 +1109,7 @@
             },
             {
               "time": "12:00",
-              "title": "두부 가이세키 점심 (시그라쿠 토후)",
+              "title": "아라시야마 점심 (4인 좌석 가능 식당)",
               "maps_query": "Arashiyama Tofu",
               "note": "4인 좌석 사전 확인"
             },
@@ -1239,17 +1205,16 @@
   ],
   "pending": [
     "조식 식자재 사전 구비 — 6/1·6/2 시오 마치야용(니조역 슈퍼·편의점), 6/3용은 6/2 밤 교토역 편의점·에키벤 선구매 (6/2·6/3 아침은 카페 영업 전). 옵션은 조식 화면 참조.",
-    "항공편 시간 (시부 예약 완료) — 5/31 오전·6/3 출국일 미세 조정",
+    "항공편 — 5/31 도착편 확정(에어서울 A8YW58 KIX 15:15). 6/3 출국편 시간 확정 후 토지 산책·조식 동선 미세 조정 남음.",
     "쇼라이안(松籟庵) 4인 좌석 사전 예약",
     "카덴쇼 가이세키 시간 (17:30~18:00 권장)",
-    "카덴쇼 짐 위탁 (6/2 오전 시오 체크아웃 후 일찍 맡길 수 있는지)",
+    "카덴쇼 짐 위탁 — 6/2 오후 동산 코스 위해 12:00경 조기 위탁 가능 여부 확인 (시오 체크아웃 후)",
     "후시미이나리 정상은 시부모 동반이라 X — 입구 ~5분 사진 충분",
     "6/3 출국 시간에 따라 토지 산책·교토역 식사 가능 여부 결정",
-    "tbd_needs_browser_mcp 라벨 leg (시오→키요미즈 + 신규 4개: 시오→니조성, 니조성→점심, 야사카→철학의 길, 철학의 길→가와라마치) — Playwright MCP 보유 세션에서 Google Maps Directions로 분·거리·노선 확정 필요",
-    "철학의 길 — 시부모 피로 시 17:00 야사카에서 시버스 46/201로 가와라마치 직행 대안 (단축 산책 생략)",
-    "사이호지(이끼사찰) — intosaihoji.com 예약 가능성 별도 조사 (5/24 현재 출국 7일 전, lead time 미공시). booking-checklist saihoji_research 항목으로 추적. 예약 가능 확인 시 6/2 일정 분기 검토",
-    "니조성 본궁 입장료 ¥1,300/인 — 외정원만 산책 시 무료. 입장 여부 5/31 당일 컨디션·시간으로 결정",
-    "박일정님 아들 선물 — 포켓몬 카드 일본판 **낱팩 3~5팩 정도**(180엔/팩, 부담 없는 선) 정가 매수. 6/2 13:30~17:00 자유시간에 포켓몬센터 키요토(가라스마선)·요도바시카메라 교토역(도보 7분) 순환. **보이면 매수 우선순위 M5 アビスアイ > M4 ニンジャスピナー > M3 ムニキスゼロ** (희소성·신작 인기 순). 참고: 입수 가능성은 역순(M3 > M4 > M5). 박스는 **적극 추구 X** — 우연히 명백히 진열되고 매수 1초면 끝나는 경우만 M5 박스 6,000엔 검토. 총액 상한 ¥1,000~1,500(≈₩9,000~14,000). 안 보이면 즉시 료칸 복귀(패스 OK). 시나리오별 배분: docs/decision-log/2026-05-27-pokemon-card-shopping.md"
+    "tbd_needs_browser_mcp 라벨 leg (시오→大鵬 저녁, 카덴쇼/교토역→키요미즈, 기온→카덴쇼) — Playwright MCP 보유 세션에서 Google Maps Directions로 분·거리·노선 확정 필요",
+    "사이호지(이끼사찰) — 예약 확정(6/1 10:30, booking-checklist 참조)",
+    "5/31 大鵬 — 일요일 디너 17:30~21:00(L.O.20:30) 확인. 인기점 웨이팅 대비, 필요 시 전화 예약(075-822-5598)",
+    "박일정님 아들 선물 — 포켓몬 카드 일본판 낱팩 3~5팩(180엔/팩). 6/2 교토역 라멘 점심(11:00) 후 ~ 짐 위탁(12:00) 전 요도바시카메라 교토역점(교토역 도보 2분) 빠른 탐색. 보이면 매수 우선순위 M5 アビスアイ > M4 ニンジャスピナー > M3 ムニキスゼロ(희소성 순). 박스 X. 총액 상한 ¥1,000~1,500. 안 보이면 패스. 시나리오: docs/decision-log/2026-05-27-pokemon-card-shopping.md"
   ],
   "source_doc": "docs/kyoto-itinerary-may31-jun3-2026.md",
   "_arrive_from_schema": {
