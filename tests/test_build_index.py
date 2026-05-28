@@ -212,7 +212,8 @@ class BuildIndexTests(unittest.TestCase):
 
     def test_arrive_from_route_is_clickable_link_when_source_is_url(self):
         """모든 mode(bus·subway·jr·taxi·walk·airport_express)의 arrive_from에서
-        source가 http URL이면 route 텍스트가 <a href> 링크로 렌더돼야 한다.
+        maps_url(우선) 또는 source가 http URL이면 해당 URL이 HTML에 링크로 렌더돼야 한다.
+        maps_url이 있으면 maps-btn 버튼으로, 없으면 source URL로 확인.
         """
         run()
         import json as _json
@@ -223,15 +224,23 @@ class BuildIndexTests(unittest.TestCase):
                 af = it.get("arrive_from")
                 if not af:
                     continue
+                # maps_url 우선, 없으면 source 첫 토큰
+                maps_url = (af.get("maps_url") or "").strip()
                 src = af.get("source", "")
-                if src.startswith("http"):
-                    url_legs.append((af["mode"], src.split()[0]))
+                first_src = src.split()[0] if src else ""
+                url = maps_url or (first_src if first_src.startswith("http") else "")
+                if url:
+                    url_legs.append((af["mode"], url))
         self.assertGreater(len(url_legs), 0, "fixture must have at least one URL-sourced leg")
+        import html as _html
         for path in (INDEX, ITINERARY):
             with self.subTest(path=path.name):
-                html = path.read_text(encoding="utf-8")
+                page = path.read_text(encoding="utf-8")
                 for mode, url in url_legs[:5]:
-                    self.assertIn(url, html, f"{mode} leg URL {url!r} not linked in {path.name}")
+                    # HTML href 속성에서 & → &amp; 이스케이프 — 양쪽 형태 중 하나가 있으면 통과
+                    escaped = _html.escape(url, quote=True)
+                    found = url in page or escaped in page
+                    self.assertTrue(found, f"{mode} leg URL {url!r} not linked in {path.name}")
 
     def test_transit_pass_playbook_rendered_as_steps(self):
         """data/itinerary.json trip.transit_pass_playbook(when·action 배열)이
@@ -312,6 +321,15 @@ class BuildIndexTests(unittest.TestCase):
         html = CHECKLIST.read_text(encoding="utf-8")
         self.assertRegex(html, r"\.badge\s*\{[^}]*white-space:\s*nowrap")
         self.assertRegex(html, r"\.badge\s*\{[^}]*flex-shrink:\s*0")
+
+    def test_checklist_value_cell_wraps_long_text(self):
+        """금액·권장 등 긴 값(.row .v)이 모바일 폭에서 가로 오버플로/클리핑되지
+        않도록 flex 자식이 줄어들 수 있어야 한다(min-width:0 + overflow-wrap).
+        긴 amount가 카드 밖으로 잘리던 회귀 가드."""
+        run()
+        html = CHECKLIST.read_text(encoding="utf-8")
+        self.assertRegex(html, r"\.row\s+\.v\s*\{[^}]*min-width:\s*0")
+        self.assertRegex(html, r"\.row\s+\.v\s*\{[^}]*overflow-wrap:\s*anywhere")
 
     def test_checklist_status_is_color_coded(self):
         """예약 탭 항목은 상태별 색상 클래스(badge·subcard accent)로 구분돼야 한다.
