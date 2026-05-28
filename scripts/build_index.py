@@ -96,6 +96,12 @@ DOC_PAGES = (
         "5/24~27 → 5/31~6/3 변경 + 카덴쇼 가용 재확인",
         "archive", "home", "decision-log.html", "← 결정 일지",
     ),
+    DocPage(
+        "docs/essential-iphone-apps.md", "viz/essential-iphone-apps.html",
+        "필수 아이폰 앱 가이드",
+        "교토 여행 필수 앱 5개 설치·설정·운영 가이드 (2026-05-28)",
+        "checklist", "checklist", "checklist.html", "← 예약",
+    ),
 )
 
 DOC_SOURCE_TO_OUT = {p.source: p.out for p in DOC_PAGES}
