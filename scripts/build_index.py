@@ -143,6 +143,17 @@ def maps_link(query: str, label: str) -> str:
     return f'<a href="https://maps.google.com/?q={q}" target="_blank" rel="noopener">{esc(label)}</a>'
 
 
+def lodging_photo_strip(photos: list, img_prefix: str = "") -> str:
+    """photos: list of (filename, alt) — renders a horizontal scroll strip."""
+    if not photos:
+        return ""
+    imgs = "".join(
+        f'<img src="{esc(img_prefix + "assets/lodging/" + fname)}" alt="{esc(alt)}" class="lodging-thumb" loading="lazy">'
+        for fname, alt in photos
+    )
+    return f'<div class="lodging-strip">{imgs}</div>'
+
+
 def blog_reviews_html(reviews: list) -> str:
     """Render a scrollable photo strip of Naver blog reviews."""
     if not reviews:
@@ -393,6 +404,10 @@ def render_css(tokens: dict) -> str:
   .blog-card {{ flex: 0 0 140px; text-decoration: none; color: var(--fg); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }}
   .blog-thumb {{ width: 140px; height: 100px; object-fit: cover; display: block; }}
   .blog-comment {{ font-size: 0.7rem; padding: 0.3rem; margin: 0; color: var(--muted); line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }}
+  /* ── 숙소 사진 스트립 ── */
+  .lodging-strip {{ display: flex; gap: 0.5rem; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; padding-bottom: 0.25rem; margin: 0.6rem 0 0.4rem; }}
+  .lodging-strip::-webkit-scrollbar {{ display: none; }}
+  .lodging-thumb {{ flex: 0 0 200px; height: 134px; object-fit: cover; border-radius: 8px; display: block; }}
 """
 
 
@@ -525,7 +540,7 @@ def card_tsuyu(d) -> str:
 """
 
 
-def card_airbnb(d) -> str:
+def card_airbnb(d, img_prefix: str = "") -> str:
     l = next((x for x in d["cost"]["lodging"] if x["id"] == "airbnb_shio_machiya"), None)
     if not l:
         return ""
@@ -538,10 +553,16 @@ def card_airbnb(d) -> str:
     link = f"https://www.airbnb.co.kr/rooms/{airbnb_id}" if airbnb_id else ""
     link_html = f'<a href="{esc(link)}" target="_blank" rel="noopener">매물 열기 ↗</a>' if link else ""
     two_night = l["per_night_krw"] * 2
+    photos = lodging_photo_strip([
+        ("shio-exterior.jpg", "외관 · 汐 노렌"),
+        ("shio-room-1.jpg", "다다미방 · 정원 뷰"),
+        ("shio-room-2.jpg", "다다미방 · 달창"),
+    ], img_prefix=img_prefix)
     return f"""
 <!-- SYNC: data/cost-options.json (lodging.airbnb_shio_machiya) · docs/airbnb-kyoto-may31-jun2-2026.md -->
 <section id="airbnb" class="card">
-  <h2>에어비앤비 · 시오(Shio) 100년 마치야 <span class="badge">확정</span></h2>
+  <h2>에어비앤비 · 시오(Shio) 100년 마치야 <span class="badge badge-done">확정</span></h2>
+  {photos}
   <div class="row"><span class="k">일정</span><span class="v">5/31~6/2 · 2박</span></div>
   <div class="row"><span class="k">위치</span><span class="v">중교구 · 니조역 도보 7분</span></div>
   <div class="row"><span class="k">2박 총액</span><span class="v">{esc(won(two_night))}</span></div>
@@ -552,7 +573,7 @@ def card_airbnb(d) -> str:
 """
 
 
-def card_kadensho(d) -> str:
+def card_kadensho(d, img_prefix: str = "") -> str:
     items = [l for l in d["cost"]["lodging"] if l["id"] == "kadensho_tripcom_no_meal_2026jun2"]
     cards = []
     for l in items:
@@ -562,10 +583,17 @@ def card_kadensho(d) -> str:
     <div class="row"><span class="k">1박 (4인, 객실 2개)</span><span class="v">{esc(won(l['per_night_krw']))}</span></div>
     {note_block(l.get('notes', ''))}
   </div>""")
+    photos = lodging_photo_strip([
+        ("kadensho-exterior.jpg", "외관 · 花伝抄"),
+        ("kadensho-bath-hinoki.jpg", "히노키 욕조"),
+        ("kadensho-bath-outdoor.jpg", "노천탕 · 대나무 정원"),
+        ("kadensho-bath-rock.jpg", "암반탕"),
+    ], img_prefix=img_prefix)
     return f"""
 <!-- SYNC: data/cost-options.json (lodging.kadensho_tripcom_no_meal_2026jun2) · data/booking-checklist.json (ryokan) -->
 <section id="kadensho" class="card">
-  <h2>우메코지 카덴쇼 (6/2 1박)</h2>
+  <h2>우메코지 카덴쇼 (6/2 1박) <span class="badge badge-done">확정</span></h2>
+  {photos}
   {note_block("트립닷컴 예약번호 1400825991981904 · 2026-05-13 확정 · 숙소 현지결제.", style="margin-bottom:0.5rem;")}
   {''.join(cards)}
 </section>
@@ -951,35 +979,106 @@ def card_score(d) -> str:
 INDEX_TITLE = "교토 5/31~6/3 · 4인 가족 여행"
 INDEX_DESCRIPTION = "교토 5/31~6/3 · 4인 가족(부부+시부모) · 3박 4일 · 확정 일정·예약 현황"
 
-INDEX_HEAD = f"""<h1>{esc(INDEX_TITLE)}</h1>
-<div class="status">시부모 동반 · 3박 4일 · 시오 마치야 2박 + 카덴쇼 료칸 1박</div>
-
-<nav>
-  <a href="#summary">요약</a>
-  <a href="#itinerary">일정</a>
-  <a href="viz/lodging.html">숙박·항공</a>
-  <a href="viz/checklist.html">예약</a>
-  <a href="viz/archive.html">아카이브</a>
-</nav>
+INDEX_HEAD = f"""
+<header class="lp-hero">
+  <h1>{esc(INDEX_TITLE)}</h1>
+  <p class="lp-tagline">시부모 동반 · 3박 4일 · 시오 마치야 2박 + 카덴쇼 료칸 1박</p>
+  <nav class="lp-nav">
+    <a href="#itinerary">일정</a>
+    <a href="#airbnb">에어비앤비</a>
+    <a href="#kadensho">카덴쇼</a>
+    <a href="#flights">항공</a>
+    <a href="#checklist">예약</a>
+    <a href="#summary">요약</a>
+  </nav>
+</header>
 """
 
-INDEX_FOOTER = f"""
-<div class="links">
-  <a href="viz/itinerary.html">일자별 일정 ↗</a>
-  <a href="viz/checklist.html">예약 체크리스트 ↗</a>
-  <a href="viz/archive.html">의사결정 아카이브 ↗</a>
-</div>
+INDEX_FOOTER = """
+<footer class="lp-footer">
+  2026-05-12 의사결정 종료 ·
+  <a href="viz/archive.html">아카이브</a> ·
+  <a href="viz/report.html">최종 보고서</a>
+</footer>
+"""
 
-<footer>2026-05-12 의사결정 종료 · 이 페이지는 확정 일정·예약 운영용. 결정 근거는 <a href="viz/archive.html" style="color:inherit;">아카이브</a> · <a href="viz/report.html" style="color:inherit;">최종 보고서</a>에서 확인.</footer>
+
+LANDING_CSS = """
+  /* ── Apple-style landing page ── */
+  body { padding: 0; overflow-x: hidden; }
+
+  .lp-hero {
+    padding: 3.5rem 1.5rem 2.5rem;
+    text-align: center;
+    background: var(--subcard);
+    border-bottom: 1px solid var(--border);
+  }
+  .lp-hero h1 {
+    font-size: clamp(1.9rem, 7vw, 2.8rem);
+    font-weight: 700; letter-spacing: -0.03em;
+    line-height: 1.1; margin: 0 0 0.5rem;
+  }
+  .lp-tagline {
+    color: var(--muted); font-size: 0.95rem;
+    margin: 0 0 1.5rem; line-height: 1.5;
+  }
+  .lp-nav {
+    display: flex; flex-wrap: wrap; justify-content: center;
+    gap: 0.4rem; margin: 0; border: none; padding: 0;
+  }
+  .lp-nav a {
+    padding: 0.4rem 0.9rem; border-radius: 999px;
+    background: var(--card); color: var(--fg); text-decoration: none;
+    font-size: 0.78rem; font-weight: 500; border: 1px solid var(--border);
+  }
+  .lp-nav a:active { background: var(--accent-soft); }
+
+  main > section.card {
+    border: none; border-radius: 0; box-shadow: none;
+    padding: 1.75rem 1.5rem; margin: 0;
+    border-bottom: 1px solid var(--border);
+  }
+  main > section.card:last-child { border-bottom: none; }
+  main > section.card > h2 {
+    font-size: 1.25rem; font-weight: 700; letter-spacing: -0.02em;
+    color: var(--fg); margin: 0 0 1rem;
+  }
+  main > section.card .subcard {
+    border-radius: 12px; border: none;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.05);
+    padding: 0.9rem; margin: 0.5rem 0;
+  }
+  @media (prefers-color-scheme: dark) {
+    main > section.card .subcard {
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.1);
+    }
+  }
+  main > section.card .lodging-strip {
+    margin: 0.75rem -1.5rem 0.6rem;
+    padding: 0 1.5rem;
+  }
+  main > section.card .lodging-thumb {
+    flex: 0 0 220px; height: 148px; border-radius: 10px;
+  }
+  footer.lp-footer {
+    padding: 2rem 1.5rem; text-align: center;
+    font-size: 0.8rem; margin: 0;
+    border-top: 1px solid var(--border);
+  }
+  footer.lp-footer a { color: var(--muted); }
 """
 
 
 def build_index(d) -> str:
     sections = [
-        card_summary(d),
         card_itinerary(d),
+        card_airbnb(d),
+        card_kadensho(d),
+        card_flights(d),
+        card_checklist(d),
+        card_summary(d),
     ]
-    body = INDEX_HEAD + "\n".join(sections) + INDEX_FOOTER + tab_bar("home", in_viz=False)
+    body = INDEX_HEAD + "<main>\n" + "\n".join(sections) + "\n</main>" + INDEX_FOOTER
     return html_doc(
         INDEX_TITLE,
         body,
@@ -987,6 +1086,7 @@ def build_index(d) -> str:
         description=INDEX_DESCRIPTION,
         og_slug="home",
         page_path="",
+        extra_css=LANDING_CSS,
     )
 
 
@@ -1031,8 +1131,8 @@ def build_archive(d) -> str:
 def build_lodging(d) -> str:
     body = f"""<h1>숙박 · 항공</h1>
 <div class="status">에어비앤비 2박 + 카덴쇼 료칸 1박 · 에어서울 4인 발권 완료</div>
-{card_airbnb(d)}
-{card_kadensho(d)}
+{card_airbnb(d, img_prefix="../")}
+{card_kadensho(d, img_prefix="../")}
 {card_flights(d)}
 <footer>data/cost-options.json 단일 출처</footer>
 {tab_bar("lodging", in_viz=True)}
