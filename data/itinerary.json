@@ -112,7 +112,8 @@
             "route": "JR 하루카 KIX→교토역 75분 + JR 산인본선 교토→니조 5분 + 도보 니조역→시오 7분 0.5km",
             "source": "JR 서일본 공식 (haruka_rt_4pax cost-options 인용) + 5/31 동선 수정 PR #26",
             "source_fetched_at": "2026-05-17",
-            "data_quality": "official_fare"
+            "data_quality": "official_fare",
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Kansai+International+Airport&destination=Nijo+Station,+Kyoto&travelmode=transit"
           }
         },
         {
@@ -127,7 +128,8 @@
             "route": "시오 마치야 → 니조성 동대수문 (堀川通 경유 700m)",
             "source": "https://www.google.com/maps/dir/Shio+Machiya+Kyoto/Nijo+Castle",
             "source_fetched_at": "2026-05-24",
-            "data_quality": "tbd_needs_browser_mcp"
+            "data_quality": "tbd_needs_browser_mcp",
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Nijo+Station,+Kyoto&destination=Nijo+Castle,+Kyoto&travelmode=walking"
           }
         },
         {
@@ -151,7 +153,8 @@
             "route": "니조성 → 大鵬 (시오 도보권 500m 내)",
             "source": "https://www.google.com/maps/search/restaurants+near+Shio+Machiya+Kyoto",
             "source_fetched_at": "2026-05-24",
-            "data_quality": "tbd_needs_browser_mcp"
+            "data_quality": "tbd_needs_browser_mcp",
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Nijo+Castle,+Kyoto&destination=%E5%A4%A7%E9%B5%AC+Kyoto&travelmode=walking"
           }
         },
         {
@@ -168,7 +171,8 @@
             "route": "점심 후 시오/니조 → JR 산인선 + 시버스 → 키요미즈 (니조 출발 약 35분. 교토역 출발 28분 대비 7분 가산)",
             "source": "https://www.google.com/maps/dir/Shio+Machiya+Kyoto/Kiyomizu-dera",
             "source_fetched_at": "2026-05-18",
-            "data_quality": "tbd_needs_browser_mcp"
+            "data_quality": "tbd_needs_browser_mcp",
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Nijo+Station,+Kyoto&destination=Kiyomizu-dera,+Kyoto&travelmode=transit"
           },
           "blog_reviews": [
             {
@@ -200,7 +204,8 @@
             "route": "키요미즈데라 → 산넨자카·니넨자카 하행 → 맛차하우스 (키요미즈 3초메 337, 도보 10분)",
             "source": "https://maps.app.goo.gl/qnpCLBJxxeA7e5au6",
             "source_fetched_at": "2026-05-25",
-            "data_quality": "researched_market_rate"
+            "data_quality": "researched_market_rate",
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Kiyomizu-dera,+Kyoto&destination=Maccha+House+%E6%8A%B9%E8%8C%B6%E9%A4%A8+Kiyomizu,+Kyoto&travelmode=walking"
           },
           "blog_reviews": [
             {
@@ -242,7 +247,8 @@
             "route": "맛차하우스 → 산넨자카 진입점 도보 5분 300m",
             "source": "https://www.google.com/maps/dir/Maccha+House/Sannenzaka",
             "source_fetched_at": "2026-05-25",
-            "data_quality": "researched_market_rate"
+            "data_quality": "researched_market_rate",
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Maccha+House+%E6%8A%B9%E8%8C%B6%E9%A4%A8+Kiyomizu,+Kyoto&destination=Yasaka+Shrine,+Kyoto&travelmode=walking"
           },
           "blog_reviews": [
             {
@@ -274,7 +280,8 @@
             "route": "야사카 신사 → 난젠지 정문 → 철학의 길 남단 (1.2km, 동산 북부)",
             "source": "https://www.google.com/maps/dir/Yasaka+Shrine/Philosopher%27s+Path+Kyoto",
             "source_fetched_at": "2026-05-24",
-            "data_quality": "tbd_needs_browser_mcp"
+            "data_quality": "tbd_needs_browser_mcp",
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Yasaka+Shrine,+Kyoto&destination=Philosopher%27s+Path,+Kyoto&travelmode=walking"
           }
         },
         {
@@ -299,7 +306,8 @@
             "route": "철학의 길 남단 → 市バス 46 또는 201 → 四条河原町 (도보 1km + 버스 15분 가산)",
             "source": "https://www.google.com/maps/dir/Philosopher%27s+Path+Kyoto/Kawaramachi",
             "source_fetched_at": "2026-05-24",
-            "data_quality": "tbd_needs_browser_mcp"
+            "data_quality": "tbd_needs_browser_mcp",
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Philosopher%27s+Path,+Kyoto&destination=Pontocho+Alley,+Kyoto&travelmode=transit"
           },
           "blog_reviews": [
             {
@@ -347,7 +355,8 @@
             "route": "JR 산인본선 (니조역 → 사가아라시야마역). 교토역→사가아라시야마 17분 기준 5분 차감",
             "source": "https://www.kyotostation.com/jr-sagano-line-for-nijo-uzumasa-saga-arashiyama/",
             "source_fetched_at": "2026-05-17",
-            "data_quality": "researched_market_rate"
+            "data_quality": "researched_market_rate",
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Nijo+Station,+Kyoto&destination=Arashiyama+Bamboo+Grove,+Kyoto&travelmode=transit"
           },
           "blog_reviews": [
             {
@@ -375,7 +384,8 @@
             "route": "죽림길 → 텐류지 북문 (竹林の小径 경유 7m, Maps 1분; 정원 경내 진입 도보 ~3분 가산)",
             "source": "https://www.google.com/maps/dir/Arashiyama+Bamboo+Grove/Tenryu-ji",
             "source_fetched_at": "2026-05-18",
-            "data_quality": "researched_market_rate"
+            "data_quality": "researched_market_rate",
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Arashiyama+Bamboo+Grove,+Kyoto&destination=Tenryu-ji+Temple,+Kyoto&travelmode=walking"
           },
           "blog_reviews": [
             {
@@ -402,7 +412,8 @@
             "route": "텐류지/아라시야마 → 교토버스 73계통 '苔寺・鈴虫寺' 정류장 → 도보 3분",
             "source": "https://saihoji-kokedera.com/en/",
             "source_fetched_at": "2026-05-26",
-            "data_quality": "tbd_needs_browser_mcp"
+            "data_quality": "tbd_needs_browser_mcp",
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Tenryu-ji+Temple,+Kyoto&destination=Saihoji+Temple,+Kyoto&travelmode=transit"
           },
           "blog_reviews": [
             {
@@ -498,7 +509,17 @@
               "img": "https://tblg.k-img.com/restaurant/images/Rvw/252182/150x150_square_f94fd442b1a0a87a9a66ae39c99d5f90.jpg",
               "comment": "[雲ノ茶] 두유·귀리우유 변경 가능. 와가시 디저트 세트. 아라시야마역 도보 3분"
             }
-          ]
+          ],
+          "arrive_from": {
+            "mode": "bus",
+            "duration_min": 20,
+            "distance_km": 3.0,
+            "route": "교토버스 73계통 역방향 (苔寺・鈴虫寺 → 嵐山天龍寺前) 15분 ¥230 + 도보 2분. 사이호지 관람 후 동일 정류장에서 탑승",
+            "source": "https://saihoji-kokedera.com/en/ + 교토버스 73계통 노선도",
+            "source_fetched_at": "2026-05-27",
+            "data_quality": "researched_market_rate",
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Saihoji+Temple,+Kyoto&destination=eX+cafe+%E4%BA%AC%E9%83%BD%E5%B5%90%E5%B1%B1%E6%9C%AC%E5%BA%97,+Kyoto&travelmode=transit"
+          }
         },
         {
           "time": "13:30",
@@ -513,7 +534,8 @@
             "route": "市バス 11(嵐山天龍寺前→山越中町) 11분 + 환승도보 6분 + 市バス 59(山越中町→金閣寺道) 18분 + 도보 2분 ¥460. 단 11번 40분 간격 · 놓치면 택시 22분(7.1km) 대안",
             "source": "https://www.google.com/maps/dir/Tenryu-ji+Temple,+Kyoto/Kinkaku-ji+Temple,+Kyoto",
             "source_fetched_at": "2026-05-18",
-            "data_quality": "researched_market_rate"
+            "data_quality": "researched_market_rate",
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Tenryu-ji+Temple,+Kyoto&destination=Kinkaku-ji,+Kyoto&travelmode=transit"
           },
           "blog_reviews": [
             {
@@ -546,7 +568,8 @@
             "route": "市バス 59 (金閣寺道 → 竜安寺前). 12~15분 간격 운행",
             "source": "https://kinukake.com/en/day-tour.html · https://www.tripadvisor.com/ShowTopic-g298564-i2712-k6637145",
             "source_fetched_at": "2026-05-17",
-            "data_quality": "researched_market_rate"
+            "data_quality": "researched_market_rate",
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Kinkaku-ji,+Kyoto&destination=Ryoan-ji,+Kyoto&travelmode=transit"
           }
         },
         {
@@ -571,7 +594,8 @@
             "route": "市バス 59 (竜安寺前 → 四条河原町). 직행 + 도보 2분 ¥230",
             "source": "https://www.google.com/maps/dir/Ryoan-ji/Kawaramachi",
             "source_fetched_at": "2026-05-18",
-            "data_quality": "researched_market_rate"
+            "data_quality": "researched_market_rate",
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Ryoan-ji,+Kyoto&destination=Pontocho+Alley,+Kyoto&travelmode=transit"
           }
         }
       ],
@@ -607,7 +631,8 @@
             "route": "니조역 JR 산인본선(니조→교토) + JR 나라선(교토→이나리) 20분 ¥200 + 도보 5분",
             "source": "https://www.kyotostation.com/jr-nara-line-for-tofukuji-inari-uji-nara/",
             "source_fetched_at": "2026-05-18",
-            "data_quality": "researched_market_rate"
+            "data_quality": "researched_market_rate",
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Nijo+Station,+Kyoto&destination=Fushimi+Inari+Taisha,+Kyoto&travelmode=transit"
           },
           "blog_reviews": [
             {
@@ -640,7 +665,8 @@
             "route": "JR 나라선 (이나리역 → 토후쿠지역). 1정거장 + 토후쿠지역 도보 10분",
             "source": "https://www.kyotostation.com/jr-nara-line-for-tofukuji-inari-uji-nara/",
             "source_fetched_at": "2026-05-17",
-            "data_quality": "researched_market_rate"
+            "data_quality": "researched_market_rate",
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Fushimi+Inari+Taisha,+Kyoto&destination=Tofuku-ji,+Kyoto&travelmode=transit"
           },
           "blog_reviews": [
             {
@@ -675,7 +701,8 @@
             "route": "JR 나라선 (토후쿠지역 → 교토역). 1정거장",
             "source": "https://www.kyotostation.com/jr-nara-line-for-tofukuji-inari-uji-nara/",
             "source_fetched_at": "2026-05-17",
-            "data_quality": "researched_market_rate"
+            "data_quality": "researched_market_rate",
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Tofuku-ji,+Kyoto&destination=Kyoto+Station,+Kyoto&travelmode=transit"
           }
         },
         {
@@ -696,7 +723,8 @@
             "route": "교토역 → JR 우메코지-교토니시역 인근 카덴쇼. JR 1정거장도 가능",
             "source": "https://livejapan.com/en/in-kansai/in-pref-kyoto/in-kyoto-station_to-ji-temple/spot-lj0091598/",
             "source_fetched_at": "2026-05-17",
-            "data_quality": "researched_market_rate"
+            "data_quality": "researched_market_rate",
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Kyoto+Station,+Kyoto&destination=Umekoji+Kadensho,+Kyoto&travelmode=walking"
           }
         },
         {
@@ -749,7 +777,8 @@
             "route": "카덴쇼 → 교토역 (역방향)",
             "source": "https://livejapan.com/en/in-kansai/in-pref-kyoto/in-kyoto-station_to-ji-temple/spot-lj0091598/",
             "source_fetched_at": "2026-05-17",
-            "data_quality": "researched_market_rate"
+            "data_quality": "researched_market_rate",
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Umekoji+Kadensho,+Kyoto&destination=Kyoto+Station,+Kyoto&travelmode=walking"
           }
         },
         {
@@ -764,7 +793,8 @@
             "route": "교토역 하치조서구 → 토지 케이가몬 (1.2km, 약 16분)",
             "source": "https://kyoto.travel/en/getting-around/comfortable-access-to-around-kyoto-station-to-ji-temple/ · https://www.japan-guide.com/e/e3919.html",
             "source_fetched_at": "2026-05-17",
-            "data_quality": "researched_market_rate"
+            "data_quality": "researched_market_rate",
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Kyoto+Station,+Kyoto&destination=To-ji+Temple,+Kyoto&travelmode=walking"
           }
         },
         {
@@ -779,7 +809,8 @@
             "route": "JR 하루카 (교토역 → KIX)",
             "source": "JR 서일본 공식 (haruka_rt_4pax cost-options 인용)",
             "source_fetched_at": "2026-05-09",
-            "data_quality": "official_fare"
+            "data_quality": "official_fare",
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Kyoto+Station,+Kyoto&destination=Kansai+International+Airport&travelmode=transit"
           }
         }
       ],

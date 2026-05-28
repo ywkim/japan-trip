@@ -268,6 +268,12 @@ def render_css(tokens: dict) -> str:
   }}
   .leg-detail a {{ color: var(--fg); }}
   .day a {{ color: var(--fg); text-decoration: underline; text-decoration-color: var(--border); }}
+  details.leg summary a.maps-btn {{
+    display: inline-block; padding: 0.05em 0.35em; margin-left: 0.3em;
+    border: 1px solid var(--accent); border-radius: 3px;
+    font-size: 0.78em; text-decoration: none; color: var(--accent);
+    vertical-align: middle; white-space: nowrap;
+  }}
   .bar {{ height: 6px; background: var(--bar-track); border-radius: 3px; margin: 0.2rem 0 0.5rem; overflow: hidden; }}
   .bar-fill {{ height: 100%; background: var(--accent); }}
   .links {{ display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.6rem; }}
@@ -690,7 +696,10 @@ def memo_block(note: str, *, style: str = "", cls: str = "sub") -> str:
 
 
 def transit_line(af) -> str:
-    """도착 경로를 '아이콘 + 평이 요약(소요시간)' summary와 장문 route 상세로 렌더."""
+    """도착 경로를 '아이콘 + 평이 요약(소요시간)' summary와 장문 route 상세로 렌더.
+
+    maps_url이 있으면 summary 줄에 '지도 ↗' 버튼 인라인 표시 — 탭하면 구글맵 앱 오픈.
+    """
     if not af:
         return ""
     mode = af.get("mode")
@@ -708,14 +717,19 @@ def transit_line(af) -> str:
     if mode == "walk" and isinstance(dist, (int, float)) and dist < 2:
         summary += f" ({dist}km)"
 
-    # source 필드의 첫 토큰이 http(s) URL이면 클릭 가능 링크로 감싼다 (Maps Directions 등).
+    # maps_url 우선, 없으면 source 첫 토큰 URL fallback
+    maps_url = (af.get("maps_url") or "").strip()
     src = (af.get("source") or "").strip()
     first_token = src.split()[0] if src else ""
-    href = first_token if first_token.startswith(("http://", "https://")) else ""
+    src_href = first_token if first_token.startswith(("http://", "https://")) else ""
+    href = maps_url or src_href
+
+    # summary 줄에 지도 버튼 인라인 (항상 노출)
+    if href:
+        summary += f' <a href="{esc(href)}" target="_blank" rel="noopener" class="maps-btn">지도 ↗</a>'
+
     route = af.get("route") or ""
     detail = esc(route) if route else f"{esc(verb)} {esc(time_part)}"
-    if href:
-        detail += f' <a href="{esc(href)}" target="_blank" rel="noopener">경로 ↗</a>'
     return fold(summary, detail)
 
 
