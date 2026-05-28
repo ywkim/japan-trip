@@ -333,9 +333,9 @@
             "mode": "bus",
             "duration_min": 20,
             "distance_km": 3.0,
-            "route": "교토버스 73계통 역방향 (苔寺・鈴虫寺 → 嵐山天龍寺前) 15분 ¥230 + 도보 2분. 사이호지 관람 후 동일 정류장에서 탑승",
+            "route": "교토버스 73계통 역방향 (苔寺・鈴虫寺 → 嵐山天龍寺前) 15분 ¥260 + 도보 2분. 사이호지 관람 후 동일 정류장에서 탑승",
             "source": "https://saihoji-kokedera.com/en/ + 교토버스 73계통 노선도",
-            "source_fetched_at": "2026-05-27",
+            "source_fetched_at": "2026-05-28",
             "data_quality": "researched_market_rate",
             "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Saihoji+Temple,+Kyoto&destination=eX+cafe+%E4%BA%AC%E9%83%BD%E5%B5%90%E5%B1%B1%E6%9C%AC%E5%BA%97,+Kyoto&travelmode=transit"
           }
@@ -554,7 +554,8 @@
             "route": "카덴쇼/교토역 → 市バス 206 → 五条坂/清水道 정류장 → 도보 10분 키요미즈자카",
             "source": "https://www.google.com/maps/dir/Kyoto+Station/Kiyomizu-dera",
             "source_fetched_at": "2026-05-28",
-            "data_quality": "tbd_needs_browser_mcp"
+            "data_quality": "tbd_needs_browser_mcp",
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Umekoji+Kadensho,+Kyoto&destination=Kiyomizu-dera,+Kyoto&travelmode=transit"
           },
           "blog_reviews": [
             {
@@ -586,7 +587,8 @@
             "route": "키요미즈데라 → 산넨자카·니넨자카 하행 → 맛차하우스 (키요미즈 3초메 337, 도보 10분)",
             "source": "https://maps.app.goo.gl/qnpCLBJxxeA7e5au6",
             "source_fetched_at": "2026-05-25",
-            "data_quality": "researched_market_rate"
+            "data_quality": "researched_market_rate",
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Kiyomizu-dera,+Kyoto&destination=Maccha+House+%E6%8A%B9%E8%8C%B6%E9%A4%A8+Kiyomizu,+Kyoto&travelmode=walking"
           },
           "blog_reviews": [
             {
@@ -628,7 +630,8 @@
             "route": "맛차하우스 → 산넨자카 진입점 도보 5분 300m",
             "source": "https://www.google.com/maps/dir/Maccha+House/Sannenzaka",
             "source_fetched_at": "2026-05-25",
-            "data_quality": "researched_market_rate"
+            "data_quality": "researched_market_rate",
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Maccha+House+%E6%8A%B9%E8%8C%B6%E9%A4%A8+Kiyomizu,+Kyoto&destination=Yasaka+Shrine,+Kyoto&travelmode=walking"
           },
           "blog_reviews": [
             {
@@ -660,7 +663,8 @@
             "route": "기온시조 → 市バス 206/86 또는 京阪+JR 환승 → 교토역 → 도보 카덴쇼",
             "source": "https://www.google.com/maps/dir/Gion+Kyoto/Umekoji+Kadensho",
             "source_fetched_at": "2026-05-28",
-            "data_quality": "tbd_needs_browser_mcp"
+            "data_quality": "tbd_needs_browser_mcp",
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Yasaka+Shrine,+Kyoto&destination=Umekoji+Kadensho,+Kyoto&travelmode=transit"
           }
         },
         {
