@@ -393,6 +393,10 @@ def render_css(tokens: dict) -> str:
   .blog-card {{ flex: 0 0 140px; text-decoration: none; color: var(--fg); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }}
   .blog-thumb {{ width: 140px; height: 100px; object-fit: cover; display: block; }}
   .blog-comment {{ font-size: 0.7rem; padding: 0.3rem; margin: 0; color: var(--muted); line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }}
+  /* ── 숙소 사진 스트립 ── */
+  .lodging-strip {{ display: flex; gap: 0.5rem; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; padding-bottom: 0.25rem; margin: 0.6rem 0 0.4rem; }}
+  .lodging-strip::-webkit-scrollbar {{ display: none; }}
+  .lodging-thumb {{ flex: 0 0 200px; height: 134px; object-fit: cover; border-radius: 8px; display: block; }}
 """
 
 
@@ -1272,15 +1276,7 @@ def build_itinerary(d) -> str:
   {''.join(cand_day_cards)}
 </details>""")
 
-    candidates_section = ""
-    if candidate_cards:
-        candidates_section = f"""
-<section class="card">
-  <h2>후보 코스</h2>
-  <div class="sub" style="margin-bottom:0.5rem;">숙소·날짜(5/31~6/3) 동일. 동선만 다른 대안 코스. 제목 탭하면 펼쳐짐.</div>
-  {''.join(candidate_cards)}
-</section>
-"""
+    candidates_section = ""  # 의사결정 완료 — 후보 코스 웹 노출 안 함
 
     body = f"""<h1>교토 3박4일 일정</h1>
 <div class="status">{esc(trip['dates'])} · {trip['nights']}박 · {trip['travelers']}인 · {esc(trip.get('composition',''))}</div>

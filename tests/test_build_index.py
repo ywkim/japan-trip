@@ -284,12 +284,11 @@ class BuildIndexTests(unittest.TestCase):
                     self.assertIn(src["url"], html, f"source url {src['url']!r} not in {path.name}")
                     self.assertIn(src["label"], html, f"source label {src['label']!r} not in {path.name}")
 
-    def test_route_candidates_rendered_in_itinerary(self):
+    def test_route_candidates_not_rendered_in_itinerary(self):
+        """의사결정 완료 후 후보 코스 섹션은 웹에 노출하지 않는다."""
         run()
         itin = ITINERARY.read_text(encoding="utf-8")
-        self.assertIn("후보 코스", itin, "route candidates section missing in itinerary.html")
-        for candidate_name in ("여유형", "서북 사찰 집중형", "미식+문화 체험형"):
-            self.assertIn(candidate_name, itin, f"candidate '{candidate_name}' missing in itinerary.html")
+        self.assertNotIn("후보 코스", itin, "route candidates section should not appear in itinerary.html")
 
     def test_checklist_note_urls_rendered_as_links(self):
         """note에 포함된 http URL은 linkify가 클릭 가능한 <a href> 링크로 렌더해야 한다.
