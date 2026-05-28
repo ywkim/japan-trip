@@ -237,6 +237,7 @@ class BuildIndexTests(unittest.TestCase):
             with self.subTest(path=path.name):
                 page = path.read_text(encoding="utf-8")
                 for mode, url in url_legs[:5]:
+                    # HTML href 속성에서 & → &amp; 이스케이프 — 양쪽 형태 중 하나가 있으면 통과
                     escaped = _html.escape(url, quote=True)
                     found = url in page or escaped in page
                     self.assertTrue(found, f"{mode} leg URL {url!r} not linked in {path.name}")
@@ -320,6 +321,15 @@ class BuildIndexTests(unittest.TestCase):
         html = CHECKLIST.read_text(encoding="utf-8")
         self.assertRegex(html, r"\.badge\s*\{[^}]*white-space:\s*nowrap")
         self.assertRegex(html, r"\.badge\s*\{[^}]*flex-shrink:\s*0")
+
+    def test_checklist_value_cell_wraps_long_text(self):
+        """금액·권장 등 긴 값(.row .v)이 모바일 폭에서 가로 오버플로/클리핑되지
+        않도록 flex 자식이 줄어들 수 있어야 한다(min-width:0 + overflow-wrap).
+        긴 amount가 카드 밖으로 잘리던 회귀 가드."""
+        run()
+        html = CHECKLIST.read_text(encoding="utf-8")
+        self.assertRegex(html, r"\.row\s+\.v\s*\{[^}]*min-width:\s*0")
+        self.assertRegex(html, r"\.row\s+\.v\s*\{[^}]*overflow-wrap:\s*anywhere")
 
     def test_checklist_status_is_color_coded(self):
         """예약 탭 항목은 상태별 색상 클래스(badge·subcard accent)로 구분돼야 한다.

@@ -333,8 +333,8 @@
             "mode": "bus",
             "duration_min": 20,
             "distance_km": 3.0,
-            "route": "교토버스 73계통 역방향 (苔寺・鈴虫寺→嵐山天龍寺前) 15분 ¥260 + 도보 2분",
-            "source": "https://saihoji-kokedera.com/en/",
+            "route": "교토버스 73계통 역방향 (苔寺・鈴虫寺 → 嵐山天龍寺前) 15분 ¥260 + 도보 2분. 사이호지 관람 후 동일 정류장에서 탑승",
+            "source": "https://saihoji-kokedera.com/en/ + 교토버스 73계통 노선도",
             "source_fetched_at": "2026-05-28",
             "data_quality": "researched_market_rate",
             "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Saihoji+Temple,+Kyoto&destination=eX+cafe+%E4%BA%AC%E9%83%BD%E5%B5%90%E5%B1%B1%E6%9C%AC%E5%BA%97,+Kyoto&travelmode=transit"

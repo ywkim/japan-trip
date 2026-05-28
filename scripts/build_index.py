@@ -287,7 +287,7 @@ def render_css(tokens: dict) -> str:
   }}
   .row:last-child {{ border-bottom: none; }}
   .row .k {{ color: var(--muted); flex-shrink: 0; }}
-  .row .v {{ font-variant-numeric: tabular-nums; text-align: right; word-break: keep-all; }}
+  .row .v {{ font-variant-numeric: tabular-nums; text-align: right; word-break: keep-all; min-width: 0; overflow-wrap: anywhere; }}
   .bf-item {{ padding: 0.5rem 0; border-bottom: 1px solid var(--border); }}
   .bf-item:last-child {{ border-bottom: none; }}
   .bf-label {{ font-weight: 600; margin-bottom: 0.2rem; }}
