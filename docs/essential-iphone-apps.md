@@ -39,7 +39,7 @@
 - 오프라인 지도 다운로드 (지하철 진입 시)
 
 **설치 방법**
-- App Store 검색 → `Google Maps` (무료) → `받기`
+- [Google Maps 다운로드 (App Store)](https://apps.apple.com/kr/app/google-maps/id585027354) — 무료
 
 **사전 설정** (5월 30일까지)
 1. 앱 열기 → 좌측 상단 프로필 아이콘 → `오프라인 지도` 클릭
@@ -67,7 +67,7 @@
 - 예약 링크 직연결 (식べログ 예약·Tabelog 앱 예약)
 
 **설치 방법**
-- App Store 검색 → `Tabelog` (무료) → `받기`
+- [Tabelog 다운로드 (App Store)](https://apps.apple.com/kr/app/tabelog/id1199035773) — 무료
 - 또는 웹브라우저 → `tabelog.com` (모바일 최적화)
 
 **사전 설정** (선택)
@@ -93,8 +93,8 @@
 - 긴 문장 번역 (Google 번역보다 한국어 문맥이 자연스러움)
 
 **설치 방법**
-- 옵션 A: App Store `Papago` (Line Corporation, 무료) → `받기`
-- 옵션 B: Google Play Store `Google 번역` 사용 (iOS에서도 가능)
+- 옵션 A: [Papago 다운로드 (App Store)](https://apps.apple.com/kr/app/papago/id1147308408) — Line Corporation, 무료
+- 옵션 B: [Google 번역 다운로드 (App Store)](https://apps.apple.com/kr/app/google-translate/id414706506) — 무료
 
 **사전 설정**
 - 두 앱 다 설치 권장 (한쪽이 부족할 때 다른 쪽 사용)
@@ -120,7 +120,8 @@
 - 현지 관광 정보·가이드 투어 예약
 
 **설치 방법**
-- App Store 검색 → `Trip.com` (무료) 또는 `Booking.com` (무료)
+- [Trip.com 다운로드 (App Store)](https://apps.apple.com/kr/app/trip-com-hotels-flights/id573506129) — 무료
+- 또는 [Booking.com 다운로드 (App Store)](https://apps.apple.com/kr/app/booking-com-hotel-deals/id535552173) — 무료
 
 **사전 설정** (5월 30일까지)
 - 회원가입/로그인 → 예약 내역 불러오기
