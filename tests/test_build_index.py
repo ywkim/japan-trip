@@ -772,7 +772,7 @@ class BreakfastPageTests(unittest.TestCase):
 
 
 class TabBarTests(unittest.TestCase):
-    TAB_PAGES = (INDEX, ITINERARY, TABLE, CHECKLIST, LODGING, ARCHIVE)
+    TAB_PAGES = (ITINERARY, TABLE, CHECKLIST, LODGING, ARCHIVE)  # index.html은 랜딩 리디자인으로 탭바 없음
 
     def test_tab_bar_present_on_all_pages(self):
         run()
@@ -783,8 +783,8 @@ class TabBarTests(unittest.TestCase):
 
     def test_each_page_has_correct_active_tab(self):
         run()
+        # index.html은 랜딩 페이지 리디자인으로 탭바 없음 — viz/* 페이지만 검사
         cases = {
-            INDEX:    "home",
             ITINERARY: "itinerary",
             TABLE:    "itinerary",
             CHECKLIST: "checklist",
