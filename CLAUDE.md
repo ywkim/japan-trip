@@ -109,7 +109,8 @@ japan-trip/
 │   ├── transit-mcp-handoff.md             # 후속 세션(Playwright MCP) 위임 가이드 (tbd_needs_browser_mcp leg 측정)
 │   ├── icoca-iphone-setup.md              # ICOCA 아이폰(Apple Wallet) 셋업 가이드 (사전 요건·등록·충전·트러블슈팅·체크리스트)
 │   ├── soyeon-maps-list.md                # 소연 구글맵 저장 목록 41개 장소 (카테고리별 정리, 일정 참고용)
-│   └── saihoji-reservation-2026-06.md     # 사이호지(苔寺) 참배 예약 가능성 리서치 (예약 방법·선착순·참배료·사경·접근성)
+│   ├── saihoji-reservation-2026-06.md     # 사이호지(苔寺) 참배 예약 가능성 리서치 (예약 방법·선착순·참배료·사경·접근성)
+│   └── screenshots/                       # 리서치 근거 스크린샷 (예: airalo-japan-2026-05-26.png — eSIM 실가격·핫스팟 정책 1차 출처)
 ├── viz/
 │   ├── itinerary.html         # 일자별 카드 뷰 (build_index.py 산출물 — 직접 편집 금지)
 │   ├── itinerary-table.html   # 4일 시간표 뷰 (build_index.py 산출물 — 직접 편집 금지)
