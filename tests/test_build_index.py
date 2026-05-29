@@ -483,6 +483,104 @@ class ChecklistDetailFoldTests(unittest.TestCase):
                       "folded reference detail (saihoji 2nd booking) lost")
 
 
+class PlaceLinkMarkupTests(unittest.TestCase):
+    """note 본문의 위키식 마크업 [[label|query]]을 Google Maps 링크로 변환하는 헬퍼."""
+
+    def test_link_places_converts_markup_with_query(self):
+        """[[코메다|Komeda Coffee]] → <a href=...>코메다</a>"""
+        text = "여기서 [[코메다|Komeda Coffee]]로 간다"
+        out = build_index.link_places(text)
+        self.assertIn('<a href="https://maps.google.com/?q=Komeda', out)
+        self.assertIn(">코메다<", out)
+        self.assertNotIn("[[", out, "markup should be converted, not left raw")
+
+    def test_link_places_converts_label_only_markup(self):
+        """[[교토역]] → 검색어=교토역"""
+        text = "다음은 [[교토역]]이다"
+        out = build_index.link_places(text)
+        self.assertIn('<a href="https://maps.google.com/?q=', out)
+        self.assertIn(">교토역<", out)
+
+    def test_link_places_preserves_plain_urls(self):
+        """본문의 HTTP URL은 linkify() 경유로 여전히 링크"""
+        text = "자세한 정보는 https://example.com 를 보세요"
+        out = build_index.link_places(text)
+        self.assertIn('<a href="https://example.com"', out)
+
+    def test_link_places_escapes_html_content(self):
+        """마크업 외의 <, & 등은 escape"""
+        text = "사람 & 동물 [[가게|Query]]"
+        out = build_index.link_places(text)
+        self.assertIn("&amp;", out, "& should be escaped")
+        self.assertNotIn("&<", out)
+
+    def test_link_places_preserves_multiple_markups(self):
+        """다중 마크업 모두 변환"""
+        text = "[[카페|Cafe]]과 [[식당|Restaurant]]을 찾아가자"
+        out = build_index.link_places(text)
+        self.assertEqual(out.count('<a href="https://maps.google.com'), 2)
+        self.assertIn(">카페<", out)
+        self.assertIn(">식당<", out)
+
+    def test_link_places_nested_markups_safe(self):
+        """중첩된 마크업은 처리하지 않음 (잘못된 입력)"""
+        text = "[[a|[[b]]]]"
+        # 단순히 깨지지 않고 처리되어야 함
+        out = build_index.link_places(text)
+        self.assertIsInstance(out, str)
+
+    def test_strip_place_markup_returns_display_text(self):
+        """strip_place_markup: [[label|query]] → label"""
+        text = "여기서 [[코메다|Komeda]]로 간다"
+        out = build_index.strip_place_markup(text)
+        self.assertEqual(out, "여기서 코메다로 간다")
+
+    def test_strip_place_markup_label_only(self):
+        """[[label]] → label"""
+        text = "[[교토역]]에서 만난다"
+        out = build_index.strip_place_markup(text)
+        self.assertEqual(out, "교토역에서 만난다")
+
+    def test_strip_place_markup_multiple(self):
+        """다중 마크업 모두 제거"""
+        text = "[[가게1|Q1]]과 [[가게2|Q2]]"
+        out = build_index.strip_place_markup(text)
+        self.assertEqual(out, "가게1과 가게2")
+
+    def test_strip_place_markup_no_markup(self):
+        """마크업 없으면 원문 반환"""
+        text = "이것은 일반 텍스트다"
+        out = build_index.strip_place_markup(text)
+        self.assertEqual(out, text)
+
+    def test_memo_block_uses_display_text_for_length(self):
+        """memo_block: 마크업 포함 note는 display text 길이로 fold 판정"""
+        # 마크업 포함하면 실제 보이는 길이는 짧음
+        short_with_markup = "[[코메다|Very Long Coffee Shop Name]]로 간다"
+        out = build_index.memo_block(short_with_markup)
+        # display text = "코메다로 간다" (13글자 < 50) → fold 안 함
+        self.assertNotIn("<details", out, "short display text should not fold")
+        self.assertIn("코메다", out, "label should be in output")
+
+    def test_memo_block_long_display_text_folds(self):
+        """마크업 제거 후 길이 > 50이면 fold"""
+        # 마크업 제거하면 50자 초과
+        long_note = "[[코메다|Query]]는 니조역 인근에 있고 " + "여기는 " * 10 + "아주 긴 설명입니다"
+        out = build_index.memo_block(long_note)
+        self.assertIn("<details", out, "long display text should fold")
+        self.assertIn("maps.google.com", out, "place link should survive folding")
+
+    def test_memo_block_place_link_in_detail(self):
+        """long note 접어도 detail에 place link 보존"""
+        memo = ("[[오가와 커피|Ogawa Coffee]]는 니조역 근처 유명한 커피숍입니다. "
+                "정원도 아름답고 조용한 분위기에서 시간을 보낼 수 있습니다. "
+                "가격은 중간대이고 계절 한정 메뉴가 많습니다.")
+        out = build_index.memo_block(memo)
+        self.assertIn('<details class="leg"', out, "long memo should fold")
+        self.assertIn("maps.google.com/?q=Ogawa", out, "maps link must be in folded detail")
+        self.assertIn(">오가와 커피<", out, "label must be clickable in detail")
+
+
 class ItineraryTableTests(unittest.TestCase):
     def test_table_file_is_generated(self):
         run()

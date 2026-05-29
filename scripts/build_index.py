@@ -143,6 +143,53 @@ def maps_link(query: str, label: str) -> str:
     return f'<a href="https://maps.google.com/?q={q}" target="_blank" rel="noopener">{esc(label)}</a>'
 
 
+_PLACE_MARKUP_RE = re.compile(r"\[\[([^\|\]]+)(?:\|([^\]]+))?\]\]")
+_PLACEHOLDER_RE = re.compile(r"__PLACE_LINK_\d+__")
+
+
+def strip_place_markup(text: str) -> str:
+    """note 텍스트에서 wiki 마크업 [[label|query]]을 제거하고 label만 남긴다.
+
+    memo_block의 길이 판정용 — 보이는 텍스트 길이로 계산하도록.
+    """
+    if not text:
+        return text
+    return _PLACE_MARKUP_RE.sub(r"\1", text)
+
+
+def link_places(text: str) -> str:
+    """note 텍스트의 위키식 마크육 [[label|query]]을 Google Maps 링크로 변환.
+
+    - [[label|query]]: label을 query로 검색
+    - [[label]]: label을 query로 사용
+    나머지 텍스트는 linkify()로 처리해 URL도 링크화하고 HTML escape.
+
+    double-escape 방지: markup을 먼저 처리해 placeholder로 치환, 나머지 텍스트를 escape+linkify,
+    마지막에 placeholder를 실제 HTML로 복구.
+    """
+    if not text:
+        return text
+
+    placeholders = {}
+    counter = [0]
+
+    def store_markup(m):
+        label = m.group(1)
+        query = m.group(2) or label
+        placeholder = f"__PLACE_LINK_{counter[0]}__"
+        placeholders[placeholder] = maps_link(query, label)
+        counter[0] += 1
+        return placeholder
+
+    text = _PLACE_MARKUP_RE.sub(store_markup, text)
+    text = linkify(text)
+
+    for placeholder, html in placeholders.items():
+        text = text.replace(esc(placeholder), html)
+
+    return text
+
+
 def blog_reviews_html(reviews: list) -> str:
     """Render a scrollable photo strip of Naver blog reviews."""
     if not reviews:
@@ -731,17 +778,21 @@ def memo_block(note: str, *, style: str = "", cls: str = "sub") -> str:
 
     장소 팁·맛집 설명이 카드를 압도하지 않도록 첫 문장만 보이고 나머지를 접는다.
     예약·숙박 메모용 note_block(' · ' 2항목 요약)과 달리 문장 단위 요약이 자연스럽다.
+
+    [[label|query]] 형식의 place markup을 Google Maps 링크로 변환.
+    길이 판정은 strip_place_markup(note)의 display text로 수행.
     """
     note = (note or "").strip()
     if not note:
         return ""
     style_attr = f' style="{style}"' if style else ""
-    if len(note) <= 50:
-        return f'<div class="{cls}"{style_attr}>{esc(note)}</div>'
+    display_text = strip_place_markup(note)
+    if len(display_text) <= 50:
+        return f'<div class="{cls}"{style_attr}>{link_places(note)}</div>'
     head, rest = _lead_split(note)
     if head and rest:
-        return fold(esc(head), esc(rest))
-    return fold("상세 보기", esc(note))
+        return fold(link_places(head), link_places(rest))
+    return fold("상세 보기", link_places(note))
 
 
 def transit_line(af) -> str:
