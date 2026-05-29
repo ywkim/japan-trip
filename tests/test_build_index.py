@@ -183,12 +183,15 @@ class BuildIndexTests(unittest.TestCase):
         self.assertIn("data/booking-checklist.json", cl)
 
     def test_all_html_outputs_use_token_palette(self):
-        """HTML 6종: light(#F7F6F2/#3E5C76) + dark 토큰 모두 인라인 CSS에 등장."""
+        """HTML 6종: light bg(#F5F5F7) + accent(#3E5C76) 토큰 모두 인라인 CSS에 등장.
+        index.html은 Apple-style 랜딩 리디자인으로 별도 팔레트 사용 — 제외."""
         run()
         for path in ALL_HTML_OUTPUTS:
+            if path == INDEX:
+                continue  # 랜딩 페이지는 Apple-style 팔레트 사용
             with self.subTest(path=path.name):
                 content = path.read_text(encoding="utf-8")
-                self.assertIn("#F7F6F2", content, f"{path.name}: light bg token not injected")
+                self.assertIn("#F5F5F7", content, f"{path.name}: light bg token not injected")
                 self.assertIn("#3E5C76", content, f"{path.name}: slate-indigo accent not injected")
                 for legacy in ("#d33", "#fafafa", "#ff6464", "#c33", "#c80", "#2a7"):
                     self.assertNotIn(
