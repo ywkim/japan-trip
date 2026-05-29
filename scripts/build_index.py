@@ -566,7 +566,7 @@ def card_airbnb(d) -> str:
 """
 
 
-def card_kadensho(d, img_prefix: str = "") -> str:
+def card_kadensho(d) -> str:
     items = [l for l in d["cost"]["lodging"] if l["id"] == "kadensho_tripcom_no_meal_2026jun2"]
     cards = []
     for l in items:
@@ -576,17 +576,10 @@ def card_kadensho(d, img_prefix: str = "") -> str:
     <div class="row"><span class="k">1박 (4인, 객실 2개)</span><span class="v">{esc(won(l['per_night_krw']))}</span></div>
     {note_block(l.get('notes', ''))}
   </div>""")
-    photos = lodging_photo_strip([
-        ("kadensho-exterior.jpg", "외관 · 花伝抄"),
-        ("kadensho-bath-hinoki.jpg", "히노키 욕조"),
-        ("kadensho-bath-outdoor.jpg", "노천탕 · 대나무 정원"),
-        ("kadensho-bath-rock.jpg", "암반탕"),
-    ], img_prefix=img_prefix)
     return f"""
 <!-- SYNC: data/cost-options.json (lodging.kadensho_tripcom_no_meal_2026jun2) · data/booking-checklist.json (ryokan) -->
 <section id="kadensho" class="card">
-  <h2>우메코지 카덴쇼 (6/2 1박) <span class="badge badge-done">확정</span></h2>
-  {photos}
+  <h2>우메코지 카덴쇼 (6/2 1박)</h2>
   {note_block("트립닷컴 예약번호 1400825991981904 · 2026-05-13 확정 · 숙소 현지결제.", style="margin-bottom:0.5rem;")}
   {''.join(cards)}
 </section>
