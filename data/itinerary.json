@@ -704,7 +704,7 @@
           "time": "06:15",
           "title": "카덴쇼 체크아웃 → 교토역",
           "maps_query": "Kyoto Station",
-          "note": "KIX 10:05 출발(에어서울 A8YW58)이라 06:45 하루카 탑승 목표. 조식 미포함 — 전날 구매분으로 차내 식사. 토지 산책은 시간 빠듯하면 생략.",
+          "note": "KIX 10:05 출발(에어서울 A8YW58)이라 06:45 하루카 탑승 목표. 조식 미포함 — 전날 구매분으로 차내 식사.",
           "arrive_from": {
             "mode": "walk",
             "duration_min": 8,
@@ -714,22 +714,6 @@
             "source_fetched_at": "2026-05-17",
             "data_quality": "researched_market_rate",
             "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Umekoji+Kadensho,+Kyoto&destination=Kyoto+Station,+Kyoto&travelmode=walking"
-          }
-        },
-        {
-          "time": "시간 여유 시",
-          "title": "토지(東寺) 오층탑 또는 교토역 이세탄",
-          "maps_query": "To-ji Temple",
-          "note": "출국 시간 빠르면 생략",
-          "arrive_from": {
-            "mode": "walk",
-            "duration_min": 16,
-            "distance_km": 1.2,
-            "route": "교토역 하치조서구 → 토지 케이가몬 (1.2km, 약 16분)",
-            "source": "https://kyoto.travel/en/getting-around/comfortable-access-to-around-kyoto-station-to-ji-temple/ · https://www.japan-guide.com/e/e3919.html",
-            "source_fetched_at": "2026-05-17",
-            "data_quality": "researched_market_rate",
-            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Kyoto+Station,+Kyoto&destination=To-ji+Temple,+Kyoto&travelmode=walking"
           }
         },
         {
@@ -749,7 +733,7 @@
           }
         }
       ],
-      "walking_km_source": "items[].arrive_from[mode=walk] 합(~1.8km). 출국 시간에 따라 토지 산책 생략 가능",
+      "walking_km_source": "items[].arrive_from[mode=walk] 합(~0.6km: 카덴쇼→교토역). 공항 내 이동 추정 포함.",
       "pass_recommendation": "패스 불요 — 도보 + JR 하루카(별도 왕복권)."
     }
   ],
