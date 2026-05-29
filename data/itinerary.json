@@ -716,10 +716,10 @@
           }
         },
         {
-          "time": "06:15",
+          "time": "06:00",
           "title": "카덴쇼 체크아웃 → 교토역",
           "maps_query": "Kyoto Station",
-          "note": "KIX 10:05 출발(에어서울 A8YW58)이라 06:45 하루카 탑승 목표. 조식 미포함 — 전날 구매분으로 차내 식사.",
+          "note": "KIX 10:05 출발(에어서울 A8YW58)이라 06:21 하루카 탑승 목표. 조식 미포함 — 전날 구매분으로 차내 식사.",
           "arrive_from": {
             "mode": "walk",
             "duration_min": 8,
@@ -733,10 +733,10 @@
           }
         },
         {
-          "time": "06:45",
+          "time": "06:21",
           "title": "JR 하루카 → 간사이공항 → 인천",
           "maps_query": "Kansai International Airport",
-          "note": "에어서울 A8YW58 KIX 10:05 출발 → ICN 12:05 도착. 국제선 2시간 전(약 08:00) KIX 도착 위해 교토역 06:45 하루카 탑승(약 75분). 시부모 동반이라 여유 버퍼 확보.",
+          "note": "에어서울 A8YW58 KIX 10:05 출발 → ICN 12:05 도착. 06:21 하루카 → KIX 약 07:36 도착 (비행 2시간 29분 전 · 여유롭게 수속 후 대기 가능). 귀국편 Trip.com 확정.",
           "arrive_from": {
             "mode": "airport_express",
             "duration_min": 75,
