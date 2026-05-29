@@ -131,6 +131,7 @@ japan-trip/
 │   ├── budget.py        # 3M 예산 시나리오 평가 (--json 지원)
 │   ├── build_index.py   # index.html + viz/*.html(12개) + assets/og-*.svg(6장) 빌드 (공통 토큰 주입, DOC_PAGES 문서 렌더 + breakfast). 산출물은 gitignore — Vercel·CI·로컬에서 빌드
 │   ├── validate.py      # 가격 필드·묵은 가격·SYNC 주석·MD↔JSON·DESIGN 동기화·GitHub 링크 검사
+│   ├── list_sources.py  # 출처 인벤토리 — data/*.json 근거 URL 추출·분류 (--json, Playwright 검증용)
 │   └── render-pdf.sh    # PDF 생성
 ├── tests/               # unittest (validate·build_index·design_tokens·score·budget)
 ├── .github/workflows/
@@ -142,7 +143,7 @@ japan-trip/
 ## 데이터 동기화 규칙
 
 - **실행 단일 출처(정본)** — 본 레포의 현재 1차 데이터:
-  - `data/itinerary.json` — 교토 3박4일 일정. `days`: 확정 코스 (일자·시간대·동선·메모·도보거리·보류). `route_candidates`: 대안 코스 3개 (여유형·서북 사찰 집중형·미식+문화 체험형). days[].items[].`arrive_from`(mode/duration_min/distance_km/route/source/source_fetched_at/data_quality)으로 장소 간 이동 출처 명시. data_quality는 `official_fare`/`researched_market_rate`/`tbd_needs_browser_mcp`(Playwright MCP 후속 세션 위임). 식사 항목은 days[].items[].`food_quality`(rating/source/source_fetched_at/data_quality/note)로 맛집 근거(타베로그·구글·미쉐린 등 평점) 명시 — 추측 금지, 출처 없으면 검사 I가 머지 차단. days[].items[].`link`(url/label)는 항목 참조 문서를 화면에서 탭 가능한 `doc-link` 앵커로 렌더(`build_index.py`의 `doc_link_html()`, 조식 슬롯 → `viz/breakfast.html`). url이 사이트 내 경로면 같은 탭, 외부(http)면 새 탭. **Vercel 운영 화면에는 외부 GitHub 링크 금지** — 레포 내 문서 참조는 `.md`(Vercel raw 서빙) 대신 사이트 내 HTML 페이지로 렌더해 연결한다. 사람용 사본은 `docs/kyoto-itinerary-may31-jun3-2026.md`
+  - `data/itinerary.json` — 교토 3박4일 일정. `days`: 확정 코스 (일자·시간대·동선·메모·도보거리·보류). `route_candidates`: 대안 코스 3개 (여유형·서북 사찰 집중형·미식+문화 체험형). days[].items[].`arrive_from`(mode/duration_min/distance_km/route/source/source_fetched_at/data_quality)으로 장소 간 이동 출처 명시. data_quality는 `official_fare`/`researched_market_rate`/`tbd_needs_browser_mcp`(Playwright MCP 후속 세션 위임). 옵션 필드 `source_url`(텍스트 source의 URL 보완), `source_verified_at`(Playwright로 도달성 검증한 ISO 날짜 — 빌드 시 ✓ 표시) — `scripts/list_sources.py`로 인벤토리, validate.py G가 형식 검증. 식사 항목은 days[].items[].`food_quality`(rating/source/source_fetched_at/data_quality/note)로 맛집 근거(타베로그·구글·미쉐린 등 평점) 명시 — 추측 금지, 출처 없으면 검사 I가 머지 차단. days[].items[].`link`(url/label)는 항목 참조 문서를 화면에서 탭 가능한 `doc-link` 앵커로 렌더(`build_index.py`의 `doc_link_html()`, 조식 슬롯 → `viz/breakfast.html`). url이 사이트 내 경로면 같은 탭, 외부(http)면 새 탭. **Vercel 운영 화면에는 외부 GitHub 링크 금지** — 레포 내 문서 참조는 `.md`(Vercel raw 서빙) 대신 사이트 내 HTML 페이지로 렌더해 연결한다. 사람용 사본은 `docs/kyoto-itinerary-may31-jun3-2026.md`
   - `data/booking-checklist.json` — 예약 진행 상태
   - `data/cost-options.json` — 항공·숙박·고정비·일회성·시나리오 (확정 금액은 `confirmed_booking` 라벨로 승격)
   - `data/breakfast.json` — 숙소 인근 조식 옵션 단일 출처 (아침 3회·숙소별 가게표·아침별 권장·출처). `build_index.py`가 `viz/breakfast.html`로 렌더. 가게명은 `map_query`(없으면 가게명+숙소 `map_area`)로 구글 지도 검색 링크(`.map-link`)로 렌더 — 모바일 탭 시 지도 앱이 열린다(좌표 추정 금지, 검색 질의만 생성). 가게별 `menu`(메뉴·가격, 출처는 §5 리서치)는 `.bf-menu` 전용 라인으로 노출. 사람용 사본은 `docs/breakfast-near-lodging.md`
