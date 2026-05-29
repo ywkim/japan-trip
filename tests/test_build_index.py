@@ -731,7 +731,7 @@ class ItineraryMemoFoldTests(unittest.TestCase):
         for path in (ITINERARY, TABLE):
             with self.subTest(path=path.name):
                 html = path.read_text(encoding="utf-8")
-                self.assertIn("닌넨자카·산넨자카 인근 말차 디저트 카페</summary>", html,
+                self.assertIn("니넨자카(二年坂)·산넨자카(産寧坂) 인근 말차 디저트 카페</summary>", html,
                               "long place memo should fold into a first-sentence summary")
                 self.assertIn("영업 11:00~20:00", html, "memo tail lost (not lossless)")
 
