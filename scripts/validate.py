@@ -20,7 +20,8 @@
      {'tbd_needs_browser_mcp'}. source_fetched_at > 60d 이고
      data_quality != tbd_needs_browser_mcp 면 stale fail. mode=walk leg의
      distance_km 합과 days[].walking_km 차이가 2km 초과면 fail (정수 반올림
-     오차 + 시장·사찰 내부 산책 추정 여유 포함).
+     오차 + 시장·사찰 내부 산책 추정 여유 포함). 옵션 필드 source_url은
+     http(s):// prefix, source_verified_at은 ISO date(YYYY-MM-DD)여야 함.
   H. DESIGN MD↔JSON 동기화: DESIGN.md의 모든 hex 색상이 data/design-tokens.json의
      color 트리에 존재하고, 그 반대(tokens의 모든 색이 DESIGN.md 본문에 등장)도
      성립. theme_name·version 일치. (4개 산출물(index·itinerary·itinerary-table·
@@ -222,6 +223,15 @@ def check_itinerary_transit(base: Path, today: date) -> tuple[list[str], list[st
             qual = af.get("data_quality")
             if qual and qual not in ITINERARY_QUALITY:
                 errors.append(f"[G] {loc}: data_quality {qual!r} not in {sorted(ITINERARY_QUALITY)}")
+            su = af.get("source_url")
+            if su and not su.startswith(("http://", "https://")):
+                errors.append(f"[G] {loc}: source_url {su!r} must start with http(s)://")
+            sv = af.get("source_verified_at")
+            if sv:
+                try:
+                    date.fromisoformat(sv)
+                except ValueError:
+                    errors.append(f"[G] {loc}: source_verified_at {sv!r} not ISO date (YYYY-MM-DD)")
             fetched = af.get("source_fetched_at")
             if fetched and qual and qual != "tbd_needs_browser_mcp":
                 d = extract_date(fetched)
