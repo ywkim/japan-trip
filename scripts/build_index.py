@@ -343,6 +343,20 @@ def render_css(tokens: dict) -> str:
     border-radius: 6px; text-decoration: none; font-size: 0.85rem;
   }}
   .links a:hover {{ border-color: var(--accent); }}
+  .links a {{ min-height: 44px; display: inline-flex; align-items: center; justify-content: center; }}
+  /* ── 출처 칩 (모바일 터치 타깃 ≥44px) ── */
+  .source-row {{ display: flex; flex-wrap: wrap; gap: 0.4rem; align-items: center; margin-top: 0.3rem; }}
+  .source-link {{
+    display: inline-flex; align-items: center; gap: 0.3rem;
+    min-height: 44px; padding: 0.5rem 0.8rem; border-radius: 8px;
+    background: var(--subcard); border: 1px solid var(--border);
+    color: var(--fg); text-decoration: none; font-size: 0.78rem; line-height: 1.2;
+    -webkit-tap-highlight-color: transparent;
+  }}
+  .source-link:hover {{ border-color: var(--accent); }}
+  .source-link:active {{ opacity: 0.6; }}
+  .source-tick {{ color: #2e9e5b; font-weight: 700; }}
+  .source-label {{ color: var(--muted); font-size: 0.72rem; margin-right: 0.1rem; }}
   .badge {{
     display: inline-block; padding: 0.1rem 0.45rem; border-radius: 4px;
     font-size: 0.75rem; border: 1px solid currentColor;
@@ -772,6 +786,23 @@ def memo_block(note: str, *, style: str = "", cls: str = "sub") -> str:
     return fold("상세 보기", esc(note))
 
 
+def source_url_of(text: str) -> str:
+    """source 문자열의 첫 http(s) 토큰을 반환 (없으면 빈 문자열)."""
+    for tok in (text or "").split():
+        if tok.startswith(("http://", "https://")):
+            return tok
+    return ""
+
+
+def source_chip(href: str, label: str, *, verified: bool = False) -> str:
+    """모바일 터치 타깃 ≥44px 출처 칩. verified면 ✓ 표시."""
+    tick = '<span class="source-tick" title="Playwright 검증">✓</span>' if verified else ""
+    return (
+        f'<a class="source-link" href="{esc(href)}" target="_blank" rel="noopener">'
+        f'{tick}<span>{esc(label)} ↗</span></a>'
+    )
+
+
 def transit_line(af) -> str:
     """도착 경로를 '아이콘 + 평이 요약(소요시간)' summary와 장문 route 상세로 렌더.
 
@@ -794,12 +825,13 @@ def transit_line(af) -> str:
     if mode == "walk" and isinstance(dist, (int, float)) and dist < 2:
         summary += f" ({dist}km)"
 
-    # maps_url 우선, 없으면 source 첫 토큰 URL fallback
+    # maps_url 우선, 없으면 source_url, 없으면 source 첫 토큰 URL fallback
     maps_url = (af.get("maps_url") or "").strip()
+    src_url = (af.get("source_url") or "").strip()
     src = (af.get("source") or "").strip()
     first_token = src.split()[0] if src else ""
     src_href = first_token if first_token.startswith(("http://", "https://")) else ""
-    href = maps_url or src_href
+    href = maps_url or src_url or src_href
 
     # summary 줄에 지도 버튼 인라인 (항상 노출)
     if href:
@@ -807,7 +839,14 @@ def transit_line(af) -> str:
 
     route = af.get("route") or ""
     detail = esc(route) if route else f"{esc(verb)} {esc(time_part)}"
-    return fold(summary, detail)
+
+    # 출처 칩 — source_url이 있고 maps_url이 없을 때만 (지도 버튼과 중복 방지)
+    source_chip_html = ""
+    if src_url and not maps_url:
+        verified = bool(af.get("source_verified_at"))
+        source_chip_html = f'<div class="source-row">{source_chip(src_url, "경로 출처", verified=verified)}</div>'
+
+    return fold(summary, detail) + source_chip_html
 
 
 def card_itinerary(d) -> str:
@@ -847,11 +886,14 @@ def card_itinerary(d) -> str:
     pass_sources = trip.get("transit_pass_sources", [])
     pass_sources_html = ""
     if pass_sources:
-        links = " · ".join(
-            f'<a href="{esc(s["url"])}" target="_blank" rel="noopener">{esc(s["label"])}</a>'
+        chips = "".join(
+            source_chip(s["url"], s["label"], verified=bool(s.get("source_verified_at")))
             for s in pass_sources
         )
-        pass_sources_html = f'<div style="margin-top:0.6rem;">{fold(f"📚 교통 출처 {len(pass_sources)}건", links)}</div>'
+        pass_sources_html = (
+            '<div class="sub" style="margin-top:0.6rem;">📚 교통 출처</div>'
+            f'<div class="source-row">{chips}</div>'
+        )
 
     playbook = trip.get("transit_pass_playbook", [])
     playbook_html = ""
@@ -1335,11 +1377,14 @@ def build_itinerary(d) -> str:
     pass_sources = trip.get("transit_pass_sources", [])
     pass_sources_html = ""
     if pass_sources:
-        links = " · ".join(
-            f'<a href="{esc(s["url"])}" target="_blank" rel="noopener">{esc(s["label"])}</a>'
+        chips = "".join(
+            source_chip(s["url"], s["label"], verified=bool(s.get("source_verified_at")))
             for s in pass_sources
         )
-        pass_sources_html = f'<div style="margin-top:0.6rem;">{fold(f"📚 교통 출처 {len(pass_sources)}건", links)}</div>'
+        pass_sources_html = (
+            '<div class="sub" style="margin-top:0.6rem;">📚 교통 출처</div>'
+            f'<div class="source-row">{chips}</div>'
+        )
 
     playbook = trip.get("transit_pass_playbook", [])
     playbook_html = ""

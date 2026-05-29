@@ -627,6 +627,39 @@ class NoGithubLinkTests(unittest.TestCase):
             self.assertTrue(any(e.startswith("[J]") and "viz/report.html" in e for e in errs), errs)
 
 
+class SourceVerificationFieldTests(unittest.TestCase):
+    """검사 G 확장: arrive_from의 source_url·source_verified_at 옵션 필드 형식."""
+
+    def _base(self, td, itin):
+        return make_fixture(Path(td), cost=VALID_COST, index_html="<html></html>", itinerary=itin)
+
+    def _run(self, af):
+        itin = _itin([
+            {"time": "09:00", "title": "A", "maps_query": "A"},
+            {"time": "10:00", "title": "B", "maps_query": "B", "arrive_from": af},
+        ])
+        with tempfile.TemporaryDirectory() as td:
+            base = self._base(td, itin)
+            return validate.run(base, date(2026, 5, 28))
+
+    def test_valid_verified_fields_pass(self):
+        af = {**VALID_ARRIVE_FROM,
+              "source_url": "https://example.com/page",
+              "source_verified_at": "2026-05-28"}
+        errs, _ = self._run(af)
+        self.assertEqual(errs, [], errs)
+
+    def test_bad_source_verified_at_fails(self):
+        af = {**VALID_ARRIVE_FROM, "source_verified_at": "2026/05/28"}
+        errs, _ = self._run(af)
+        self.assertTrue(any(e.startswith("[G]") and "source_verified_at" in e for e in errs), errs)
+
+    def test_non_http_source_url_fails(self):
+        af = {**VALID_ARRIVE_FROM, "source_url": "ftp://example.com"}
+        errs, _ = self._run(af)
+        self.assertTrue(any(e.startswith("[G]") and "source_url" in e for e in errs), errs)
+
+
 class ProductionDataTests(unittest.TestCase):
     """현재 레포 데이터가 validate를 통과하는지 회귀 검사."""
 

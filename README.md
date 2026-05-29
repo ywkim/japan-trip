@@ -103,7 +103,7 @@ docs/        # 일정·후보·날씨·항공 분석, 의사결정 일지(decisi
 viz/         # itinerary·itinerary-table·lodging·checklist·archive·breakfast + 문서 렌더(report·itinerary-doc·research·transit-pass·decision-kyoto·decision-log) (build_index.py 산출물 — gitignore)
 assets/      # og-*.svg (OG/Twitter 카드 이미지 6장, build_index.py 산출물 — gitignore)
 pyproject.toml + uv.lock  # 빌드 의존성 (markdown==3.7 — 문서 렌더용, uv virtual project)
-scripts/     # build_index·validate·score·budget·render-pdf
+scripts/     # build_index·validate·score·budget·list_sources·render-pdf
 tests/       # unittest (validate·build_index·design_tokens·score·budget)
 reports/     # 최종 보고서 (아카이브)
 index.html   # 운영 페이지 — 요약·일자별 일정 (build_index.py 산출물 — gitignore)
