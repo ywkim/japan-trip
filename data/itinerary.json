@@ -763,13 +763,13 @@
             },
             {
               "time": "14:00",
-              "title": "기요미즈데라 + 산넨자카 카페 휴식",
+              "title": "기요미즈데라 (清水寺) + 산넨자카 (産寧坂) 카페 휴식",
               "maps_query": "Kiyomizu-dera",
               "note": "니넨자카 카페에서 30~40분 여유"
             },
             {
               "time": "17:00",
-              "title": "야사카 신사 → 기온 산책 (가볍게)",
+              "title": "야사카 신사 (八坂神社) → 기온 (祇園) 산책 (가볍게)",
               "maps_query": "Yasaka Shrine"
             },
             {
@@ -787,7 +787,7 @@
           "items": [
             {
               "time": "09:30",
-              "title": "죽림길 (느긋하게 출발)",
+              "title": "치쿠린/죽림길 (竹林の小径) (느긋하게 출발)",
               "maps_query": "Arashiyama Bamboo Grove"
             },
             {
@@ -907,17 +907,17 @@
             },
             {
               "time": "13:30",
-              "title": "기요미즈데라",
+              "title": "기요미즈데라 (清水寺)",
               "maps_query": "Kiyomizu-dera"
             },
             {
               "time": "16:00",
-              "title": "산넨자카 → 야사카 신사 → 기온",
+              "title": "산넨자카 (産寧坂) → 야사카 신사 (八坂神社) → 기온 (祇園)",
               "maps_query": "Gion Kyoto"
             },
             {
               "time": "18:30",
-              "title": "가와라마치 저녁 (폰토초)",
+              "title": "폰토초 (先斗町) 저녁",
               "maps_query": "Pontocho Alley"
             }
           ]
@@ -1060,17 +1060,17 @@
             },
             {
               "time": "14:30",
-              "title": "기요미즈데라 + 기요미즈 도자기 거리 쇼핑",
+              "title": "기요미즈데라 (清水寺) + 기요미즈 도자기 거리 쇼핑",
               "maps_query": "Kiyomizu-dera"
             },
             {
               "time": "17:00",
-              "title": "야사카 신사",
+              "title": "야사카 신사 (八坂神社)",
               "maps_query": "Yasaka Shrine"
             },
             {
               "time": "19:00",
-              "title": "폰토초 골목 이자카야 저녁",
+              "title": "폰토초 (先斗町) 골목 이자카야 저녁",
               "maps_query": "Pontocho Alley"
             }
           ]
@@ -1083,12 +1083,12 @@
           "items": [
             {
               "time": "09:00",
-              "title": "죽림길",
+              "title": "치쿠린/죽림길 (竹林の小径)",
               "maps_query": "Arashiyama Bamboo Grove"
             },
             {
               "time": "09:45",
-              "title": "텐류지 정원",
+              "title": "텐류지 (天龍寺) 정원",
               "maps_query": "Tenryu-ji Temple"
             },
             {
@@ -1122,7 +1122,7 @@
           "items": [
             {
               "time": "07:30",
-              "title": "후시미이나리 신사 (이른 방문)",
+              "title": "후시미이나리 신사 (伏見稲荷) (이른 방문)",
               "maps_query": "Fushimi Inari Taisha",
               "note": "이른 시간 인파 회피"
             },
