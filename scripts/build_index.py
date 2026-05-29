@@ -97,6 +97,12 @@ DOC_PAGES = (
         "archive", "home", "decision-log.html", "← 결정 일지",
     ),
     DocPage(
+        "docs/icoca-iphone-setup.md", "viz/icoca-setup.html",
+        "ICOCA 아이폰(Apple Wallet) 셋업 가이드",
+        "출국 전 4인 ICOCA 설정 및 초기 충전 가이드 (2026-05-25)",
+        "checklist", "checklist", "checklist.html", "← 예약",
+    ),
+    DocPage(
         "docs/essential-iphone-apps.md", "viz/essential-iphone-apps.html",
         "필수 아이폰 앱 가이드",
         "교토 여행 필수 앱 5개 설치·설정·운영 가이드 (2026-05-28)",

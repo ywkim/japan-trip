@@ -20,7 +20,7 @@
 - 별도 앱 설치 불필요 — iPhone 기본 제공 `Wallet` 앱 사용
 
 **사전 설정** (5월 30일까지 필수)
-- 상세 절차: `docs/icoca-iphone-setup.md` 참조
+- 상세 절차: [ICOCA 셋업 가이드](icoca-setup.html) 참조
 - 4인 각자 ¥3,000 초기 충전 + Express Card 설정
 
 **현지 운영**
