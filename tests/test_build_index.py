@@ -393,7 +393,7 @@ class TransitFoldTests(unittest.TestCase):
         for path in (INDEX, ITINERARY):
             with self.subTest(path=path.name):
                 html = path.read_text(encoding="utf-8")
-                self.assertIn("JR 하루카 KIX→교토역", html,
+                self.assertIn("교토역(京都駅)", html,
                               f"verbose route detail missing in {path.name}")
 
     def test_pass_recommendation_folded(self):
