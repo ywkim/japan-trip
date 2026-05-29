@@ -162,7 +162,7 @@
         },
         {
           "time": "08:00",
-          "title": "죽림길 (지쿠린)",
+          "title": "치쿠린/죽림길 (竹林の小径)",
           "maps_query": "Arashiyama Bamboo Grove",
           "note": "일찍 출발 (관광객 적음). 죽림길 북측 출구 인근 교토 오르골당 아라시야마점(입장 무료) 텐류지 진입 전 5분 즉석 방문 가능 — 30도 더위 피해 이른 아침 출발",
           "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Sagano_Bamboo_forest%2C_Arashiyama%2C_Kyoto.jpg?width=480",
@@ -192,7 +192,7 @@
         },
         {
           "time": "09:30",
-          "title": "텐류지 정원",
+          "title": "텐류지 (天龍寺)",
           "maps_query": "Tenryu-ji Temple",
           "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Tenryuji%2C_Kyoto-_DSC06041.JPG?width=480",
           "image_credit": "Wikimedia Commons",
@@ -376,7 +376,7 @@
         },
         {
           "time": "15:00",
-          "title": "료안지 석정원",
+          "title": "료안지 (竜安寺)",
           "maps_query": "Ryoan-ji",
           "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/RyoanJi-Dry_garden.jpg?width=480",
           "image_credit": "Wikimedia Commons",
@@ -438,7 +438,7 @@
         },
         {
           "time": "07:30",
-          "title": "후시미 이나리 신사",
+          "title": "후시미이나리 신사 (伏見稲荷)",
           "maps_query": "Fushimi Inari Taisha",
           "note": "이른 시간 인파 회피. 정상까지 안 가도 OK",
           "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Torii_gates%E2%80%94Fushimi_Inari_Shrine_%289977683204%29.jpg?width=480",
@@ -473,7 +473,7 @@
         },
         {
           "time": "09:30",
-          "title": "토후쿠지 정원",
+          "title": "토후쿠지 (東福寺)",
           "maps_query": "Tofuku-ji",
           "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Sand_Garden_at_Tofukuji_Temple.jpg?width=480",
           "image_credit": "Wikimedia Commons",
@@ -620,7 +620,7 @@
         },
         {
           "time": "15:15",
-          "title": "산넨자카 → 야사카 신사 → 기온",
+          "title": "산넨자카 (産寧坂) → 야사카 신사 (八坂神社) → 기온 (祇園)",
           "maps_query": "Gion Kyoto",
           "note": "기온시조역(祇園四条駅) 인근 마츠모토키요시·코쿠민 드럭스토어 약국 방문 가능 — 니넨자카(二年坂) 진입점 스타벅스 야사카차야점(八坂茶屋)(100년 마치야 매장) · % 아라비카 교토 히가시야마점 — 둘 중 택1 카페 휴식 권장. 4인 좌석 대기 길 수 있음",
           "arrive_from": {
@@ -792,7 +792,7 @@
             },
             {
               "time": "10:30",
-              "title": "텐류지 정원",
+              "title": "텐류지 (天龍寺)",
               "maps_query": "Tenryu-ji Temple"
             },
             {
@@ -803,7 +803,7 @@
             },
             {
               "time": "14:30",
-              "title": "아라시야마 강변 카페 휴식 + 자유시간",
+              "title": "아라시야마(嵐山) 강변 카페 휴식 + 자유시간",
               "maps_query": "Arashiyama"
             },
             {
@@ -825,13 +825,13 @@
           "items": [
             {
               "time": "08:00",
-              "title": "후시미이나리 신사 입구 (1구간만)",
+              "title": "후시미이나리 신사 (伏見稲荷) 입구 (1구간만)",
               "maps_query": "Fushimi Inari Taisha",
               "note": "시부모 부담 없는 수준 — 천문 도리이 구간까지만"
             },
             {
               "time": "10:00",
-              "title": "도후쿠지 정원 (앉아서 쉬기 좋음)",
+              "title": "토후쿠지 (東福寺) (앉아서 쉬기 좋음)",
               "maps_query": "Tofuku-ji"
             },
             {
@@ -935,7 +935,7 @@
             },
             {
               "time": "10:30",
-              "title": "료안지 석정원",
+              "title": "료안지 (竜安寺)",
               "maps_query": "Ryoan-ji"
             },
             {
@@ -968,7 +968,7 @@
           "items": [
             {
               "time": "07:30",
-              "title": "후시미이나리 신사 (이른 방문, 1~2구간)",
+              "title": "후시미이나리 신사 (伏見稲荷) (이른 방문, 1~2구간)",
               "maps_query": "Fushimi Inari Taisha"
             },
             {
