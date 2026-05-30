@@ -248,9 +248,10 @@ def migrate_arrive_from(af_dict: dict) -> dict:
         if "하루카" in route or "ハルカ" in route:
             step["operator"] = {"ko": "JR 하루카", "ja": "JR ハルカ"}
 
-    # Create new arrive_from structure
+    # Create new arrive_from structure (preserve route for warning extraction in rendering)
     return {
         "steps": [step],
+        "route": route,  # Keep original for rendering warnings/alternatives
         "source": af_dict.get("source"),
         "source_fetched_at": af_dict.get("source_fetched_at"),
         "data_quality": af_dict.get("data_quality"),

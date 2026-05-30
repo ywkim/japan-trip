@@ -224,18 +224,56 @@ def render_title_display(title) -> str:
 
 
 def render_transit_line_steps(steps: list, af_dict: dict) -> str:
-    """Render new schema arrive_from with steps array.
+    """Render new schema arrive_from with rich step-by-step visualization.
 
-    Each step is: {mode, operator, number, from, to, duration_min, fare_jpy, distance_km}
+    Features:
+    - Operator badges with line numbers
+    - Transfer points highlighted
+    - Warning messages (frequency, alternatives)
+    - From/To station details
+    - Fare & duration per step
     """
     if not steps:
         return ""
 
-    # For now, render similarly to old schema - show mode + duration
-    # In future: could render each step separately with operator badges
+    # Operator styling
+    OPERATOR_ICONS = {
+        "shibus": ("🚌", "#E94B3C"),      # 시버스 (red)
+        "kyoto_bus": ("🚌", "#0066CC"),   # 교토버스 (blue)
+        "jr": ("🚆", "#003DA5"),          # JR (navy)
+    }
 
+    # Extract warnings/alternatives from route string
+    import re
+    route = (af_dict.get("route") or "").strip()
+    warnings = []
+    alternatives = []
+    transfer_point = None
+
+    # Extract transfer point (e.g., "야마고에나카마치에서 59번으로 환승")
+    transfer_match = re.search(r'([가-힣\w]+)\s*에서\s+(\d+)번으로\s+환승', route)
+    if transfer_match:
+        transfer_point = transfer_match.group(1)
+
+    # Extract frequency warning (e.g., "11번은 40분 간격")
+    interval_match = re.search(r'(\d+)번은\s+(\d+)분\s+간격', route)
+    if interval_match:
+        warnings.append(f"🚌 {interval_match.group(1)}번: {interval_match.group(2)}분 간격")
+
+    # Extract alternatives (e.g., "택시 22분 대안")
+    taxi_match = re.search(r'택시\s+(\d+)분\s+대안', route)
+    if taxi_match:
+        alternatives.append(f"🚖 택시 {taxi_match.group(1)}분")
+
+    # Also look for "놓치면 택시" pattern
+    if "놓치면" in route:
+        alt_match = re.search(r'놓치면\s+택시\s+(\d+)분', route)
+        if alt_match and f"🚖 택시 {alt_match.group(1)}분" not in alternatives:
+            alternatives.append(f"🚖 택시 {alt_match.group(1)}분")
+
+    # Build summary: step icons with arrows
     summaries = []
-    for step in steps:
+    for i, step in enumerate(steps):
         mode = step.get("mode", "walk")
         icon = MODE_ICONS.get(mode, "·")
         verb = MODE_VERBS.get(mode, "이동")
@@ -248,7 +286,7 @@ def render_transit_line_steps(steps: list, af_dict: dict) -> str:
 
     summary = " → ".join(summaries) if summaries else "이동"
 
-    # Add map button if available
+    # Add map button
     maps_url = (af_dict.get("maps_url") or "").strip()
     src = (af_dict.get("source") or "").strip()
     first_token = src.split()[0] if src else ""
@@ -258,49 +296,102 @@ def render_transit_line_steps(steps: list, af_dict: dict) -> str:
     if href:
         summary += f' <a href="{esc(href)}" target="_blank" rel="noopener" class="maps-btn">지도 ↗</a>'
 
-    # For detail, reconstruct route description
-    detail_parts = []
-    for step in steps:
+    # Build rich detail HTML
+    detail_html_parts = []
+
+    # Step-by-step rendering
+    for i, step in enumerate(steps):
         mode = step.get("mode")
         operator = step.get("operator", {})
         number = step.get("number")
         from_place = step.get("from", {})
         to_place = step.get("to", {})
         duration = step.get("duration_min")
+        distance = step.get("distance_km")
         fare = step.get("fare_jpy")
 
         if mode == "bus":
             op_ko = operator.get("ko") if isinstance(operator, dict) else ""
+            op_type = operator.get("type") if isinstance(operator, dict) else ""
             from_ko = from_place.get("ko") if isinstance(from_place, dict) else ""
             to_ko = to_place.get("ko") if isinstance(to_place, dict) else ""
 
-            line = f"{op_ko}"
+            # Operator badge
+            icon, color = OPERATOR_ICONS.get(op_type, ("🚌", "#666"))
+            badge_html = f'<span style="display:inline-block;background:{color};color:white;padding:2px 6px;border-radius:3px;font-size:0.9em;margin-right:4px;"><strong>{op_ko}</strong>'
             if number:
-                line += f" {number}번"
+                badge_html += f' {number}번'
+            badge_html += '</span>'
+
+            # Step line
+            step_line = badge_html
             if from_ko and to_ko:
-                line += f" {from_ko}→{to_ko}"
+                step_line += f' {from_ko} → {to_ko}'
             if duration:
-                line += f" {duration}분"
-            if fare:
-                line += f" ¥{fare}"
-            detail_parts.append(line)
+                step_line += f' <small>({duration}분'
+                if distance:
+                    step_line += f', {distance}km'
+                if fare:
+                    step_line += f', ¥{fare}'
+                step_line += ')</small>'
+            elif fare:
+                step_line += f' <small>(¥{fare})</small>'
+
+            detail_html_parts.append(step_line)
+
+            # Add transfer indicator if not last step
+            if i < len(steps) - 1:
+                next_step = steps[i + 1]
+                next_op = next_step.get("operator", {})
+                next_num = next_step.get("number")
+                if next_op:
+                    next_op_ko = next_op.get("ko", "")
+                    transfer_text = f'↓ 환승'
+                    if transfer_point:
+                        transfer_text += f' at {transfer_point}'
+                    transfer_text += ' ↓'
+                    detail_html_parts.append(f'<div style="padding:4px 0;color:#FF6B6B;text-align:center;font-size:0.9em;font-weight:bold;">{transfer_text}</div>')
+
         elif mode == "walk":
             dist = step.get("distance_km")
-            line = "도보"
+            line = "🚶 도보"
             if duration:
                 line += f" {duration}분"
             if dist:
                 line += f" ({dist}km)"
-            detail_parts.append(line)
-        else:
-            # Other modes (jr, airport_express, etc)
-            line = MODE_VERBS.get(mode, "이동")
-            if duration:
-                line += f" {duration}분"
-            detail_parts.append(line)
+            detail_html_parts.append(line)
 
-    detail = " · ".join(detail_parts) if detail_parts else summary.strip()
-    return fold(summary, esc(detail))
+        elif mode == "jr":
+            from_ko = from_place.get("ko") if isinstance(from_place, dict) else ""
+            to_ko = to_place.get("ko") if isinstance(to_place, dict) else ""
+            line = "🚆 JR"
+            if from_ko and to_ko:
+                line += f" {from_ko} → {to_ko}"
+            if duration:
+                line += f" ({duration}분"
+                if fare:
+                    line += f", ¥{fare}"
+                line += ")"
+            detail_html_parts.append(line)
+
+        elif mode == "airport_express":
+            line = "✈️ 공항 연결 열차"
+            if duration:
+                line += f" ({duration}분)"
+            detail_html_parts.append(line)
+
+    # Add warnings section
+    if warnings or alternatives:
+        detail_html_parts.append(f'<div style="margin-top:8px;padding-top:8px;border-top:1px solid #ddd;font-size:0.9em;color:#d9534f;">')
+        for warning in warnings:
+            detail_html_parts.append(f'⚠️ {warning}')
+        for alt in alternatives:
+            detail_html_parts.append(f'💡 대안: {alt}')
+        detail_html_parts.append('</div>')
+
+    detail_html = '\n'.join(detail_html_parts) if detail_html_parts else ""
+
+    return fold(summary, detail_html)
 
 
 _PLACE_MARKUP_RE = re.compile(r"\[\[([^\|\]]+)(?:\|([^\]]+))?\]\]")
