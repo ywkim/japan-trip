@@ -863,12 +863,16 @@ class ItineraryMemoFoldTests(unittest.TestCase):
         self.assertIn('<details class="leg"', out)
         self.assertIn("매장)</summary>", out)
 
-    def test_memo_without_separator_uses_generic_summary(self):
+    def test_memo_without_separator_uses_meaningful_summary(self):
+        """구분자 없는 장문은 첫 60자 + '…'로 요약 (더이상 '상세 보기' 폴백 없음)."""
         memo = "가" * 70
         out = build_index.memo_block(memo)
         self.assertIn('<details class="leg"', out)
-        self.assertIn("상세 보기", out)
-        self.assertIn("가" * 70, out, "memo body lost in generic fold")
+        # '…' 포함된 의미있는 요약 생성
+        self.assertIn("…", out, "should have '…' in summary for long text without separators")
+        # 60자 이상 요약 + 나머지 상세
+        self.assertIn("가" * 60, out, "first 60 chars should be in summary")
+        self.assertIn("가" * 10, out, "remaining 10 chars should be in detail")
 
     def test_custom_class_preserved_for_short_memo(self):
         out = build_index.memo_block("교토역 도보 5분", cls="t-note")
@@ -1140,6 +1144,76 @@ class DocPageTests(unittest.TestCase):
                     self.assertEqual(r.returncode, 1, f"--check should fail on drift in {path.name}")
                 finally:
                     path.write_text(original, encoding="utf-8")
+
+    def test_title_reading_html_function_exists(self):
+        """title_reading_html() 헬퍼가 존재하고 정확히 동작해야 한다."""
+        # ja_reading_ko가 있는 title dict
+        title_with_reading = {"type": "shrine", "ko_name": "금각사", "ja_name": "金閣寺", "ja_reading_ko": "킨카쿠지"}
+        result = build_index.title_reading_html(title_with_reading)
+        self.assertIn("🗣️", result, "should contain speaker icon")
+        self.assertIn("킨카쿠지", result, "should contain reading")
+        self.assertIn('class="pron"', result, "should have pron class")
+
+        # ja_reading_ko가 없는 title dict
+        title_no_reading = {"type": "shrine", "ko_name": "금각사", "ja_name": "金閣寺"}
+        result = build_index.title_reading_html(title_no_reading)
+        self.assertEqual(result, "", "should return empty string when no reading")
+
+        # string title (title이 dict이 아님)
+        result = build_index.title_reading_html("금각사")
+        self.assertEqual(result, "", "should return empty string when title is not dict")
+
+    def test_pronunciation_lines_in_itinerary(self):
+        """temples/shrines/stations의 발음이 렌더돼야 한다."""
+        run()
+        itin = ITINERARY.read_text(encoding="utf-8")
+        # 발음 아이콘과 발음 텍스트가 렌더됨
+        self.assertIn("🗣️", itin, "pronunciation icon should be in itinerary.html")
+        # pron 클래스가 있어야 함 (스타일링 대상)
+        self.assertIn('class="pron"', itin, "pronunciation line should have pron class")
+
+    def test_no_generic_shosehi_summary(self):
+        """'상세 보기' generic summary가 어떤 화면에도 나타나면 안 된다."""
+        run()
+        for path in (ITINERARY, CHECKLIST, LODGING):
+            with self.subTest(path=path.name):
+                html = path.read_text(encoding="utf-8")
+                # '상세 보기'가 summary text로 나타나는 경우만 실패 (접힘 제목)
+                import re
+                # <summary>상세 보기</summary> 패턴을 찾기 (정확한 generic 폴백)
+                matches = re.findall(r'<summary>[^<]*상세\s*보기[^<]*</summary>', html)
+                self.assertEqual(len(matches), 0,
+                    f"{path.name} should not have '상세 보기' as generic summary (found {len(matches)} instances)")
+
+    def test_memo_block_extracts_meaningful_summary(self):
+        """memo_block()이 구분자( . 또는 · )를 찾아 의미있는 요약을 추출한다."""
+        # 60자 이상이고 구분자 있는 경우: 요약 + 접기
+        long_text = "첫 번째 항목입니다. 두 번째 항목입니다. 세 번째 항목입니다. 네 번째 항목입니다. 다섯 번째 항목입니다."
+        result = build_index.memo_block(long_text)
+        self.assertIn("<details", result, "should create <details> for long text with period")
+        self.assertIn("첫 번째", result, "should contain first part in summary")
+
+        # 60자 이상이고 · 구분자 있는 경우
+        long_text2 = "첫 번째 메모입니다 · 두 번째 메모입니다 · 세 번째 메모입니다 · 네 번째 메모입니다 · 다섯 번째 메모입니다"
+        result2 = build_index.memo_block(long_text2)
+        self.assertIn("<details", result2, "should create <details> for long text with ·")
+
+    def test_note_block_extracts_meaningful_summary(self):
+        """note_block()이 구분자(· 또는 다.)를 찾아 의미있는 요약을 추출한다."""
+        # 60자 이상이고 · 구분자 있는 경우
+        long_text = "예약확정번호: 0123456789abcd · PIN 코드: 1234 · 체크인 시간: 15:00 · 취소 정책: 예약 7일 전까지"
+        result = build_index.note_block(long_text)
+        self.assertIn("<details", result, "should create <details> for long text")
+        self.assertIn("예약확정", result, "should contain first part")
+
+    def test_pass_block_renders_recommendation_and_detail_lines(self):
+        """pass_block()이 ' — ' 앞은 요약으로, 뒤는 여러 줄로 분해 렌더한다."""
+        # 요약 — 근거1 + 근거2 형태 (총 60자 이상)
+        text = "ICOCA 일일권 추천 — 시버스 3회 비용: 2700엔 + 1일권 비용: 3500엔 비교 + 차이: 800엔 절감"
+        result = build_index.pass_block(text)
+        self.assertIn("ICOCA", result, "should show recommendation")
+        self.assertIn("<details", result, "should have collapsible section")
+        self.assertIn("시버스", result, "should contain detail items")
 
 
 if __name__ == "__main__":

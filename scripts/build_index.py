@@ -223,6 +223,16 @@ def render_title_display(title) -> str:
     return " ".join(parts)
 
 
+def title_reading_html(title) -> str:
+    """발음 줄 렌더 (🗣️ {ja_reading_ko}). title이 dict이고 ja_reading_ko가 있으면 HTML, 없으면 빈 문자열."""
+    if not isinstance(title, dict):
+        return ""
+    reading = title.get("ja_reading_ko", "").strip()
+    if not reading:
+        return ""
+    return f'<div class="pron">🗣️ {esc(reading)}</div>'
+
+
 def _station_label(value) -> str:
     """from/to 값에서 화면용 라벨을 얻는다.
 
@@ -585,6 +595,7 @@ def render_css(tokens: dict) -> str:
   .day:last-child {{ border-bottom: none; }}
   .day .date {{ font-size: 0.9rem; }}
   .day .date .k {{ display: inline-block; min-width: 3.2rem; color: var(--fg); font-weight: 600; font-variant-numeric: tabular-nums; }}
+  .pron {{ color: var(--muted); font-size: 0.8em; margin-top: 0.1rem; }}
   /* ── 접기(쉬운 설명 + 펼침 상세) ── */
   details.leg {{ margin: 0.15rem 0 0.35rem; }}
   details.leg > summary {{
@@ -1022,9 +1033,22 @@ def note_block(note: str, *, style: str = "") -> str:
     if len(note) <= 60:
         return f'<div class="sub"{style_attr}>{esc(note)}</div>'
     segs = [s for s in note.split(" · ") if s.strip()]
-    if len(segs) >= 3:
-        return fold(esc(" · ".join(segs[:2])), esc(" · ".join(segs[2:])))
-    return fold("상세 보기", esc(note))
+    if len(segs) >= 2:
+        summary = esc(" · ".join(segs[:2]))
+        # 3개 이상 항목이면 나머지를 다중 줄로 렌더
+        if len(segs) >= 3:
+            rest_lines = "".join(f'<div>{esc(s)}</div>' for s in segs[2:])
+            return fold(summary, rest_lines)
+        # 2개 항목: 그대로 접기
+        return fold(summary, esc(" · ".join(segs[1:])))
+    # 구분자 없으면 첫 50자 + "…" 요약 후 다중 줄로 분해
+    break_idx = note.find(" ", 0, 50)
+    if break_idx > 0:
+        first_phrase = note[:break_idx].strip() + "…"
+    else:
+        first_phrase = note[:50].strip() + "…"
+    detail_lines = "".join(f'<div>{esc(line)}</div>' for line in [note])
+    return fold(esc(first_phrase), detail_lines)
 
 
 def pass_block(text: str) -> str:
@@ -1038,7 +1062,15 @@ def pass_block(text: str) -> str:
     if len(text) <= 60 or " — " not in text:
         return f'<div class="sub" style="margin-top:0.25rem;">🎫 {esc(text)}</div>'
     head, _, rest = text.partition(" — ")
-    return f'<div style="margin-top:0.25rem;">{fold("🎫 " + esc(head.strip()), esc(rest.strip()))}</div>'
+    # rest를 ` + ` 또는 ` · ` 기준으로 여러 줄로 분해
+    import re
+    lines = re.split(r'\s+\+\s+|\s·\s', rest)
+    lines = [line.strip() for line in lines if line.strip()]
+    if lines:
+        detail_html = "".join(f'<div>{esc(line)}</div>' for line in lines)
+    else:
+        detail_html = esc(rest.strip())
+    return f'<div style="margin-top:0.25rem;">{fold("🎫 " + esc(head.strip()), detail_html)}</div>'
 
 
 def detail_row(label: str, value: str) -> str:
@@ -1063,15 +1095,54 @@ def detail_row(label: str, value: str) -> str:
 
 
 def _lead_split(text: str):
-    """첫 문장(". ") 또는 첫 토막(" · ")을 요약 head로, 나머지를 detail로 분리.
+    """첫 문장 또는 첫 토막을 요약 head로, 나머지를 detail로 분리.
 
-    앞 토막이 60자 밖이거나 구분자가 없으면 (None, None) — 통째 접기 폴백.
+    구분자 우선순위: 위치(earlier is better) + 타입(문장 > 항목).
+    1. 60자 이내에서 가장 먼저 나타나는 구분자 찾기: ". " · "다. " · "요. " · "음. " · " — " · " · "
+    2. 구분자 없으면 첫 어절 또는 60자 추출 + "…"
+
+    의도: 항상 의미있는 요약을 생성.
     """
-    for sep in (". ", " · "):
+    separators = [". ", "다. ", "요. ", "음. ", " — ", " · "]
+    # 60자 이내에서 가장 먼저 나타나는 구분자 찾기
+    best_sep = None
+    best_idx = float('inf')
+    for sep in separators:
         idx = text.find(sep)
-        if 0 < idx < 60:
-            return text[:idx].strip(), text[idx + len(sep):].strip()
-    return None, None
+        if 0 < idx < 60 and idx < best_idx:
+            best_idx = idx
+            best_sep = sep
+
+    if best_sep:
+        return text[:best_idx].strip(), text[best_idx + len(best_sep):].strip()
+
+    # 구분자 없으면 첫 어절 또는 60자까지 추출 + "…"
+    if len(text) <= 60:
+        return None, None
+    # 첫 띄어쓰기 찾기 (최대 60자 내)
+    break_idx = text.find(" ", 0, 60)
+    if break_idx > 0:
+        head = text[:break_idx].strip() + "…"
+        return head, text[break_idx + 1:].strip()
+    # 띄어쓰기 없으면 60자 한계
+    return text[:60].strip() + "…", text[60:].strip()
+
+
+def _detail_lines(text: str) -> str:
+    """상세 텍스트를 여러 줄로 분해하여 HTML 렌더링.
+
+    구분자(`. `·`다. `·`요. `·`음. `·` · `)로 항목화하고, 각 항목을 `<div>` 줄로 렌더.
+    마크업([[]]) 변환도 함께.
+    """
+    import re
+    # 구분자 패턴: ". " · "다. " · "요. " · "음. " · " · "
+    sep_pattern = r'(?:\.(?:\s+|$)|다\.\s+|요\.\s+|음\.\s+|\s·\s)'
+    lines = re.split(sep_pattern, text)
+    # 빈 항목과 도미노 공백 제거
+    lines = [line.strip() for line in lines if line.strip()]
+    if not lines:
+        return ""
+    return "".join(f'<div>{link_places(line)}</div>' for line in lines)
 
 
 def memo_block(note: str, *, style: str = "", cls: str = "sub") -> str:
@@ -1092,8 +1163,22 @@ def memo_block(note: str, *, style: str = "", cls: str = "sub") -> str:
         return f'<div class="{cls}"{style_attr}>{link_places(note)}</div>'
     head, rest = _lead_split(note)
     if head and rest:
-        return fold(link_places(head), link_places(rest))
-    return fold("상세 보기", link_places(note))
+        detail_html = _detail_lines(rest)
+        return fold(link_places(head), detail_html)
+    # 구분자를 찾지 못하면 첫 어절 + "…" 추출 + 상세를 여러 줄로
+    if len(display_text) > 60:
+        # 50~60자: 구분자가 없으면 평문 그대로
+        # 60자 초과: 첫 50자 추출 + "…"로 요약, 나머지 다중 줄
+        import re
+        break_idx = note.find(" ", 0, 50)
+        if break_idx > 0:
+            first_phrase = note[:break_idx].strip() + "…"
+        else:
+            first_phrase = note[:50].strip() + "…"
+        detail_html = _detail_lines(note)
+        return fold(link_places(first_phrase), detail_html)
+    # 50~60자: 평문
+    return f'<div class="{cls}"{style_attr}>{link_places(note)}</div>'
 
 
 def source_url_of(text: str) -> str:
@@ -1175,6 +1260,7 @@ def card_itinerary(d) -> str:
         for it in day["items"]:
             title_text = render_title_display(it["title"])
             link = maps_link(it["maps_query"], title_text) if it.get("maps_query") else esc(title_text)
+            pronunciation_html = title_reading_html(it["title"])
             note_html = memo_block(it.get("note"))
             transit = transit_line(it.get("arrive_from"))
             if it.get("image_url"):
@@ -1190,6 +1276,7 @@ def card_itinerary(d) -> str:
             item_rows.append(f"""
     <div class="day">
       <div class="date"><span class="k">{esc(it['time'])}</span> {link}</div>
+      {pronunciation_html}
       {transit}
       {note_html}{link_html}{img_html}{reviews_html}
     </div>""")
@@ -1664,6 +1751,7 @@ def build_itinerary(d) -> str:
         for it in day["items"]:
             title_text = render_title_display(it["title"])
             link = maps_link(it["maps_query"], title_text) if it.get("maps_query") else esc(title_text)
+            pronunciation_html = title_reading_html(it["title"])
             note_html = memo_block(it.get("note"))
             transit = transit_line(it.get("arrive_from"))
             if it.get("image_url"):
@@ -1680,6 +1768,7 @@ def build_itinerary(d) -> str:
             item_rows.append(f"""
     <div class="day">
       <div class="date"><span class="k">{esc(it['time'])}</span> {link}</div>
+      {pronunciation_html}
       {transit}
       {note_html}{food_html}{link_html}{img_html}{reviews_html}
     </div>""")
@@ -1729,12 +1818,14 @@ def build_itinerary(d) -> str:
             for it in day["items"]:
                 title_text = render_title_display(it["title"])
                 link = maps_link(it["maps_query"], title_text) if it.get("maps_query") else esc(title_text)
+                pronunciation_html = title_reading_html(it["title"])
                 note_html = memo_block(it.get("note"))
                 food_html = food_quality_html(it.get("food_quality"))
                 link_html = doc_link_html(it.get("link"))
                 item_rows.append(f"""
     <div class="day">
       <div class="date"><span class="k">{esc(it['time'])}</span> {link}</div>
+      {pronunciation_html}
       {note_html}{food_html}{link_html}
     </div>""")
             cand_day_cards.append(f"""
@@ -1923,6 +2014,7 @@ def build_itinerary_table(d) -> str:
                 it = col[i]
                 title_text = render_title_display(it["title"])
                 link = maps_link(it["maps_query"], title_text) if it.get("maps_query") else esc(title_text)
+                pronunciation_html = title_reading_html(it["title"])
                 note_html = memo_block(it.get("note"), cls="t-note")
                 transit = transit_line(it.get("arrive_from"))
                 if it.get("image_url"):
@@ -1937,7 +2029,7 @@ def build_itinerary_table(d) -> str:
                 link_html = doc_link_html(it.get("link"))
                 cells.append(
                     f'<td><span class="t-time">{esc(it["time"])}</span>'
-                    f'<span class="t-title">{link}</span>{transit}{note_html}{food_html}{link_html}{img_html}</td>'
+                    f'<span class="t-title">{link}</span>{pronunciation_html}{transit}{note_html}{food_html}{link_html}{img_html}</td>'
                 )
             else:
                 cells.append("<td></td>")
@@ -1950,6 +2042,7 @@ def build_itinerary_table(d) -> str:
         for it in day["items"]:
             title_text = render_title_display(it["title"])
             link = maps_link(it["maps_query"], title_text) if it.get("maps_query") else esc(title_text)
+            pronunciation_html = title_reading_html(it["title"])
             note_html = memo_block(it.get("note"))
             transit = transit_line(it.get("arrive_from"))
             if it.get("image_url"):
@@ -1966,6 +2059,7 @@ def build_itinerary_table(d) -> str:
             item_rows.append(f"""
     <div class="day">
       <div class="date"><span class="k">{esc(it["time"])}</span> {link}</div>
+      {pronunciation_html}
       {transit}
       {note_html}{food_html}{link_html}{img_html}{reviews_html}
     </div>""")
