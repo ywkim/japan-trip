@@ -91,6 +91,11 @@ japan-trip/
 │   ├── weather.json           # 후보지 × 시기 기후 + 긴키 매우(梅雨) 평년·실적 + 교토 5/31~6/3 일별 강수 평년
 │   ├── flights.json           # 후보지 × 출발지 항공권 시세 스냅샷 (메타사이트 근사)
 │   ├── itinerary.json         # 단일 출처 (교토 3박4일 일정 — 일자·시간대·동선·메모 + route_candidates 대안 코스 3개)
+│   │   # schema: items[].title = {type, ko_name, ja_name, ja_reading_ko, en_name}
+│   │   # 신규 장소 추가 시 ALL 사찰·신사·역·주요 식당/장소는 ja_reading_ko 필수 (발음 택시용).
+│   │   # places 레지스트리의 역·정류장·랜드마크도 reading 필드 필수 (교통 타임라인).
+│   │   # 예: "텐류지" 항목은 ja_reading_ko="텐류지", places.tenryuji.reading="텐류지" 추가.
+│   │   # 발음 정확도: 표준 일본어 발음을 한글로 표기 (교토 유명 랜드마크·식당 기준).
 │   ├── booking-checklist.json # 단일 출처 (예약 진행 상태 7 항목)
 │   ├── breakfast.json         # 단일 출처 (숙소 인근 조식 옵션 — viz/breakfast.html 렌더)
 │   └── design-tokens.json     # 단일 출처 (색·타이포·간격·반경, DESIGN.md §2~§6과 동기화)

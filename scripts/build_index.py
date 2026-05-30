@@ -150,6 +150,22 @@ def maps_link(query: str, label: str) -> str:
 # validate.py 검사 K가 (1) 미정의 참조, (2) 참조/병기 없는 생(生) 장소명을 차단한다.
 PLACE_REGISTRY: dict = {}
 PLACE_REF_RE = re.compile(r"\{\{([a-z0-9_]+)\}\}")
+# 확장된 'ko(ja)' 라벨 → reading(일본어 발음 한글표기) 역방향 맵.
+# 교통 타임라인이 역·정류장 발음을 노출하기 위해 load_data에서 채운다.
+PLACE_LABEL_TO_READING: dict = {}
+
+
+def build_place_reading_map() -> dict:
+    """PLACE_REGISTRY에서 확장 라벨('ko(ja)' 또는 'ko') → reading 맵을 만든다."""
+    m = {}
+    for p in PLACE_REGISTRY.values():
+        reading = (p.get("reading") or "").strip()
+        if not reading:
+            continue
+        ko, ja = p.get("ko", ""), p.get("ja", "")
+        label = f"{ko}({ja})" if ja else ko
+        m[label] = reading
+    return m
 
 
 def expand_place_refs(text: str) -> str:
@@ -306,6 +322,7 @@ def _render_transit_timeline(steps: list) -> str:
         if is_transfer:
             station += '<span class="tl-tag">환승</span>'
         station += '</div>'
+        station += _station_reading_html(from_label)
         seg = f'<div class="tl-seg">{_segment_pill(step)}{_segment_meta(step)}</div>'
         parts.append(
             f'<div class="tl-node"><div class="tl-rail">{rail}</div>'
@@ -314,10 +331,19 @@ def _render_transit_timeline(steps: list) -> str:
     to_label = _station_label(steps[-1].get("to"))
     parts.append(
         f'<div class="tl-node"><div class="tl-rail"><span class="tl-dot end"></span></div>'
-        f'<div class="tl-content"><div class="tl-station">{esc(to_label)}</div></div></div>'
+        f'<div class="tl-content"><div class="tl-station">{esc(to_label)}</div>'
+        f'{_station_reading_html(to_label)}</div></div>'
     )
     parts.append('</div>')
     return ''.join(parts)
+
+
+def _station_reading_html(label: str) -> str:
+    """확장 라벨('ko(ja)')에 대응하는 역·정류장 발음 줄. 없으면 빈 문자열."""
+    reading = PLACE_LABEL_TO_READING.get(label.strip())
+    if not reading:
+        return ""
+    return f'<div class="tl-reading">🗣️ {esc(reading)}</div>'
 
 
 def _render_transit_simple(steps: list) -> str:
@@ -503,8 +529,9 @@ def run_json(script: str) -> dict:
 def load_data():
     itinerary = json.loads((DATA / "itinerary.json").read_text(encoding="utf-8"))
     # 장소 레지스트리를 모듈 전역에 적재 후 {{place_id}} 참조를 'ko(ja)'로 확장.
-    global PLACE_REGISTRY
+    global PLACE_REGISTRY, PLACE_LABEL_TO_READING
     PLACE_REGISTRY = itinerary.get("places", {})
+    PLACE_LABEL_TO_READING = build_place_reading_map()
     itinerary = expand_refs_in_obj(itinerary)
     return {
         "decision": json.loads((DATA / "decision.json").read_text(encoding="utf-8")),
@@ -719,6 +746,7 @@ def render_css(tokens: dict) -> str:
   .tl-content {{ flex: 1; min-width: 0; padding-bottom: 0.5rem; }}
   .tl-node:last-child .tl-content {{ padding-bottom: 0; }}
   .tl-station {{ color: var(--fg); font-weight: 500; font-size: 0.92em; line-height: 1.35; word-break: keep-all; }}
+  .tl-reading {{ color: var(--muted); font-size: 0.78em; line-height: 1.3; margin-top: 0.05rem; }}
   .tl-tag {{
     display: inline-block; margin-left: 0.35rem; padding: 0 0.4rem;
     font-size: 0.72em; font-weight: 600; color: var(--warn);

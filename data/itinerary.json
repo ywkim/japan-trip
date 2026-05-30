@@ -4,119 +4,148 @@
   "places": {
     "kyoto_station": {
       "ko": "교토역",
-      "ja": "京都駅"
+      "ja": "京都駅",
+      "reading": "교토에키"
     },
     "nijo_station": {
       "ko": "니조역",
-      "ja": "二条駅"
+      "ja": "二条駅",
+      "reading": "니조에키"
     },
     "nishiki": {
       "ko": "니시키 시장",
-      "ja": "錦市場"
+      "ja": "錦市場",
+      "reading": "니시키이치바"
     },
     "kawaramachi": {
       "ko": "가와라마치",
-      "ja": "河原町"
+      "ja": "河原町",
+      "reading": "가와라마치"
     },
     "tenryuji": {
       "ko": "텐류지",
-      "ja": "天龍寺"
+      "ja": "天龍寺",
+      "reading": "텐류지"
     },
     "kinkakuji": {
       "ko": "금각사",
-      "ja": "金閣寺"
+      "ja": "金閣寺",
+      "reading": "킨카쿠지"
     },
     "ryoanji": {
       "ko": "료안지",
-      "ja": "竜安寺"
+      "ja": "竜安寺",
+      "reading": "료안지"
     },
     "arashiyama": {
       "ko": "아라시야마",
-      "ja": "嵐山"
+      "ja": "嵐山",
+      "reading": "아라시야마"
     },
     "tofukuji": {
       "ko": "토후쿠지",
-      "ja": "東福寺"
+      "ja": "東福寺",
+      "reading": "토후쿠지"
     },
     "fushimi_inari": {
       "ko": "후시미이나리",
-      "ja": "伏見稲荷"
+      "ja": "伏見稲荷",
+      "reading": "후시미이나리"
     },
     "inari": {
       "ko": "이나리",
-      "ja": "稲荷"
+      "ja": "稲荷",
+      "reading": "이나리"
     },
     "kiyomizu": {
       "ko": "키요미즈데라",
-      "ja": "清水寺"
+      "ja": "清水寺",
+      "reading": "키요미즈데라"
     },
     "gion": {
       "ko": "기온",
-      "ja": "祇園"
+      "ja": "祇園",
+      "reading": "기온"
     },
     "saihoji": {
       "ko": "사이호지",
-      "ja": "西芳寺"
+      "ja": "西芳寺",
+      "reading": "사이호지"
     },
     "kansai_airport": {
       "ko": "간사이공항",
-      "ja": "関西空港"
+      "ja": "関西空港",
+      "reading": "간사이쿠코"
     },
     "sanin_line": {
       "ko": "산인본선",
-      "ja": "山陰本線"
+      "ja": "山陰本線",
+      "reading": "산인혼센"
     },
     "shio_machiya": {
       "ko": "시오 마치야",
-      "ja": "塩町家"
+      "ja": "塩町家",
+      "reading": "시오마치야"
     },
     "kadensho": {
       "ko": "카덴쇼",
-      "ja": "嘉寿庄"
+      "ja": "嘉寿庄",
+      "reading": "카덴쇼"
     },
     "sagaarashiyama_station": {
       "ko": "사가아라시야마역",
-      "ja": "嵯峨嵐山駅"
+      "ja": "嵯峨嵐山駅",
+      "reading": "사가아라시야마에키"
     },
     "inari_station": {
       "ko": "이나리역",
-      "ja": "稲荷駅"
+      "ja": "稲荷駅",
+      "reading": "이나리에키"
     },
     "tofukuji_station": {
       "ko": "토후쿠지역",
-      "ja": "東福寺駅"
+      "ja": "東福寺駅",
+      "reading": "토후쿠지에키"
     },
     "arashiyama_tenryuji_stop": {
       "ko": "아라시야마텐류지마에",
-      "ja": "嵐山天龍寺前"
+      "ja": "嵐山天龍寺前",
+      "reading": "아라시야마텐류지마에"
     },
     "kokedera_stop": {
       "ko": "코케데라·스즈무시데라",
-      "ja": "苔寺・鈴虫寺"
+      "ja": "苔寺・鈴虫寺",
+      "reading": "코케데라·스즈무시데라"
     },
     "kinkakujimichi_stop": {
       "ko": "금각사도",
-      "ja": "金閣寺道"
+      "ja": "金閣寺道",
+      "reading": "킨카쿠지미치"
     },
     "ryoanjimae_stop": {
       "ko": "료안지마에",
-      "ja": "竜安寺前"
+      "ja": "竜安寺前",
+      "reading": "료안지마에"
     },
     "shijo_kawaramachi_stop": {
       "ko": "시조가와라마치",
-      "ja": "四条河原町"
+      "ja": "四条河原町",
+      "reading": "시조가와라마치"
     },
     "gion_shijo_stop": {
       "ko": "기온시조",
-      "ja": "祇園四条"
+      "ja": "祇園四条",
+      "reading": "기온시조"
     },
     "gojozaka_stop": {
       "ko": "고조자카·키요미즈미치",
-      "ja": "五条坂・清水道"
+      "ja": "五条坂・清水道",
+      "reading": "고조자카·키요미즈미치"
     },
     "yamagoe_nakamachi_stop": {
       "ko": "야마고에나카마치",
-      "ja": "山越中町"
+      "ja": "山越中町",
+      "reading": "야마고에나카마치"
     }
   },
   "trip": {
@@ -274,7 +303,7 @@
             "type": "restaurant",
             "ko_name": "시오 인근 저녁",
             "ja_name": "다이호·中華 大鵬",
-            "ja_reading_ko": "",
+            "ja_reading_ko": "다이호",
             "en_name": ""
           },
           "maps_query": "Taiho Nijo Kyoto",
@@ -389,7 +418,7 @@
             "type": "place",
             "ko_name": "텐류지",
             "ja_name": "天龍寺",
-            "ja_reading_ko": "",
+            "ja_reading_ko": "텐류지",
             "en_name": ""
           },
           "maps_query": "Tenryu-ji Temple",
@@ -427,7 +456,7 @@
             "type": "place",
             "ko_name": "사이호지",
             "ja_name": "苔寺·이끼사찰",
-            "ja_reading_ko": "",
+            "ja_reading_ko": "코케데라",
             "en_name": ""
           },
           "maps_query": "Saihoji Temple Kyoto",
@@ -650,7 +679,7 @@
             "type": "place",
             "ko_name": "료안지",
             "ja_name": "竜安寺",
-            "ja_reading_ko": "",
+            "ja_reading_ko": "료안지",
             "en_name": ""
           },
           "maps_query": "Ryoan-ji",
@@ -685,7 +714,7 @@
             "type": "restaurant",
             "ko_name": "폰토초 저녁",
             "ja_name": "만자라테이·まんざら亭",
-            "ja_reading_ko": "",
+            "ja_reading_ko": "만자라테이",
             "en_name": ""
           },
           "maps_query": "Manzaratei Pontocho Kyoto",
@@ -762,7 +791,7 @@
             "type": "place",
             "ko_name": "후시미이나리 신사",
             "ja_name": "伏見稲荷",
-            "ja_reading_ko": "",
+            "ja_reading_ko": "후시미이나리",
             "en_name": ""
           },
           "maps_query": "Fushimi Inari Taisha",
@@ -819,7 +848,7 @@
             "type": "place",
             "ko_name": "토후쿠지",
             "ja_name": "東福寺",
-            "ja_reading_ko": "",
+            "ja_reading_ko": "토후쿠지",
             "en_name": ""
           },
           "maps_query": "Tofuku-ji",
@@ -860,7 +889,7 @@
             "type": "restaurant",
             "ko_name": "교토역 라멘코지 점심",
             "ja_name": "나카무라쇼텐·中村商店",
-            "ja_reading_ko": "",
+            "ja_reading_ko": "나카무라쇼텐",
             "en_name": ""
           },
           "maps_query": "Nakamura Shoten Kyoto Ramen Koji",
@@ -930,7 +959,7 @@
             "type": "place",
             "ko_name": "키요미즈데라",
             "ja_name": "清水寺",
-            "ja_reading_ko": "",
+            "ja_reading_ko": "키요미즈데라",
             "en_name": ""
           },
           "maps_query": "Kiyomizu-dera",
@@ -1034,7 +1063,7 @@
             "type": "place",
             "ko_name": "산넨자카 (産寧坂) → 야사카 신사 (八坂神社) → 기온",
             "ja_name": "祇園",
-            "ja_reading_ko": "",
+            "ja_reading_ko": "기온",
             "en_name": ""
           },
           "maps_query": "Gion Kyoto",
@@ -1308,7 +1337,7 @@
                 "type": "place",
                 "ko_name": "텐류지",
                 "ja_name": "天龍寺",
-                "ja_reading_ko": "",
+                "ja_reading_ko": "텐류지",
                 "en_name": ""
               },
               "maps_query": "Tenryu-ji Temple"
@@ -1519,7 +1548,7 @@
                 "type": "place",
                 "ko_name": "기요미즈데라",
                 "ja_name": "清水寺",
-                "ja_reading_ko": "",
+                "ja_reading_ko": "키요미즈데라",
                 "en_name": ""
               },
               "maps_query": "Kiyomizu-dera"
@@ -1530,7 +1559,7 @@
                 "type": "place",
                 "ko_name": "산넨자카 (産寧坂) → 야사카 신사 (八坂神社) → 기온",
                 "ja_name": "祇園",
-                "ja_reading_ko": "",
+                "ja_reading_ko": "기온",
                 "en_name": ""
               },
               "maps_query": "Gion Kyoto"
@@ -1560,7 +1589,7 @@
                 "type": "place",
                 "ko_name": "금각사",
                 "ja_name": "鹿苑寺",
-                "ja_reading_ko": "",
+                "ja_reading_ko": "로쿠온지",
                 "en_name": ""
               },
               "maps_query": "Kinkaku-ji"
@@ -1571,7 +1600,7 @@
                 "type": "place",
                 "ko_name": "료안지",
                 "ja_name": "竜安寺",
-                "ja_reading_ko": "",
+                "ja_reading_ko": "료안지",
                 "en_name": ""
               },
               "maps_query": "Ryoan-ji"
@@ -1815,7 +1844,7 @@
                 "type": "place",
                 "ko_name": "야사카 신사",
                 "ja_name": "八坂神社",
-                "ja_reading_ko": "",
+                "ja_reading_ko": "야사카진자",
                 "en_name": ""
               },
               "maps_query": "Yasaka Shrine"
