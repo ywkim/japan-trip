@@ -32,3 +32,4 @@ reports/final-report.pdf
 
 # Playwright MCP 임시 캐시 (DOM 스냅샷 등)
 .playwright-mcp/
+data/itinerary_backup.json

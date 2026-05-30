@@ -39,7 +39,7 @@
 
 ### 1. 발권·예약 기록
 
-- 단일 출처: `data/booking-checklist.json` (예약 진행 상태 10 항목)
+- 단일 출처: `data/booking-checklist.json` (예약 진행 상태 7 항목)
 - 예약 확정 시: `status`·`reference`(예약번호)·`confirmed_at`(확정일) 갱신 + `docs/decision-log/`에 새 일지 (예약처·금액·취소 정책 요약)
 - 발권/예약 영수증·바우처는 본 레포에 첨부하지 않음 (개인정보·메일/카카오톡 원본 보관)
 - 발권·결제 금액은 `data/cost-options.json`의 시나리오 입력에도 반영 (확정값으로 `confirmed_booking` 라벨로 승격)
@@ -91,7 +91,12 @@ japan-trip/
 │   ├── weather.json           # 후보지 × 시기 기후 + 긴키 매우(梅雨) 평년·실적 + 교토 5/31~6/3 일별 강수 평년
 │   ├── flights.json           # 후보지 × 출발지 항공권 시세 스냅샷 (메타사이트 근사)
 │   ├── itinerary.json         # 단일 출처 (교토 3박4일 일정 — 일자·시간대·동선·메모 + route_candidates 대안 코스 3개)
-│   ├── booking-checklist.json # 단일 출처 (예약 진행 상태 10 항목)
+│   │   # schema: items[].title = {type, ko_name, ja_name, ja_reading_ko, en_name}
+│   │   # 신규 장소 추가 시 ALL 사찰·신사·역·주요 식당/장소는 ja_reading_ko 필수 (발음 택시용).
+│   │   # places 레지스트리의 역·정류장·랜드마크도 reading 필드 필수 (교통 타임라인).
+│   │   # 예: "텐류지" 항목은 ja_reading_ko="텐류지", places.tenryuji.reading="텐류지" 추가.
+│   │   # 발음 정확도: 표준 일본어 발음을 한글로 표기 (교토 유명 랜드마크·식당 기준).
+│   ├── booking-checklist.json # 단일 출처 (예약 진행 상태 7 항목)
 │   ├── breakfast.json         # 단일 출처 (숙소 인근 조식 옵션 — viz/breakfast.html 렌더)
 │   └── design-tokens.json     # 단일 출처 (색·타이포·간격·반경, DESIGN.md §2~§6과 동기화)
 ├── docs/
@@ -144,6 +149,8 @@ japan-trip/
 
 - **실행 단일 출처(정본)** — 본 레포의 현재 1차 데이터:
   - `data/itinerary.json` — 교토 3박4일 일정. `days`: 확정 코스 (일자·시간대·동선·메모·도보거리·보류). `route_candidates`: 대안 코스 3개 (여유형·서북 사찰 집중형·미식+문화 체험형). days[].items[].`arrive_from`(mode/duration_min/distance_km/route/source/source_fetched_at/data_quality)으로 장소 간 이동 출처 명시. data_quality는 `official_fare`/`researched_market_rate`/`tbd_needs_browser_mcp`(Playwright MCP 후속 세션 위임). 옵션 필드 `source_url`(텍스트 source의 URL 보완), `source_verified_at`(Playwright로 도달성 검증한 ISO 날짜 — 빌드 시 ✓ 표시) — `scripts/list_sources.py`로 인벤토리, validate.py G가 형식 검증. 식사 항목은 days[].items[].`food_quality`(rating/source/source_fetched_at/data_quality/note)로 맛집 근거(타베로그·구글·미쉐린 등 평점) 명시 — 추측 금지, 출처 없으면 검사 I가 머지 차단. days[].items[].`link`(url/label)는 항목 참조 문서를 화면에서 탭 가능한 `doc-link` 앵커로 렌더(`build_index.py`의 `doc_link_html()`, 조식 슬롯 → `viz/breakfast.html`). url이 사이트 내 경로면 같은 탭, 외부(http)면 새 탭. **Vercel 운영 화면에는 외부 GitHub 링크 금지** — 레포 내 문서 참조는 `.md`(Vercel raw 서빙) 대신 사이트 내 HTML 페이지로 렌더해 연결한다. 사람용 사본은 `docs/kyoto-itinerary-may31-jun3-2026.md`
+    - **장소명 병기 단일 출처 `places` 레지스트리**: `data/itinerary.json` 최상위 `places`(`{place_id: {ko, ja}}`)가 장소명 한자 병기의 유일한 출처. 산문 필드(note·food_quality·pass_recommendation·route)에서 `{{place_id}}`로 **참조**하면 `build_index.py`의 `expand_place_refs()`(load 시 `expand_refs_in_obj` 재귀)가 `ko(ja)`로 확장 — 같은 장소가 문서 전체에서 동일 병기된다. 역명 합성어(`아라시야마역(嵐山駅)`)는 참조 대신 리터럴 병기(둘 다 검사 K 통과). **신규 장소는 `places`에 1줄 추가 후 참조**. 검사 K(`scripts/validate.py`)가 미정의 참조·생(生) 장소명 무병기를 머지 차단 — 수기 병기 드리프트를 구조적으로 봉쇄. 근거: `docs/decision-log/2026-05-30-place-registry-annotation.md`
+    - **교통 노드(역·정류장)도 `places` 레지스트리 단일 출처**: `arrive_from.steps[].from`·`to`는 inline dict가 아니라 **`"{{place_id}}"` 단일 참조 문자열**. 역(`nijo_station`·`sagaarashiyama_station`…)·버스정류장(`kinkakujimichi_stop`·`gion_shijo_stop`…)·환승점(`yamagoe_nakamachi_stop`)을 `places`에 등록하고 참조하면 `expand_refs_in_obj`가 `ko(ja)`로 자동 확장 → 화면에 "니조역(二条駅) → 교토역(京都駅)". 환승은 steps를 2개로 나눠 모델링하면 `render_transit_line_steps()`가 "↓ 환승 ↓"를 자동 삽입. 운행 경고·대안은 `arrive_from.advisory`(문자열, 선택)에 적고 ⚠️로 노출(과거 `route` 문자열 정규식 추출 폐기). **검사 L**(`scripts/validate.py`)이 from/to를 `^{{place_id}}$` 형식+레지스트리 정의로 강제 — inline dict·요금(`¥230`)·노선번호(`206`)·생문자열을 머지 차단. **신규 leg from/to는 마이그레이션이 생성하지 않으므로 데이터에서 ref로 수기 작성**. 근거: `docs/decision-log/2026-05-30-transit-fromto-registry-refs.md`
   - `data/booking-checklist.json` — 예약 진행 상태
   - `data/cost-options.json` — 항공·숙박·고정비·일회성·시나리오 (확정 금액은 `confirmed_booking` 라벨로 승격)
   - `data/breakfast.json` — 숙소 인근 조식 옵션 단일 출처 (아침 3회·숙소별 가게표·아침별 권장·출처). `build_index.py`가 `viz/breakfast.html`로 렌더. 가게명은 `map_query`(없으면 가게명+숙소 `map_area`)로 구글 지도 검색 링크(`.map-link`)로 렌더 — 모바일 탭 시 지도 앱이 열린다(좌표 추정 금지, 검색 질의만 생성). 가게별 `menu`(메뉴·가격, 출처는 §5 리서치)는 `.bf-menu` 전용 라인으로 노출. 사람용 사본은 `docs/breakfast-near-lodging.md`
@@ -153,7 +160,7 @@ japan-trip/
   - `data/weather.json` — 후보지×시기 기후 + `tsuyu_normals`(긴키 매우입·매우명 평년 + 최근 7년 실적) + `cities.kyoto.sub_monthly_precip`(순계열)·`trip_window_daily_precip`(5/31~6/3 일별). 원자료: JMA 매우 평년값·京都(47759) 일별 평년값 1991–2020. `docs/weather.md` §5와 동기화. 5/31~6/3 실측 기상 추적이 필요해지면 본 파일의 `cities.kyoto`에 새 키로 추가
   - `data/flights.json` — 후보지×출발지 항공권 시세 스냅샷 (시점 스냅샷, snapshot_date 명시). 발권은 별도 PR로 `data/booking-checklist.json`·`data/cost-options.json`에 기록
 - **`index.html`·`viz/*.html`(12개)·`assets/og-*.svg`(6장)는 `scripts/build_index.py` 산출물 — 직접 편집 금지**. **이 산출물(13 HTML + 6 SVG = 19개)은 레포에 커밋하지 않는다(`.gitignore`)** — 배포(CD)와 소스를 분리해 거대한 기계 생성 diff로 인한 PR 머지 충돌을 없앤다(근거: `docs/decision-log/2026-05-27-cd-artifact-separation.md`). 데이터(`data/*.json`)·스크립트·렌더 대상 `.md` 변경 후 `uv run python scripts/build_index.py`로 로컬 빌드(클론 직후 1회 필요, `markdown` 의존 — `uv sync`/`uv run`이 자동 설치). 실제 배포는 Vercel이 `vercel.json`의 `buildCommand`(`uv run python scripts/build_index.py` — Vercel 빌드 이미지의 uv가 lockfile에서 markdown 설치 후 빌드)로 매 배포 시점 생성. CI는 검증 전에 `build_index.py`를 실행해 산출물을 만들고(빌드 무오류 + 검사 J가 가드), 재현성(idempotent)·콘텐츠 검사는 `tests/test_build_index.py`가 담당
-- 모바일 가독성: 장문 블록(이동 경로 `arrive_from.route`·ICOCA 실행 단계·비선택 예산 시나리오·긴 예약/숙박 메모·일자별 교통패스 추천·조식 가게 그룹·조식 영업시간 주의)은 `build_index.py`의 `fold(summary, detail)` 헬퍼로 "평이 요약 + `<details>` 접기"로 렌더. 이동은 모드별 한국어 동사(`MODE_VERBS`)+소요시간 요약, 상세에 원문 경로·출처 링크. 예약·숙박 메모는 `note_block()`이 60자 초과 시 `·` 앞 2개 항목을 요약으로 노출하고 나머지(예약번호·PIN·탑승객 등)를 접는다. 교통패스 추천은 `pass_block()`이 `' — '` 앞 추천명만 보이고 비용 근거를 접는다. 예약 체크리스트(`checklist_card`)의 긴 예약번호·권장 값은 `detail_row(label, value)`이 44자 초과 시 `·` 앞 토막만 요약에 노출하고 나머지(②예약·PIN·취소정책 등)를 접어 우측 정렬 셀(`.row .v`) 오버플로를 막는다(짧으면 기존 k/v 행 유지). lodging 화면 운영 메모도 모두 `note_block()` 경유 — 하드코딩 장문 라인 금지. 일정 카드·시간표의 긴 장소 메모(`note`)·맛집 상세 노트(`food_quality.note`)는 `memo_block()`이 50자 초과 시 첫 문장(". " 또는 " · " 앞 토막, 60자 미만일 때)을 요약으로 노출하고 나머지를 접는다(맛집 평점 줄 `🍽️ …`은 항상 노출 — 검증 신호 유지). 조식 페이지(`viz/breakfast.html`)는 `_breakfast_group()`이 가게 그룹을 "라벨 · N곳"으로 접되 숙소별 첫(가장 편리) 그룹은 펼친 채(`open=True`) 둬 가격·메뉴를 즉시 노출하고, 아침 3회 표·아침별 권장은 긴 텍스트라 우측정렬 k/v 행 대신 좌측정렬 블록(`.bf-item`/`.bf-body`)으로 렌더한다. 문서 렌더 페이지(`viz/report.html`·`itinerary-doc.html`·`research.html`·`transit-pass.html`·`decision-kyoto.html`·`decision-log.html`)는 `DOC_PAGES`로 레포 마크다운을 사이트 내 HTML로 변환(아래 "문서 렌더링" 절). 모든 화면(index·itinerary·itinerary-table·lodging·checklist·archive·breakfast)이 동일 fold 패턴 적용. 새 장문 정보도 이 패턴을 따른다
+- 모바일 가독성: 장문 블록(이동 경로 `arrive_from.route`·ICOCA 실행 단계·비선택 예산 시나리오·긴 예약/숙박 메모·일자별 교통패스 추천·조식 가게 그룹·조식 영업시간 주의)은 `build_index.py`의 `fold(summary, detail)` 헬퍼로 "평이 요약 + `<details>` 접기"로 렌더. 이동은 모드별 한국어 동사(`MODE_VERBS`)+소요시간 요약(환승 leg는 "환승 N회 · 약 M분"), 상세는 **역 타임라인 컴포넌트**(`.tl*`, `render_transit_line_steps`→`_render_transit_timeline`)로 렌더 — 역·정류장마다 도트 노드, 환승점은 warn 도트+'환승' 태그, 운영사·노선은 색 대신 아이콘+`.tl-mode` pill, 분·거리·요금은 `.tl-meta`. 역 정보 없는 leg(도보)는 `.tl-simple` 폴백, `advisory`는 `.tl-advisory`(warn 보더). 운영사 브랜드색(인라인 hex) 금지 — 기존 토큰만(근거: `docs/decision-log/2026-05-30-02-transit-timeline-ui.md`, DESIGN.md §4 Transit timeline). 예약·숙박 메모는 `note_block()`이 60자 초과 시 `·` 앞 2개 항목을 요약으로 노출하고 나머지(예약번호·PIN·탑승객 등)를 접는다. 교통패스 추천은 `pass_block()`이 `' — '` 앞 추천명만 보이고 비용 근거를 접는다. 예약 체크리스트(`checklist_card`)의 긴 예약번호·권장 값은 `detail_row(label, value)`이 44자 초과 시 `·` 앞 토막만 요약에 노출하고 나머지(②예약·PIN·취소정책 등)를 접어 우측 정렬 셀(`.row .v`) 오버플로를 막는다(짧으면 기존 k/v 행 유지). lodging 화면 운영 메모도 모두 `note_block()` 경유 — 하드코딩 장문 라인 금지. 일정 카드·시간표의 긴 장소 메모(`note`)·맛집 상세 노트(`food_quality.note`)는 `memo_block()`이 50자 초과 시 첫 문장(". " 또는 " · " 앞 토막, 60자 미만일 때)을 요약으로 노출하고 나머지를 접는다(맛집 평점 줄 `🍽️ …`은 항상 노출 — 검증 신호 유지). 조식 페이지(`viz/breakfast.html`)는 `_breakfast_group()`이 가게 그룹을 "라벨 · N곳"으로 접되 숙소별 첫(가장 편리) 그룹은 펼친 채(`open=True`) 둬 가격·메뉴를 즉시 노출하고, 아침 3회 표·아침별 권장은 긴 텍스트라 우측정렬 k/v 행 대신 좌측정렬 블록(`.bf-item`/`.bf-body`)으로 렌더한다. 문서 렌더 페이지(`viz/report.html`·`itinerary-doc.html`·`research.html`·`transit-pass.html`·`decision-kyoto.html`·`decision-log.html`)는 `DOC_PAGES`로 레포 마크다운을 사이트 내 HTML로 변환(아래 "문서 렌더링" 절). 모든 화면(index·itinerary·itinerary-table·lodging·checklist·archive·breakfast)이 동일 fold 패턴 적용. 새 장문 정보도 이 패턴을 따른다
 - 메인 페이지(`index.html`)는 **운영 모드** — 요약·일자별 일정만. 분석·결정 자료(장마 확률·9 예산 시나리오·7 후보지 점수)는 `viz/archive.html`로 분리. 받는 사람에게 "아직 결정 중"으로 읽히는 콘텐츠는 메인에서 제외
 - `docs/weather.md`·`docs/flights.md`의 표는 각각 `data/weather.json`·`data/flights.json`의 사람용 사본 — JSON 수정 시 함께 갱신 (CI 게이트: `scripts/validate.py` E·F가 도시·시기 수치, snapshot_date, 시세 표기의 drift를 PR 단계에서 차단)
 - `docs/kyoto-itinerary-may31-jun3-2026.md`는 `data/itinerary.json`의 사람용 마크다운 사본 (JSON이 정본). 일정 변경 시 JSON을 먼저 수정 → 마크다운 함께 갱신
@@ -163,7 +170,6 @@ japan-trip/
   - 이전 정책(2026-05-26 이전): 외부 문서를 GitHub blob URL(`https://github.com/ywkim/japan-trip/blob/main/...`)로 링크 — Vercel이 `.md`를 raw text로 서빙해 상대 경로가 깨진다는 이유. **2026-05-26 정책 반전**: 받는 사람(시부모 포함)에게 레포 노출을 막기 위해 산출물에서 GitHub 링크 자체를 제거. 근거: `docs/decision-log/2026-05-26-vercel-no-github-links.md`
   - **2026-05-26 보완**: GitHub 링크 금지는 유지하되, 참조 문서를 없애는 대신 레포 마크다운을 사이트 내 HTML(`viz/report.html` 등)로 렌더해 연결. 근거: `docs/decision-log/2026-05-26-02-vercel-docs-as-html-pages.md`
   - `data/booking-checklist.json`의 `link.url`에 레포 마크다운 경로(예: `docs/booking-research-2026-05-24.md`)를 넣으면 `build_index.py`의 `DOC_SOURCE_TO_OUT`가 사이트 내 렌더 페이지로 치환. GitHub URL은 여전히 금지 (검사 J가 렌더 산출물에서 잡는다)
-  - 체크리스트 `note`는 `build_index.py`의 `linkify`로 렌더 — 벌거벗은 http(s) URL은 자동 링크, 마크다운 `[라벨](url)` 문법은 라벨 텍스트로 탭 가능한 링크(url=http(s)는 새 탭, `tel:`은 전화 탭)로 변환. 예약 채널·전화번호는 `[라벨](url)`/`[☎번호](tel:+81…)` 형식으로 적어 모바일에서 바로 탭/통화. javascript: 등 다른 스킴은 무시(http(s)·tel: 화이트리스트). 회귀 가드: `tests/test_build_index.py::test_checklist_note_urls_rendered_as_links`
 
 ## 문서 렌더링 (DOC_PAGES)
 
@@ -195,6 +201,8 @@ japan-trip/
 | DESIGN MD↔JSON 동기화 | `scripts/validate.py` (H) | `DESIGN.md`의 hex가 `data/design-tokens.json`에 없거나 그 반대, theme_name·version drift |
 | itinerary food_quality 무결성 | `scripts/validate.py` (I) | `data/itinerary.json` 식사 항목 food_quality에 rating/source/source_fetched_at/data_quality 누락, data_quality 화이트리스트 외, source_fetched_at > 60d. food_quality 없는 항목(동네 끼니)은 면제. route_candidates도 순회 |
 | Vercel GitHub 링크 금지 | `scripts/validate.py` (J) | `index.html` + `viz/*.html`(glob 전체) 중 하나라도 `github.com` 문자열(링크·raw URL) 포함. 산출물은 검증 전에 빌드되므로 갓 생성된 HTML을 스캔 |
+| 장소 레지스트리 병기 무결성 | `scripts/validate.py` (K) | `data/itinerary.json` 산문 필드(note·food_quality·pass_recommendation·route·arrive_from.steps from/to)에서 ① `{{place_id}}` 참조가 `places`에 미정의, ② 레지스트리 장소 ko명이 참조·`ko(漢字)` 병기 없이 '생으로' 등장. title은 제외. route_candidates도 순회 |
+| transit from/to 참조 무결성 | `scripts/validate.py` (L) | `data/itinerary.json` `arrive_from.steps[].from`·`to`가 존재하면 `^{{place_id}}$` 단일 참조 문자열이 아니거나(inline dict·요금·노선번호·생문자열) id가 `places`에 미정의. route_candidates도 순회 |
 | 빌드 실행 (산출물 생성) | `scripts/build_index.py` | exit ≠ 0 (빌드 오류). 산출물은 gitignore이므로 검증 전에 생성. 재현성·drift·콘텐츠 검사는 `tests/test_build_index.py`(unittest)가 담당 |
 
 ## 디자인 워크플로우

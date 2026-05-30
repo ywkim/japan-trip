@@ -217,6 +217,7 @@ class BuildIndexTests(unittest.TestCase):
         """모든 mode(bus·subway·jr·taxi·walk·airport_express)의 arrive_from에서
         maps_url(우선) 또는 source가 http URL이면 해당 URL이 HTML에 링크로 렌더돼야 한다.
         maps_url이 있으면 maps-btn 버튼으로, 없으면 source URL로 확인.
+        Supports both old schema (mode at top level) and new schema (mode inside steps).
         """
         run()
         import json as _json
@@ -233,7 +234,12 @@ class BuildIndexTests(unittest.TestCase):
                 first_src = src.split()[0] if src else ""
                 url = maps_url or (first_src if first_src.startswith("http") else "")
                 if url:
-                    url_legs.append((af["mode"], url))
+                    # Get mode from new or old schema
+                    if isinstance(af.get("steps"), list) and af["steps"]:
+                        mode = af["steps"][0].get("mode", "unknown")
+                    else:
+                        mode = af.get("mode", "unknown")
+                    url_legs.append((mode, url))
         self.assertGreater(len(url_legs), 0, "fixture must have at least one URL-sourced leg")
         import html as _html
         for path in (INDEX, ITINERARY):
@@ -430,7 +436,7 @@ class TransitFoldTests(unittest.TestCase):
         for path in (INDEX, ITINERARY):
             with self.subTest(path=path.name):
                 html = path.read_text(encoding="utf-8")
-                self.assertIn("JR 하루카 KIX→교토역", html,
+                self.assertIn("교토역(京都駅)", html,
                               f"verbose route detail missing in {path.name}")
 
     def test_pass_recommendation_folded(self):
@@ -454,6 +460,121 @@ class TransitFoldTests(unittest.TestCase):
                 self.assertIn("실행 단계", html, f"playbook header missing in {path.name}")
                 for s in steps:
                     self.assertIn(s["when"], html, f"step.when {s['when']!r} not in {path.name}")
+
+
+class TransitFromToRegistryTests(unittest.TestCase):
+    """arrive_from from/to를 places 레지스트리 '{{ref}}'로 참조 → ko(ja) 병기 렌더 (Work 4.1)."""
+
+    def test_station_label_handles_string_and_dict(self):
+        # 확장된 문자열은 그대로
+        self.assertEqual(build_index._station_label("니조역(二条駅)"), "니조역(二条駅)")
+        # 구 dict 안전망: ko(ja) 합성
+        self.assertEqual(build_index._station_label({"ko": "교토역", "ja": "京都駅"}), "교토역(京都駅)")
+        self.assertEqual(build_index._station_label(None), "")
+
+    def test_render_steps_uses_expanded_fromto(self):
+        """from/to 병기가 렌더된다 (여러 줄 배치에서 각각 포함).
+
+        새 레이아웃(flexbox)에서는 from과 to가 별도 div로 분리되므로 각각 확인.
+        """
+        steps = [{
+            "mode": "jr", "duration_min": 12, "fare_jpy": 200,
+            "line": "산인본선(嵯峨野線)",
+            "from": "니조역(二条駅)", "to": "사가아라시야마역(嵯峨嵐山駅)",
+        }]
+        html = build_index.render_transit_line_steps(steps, {})
+        self.assertIn("니조역(二条駅)", html)
+        self.assertIn("사가아라시야마역(嵯峨嵐山駅)", html)
+
+    def test_render_multistep_shows_transfer(self):
+        steps = [
+            {"mode": "bus", "operator": {"ko": "시버스", "type": "shibus"}, "number": "11",
+             "from": "아라시야마텐류지마에(嵐山天龍寺前)", "to": "야마고에나카마치(山越中町)", "duration_min": 29},
+            {"mode": "bus", "operator": {"ko": "시버스", "type": "shibus"}, "number": "59",
+             "from": "야마고에나카마치(山越中町)", "to": "금각사도(金閣寺道)", "duration_min": 9},
+        ]
+        html = build_index.render_transit_line_steps(steps, {"advisory": "11번은 40분 간격"})
+        # 환승점은 타임라인 노드의 '환승' 태그 + 강조 도트로 표시
+        self.assertIn('class="tl-tag">환승</span>', html)
+        self.assertIn("tl-dot transfer", html)
+        self.assertIn("⚠️ 11번은 40분 간격", html)
+        # 운영사는 브랜드색(인라인 hex) 아닌 pill 클래스로
+        self.assertIn("시버스 11번", html)
+        self.assertNotIn("#E94B3C", html)
+
+    def test_single_step_has_no_transfer(self):
+        steps = [{"mode": "bus", "operator": {"ko": "시버스", "type": "shibus"}, "number": "59",
+                  "from": "금각사도(金閣寺道)", "to": "료안지마에(竜安寺前)", "duration_min": 4}]
+        html = build_index.render_transit_line_steps(steps, {})
+        self.assertNotIn("tl-dot transfer", html)
+        self.assertNotIn('class="tl-tag">환승', html)
+
+    def test_production_fromto_annotated_in_itinerary(self):
+        """프로덕션 빌드: 역·정류장이 ko(ja)로 병기되어 렌더된다.
+
+        새 레이아웃(flexbox 여러 줄)에서는 from과 to가 별도 div로 분리되므로,
+        각각의 역명이 포함되어 있는지 확인한다.
+        """
+        run()
+        html = ITINERARY.read_text(encoding="utf-8")
+        # (from 병기, to 병기) 튜플 검증
+        for from_label, to_label in (
+            ("니조역(二条駅)", "교토역(京都駅)"),
+            ("교토역(京都駅)", "이나리역(稲荷駅)"),
+            ("아라시야마텐류지마에(嵐山天龍寺前)", "야마고에나카마치(山越中町)"),
+        ):
+            with self.subTest(route=f"{from_label}→{to_label}"):
+                self.assertIn(from_label, html, f"from 병기 누락: {from_label}")
+                self.assertIn(to_label, html, f"to 병기 누락: {to_label}")
+
+    def test_production_transfer_and_advisory_rendered(self):
+        run()
+        html = ITINERARY.read_text(encoding="utf-8")
+        # 환승 2건(금각사·후시미)이 타임라인 '환승' 태그로 렌더
+        self.assertIn('class="tl-tag">환승</span>', html)
+        self.assertIn("tl-dot transfer", html)
+        self.assertIn("놓치면 택시 22분 대안", html)
+
+    def test_production_no_inline_operator_hex(self):
+        """운영사 브랜드 hex(인라인 스타일)가 산출물에 남지 않아야 한다 (DESIGN: 단일 accent)."""
+        run()
+        html = ITINERARY.read_text(encoding="utf-8")
+        for stray in ("#E94B3C", "#0066CC", "#003DA5", "#FF6B6B", "#d9534f"):
+            self.assertNotIn(stray, html, f"인라인 운영사 hex 잔재: {stray}")
+
+    def test_multistep_leg_totals_match_sourced_aggregate(self):
+        """환승 2-step 분할이 출처 있는 집계값(분·요금)과 정합해야 한다 (Work 4.1 회귀 가드).
+
+        근거: 단일 출처 집계를 2-step으로 쪼개며 임의 숫자를 넣어 후시미 leg가
+        9+5=14분으로 출처값 20분과 모순됐던 버그(2026-05-30 postmortem)의 재발 방지.
+        """
+        import json as _json
+        data = _json.loads((BASE / "data" / "itinerary.json").read_text(encoding="utf-8"))
+
+        def find_leg(date, ko_contains):
+            for day in data["days"]:
+                if day["date"] != date:
+                    continue
+                for it in day["items"]:
+                    t = it.get("title") or {}
+                    ko = t.get("ko_name", "") if isinstance(t, dict) else str(t)
+                    if ko_contains in ko:
+                        return it.get("arrive_from") or {}
+            return {}
+
+        # (date, ko, 기대 분 합, 기대 요금 합)
+        expectations = [
+            ("2026-06-01", "금각사", 38, 460),   # 버스 환승: 요금 2회(¥230×2)
+            ("2026-06-02", "후시미이나리", 20, 200),  # JR 통표: 단일 ¥200, 합계 20분
+        ]
+        for date, ko, exp_dur, exp_fare in expectations:
+            with self.subTest(leg=ko):
+                steps = (find_leg(date, ko).get("steps")) or []
+                self.assertGreaterEqual(len(steps), 2, f"{ko}: 2-step 환승이어야 함")
+                dur = sum(s.get("duration_min") or 0 for s in steps)
+                fare = sum(s.get("fare_jpy") or 0 for s in steps)
+                self.assertEqual(dur, exp_dur, f"{ko}: 분 합 {dur} ≠ 출처 {exp_dur}")
+                self.assertEqual(fare, exp_fare, f"{ko}: 요금 합 ¥{fare} ≠ 출처 ¥{exp_fare}")
 
 
 class NoteFoldTests(unittest.TestCase):
@@ -518,6 +639,104 @@ class ChecklistDetailFoldTests(unittest.TestCase):
         # 접어도 전체 예약번호 텍스트는 보존
         self.assertIn("1400827143410570", html,
                       "folded reference detail (saihoji 2nd booking) lost")
+
+
+class PlaceLinkMarkupTests(unittest.TestCase):
+    """note 본문의 위키식 마크업 [[label|query]]을 Google Maps 링크로 변환하는 헬퍼."""
+
+    def test_link_places_converts_markup_with_query(self):
+        """[[코메다|Komeda Coffee]] → <a href=...>코메다</a>"""
+        text = "여기서 [[코메다|Komeda Coffee]]로 간다"
+        out = build_index.link_places(text)
+        self.assertIn('<a href="https://maps.google.com/?q=Komeda', out)
+        self.assertIn(">코메다<", out)
+        self.assertNotIn("[[", out, "markup should be converted, not left raw")
+
+    def test_link_places_converts_label_only_markup(self):
+        """[[교토역]] → 검색어=교토역"""
+        text = "다음은 [[교토역]]이다"
+        out = build_index.link_places(text)
+        self.assertIn('<a href="https://maps.google.com/?q=', out)
+        self.assertIn(">교토역<", out)
+
+    def test_link_places_preserves_plain_urls(self):
+        """본문의 HTTP URL은 linkify() 경유로 여전히 링크"""
+        text = "자세한 정보는 https://example.com 를 보세요"
+        out = build_index.link_places(text)
+        self.assertIn('<a href="https://example.com"', out)
+
+    def test_link_places_escapes_html_content(self):
+        """마크업 외의 <, & 등은 escape"""
+        text = "사람 & 동물 [[가게|Query]]"
+        out = build_index.link_places(text)
+        self.assertIn("&amp;", out, "& should be escaped")
+        self.assertNotIn("&<", out)
+
+    def test_link_places_preserves_multiple_markups(self):
+        """다중 마크업 모두 변환"""
+        text = "[[카페|Cafe]]과 [[식당|Restaurant]]을 찾아가자"
+        out = build_index.link_places(text)
+        self.assertEqual(out.count('<a href="https://maps.google.com'), 2)
+        self.assertIn(">카페<", out)
+        self.assertIn(">식당<", out)
+
+    def test_link_places_nested_markups_safe(self):
+        """중첩된 마크업은 처리하지 않음 (잘못된 입력)"""
+        text = "[[a|[[b]]]]"
+        # 단순히 깨지지 않고 처리되어야 함
+        out = build_index.link_places(text)
+        self.assertIsInstance(out, str)
+
+    def test_strip_place_markup_returns_display_text(self):
+        """strip_place_markup: [[label|query]] → label"""
+        text = "여기서 [[코메다|Komeda]]로 간다"
+        out = build_index.strip_place_markup(text)
+        self.assertEqual(out, "여기서 코메다로 간다")
+
+    def test_strip_place_markup_label_only(self):
+        """[[label]] → label"""
+        text = "[[교토역]]에서 만난다"
+        out = build_index.strip_place_markup(text)
+        self.assertEqual(out, "교토역에서 만난다")
+
+    def test_strip_place_markup_multiple(self):
+        """다중 마크업 모두 제거"""
+        text = "[[가게1|Q1]]과 [[가게2|Q2]]"
+        out = build_index.strip_place_markup(text)
+        self.assertEqual(out, "가게1과 가게2")
+
+    def test_strip_place_markup_no_markup(self):
+        """마크업 없으면 원문 반환"""
+        text = "이것은 일반 텍스트다"
+        out = build_index.strip_place_markup(text)
+        self.assertEqual(out, text)
+
+    def test_memo_block_uses_display_text_for_length(self):
+        """memo_block: 마크업 포함 note는 display text 길이로 fold 판정"""
+        # 마크업 포함하면 실제 보이는 길이는 짧음
+        short_with_markup = "[[코메다|Very Long Coffee Shop Name]]로 간다"
+        out = build_index.memo_block(short_with_markup)
+        # display text = "코메다로 간다" (13글자 < 50) → fold 안 함
+        self.assertNotIn("<details", out, "short display text should not fold")
+        self.assertIn("코메다", out, "label should be in output")
+
+    def test_memo_block_long_display_text_folds(self):
+        """마크업 제거 후 길이 > 50이면 fold"""
+        # 마크업 제거하면 50자 초과
+        long_note = "[[코메다|Query]]는 니조역 인근에 있고 " + "여기는 " * 10 + "아주 긴 설명입니다"
+        out = build_index.memo_block(long_note)
+        self.assertIn("<details", out, "long display text should fold")
+        self.assertIn("maps.google.com", out, "place link should survive folding")
+
+    def test_memo_block_place_link_in_detail(self):
+        """long note 접어도 detail에 place link 보존"""
+        memo = ("[[오가와 커피|Ogawa Coffee]]는 니조역 근처 유명한 커피숍입니다. "
+                "정원도 아름답고 조용한 분위기에서 시간을 보낼 수 있습니다. "
+                "가격은 중간대이고 계절 한정 메뉴가 많습니다.")
+        out = build_index.memo_block(memo)
+        self.assertIn('<details class="leg"', out, "long memo should fold")
+        self.assertIn("maps.google.com/?q=Ogawa", out, "maps link must be in folded detail")
+        self.assertIn(">오가와 커피<", out, "label must be clickable in detail")
 
 
 class ItineraryTableTests(unittest.TestCase):
@@ -654,12 +873,16 @@ class ItineraryMemoFoldTests(unittest.TestCase):
         self.assertIn('<details class="leg"', out)
         self.assertIn("매장)</summary>", out)
 
-    def test_memo_without_separator_uses_generic_summary(self):
+    def test_memo_without_separator_uses_meaningful_summary(self):
+        """구분자 없는 장문은 첫 60자 + '…'로 요약 (더이상 '상세 보기' 폴백 없음)."""
         memo = "가" * 70
         out = build_index.memo_block(memo)
         self.assertIn('<details class="leg"', out)
-        self.assertIn("상세 보기", out)
-        self.assertIn("가" * 70, out, "memo body lost in generic fold")
+        # '…' 포함된 의미있는 요약 생성
+        self.assertIn("…", out, "should have '…' in summary for long text without separators")
+        # 60자 이상 요약 + 나머지 상세
+        self.assertIn("가" * 60, out, "first 60 chars should be in summary")
+        self.assertIn("가" * 10, out, "remaining 10 chars should be in detail")
 
     def test_custom_class_preserved_for_short_memo(self):
         out = build_index.memo_block("교토역 도보 5분", cls="t-note")
@@ -670,7 +893,7 @@ class ItineraryMemoFoldTests(unittest.TestCase):
         for path in (ITINERARY, TABLE):
             with self.subTest(path=path.name):
                 html = path.read_text(encoding="utf-8")
-                self.assertIn("닌넨자카·산넨자카 인근 말차 디저트 카페</summary>", html,
+                self.assertIn("니넨자카(二年坂)·산넨자카(産寧坂) 인근 말차 디저트 카페</summary>", html,
                               "long place memo should fold into a first-sentence summary")
                 self.assertIn("영업 11:00~20:00", html, "memo tail lost (not lossless)")
 
@@ -903,6 +1126,23 @@ class DocPageTests(unittest.TestCase):
                 self.assertIn('property="og:title"', html)
                 self.assertIn("/assets/og-", html)
 
+    def test_place_refs_expanded_in_itinerary(self):
+        """data/itinerary.json places 레지스트리의 {{id}} 참조가 'ko(ja)'로
+        확장 렌더되고, 미확장 {{...}} 토큰이 산출물에 남지 않아야 한다.
+        병기 단일 출처(레지스트리) 회귀 가드."""
+        run()
+        import json as _json
+        data = _json.loads((BASE / "data" / "itinerary.json").read_text(encoding="utf-8"))
+        places = data.get("places", {})
+        self.assertGreater(len(places), 0, "places registry must be populated")
+        html = ITINERARY.read_text(encoding="utf-8")
+        self.assertNotIn("{{", html, "unexpanded place ref leaked into itinerary.html")
+        # 니시키 레지스트리 항목이 ko(ja) 병기 형태로 확장됐는지
+        if "nishiki" in places:
+            p = places["nishiki"]
+            self.assertIn(f'{p["ko"]}({p["ja"]})', html,
+                          "nishiki place ref not expanded to ko(ja) in itinerary.html")
+
     def test_doc_pages_drift_detected_by_check(self):
         run()
         for path in DOC_PAGE_OUTPUTS:
@@ -914,6 +1154,76 @@ class DocPageTests(unittest.TestCase):
                     self.assertEqual(r.returncode, 1, f"--check should fail on drift in {path.name}")
                 finally:
                     path.write_text(original, encoding="utf-8")
+
+    def test_title_reading_html_function_exists(self):
+        """title_reading_html() 헬퍼가 존재하고 정확히 동작해야 한다."""
+        # ja_reading_ko가 있는 title dict
+        title_with_reading = {"type": "shrine", "ko_name": "금각사", "ja_name": "金閣寺", "ja_reading_ko": "킨카쿠지"}
+        result = build_index.title_reading_html(title_with_reading)
+        self.assertIn("🗣️", result, "should contain speaker icon")
+        self.assertIn("킨카쿠지", result, "should contain reading")
+        self.assertIn('class="pron"', result, "should have pron class")
+
+        # ja_reading_ko가 없는 title dict
+        title_no_reading = {"type": "shrine", "ko_name": "금각사", "ja_name": "金閣寺"}
+        result = build_index.title_reading_html(title_no_reading)
+        self.assertEqual(result, "", "should return empty string when no reading")
+
+        # string title (title이 dict이 아님)
+        result = build_index.title_reading_html("금각사")
+        self.assertEqual(result, "", "should return empty string when title is not dict")
+
+    def test_pronunciation_lines_in_itinerary(self):
+        """temples/shrines/stations의 발음이 렌더돼야 한다."""
+        run()
+        itin = ITINERARY.read_text(encoding="utf-8")
+        # 발음 아이콘과 발음 텍스트가 렌더됨
+        self.assertIn("🗣️", itin, "pronunciation icon should be in itinerary.html")
+        # pron 클래스가 있어야 함 (스타일링 대상)
+        self.assertIn('class="pron"', itin, "pronunciation line should have pron class")
+
+    def test_no_generic_shosehi_summary(self):
+        """'상세 보기' generic summary가 어떤 화면에도 나타나면 안 된다."""
+        run()
+        for path in (ITINERARY, CHECKLIST, LODGING):
+            with self.subTest(path=path.name):
+                html = path.read_text(encoding="utf-8")
+                # '상세 보기'가 summary text로 나타나는 경우만 실패 (접힘 제목)
+                import re
+                # <summary>상세 보기</summary> 패턴을 찾기 (정확한 generic 폴백)
+                matches = re.findall(r'<summary>[^<]*상세\s*보기[^<]*</summary>', html)
+                self.assertEqual(len(matches), 0,
+                    f"{path.name} should not have '상세 보기' as generic summary (found {len(matches)} instances)")
+
+    def test_memo_block_extracts_meaningful_summary(self):
+        """memo_block()이 구분자( . 또는 · )를 찾아 의미있는 요약을 추출한다."""
+        # 60자 이상이고 구분자 있는 경우: 요약 + 접기
+        long_text = "첫 번째 항목입니다. 두 번째 항목입니다. 세 번째 항목입니다. 네 번째 항목입니다. 다섯 번째 항목입니다."
+        result = build_index.memo_block(long_text)
+        self.assertIn("<details", result, "should create <details> for long text with period")
+        self.assertIn("첫 번째", result, "should contain first part in summary")
+
+        # 60자 이상이고 · 구분자 있는 경우
+        long_text2 = "첫 번째 메모입니다 · 두 번째 메모입니다 · 세 번째 메모입니다 · 네 번째 메모입니다 · 다섯 번째 메모입니다"
+        result2 = build_index.memo_block(long_text2)
+        self.assertIn("<details", result2, "should create <details> for long text with ·")
+
+    def test_note_block_extracts_meaningful_summary(self):
+        """note_block()이 구분자(· 또는 다.)를 찾아 의미있는 요약을 추출한다."""
+        # 60자 이상이고 · 구분자 있는 경우
+        long_text = "예약확정번호: 0123456789abcd · PIN 코드: 1234 · 체크인 시간: 15:00 · 취소 정책: 예약 7일 전까지"
+        result = build_index.note_block(long_text)
+        self.assertIn("<details", result, "should create <details> for long text")
+        self.assertIn("예약확정", result, "should contain first part")
+
+    def test_pass_block_renders_recommendation_and_detail_lines(self):
+        """pass_block()이 ' — ' 앞은 요약으로, 뒤는 여러 줄로 분해 렌더한다."""
+        # 요약 — 근거1 + 근거2 형태 (총 60자 이상)
+        text = "ICOCA 일일권 추천 — 시버스 3회 비용: 2700엔 + 1일권 비용: 3500엔 비교 + 차이: 800엔 절감"
+        result = build_index.pass_block(text)
+        self.assertIn("ICOCA", result, "should show recommendation")
+        self.assertIn("<details", result, "should have collapsible section")
+        self.assertIn("시버스", result, "should contain detail items")
 
 
 if __name__ == "__main__":

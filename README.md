@@ -46,6 +46,7 @@
 
 - `data/itinerary.json`의 해당 day(`days[*]`)에 시간대·동선·메모 갱신
 - 식사 항목은 `food_quality`(타베로그·구글·미쉐린 등 평점 + `source`·`data_quality`)로 맛집 근거 명시 — 추측 금지, 출처 없으면 머지 차단(검사 H)
+- 장소명 한자 병기는 `data/itinerary.json`의 `places` 레지스트리가 단일 출처. 산문 필드에서 `{{place_id}}`로 참조하면 빌드 시 `ko(ja)`로 확장된다(신규 장소는 `places`에 1줄 추가). 참조·병기 없는 생 장소명은 검사 K가 머지 차단 — 병기 드리프트 방지
 - `docs/kyoto-itinerary-may31-jun3-2026.md`(사람용 사본) 함께 갱신
 - `uv run python scripts/build_index.py` 재빌드 → `viz/itinerary.html`·`viz/itinerary-table.html`·`index.html` 재생성
 
@@ -62,7 +63,7 @@
 
 - `uv run python scripts/build_index.py` — 산출물(13 HTML + 6 OG SVG)은 gitignore이므로 검증 전에 빌드(빌드 무오류 자체가 가드). 재현성(idempotent)·콘텐츠 검사는 단위 테스트 `tests/test_build_index.py`가 담당. 로컬 재현성 확인은 `uv run python scripts/build_index.py --check`(drift 시 exit 1)
 - `uv run python -m unittest discover tests` — 단위 테스트 (validate·build_index·design_tokens·score·budget)
-- `uv run python scripts/validate.py` — 가격 필드 무결성(source·data_quality), 30/60일 묵은 가격 경고/실패, SYNC 주석 경로·절 번호 검증, `docs/weather.md`↔`data/weather.json`, `docs/flights.md`↔`data/flights.json`, `DESIGN.md`↔`data/design-tokens.json` 동기화 검증, Vercel 산출물 GitHub 링크 금지(검사 J — `index.html`·`viz/*.html`에 `github.com` 없음)
+- `uv run python scripts/validate.py` — 가격 필드 무결성(source·data_quality), 30/60일 묵은 가격 경고/실패, SYNC 주석 경로·절 번호 검증, `docs/weather.md`↔`data/weather.json`, `docs/flights.md`↔`data/flights.json`, `DESIGN.md`↔`data/design-tokens.json` 동기화 검증, Vercel 산출물 GitHub 링크 금지(검사 J — `index.html`·`viz/*.html`에 `github.com` 없음), 장소명 병기 무결성(검사 K — `places` 미정의 참조·생 장소명 무병기 차단)
 - `.github/workflows/validate.yml`이 PR마다 위를 실행 (`uv sync --locked` 선행, `astral-sh/setup-uv`)
 
 ### 7. 시각 디자인 출처
