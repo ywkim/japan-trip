@@ -12,6 +12,11 @@
       "ja": "二条駅",
       "reading": "니조에키"
     },
+    "sanjo_keihan_station": {
+      "ko": "산조케이한역",
+      "ja": "三条京阪駅",
+      "reading": "산조케이한에키"
+    },
     "nishiki": {
       "ko": "니시키 시장",
       "ja": "錦市場",
@@ -230,7 +235,7 @@
   "days": [
     {
       "date": "2026-05-31",
-      "day_label": "5/31 (일) — 오후 도착 + 시오 체크인 + 가까운 저녁",
+      "day_label": "5/31 (일) — 오후 도착 + 시오 체크인 + 폰토초 야끼니꾸 저녁",
       "walking_km": 1,
       "lodging": "에어비앤비 시오",
       "items": [
@@ -280,7 +285,7 @@
             "en_name": ""
           },
           "maps_query": "Nijo Station Kyoto",
-          "note": "JR 하루카로 {{kyoto_station}}까지, JR {{sanin_line}}으로 {{nijo_station}}까지 환승 + 도보 7분. 오후 도착편 피로를 고려해 첫날은 체크인·짐 정리 후 인근 저녁만. 동산 관광은 6/2 오후로 이동.",
+          "note": "JR 하루카로 {{kyoto_station}}까지, JR {{sanin_line}}으로 {{nijo_station}}까지 환승 + 도보 7분. 오후 도착편 피로를 고려해 체크인·짐 정리 후 저녁은 폰토초(先斗町) enen 야끼니꾸로 지하철 이동. 동산 관광은 6/2 오후로 이동.",
           "arrive_from": {
             "steps": [
               {
@@ -301,52 +306,53 @@
           "time": "18:30",
           "title": {
             "type": "restaurant",
-            "ko_name": "시오 인근 저녁",
-            "ja_name": "다이호·中華 大鵬",
-            "ja_reading_ko": "다이호",
-            "en_name": ""
+            "ko_name": "엔엔 — 폰토초 야끼니꾸 저녁",
+            "ja_name": "京都焼肉 enen 先斗町本店",
+            "ja_reading_ko": "엔엔",
+            "en_name": "Kyoto Yakiniku enen"
           },
-          "maps_query": "Taiho Nijo Kyoto",
-          "note": "{{shio_machiya}} 도보권 — {{nijo_station}} 도보 5분. 도착일 피로 최소화, 이동 없이 가까운 저녁. 인기점이라 예약·웨이팅 가능, 도착편 지연 시 대안: 교유바도코로 시즈카(京ゆば処 静家·유바).",
+          "maps_query": "京都焼肉 enen 先斗町本店",
+          "note": "{{shio_machiya}}·{{nijo_station}}에서 도보권 아님 — 폰토초(先斗町)로 지하철 이동 후 야끼니꾸 저녁. 도착편 지연·피로 시 휴식 후 출발. 인기점이라 예약 권장.",
           "food_quality": {
-            "rating": "타베로그 3.76 · 미쉐린 빕구르망 2024 · 中国料理WEST百名店2024",
-            "source": "Tabelog · Hot Pepper(영업시간) 2026-05-28 · 미쉐린 가이드 교토 2024",
-            "source_fetched_at": "2026-05-28",
+            "rating": "타베로그 3.44 · A5 흑모와규 창작 야끼니꾸(프렌치 터치)",
+            "source": "Tabelog · enen 공식사이트(주소·영업시간) 2026-05-30",
+            "source_fetched_at": "2026-05-30",
             "data_quality": "researched_market_rate",
-            "url": "https://tabelog.com/en/kyoto/A2601/A260203/26003254/",
-            "michelin_url": "https://guide.michelin.com/us/en/kyoto-region/restaurants/bib-gourmand",
-            "note": "쓰촨 중식. 西ノ京星池町149 — {{nijo_station}} 도보 5분·{{shio_machiya}} 인접. 일요일 디너 17:30~21:00(L.O.20:30)·화·격주 수 휴무. 1인 ¥4,000~5,000",
+            "url": "https://tabelog.com/en/kyoto/A2601/A260201/26034057/",
+            "note": "흑모와규 창작 야끼니꾸. 中京区鍋屋町209-13(폰토초·先斗町) — 한큐 교토카와라마치(京都河原町)역·게이한 {{gion_shijo_stop}}역 도보 2분, {{shio_machiya}}에서 도보권 아님. 일요일 디너 17:00~22:00(L.O.21:30)·1인 ¥5,000~6,000. 인기점·예약 권장.",
             "place_info": {},
             "business_hours": [],
             "ratings": [
               {
                 "source": "tabelog",
-                "score": 3.76
-              },
-              {
-                "source": "michelin",
-                "badge": "bib-gourmand"
+                "score": 3.44
               }
             ]
           },
           "arrive_from": {
             "steps": [
               {
-                "mode": "walk",
+                "mode": "subway",
+                "from": "{{nijo_station}}",
+                "to": "{{sanjo_keihan_station}}",
                 "duration_min": 8,
+                "distance_km": 3.4
+              },
+              {
+                "mode": "walk",
+                "duration_min": 7,
                 "distance_km": 0.5
               }
             ],
-            "source": "https://www.google.com/maps/search/restaurants+near+Shio+Machiya+Kyoto",
-            "source_fetched_at": "2026-05-28",
-            "source_verified_at": "2026-05-28",
+            "source": "교토 지하철 도자이선 二条→三条京阪 + 폰토초 도보 (Google Maps 경로) — 정밀 노선·요금 브라우저 검증 대기",
+            "source_fetched_at": "2026-05-30",
             "data_quality": "tbd_needs_browser_mcp",
-            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Nijo+Station,+Kyoto&destination=%E5%A4%A7%E9%B5%AC+Kyoto&travelmode=walking"
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Nijo+Station,+Kyoto&destination=%E4%BA%AC%E9%83%BD%E7%84%BC%E8%82%89+enen+%E5%85%88%E6%96%97%E7%94%BA%E6%9C%AC%E5%BA%97&travelmode=transit"
           }
         }
       ],
-      "walking_km_source": "items[].arrive_from[mode=walk] 합(~0.5km: 시오→大鵬) + 니조역·교토역 환승 도보 추정. 오후 도착으로 첫날 관광 없음(동산 코스는 6/2로 이동).",
-      "pass_recommendation": "iPhone Apple Wallet ICOCA 단권 — JR 하루카는 별도 왕복권(¥2,400/인). {{kyoto_station}}→{{nijo_station}} JR 산인선만 ICOCA 탭(약 ¥190). 시버스·관광 이동 없음."
+      "walking_km_source": "items[].arrive_from[mode=walk] 합(~0.5km: 三条京阪→enen) + 니조역·교토역 환승 도보 추정. 오후 도착으로 첫날 관광 없음(동산 코스는 6/2로 이동).",
+      "pass_recommendation": "iPhone Apple Wallet ICOCA 단권 — JR 하루카는 별도 왕복권(¥2,400/인). {{kyoto_station}}→{{nijo_station}} JR 산인선만 ICOCA 탭(약 ¥190). 저녁 폰토초 enen 이동으로 지하철 도자이선 {{nijo_station}}↔{{sanjo_keihan_station}} 왕복 ICOCA 탭 추가(요금 현지 확인)."
     },
     {
       "date": "2026-06-01",
@@ -2078,9 +2084,9 @@
     "카덴쇼 짐 위탁 — 6/2 오후 동산 코스 위해 12:00경 조기 위탁 가능 여부 확인 (시오 체크아웃 후)",
     "후시미이나리 정상은 시부모 동반이라 X — 입구 ~5분 사진 충분",
     "6/3 출국 시간에 따라 토지 산책·교토역 식사 가능 여부 결정",
-    "tbd_needs_browser_mcp 라벨 leg (시오→大鵬 저녁, 카덴쇼/교토역→키요미즈, 기온→카덴쇼) — Playwright MCP 보유 세션에서 Google Maps Directions로 분·거리·노선 확정 필요",
+    "tbd_needs_browser_mcp 라벨 leg (시오→폰토초 enen 저녁(지하철 도자이선 二条→三条京阪+도보), 카덴쇼/교토역→키요미즈, 기온→카덴쇼) — Playwright MCP 보유 세션에서 Google Maps Directions로 분·거리·노선·요금 확정 필요",
     "사이호지(이끼사찰) — 예약 확정(6/1 10:30, booking-checklist 참조)",
-    "5/31 大鵬 — 일요일 디너 17:30~21:00(L.O.20:30) 확인. 인기점 웨이팅 대비, 필요 시 전화 예약(075-822-5598)"
+    "5/31 enen(폰토초) — 일요일 디너 17:00~22:00(L.O.21:30) 확인. 시오에서 도보권 아님(지하철 이동). 인기점이라 예약 권장"
   ],
   "source_doc": "docs/kyoto-itinerary-may31-jun3-2026.md",
   "_arrive_from_schema": {

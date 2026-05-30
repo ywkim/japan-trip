@@ -305,17 +305,15 @@ class BuildIndexTests(unittest.TestCase):
                 self.assertIn("min-height: 44px", html, f"no 44px touch target CSS in {path.name}")
 
     def test_verified_source_shows_tick(self):
-        """source_verified_at가 있는 transit leg은 ✓ 검증 표시를 노출해야 한다."""
-        run()
-        import json as _json
-        data = _json.loads((BASE / "data" / "itinerary.json").read_text(encoding="utf-8"))
-        has_verified = any(
-            (it.get("arrive_from") or {}).get("source_verified_at")
-            for day in data["days"] for it in day["items"]
-        )
-        self.assertTrue(has_verified, "fixture must have a verified leg")
-        itin = ITINERARY.read_text(encoding="utf-8")
-        self.assertIn("✓", itin, "verified tick ✓ missing in itinerary.html")
+        """source_verified_at가 있는 출처 칩만 ✓ 검증 표시를 노출해야 한다.
+
+        production days[] 레그가 모두 미검증(tbd_needs_browser_mcp)일 수 있으므로
+        ✓ 렌더 규칙은 source_chip 단위로 격리 검증한다(TDD 규칙: 규칙 검증은 fixture).
+        """
+        verified = build_index.source_chip("https://example.com/x", "경로 출처", verified=True)
+        self.assertIn("✓", verified, "verified chip must render ✓")
+        plain = build_index.source_chip("https://example.com/x", "경로 출처", verified=False)
+        self.assertNotIn("✓", plain, "unverified chip must not render ✓")
 
     def test_route_candidates_not_rendered_in_itinerary(self):
         """의사결정 완료 후 후보 코스 섹션은 웹에 노출하지 않는다."""
@@ -901,8 +899,8 @@ class ItineraryMemoFoldTests(unittest.TestCase):
         run()
         html = ITINERARY.read_text(encoding="utf-8")
         self.assertIn('class="food-quality"', html, "rating line must stay visible")
-        self.assertIn("쓰촨 중식</summary>", html, "long food note should fold to first sentence")
-        self.assertIn("1인 ¥4,000~5,000", html, "food note detail lost after folding")
+        self.assertIn("흑모와규 창작 야끼니꾸</summary>", html, "long food note should fold to first sentence")
+        self.assertIn("1인 ¥5,000~6,000", html, "food note detail lost after folding")
 
 
 class ItineraryDocLinkTests(unittest.TestCase):
