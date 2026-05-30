@@ -484,14 +484,20 @@ class TransitFromToRegistryTests(unittest.TestCase):
              "from": "야마고에나카마치(山越中町)", "to": "금각사도(金閣寺道)", "duration_min": 9},
         ]
         html = build_index.render_transit_line_steps(steps, {"advisory": "11번은 40분 간격"})
-        self.assertIn("↓ 환승 ↓", html)
+        # 환승점은 타임라인 노드의 '환승' 태그 + 강조 도트로 표시
+        self.assertIn('class="tl-tag">환승</span>', html)
+        self.assertIn("tl-dot transfer", html)
         self.assertIn("⚠️ 11번은 40분 간격", html)
+        # 운영사는 브랜드색(인라인 hex) 아닌 pill 클래스로
+        self.assertIn("시버스 11번", html)
+        self.assertNotIn("#E94B3C", html)
 
     def test_single_step_has_no_transfer(self):
         steps = [{"mode": "bus", "operator": {"ko": "시버스", "type": "shibus"}, "number": "59",
                   "from": "금각사도(金閣寺道)", "to": "료안지마에(竜安寺前)", "duration_min": 4}]
         html = build_index.render_transit_line_steps(steps, {})
-        self.assertNotIn("↓ 환승 ↓", html)
+        self.assertNotIn("tl-dot transfer", html)
+        self.assertNotIn('class="tl-tag">환승', html)
 
     def test_production_fromto_annotated_in_itinerary(self):
         """프로덕션 빌드: 역·정류장이 ko(ja)로 병기되어 렌더된다.
@@ -514,8 +520,17 @@ class TransitFromToRegistryTests(unittest.TestCase):
     def test_production_transfer_and_advisory_rendered(self):
         run()
         html = ITINERARY.read_text(encoding="utf-8")
-        self.assertIn("↓ 환승 ↓", html)
+        # 환승 2건(금각사·후시미)이 타임라인 '환승' 태그로 렌더
+        self.assertIn('class="tl-tag">환승</span>', html)
+        self.assertIn("tl-dot transfer", html)
         self.assertIn("놓치면 택시 22분 대안", html)
+
+    def test_production_no_inline_operator_hex(self):
+        """운영사 브랜드 hex(인라인 스타일)가 산출물에 남지 않아야 한다 (DESIGN: 단일 accent)."""
+        run()
+        html = ITINERARY.read_text(encoding="utf-8")
+        for stray in ("#E94B3C", "#0066CC", "#003DA5", "#FF6B6B", "#d9534f"):
+            self.assertNotIn(stray, html, f"인라인 운영사 hex 잔재: {stray}")
 
     def test_multistep_leg_totals_match_sourced_aggregate(self):
         """환승 2-step 분할이 출처 있는 집계값(분·요금)과 정합해야 한다 (Work 4.1 회귀 가드).

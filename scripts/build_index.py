@@ -238,181 +238,130 @@ def _station_label(value) -> str:
     return ""
 
 
-def render_transit_line_steps(steps: list, af_dict: dict) -> str:
-    """Render new schema arrive_from with rich step-by-step visualization.
+def _segment_pill(step: dict) -> str:
+    """이동 수단 pill 라벨 (아이콘 + 운영사·노선). 색이 아니라 아이콘·텍스트로 구분.
 
-    - 운영사 배지 + 노선번호
-    - from/to 역·정류장은 places 레지스트리 참조('{{ref}}')가 'ko(ja)'로 확장된 문자열
-    - step 사이 '↓ 환승 ↓' 표시
-    - af_dict.advisory(선택)를 ⚠️ 안내로 노출 (route 정규식 폐기)
+    Quiet Gray 테마: 운영사별 브랜드색(빨강·파랑) 도입 금지 — 단일 accent 유지.
+    """
+    mode = step.get("mode")
+    operator = step.get("operator") or {}
+    op_ko = operator.get("ko") if isinstance(operator, dict) else ""
+    icon = MODE_ICONS.get(mode, "·")
+    if mode == "bus":
+        text = op_ko or "버스"
+        number = step.get("number")
+        if number:
+            text += f" {number}번"
+    elif mode == "jr":
+        jr_line = step.get("line")
+        text = f"JR {jr_line}" if jr_line else "JR"
+    elif mode == "airport_express":
+        text = op_ko or "공항특급"
+    elif mode == "walk":
+        text = "도보"
+    else:
+        text = MODE_VERBS.get(mode, "이동")
+    return f'<span class="tl-mode">{icon} {esc(text)}</span>'
+
+
+def _segment_meta(step: dict) -> str:
+    """분·거리·요금 메타 (tabular-nums). 없으면 빈 문자열."""
+    parts = []
+    if step.get("duration_min"):
+        parts.append(f'{step["duration_min"]}분')
+    if step.get("distance_km"):
+        parts.append(f'{step["distance_km"]}km')
+    if step.get("fare_jpy"):
+        parts.append(f'¥{step["fare_jpy"]}')
+    if not parts:
+        return ""
+    return f'<span class="tl-meta">{esc(" · ".join(parts))}</span>'
+
+
+def _render_transit_timeline(steps: list) -> str:
+    """역·정류장 from/to가 있는 steps를 세로 레일 타임라인으로 렌더.
+
+    - 각 step.from을 도트 노드로(첫 step은 출발, 이후 step의 from은 환승점),
+      마지막 step.to를 도착 노드로 렌더 → 노드 사이를 레일 선이 잇는다.
+    - 환승점은 강조 도트 + '환승' 태그. 운영사/소요/요금은 도트 옆 pill·메타.
+    인접 step이 to[i]==from[i+1]로 이어진다는 전제(우리 데이터의 환승 모델).
+    """
+    parts = ['<div class="tl">']
+    for i, step in enumerate(steps):
+        from_label = _station_label(step.get("from"))
+        is_transfer = i > 0
+        dot_cls = "tl-dot transfer" if is_transfer else "tl-dot start"
+        rail = f'<span class="{dot_cls}"></span><span class="tl-line"></span>'
+        station = f'<div class="tl-station">{esc(from_label)}'
+        if is_transfer:
+            station += '<span class="tl-tag">환승</span>'
+        station += '</div>'
+        seg = f'<div class="tl-seg">{_segment_pill(step)}{_segment_meta(step)}</div>'
+        parts.append(
+            f'<div class="tl-node"><div class="tl-rail">{rail}</div>'
+            f'<div class="tl-content">{station}{seg}</div></div>'
+        )
+    to_label = _station_label(steps[-1].get("to"))
+    parts.append(
+        f'<div class="tl-node"><div class="tl-rail"><span class="tl-dot end"></span></div>'
+        f'<div class="tl-content"><div class="tl-station">{esc(to_label)}</div></div></div>'
+    )
+    parts.append('</div>')
+    return ''.join(parts)
+
+
+def _render_transit_simple(steps: list) -> str:
+    """역 정보가 없는 steps(도보 등)를 간결한 pill 줄로 렌더."""
+    rows = []
+    for step in steps:
+        rows.append(f'<div class="tl-simple">{_segment_pill(step)}{_segment_meta(step)}</div>')
+    return ''.join(rows)
+
+
+def render_transit_line_steps(steps: list, af_dict: dict) -> str:
+    """새 스키마 arrive_from를 '역 타임라인'으로 렌더 (모바일 ONE LONG STRING 해소).
+
+    - 접힘 요약: 모드별 한국어 동사 + 총 소요시간(+환승 횟수). 길게 늘어지지 않음.
+    - 펼침 상세: 세로 레일 + 역·정류장 도트 타임라인(역 기반 leg) 또는 간결 pill(도보).
+    - 운영사/노선은 색이 아니라 아이콘+pill로 구분 (Quiet Gray: 단일 accent 유지).
+    - af_dict.advisory(선택)는 warn 보더 안내 박스.
     """
     if not steps:
         return ""
 
-    # Operator styling
-    OPERATOR_ICONS = {
-        "shibus": ("🚌", "#E94B3C"),      # 시버스 (red)
-        "kyoto_bus": ("🚌", "#0066CC"),   # 교토버스 (blue)
-        "jr": ("🚆", "#003DA5"),          # JR (navy)
-    }
+    ride_modes = ("bus", "jr", "subway", "train", "airport_express")
+    rides = [s for s in steps if s.get("mode") in ride_modes]
+    transfers = max(0, len(rides) - 1)
+    total_dur = sum(s.get("duration_min") or 0 for s in steps)
+    primary = rides[0] if rides else steps[0]
+    icon = MODE_ICONS.get(primary.get("mode"), "·")
+    verb = MODE_VERBS.get(primary.get("mode"), "이동")
+    if transfers >= 1:
+        summary = f"{icon} {verb} 환승 {transfers}회 · 약 {total_dur}분"
+    elif total_dur:
+        summary = f"{icon} {verb} {total_dur}분"
+    else:
+        summary = f"{icon} {verb}"
 
-    # Build summary: step icons with arrows
-    summaries = []
-    for step in steps:
-        mode = step.get("mode", "walk")
-        icon = MODE_ICONS.get(mode, "·")
-        verb = MODE_VERBS.get(mode, "이동")
-        duration = step.get("duration_min")
-        if duration:
-            summaries.append(f"{icon} {verb} {duration}분")
-        else:
-            summaries.append(f"{icon} {verb}")
-
-    summary = " → ".join(summaries) if summaries else "이동"
-
-    # Add map button
+    # 지도 버튼
     maps_url = (af_dict.get("maps_url") or "").strip()
     src = (af_dict.get("source") or "").strip()
     first_token = src.split()[0] if src else ""
     src_href = first_token if first_token.startswith(("http://", "https://")) else ""
     href = maps_url or src_href
-
     if href:
         summary += f' <a href="{esc(href)}" target="_blank" rel="noopener" class="maps-btn">지도 ↗</a>'
 
-    # Build rich detail HTML
-    detail_html_parts = []
+    station_based = all(
+        _station_label(s.get("from")) and _station_label(s.get("to")) for s in steps
+    )
+    detail = _render_transit_timeline(steps) if station_based else _render_transit_simple(steps)
 
-    for i, step in enumerate(steps):
-        mode = step.get("mode")
-        operator = step.get("operator", {})
-        number = step.get("number")
-        from_label = _station_label(step.get("from"))
-        to_label = _station_label(step.get("to"))
-        duration = step.get("duration_min")
-        distance = step.get("distance_km")
-        fare = step.get("fare_jpy")
-
-        if mode == "bus":
-            op_ko = operator.get("ko") if isinstance(operator, dict) else ""
-            op_type = operator.get("type") if isinstance(operator, dict) else ""
-
-            # Operator badge
-            icon, color = OPERATOR_ICONS.get(op_type, ("🚌", "#666"))
-            badge_html = f'<span style="display:inline-block;background:{color};color:white;padding:3px 8px;border-radius:4px;font-size:0.85em;margin-right:6px;white-space:nowrap;"><strong>{esc(op_ko)}</strong>'
-            if number:
-                badge_html += f' {esc(number)}번'
-            badge_html += '</span>'
-
-            # 모바일 최적 레이아웃: 배지 + 역명을 여러 줄로 배치
-            step_html = f'<div style="display:flex;align-items:flex-start;gap:6px;margin:4px 0;">'
-            step_html += badge_html
-
-            # 역명 블록 (여러 줄 표시)
-            meta_parts = []
-            if duration:
-                meta_parts.append(f'{duration}분')
-            if distance:
-                meta_parts.append(f'{distance}km')
-            if fare:
-                meta_parts.append(f'¥{fare}')
-            meta_str = ', '.join(meta_parts)
-
-            step_html += '<div style="flex:1;font-size:0.9em;line-height:1.4;">'
-            if from_label:
-                step_html += f'<div>{esc(from_label)}</div>'
-            if from_label and to_label:
-                step_html += '<div style="text-align:center;color:#999;margin:2px 0;font-size:0.85em;">↓</div>'
-            if to_label:
-                step_html += f'<div>{esc(to_label)}</div>'
-            if meta_str:
-                step_html += f'<div style="color:#666;font-size:0.8em;margin-top:2px;">({meta_str})</div>'
-            step_html += '</div></div>'
-            detail_html_parts.append(step_html)
-
-        elif mode == "jr":
-            line_name = "🚆 JR"
-            jr_line = step.get("line")
-            if jr_line:
-                line_name += f" {esc(jr_line)}"
-
-            # 모바일 최적 레이아웃: 노선명 + 역명을 여러 줄로 배치
-            meta_parts = []
-            if duration:
-                meta_parts.append(f'{duration}분')
-            if distance:
-                meta_parts.append(f'{distance}km')
-            if fare:
-                meta_parts.append(f'¥{fare}')
-            meta_str = ', '.join(meta_parts)
-
-            step_html = f'<div style="display:flex;align-items:flex-start;gap:6px;margin:4px 0;">'
-            step_html += f'<span style="white-space:nowrap;flex-shrink:0;">{line_name}</span>'
-            step_html += '<div style="flex:1;font-size:0.9em;line-height:1.4;">'
-            if from_label:
-                step_html += f'<div>{esc(from_label)}</div>'
-            if from_label and to_label:
-                step_html += '<div style="text-align:center;color:#999;margin:2px 0;font-size:0.85em;">↓</div>'
-            if to_label:
-                step_html += f'<div>{esc(to_label)}</div>'
-            if meta_str:
-                step_html += f'<div style="color:#666;font-size:0.8em;margin-top:2px;">({meta_str})</div>'
-            step_html += '</div></div>'
-            detail_html_parts.append(step_html)
-
-        elif mode == "airport_express":
-            op_ko = operator.get("ko") if isinstance(operator, dict) else ""
-            express_name = f"✈️ {esc(op_ko)}" if op_ko else "✈️ 공항 연결 열차"
-
-            # 모바일 최적 레이아웃
-            meta_parts = []
-            if duration:
-                meta_parts.append(f'{duration}분')
-            if distance:
-                meta_parts.append(f'{distance}km')
-            meta_str = ', '.join(meta_parts)
-
-            step_html = f'<div style="display:flex;align-items:flex-start;gap:6px;margin:4px 0;">'
-            step_html += f'<span style="white-space:nowrap;flex-shrink:0;">{express_name}</span>'
-            step_html += '<div style="flex:1;font-size:0.9em;line-height:1.4;">'
-            if from_label:
-                step_html += f'<div>{esc(from_label)}</div>'
-            if from_label and to_label:
-                step_html += '<div style="text-align:center;color:#999;margin:2px 0;font-size:0.85em;">↓</div>'
-            if to_label:
-                step_html += f'<div>{esc(to_label)}</div>'
-            if meta_str:
-                step_html += f'<div style="color:#666;font-size:0.8em;margin-top:2px;">({meta_str})</div>'
-            step_html += '</div></div>'
-            detail_html_parts.append(step_html)
-
-        elif mode == "walk":
-            line = "🚶 도보"
-            if duration:
-                line += f" {duration}분"
-            if distance:
-                line += f" ({distance}km)"
-            detail_html_parts.append(line)
-
-        # 환승 표시: 다음 step도 교통수단이면 step 사이에 '↓ 환승 ↓'
-        if i < len(steps) - 1 and mode in ("bus", "jr", "subway", "train"):
-            next_mode = steps[i + 1].get("mode")
-            if next_mode in ("bus", "jr", "subway", "train"):
-                detail_html_parts.append(
-                    '<div style="padding:4px 0;color:#FF6B6B;text-align:center;'
-                    'font-size:0.9em;font-weight:bold;">↓ 환승 ↓</div>'
-                )
-
-    # advisory (구조화 안내 — route 정규식 대체)
     advisory = (af_dict.get("advisory") or "").strip()
     if advisory:
-        detail_html_parts.append(
-            '<div style="margin-top:8px;padding-top:8px;border-top:1px solid #ddd;'
-            f'font-size:0.9em;color:#d9534f;">⚠️ {esc(advisory)}</div>'
-        )
+        detail += f'<div class="tl-advisory">⚠️ {esc(advisory)}</div>'
 
-    detail_html = '\n'.join(detail_html_parts) if detail_html_parts else ""
-    return fold(summary, detail_html)
+    return fold(summary, detail)
 
 
 _PLACE_MARKUP_RE = re.compile(r"\[\[([^\|\]]+)(?:\|([^\]]+))?\]\]")
@@ -746,6 +695,39 @@ def render_css(tokens: dict) -> str:
   .lodging-strip {{ display: flex; gap: 0.5rem; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; padding-bottom: 0.25rem; margin: 0.6rem 0 0.4rem; }}
   .lodging-strip::-webkit-scrollbar {{ display: none; }}
   .lodging-thumb {{ flex: 0 0 200px; height: 134px; object-fit: cover; border-radius: 8px; display: block; }}
+  /* ── 이동 경로 타임라인 (역·정류장 노드 + 환승) ── */
+  .tl {{ margin: 0.1rem 0 0.05rem; }}
+  .tl-node {{ display: flex; gap: 0.55rem; align-items: stretch; }}
+  .tl-rail {{ display: flex; flex-direction: column; align-items: center; flex-shrink: 0; width: 11px; }}
+  .tl-dot {{
+    width: 9px; height: 9px; border-radius: 50%; margin-top: 3px; flex-shrink: 0;
+    background: var(--accent); box-shadow: 0 0 0 2px var(--card), 0 0 0 3px var(--accent);
+  }}
+  .tl-dot.transfer {{ background: var(--warn); box-shadow: 0 0 0 2px var(--card), 0 0 0 3px var(--warn); }}
+  .tl-line {{ width: 2px; flex: 1 0 auto; min-height: 1.3rem; background: var(--border); margin: 2px 0; }}
+  .tl-content {{ flex: 1; min-width: 0; padding-bottom: 0.5rem; }}
+  .tl-node:last-child .tl-content {{ padding-bottom: 0; }}
+  .tl-station {{ color: var(--fg); font-weight: 500; font-size: 0.92em; line-height: 1.35; word-break: keep-all; }}
+  .tl-tag {{
+    display: inline-block; margin-left: 0.35rem; padding: 0 0.4rem;
+    font-size: 0.72em; font-weight: 600; color: var(--warn);
+    border: 1px solid var(--warn); border-radius: 999px; vertical-align: middle; white-space: nowrap;
+  }}
+  .tl-seg {{ display: flex; align-items: center; flex-wrap: wrap; gap: 0.3rem 0.4rem; margin-top: 0.25rem; }}
+  .tl-mode {{
+    display: inline-flex; align-items: center; gap: 0.25rem; white-space: nowrap;
+    padding: 0.1rem 0.5rem; border-radius: 999px;
+    background: var(--accent-soft); color: var(--accent);
+    font-size: 0.78em; font-weight: 600;
+  }}
+  .tl-meta {{ color: var(--muted); font-size: 0.78em; font-variant-numeric: tabular-nums; }}
+  .tl-simple {{ display: flex; align-items: center; flex-wrap: wrap; gap: 0.3rem 0.4rem; padding: 0.1rem 0; }}
+  .tl-advisory {{
+    margin-top: 0.45rem; padding: 0.4rem 0.55rem;
+    border-left: 2px solid var(--warn); background: var(--subcard);
+    border-radius: 0 4px 4px 0; color: var(--fg);
+    font-size: 0.82em; line-height: 1.4; word-break: keep-all;
+  }}
 """
 
 

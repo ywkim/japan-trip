@@ -80,6 +80,14 @@
 - `display: inline-block`, `padding: 0.1rem 0.45rem`, `border: 1px solid currentColor`, `radius: 4px (sm)`.
 - 텍스트 색이 곧 보더 색 (`currentColor`). 사용처: `viz/checklist.html`의 상태 라벨.
 
+### Transit timeline (이동 경로)
+- 일정의 이동 경로(`arrive_from.steps`)를 세로 레일 타임라인으로 렌더 (`.tl*`, `viz/itinerary.html`·`viz/itinerary-table.html`·`index.html`).
+- **노드**: 역·정류장마다 `accent` 도트(`.tl-dot`). 환승점은 `warn` 도트(`.tl-dot.transfer`) + `warn` 보더 '환승' pill(`.tl-tag`). 노드 사이는 `border` 색 레일선(`.tl-line`)으로 연결.
+- **세그먼트 라벨**: 운영사·노선은 **색이 아니라 아이콘 + `accent_soft` 배경 pill**(`.tl-mode`)로 구분 (시버스 11번 / JR 산인본선 / 공항특급). 브랜드색(빨강·파랑) 도입 금지 — §1 단일 accent 철학.
+- **메타**: 분·거리·요금은 `ink_muted` + `tabular-nums`(`.tl-meta`).
+- **advisory**: 운행 경고는 `warn` 좌측 보더 박스(`.tl-advisory`, 배경 `surface_sunken`).
+- 모든 색은 기존 토큰만 사용 — 신규 hex 없음. 접힘 요약은 "모드 + 총 소요시간(+환승 횟수)"만 노출하고 타임라인은 펼침 상세에 둔다 (모바일 ONE LONG STRING 방지).
+
 ## 5. Layout Principles
 
 - **Mobile-first**. 6개 산출물(`index.html`·`viz/itinerary.html`·`viz/itinerary-table.html`·`viz/lodging.html`·`viz/checklist.html`·`viz/archive.html`) 모두 단일 컬럼 기본 (`itinerary-table`은 600px+ 가로 4열 시간표).
