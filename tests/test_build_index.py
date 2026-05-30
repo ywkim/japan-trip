@@ -668,8 +668,8 @@ class ItineraryMemoFoldTests(unittest.TestCase):
         run()
         html = ITINERARY.read_text(encoding="utf-8")
         self.assertIn('class="food-quality"', html, "rating line must stay visible")
-        self.assertIn("쓰촨 중식</summary>", html, "long food note should fold to first sentence")
-        self.assertIn("1인 ¥4,000~5,000", html, "food note detail lost after folding")
+        self.assertIn("130년 교마치야</summary>", html, "long food note should fold to first sentence")
+        self.assertIn("1인 ¥6,000~8,000", html, "food note detail lost after folding")
 
 
 class ItineraryDocLinkTests(unittest.TestCase):

@@ -23,7 +23,7 @@
         "note": "2명×2실, 조식 미포함 (6/3 새벽 출발)"
       }
     ],
-    "walking_km_total": 13,
+    "walking_km_total": 16,
     "walking_km_source": "items[].arrive_from[mode=walk].distance_km 합 + 사찰·시장 내부 산책 추정",
     "transit_pass_source": "4인 iPhone Apple Wallet ICOCA 통일, 4일 모두 단권. 일자별 근거: days[].pass_recommendation. 4일 합계 ¥5,400 ≈ ₩56,000. 통합 1일권 ¥1,100은 ¥700 시버스 단독 1일권(2023-09 폐지) 대체이나 본전 미달. 분석: docs/decision-log/2026-05-18-04-transit-pass-correction-icoca.md. cost-options.json의 kyoto_local_transit_4pax 항목과 동기화.",
     "transit_pass_sources": [
@@ -58,8 +58,8 @@
         "action": "JR 하루카는 별도 왕복권(¥2,400/인 × 4)으로 탑승 — ICOCA 미사용. 교토역→니조 환승 시 ICOCA 탭."
       },
       {
-        "when": "5/31 시오 → 키요미즈",
-        "action": "시버스 균일 ¥230. 뒷문 승차 → 앞문 하차 시 운전석 옆 IC 리더에 탭."
+        "when": "5/31 시오 → 기온 (야사카 야경)",
+        "action": "지하철 도자이선 二条→三条京阪 ¥260 + 게이한 三条→祇園四条 ¥160 ICOCA 탭. 귀로 三条京阪→二条 ¥260. 차내 충전 불가."
       },
       {
         "when": "6/1 시버스 3회",
@@ -82,8 +82,8 @@
   "days": [
     {
       "date": "2026-05-31",
-      "day_label": "5/31 (일) — 오후 도착 + 시오 체크인 + 가까운 저녁",
-      "walking_km": 1,
+      "day_label": "5/31 (일) — 오후 도착 + 시오 체크인 + 기온 야사카 야경·가모강 산책",
+      "walking_km": 3,
       "lodging": "에어비앤비 시오",
       "items": [
         {
@@ -108,7 +108,7 @@
           "time": "17:45",
           "title": "니조역 → 시오 체크인 + 짐 풀기",
           "maps_query": "Nijo Station Kyoto",
-          "note": "JR 하루카(KIX→교토역) + JR 산인본선(교토→니조) + 도보 7분. 오후 도착편 피로를 고려해 첫날은 체크인·짐 정리 후 인근 저녁만. 동산 관광은 6/2 오후로 이동.",
+          "note": "JR 하루카(KIX→교토역) + JR 산인본선(교토→니조) + 도보 7분. 도착편 피로를 덜기 위해 무거운 짐은 시오에 먼저 풀고, 가벼운 차림으로 기온 야사카 신사 야경 원정. 동산 관광(키요미즈·산넨자카)은 6/2 오후로 이동.",
           "arrive_from": {
             "mode": "airport_express",
             "duration_min": 90,
@@ -121,34 +121,80 @@
           }
         },
         {
-          "time": "18:30",
-          "title": "시오 인근 저녁 (中華 大鵬 — 쓰촨 중식)",
-          "maps_query": "Taiho Nijo Kyoto",
-          "note": "시오 도보권(니조역 도보 5분). 도착일 피로 최소화 — 이동 없이 가까운 저녁. 인기점이라 예약·웨이팅 가능, 도착편 지연 시 대안: 京ゆば処 静家(유바).",
+          "time": "18:45",
+          "title": "야사카 앞 저녁 (手打ちうどん おかる — 기온 우동 노포)",
+          "maps_query": "Okaru Udon Gion Kyoto",
+          "note": "시오에 짐 풀고 가벼운 차림으로 기온 원정. 게이한 기온시조역 도보 3~4분·시조도리 한 블록 북(八坂新地富永町)이라 식후 야사카까지 도보 10분에 야경. 1925년 창업 우동 노포, 명물 카레우동(치즈고기카레)·ねぎうどん. 17:00~심야 영업이라 오후 도착·고령자 저녁에 적합·일요일 영업·예약 불가. 작은 인기점이라 웨이팅·2층 좌석 계단 주의. 대안: ① 좌석 여유·個室 원하면 가모강 서편 権太呂 四条본점(우동스키 나베·~21:30·수휴·¥5,000대) ② 기온 원정 생략 시 시오 도보권 中華 大鵬(쓰촨·타베로그 3.76·일 17:30~21:00).",
           "food_quality": {
-            "rating": "타베로그 3.76 · 미쉐린 빕구르망 2024 · 中国料理WEST百名店2024",
-            "source": "Tabelog · Hot Pepper(영업시간) 2026-05-28 · 미쉐린 가이드 교토 2024",
-            "source_fetched_at": "2026-05-28",
+            "rating": "타베로그 3.59 (1,336)",
+            "source": "Tabelog·Retty 2026-05-30",
+            "source_fetched_at": "2026-05-30",
             "data_quality": "researched_market_rate",
-            "url": "https://tabelog.com/en/kyoto/A2601/A260203/26003254/",
-            "michelin_url": "https://guide.michelin.com/us/en/kyoto-region/restaurants/bib-gourmand",
-            "note": "쓰촨 중식. 西ノ京星池町149(니조역 도보 5분·시오 인접). 일요일 디너 17:30~21:00(L.O.20:30)·화·격주 수 휴무. 1인 ¥4,000~5,000"
+            "url": "https://tabelog.com/en/kyoto/A2601/A260301/26001282/",
+            "note": "八坂新地富永町132(게이한 기온시조역 3~4분·시조도리 한 블록 북). 명물 카레우동(치즈고기카레)·ねぎうどん. 11:00~15:00 & 17:00~翌2:30(금·토 ~翌3:00)·부정기휴·일요일 영업. 1인 약 ¥1,200~2,000. 작은 노포라 피크 웨이팅·2층 계단."
           },
           "arrive_from": {
+            "mode": "subway",
+            "duration_min": 30,
+            "distance_km": 5.5,
+            "route": "시오 → 니조역 도보 7분 → 지하철 도자이선 二条→三条京阪 약 7분 ¥260 → 게이한 본선 三条→祇園四条 1정거장 ¥160(또는 가모강변 도보 8분) → 오카루 도보 5분",
+            "source": "https://www.jorudan.co.jp/cgi-bin/nori.cgi?eki1=二条&eki2=祇園四条 + 京都市交通局 도자이선 노선",
+            "source_fetched_at": "2026-05-30",
+            "data_quality": "researched_market_rate",
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Nijo+Station,+Kyoto&destination=Okaru+Udon+Gion,+Kyoto&travelmode=transit"
+          }
+        },
+        {
+          "time": "19:45",
+          "title": "야사카 신사 야경 (서루문·무전 등롱)",
+          "maps_query": "Yasaka Shrine Kyoto",
+          "note": "24시간 개방·무료. 시조도리 동쪽 끝 서루문(西楼門)이 주홍빛으로 점등되고, 본전 맞은편 무전(舞殿)에 기온 찻집·요정이 봉납한 수백 개 등롱이 켜져 ~21:30경까지 환상적 야경. 부적·고슈인(御朱印)은 16:00 마감이라 야간엔 야경·참배만. 야간 방울(스즈) 사용 자제 안내 있음. 경내 계단·자갈 구간 있어 고령자 보행 주의.",
+          "arrive_from": {
             "mode": "walk",
-            "duration_min": 8,
-            "distance_km": 0.5,
-            "route": "시오 마치야 → 大鵬 (니조역 인근 西ノ京星池町, 시오 도보권 500m)",
-            "source": "https://www.google.com/maps/search/restaurants+near+Shio+Machiya+Kyoto",
-            "source_fetched_at": "2026-05-28",
-            "source_verified_at": "2026-05-28",
-            "data_quality": "tbd_needs_browser_mcp",
-            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Nijo+Station,+Kyoto&destination=%E5%A4%A7%E9%B5%AC+Kyoto&travelmode=walking"
+            "duration_min": 10,
+            "distance_km": 0.7,
+            "route": "오카루 → 시조도리 동진 → 야사카 신사 서루문 (도보 10분 700m)",
+            "source": "https://www.google.com/maps/dir/Okaru+Udon+Gion/Yasaka+Shrine",
+            "source_fetched_at": "2026-05-30",
+            "data_quality": "researched_market_rate",
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Okaru+Udon+Gion,+Kyoto&destination=Yasaka+Shrine,+Kyoto&travelmode=walking"
+          }
+        },
+        {
+          "time": "20:15",
+          "title": "가모강 산책 (시조대교→폰토초→산조대교)",
+          "maps_query": "Kamogawa Pontocho Kyoto",
+          "note": "야사카에서 시조도리를 서쪽으로 되짚어 가모강 시조대교로. 강변 보도를 따라 폰토초(先斗町) 돌길과 강 사이를 북상해 산조대교까지. 납량상(納涼床·川床)은 5/1~9/30 운영이라 5/31 강가에 床이 늘어선 여름 야경. 강변길은 평탄해 고령자 산책에 적합 — 무리 말고 산조에서 마무리.",
+          "arrive_from": {
+            "mode": "walk",
+            "duration_min": 12,
+            "distance_km": 0.8,
+            "route": "야사카 신사 → 시조도리 서진 → 가모강 시조대교 (도보 12분 800m)",
+            "source": "https://www.google.com/maps/dir/Yasaka+Shrine/Shijo+Ohashi+Kyoto",
+            "source_fetched_at": "2026-05-29",
+            "data_quality": "researched_market_rate",
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Yasaka+Shrine,+Kyoto&destination=Shijo+Ohashi,+Kyoto&travelmode=walking"
+          }
+        },
+        {
+          "time": "21:00",
+          "title": "산조 → 시오 복귀 (취침)",
+          "maps_query": "Nijo Station Kyoto",
+          "note": "산조대교 인근 三条京阪/京都市役所前에서 지하철 도자이선으로 二条역 환승 없이 1회, 도보 7분 시오. 다음날 08:00 아라시야마 출발 대비 일찍 취침.",
+          "arrive_from": {
+            "mode": "subway",
+            "duration_min": 25,
+            "distance_km": 5.0,
+            "route": "三条京阪(또는 京都市役所前) → 지하철 도자이선 → 二条역 약 9분 ¥260 → 도보 7분 시오",
+            "source": "https://www.jorudan.co.jp/cgi-bin/nori.cgi?eki1=三条京阪&eki2=二条 + 京都市交通局 도자이선 노선",
+            "source_fetched_at": "2026-05-29",
+            "data_quality": "researched_market_rate",
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Sanjo+Keihan+Station,+Kyoto&destination=Nijo+Station,+Kyoto&travelmode=transit"
           }
         }
       ],
-      "walking_km_source": "items[].arrive_from[mode=walk] 합(~0.5km: 시오→大鵬) + 니조역·교토역 환승 도보 추정. 오후 도착으로 첫날 관광 없음(동산 코스는 6/2로 이동).",
-      "pass_recommendation": "iPhone Apple Wallet ICOCA 단권 — JR 하루카는 별도 왕복권(¥2,400/인). 교토역→니조 JR 산인선만 ICOCA 탭(약 ¥190). 시버스·관광 이동 없음."
+      "walking_km_source": "items[].arrive_from[mode=walk] 합(~1.2km: 권태로→야사카 0.4 + 야사카→가모강 0.8) + 가모강변 시조~산조 산책(~1.5km) + 니조·교토역 환승 도보 추정. 동산 코스는 6/2로 이동.",
+      "pass_recommendation": "iPhone Apple Wallet ICOCA 단권 — JR 하루카는 별도 왕복권(¥2,400/인). 교토역→니조 JR 산인선 ICOCA 탭(약 ¥190). 야간 기온 원정은 지하철 도자이선 왕복(二条↔三条京阪 ¥260×2) + 게이한 1정거장(¥160) 모두 ICOCA 탭. 이동 적어 1일권 불요."
     },
     {
       "date": "2026-06-01",
