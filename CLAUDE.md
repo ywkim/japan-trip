@@ -39,7 +39,7 @@
 
 ### 1. 발권·예약 기록
 
-- 단일 출처: `data/booking-checklist.json` (예약 진행 상태 7 항목)
+- 단일 출처: `data/booking-checklist.json` (예약 진행 상태 10 항목)
 - 예약 확정 시: `status`·`reference`(예약번호)·`confirmed_at`(확정일) 갱신 + `docs/decision-log/`에 새 일지 (예약처·금액·취소 정책 요약)
 - 발권/예약 영수증·바우처는 본 레포에 첨부하지 않음 (개인정보·메일/카카오톡 원본 보관)
 - 발권·결제 금액은 `data/cost-options.json`의 시나리오 입력에도 반영 (확정값으로 `confirmed_booking` 라벨로 승격)
@@ -91,7 +91,7 @@ japan-trip/
 │   ├── weather.json           # 후보지 × 시기 기후 + 긴키 매우(梅雨) 평년·실적 + 교토 5/31~6/3 일별 강수 평년
 │   ├── flights.json           # 후보지 × 출발지 항공권 시세 스냅샷 (메타사이트 근사)
 │   ├── itinerary.json         # 단일 출처 (교토 3박4일 일정 — 일자·시간대·동선·메모 + route_candidates 대안 코스 3개)
-│   ├── booking-checklist.json # 단일 출처 (예약 진행 상태 7 항목)
+│   ├── booking-checklist.json # 단일 출처 (예약 진행 상태 10 항목)
 │   ├── breakfast.json         # 단일 출처 (숙소 인근 조식 옵션 — viz/breakfast.html 렌더)
 │   └── design-tokens.json     # 단일 출처 (색·타이포·간격·반경, DESIGN.md §2~§6과 동기화)
 ├── docs/
