@@ -506,6 +506,40 @@ class TransitFromToRegistryTests(unittest.TestCase):
         self.assertIn("↓ 환승 ↓", html)
         self.assertIn("놓치면 택시 22분 대안", html)
 
+    def test_multistep_leg_totals_match_sourced_aggregate(self):
+        """환승 2-step 분할이 출처 있는 집계값(분·요금)과 정합해야 한다 (Work 4.1 회귀 가드).
+
+        근거: 단일 출처 집계를 2-step으로 쪼개며 임의 숫자를 넣어 후시미 leg가
+        9+5=14분으로 출처값 20분과 모순됐던 버그(2026-05-30 postmortem)의 재발 방지.
+        """
+        import json as _json
+        data = _json.loads((BASE / "data" / "itinerary.json").read_text(encoding="utf-8"))
+
+        def find_leg(date, ko_contains):
+            for day in data["days"]:
+                if day["date"] != date:
+                    continue
+                for it in day["items"]:
+                    t = it.get("title") or {}
+                    ko = t.get("ko_name", "") if isinstance(t, dict) else str(t)
+                    if ko_contains in ko:
+                        return it.get("arrive_from") or {}
+            return {}
+
+        # (date, ko, 기대 분 합, 기대 요금 합)
+        expectations = [
+            ("2026-06-01", "금각사", 38, 460),   # 버스 환승: 요금 2회(¥230×2)
+            ("2026-06-02", "후시미이나리", 20, 200),  # JR 통표: 단일 ¥200, 합계 20분
+        ]
+        for date, ko, exp_dur, exp_fare in expectations:
+            with self.subTest(leg=ko):
+                steps = (find_leg(date, ko).get("steps")) or []
+                self.assertGreaterEqual(len(steps), 2, f"{ko}: 2-step 환승이어야 함")
+                dur = sum(s.get("duration_min") or 0 for s in steps)
+                fare = sum(s.get("fare_jpy") or 0 for s in steps)
+                self.assertEqual(dur, exp_dur, f"{ko}: 분 합 {dur} ≠ 출처 {exp_dur}")
+                self.assertEqual(fare, exp_fare, f"{ko}: 요금 합 ¥{fare} ≠ 출처 ¥{exp_fare}")
+
 
 class NoteFoldTests(unittest.TestCase):
     """긴 예약·숙박 메모(예약번호·PIN·탑승객 등)를 접기로 렌더하는 회귀 가드."""

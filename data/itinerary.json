@@ -775,20 +775,21 @@
                 "mode": "jr",
                 "duration_min": 9,
                 "distance_km": 4.5,
+                "fare_jpy": 200,
                 "line": "산인본선(嵯峨野線)",
                 "from": "{{nijo_station}}",
                 "to": "{{kyoto_station}}"
               },
               {
                 "mode": "jr",
-                "duration_min": 5,
+                "duration_min": 11,
                 "distance_km": 5.5,
                 "line": "나라선(奈良線)",
                 "from": "{{kyoto_station}}",
                 "to": "{{inari_station}}"
               }
             ],
-            "advisory": "니조→교토 산인본선, 교토역에서 나라선 환승. 합계 약 20분·¥200",
+            "advisory": "니조→교토 산인본선, 교토역에서 나라선 환승(환승·대기 포함 합계 약 20분). JR 통표 ¥200(니조 탑승·이나리 하차 단일 요금)",
             "source": "https://www.kyotostation.com/jr-nara-line-for-tofukuji-inari-uji-nara/",
             "source_fetched_at": "2026-05-18",
             "data_quality": "researched_market_rate",
