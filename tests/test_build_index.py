@@ -214,6 +214,7 @@ class BuildIndexTests(unittest.TestCase):
         """모든 mode(bus·subway·jr·taxi·walk·airport_express)의 arrive_from에서
         maps_url(우선) 또는 source가 http URL이면 해당 URL이 HTML에 링크로 렌더돼야 한다.
         maps_url이 있으면 maps-btn 버튼으로, 없으면 source URL로 확인.
+        Supports both old schema (mode at top level) and new schema (mode inside steps).
         """
         run()
         import json as _json
@@ -230,7 +231,12 @@ class BuildIndexTests(unittest.TestCase):
                 first_src = src.split()[0] if src else ""
                 url = maps_url or (first_src if first_src.startswith("http") else "")
                 if url:
-                    url_legs.append((af["mode"], url))
+                    # Get mode from new or old schema
+                    if isinstance(af.get("steps"), list) and af["steps"]:
+                        mode = af["steps"][0].get("mode", "unknown")
+                    else:
+                        mode = af.get("mode", "unknown")
+                    url_legs.append((mode, url))
         self.assertGreater(len(url_legs), 0, "fixture must have at least one URL-sourced leg")
         import html as _html
         for path in (INDEX, ITINERARY):

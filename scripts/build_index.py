@@ -143,6 +143,127 @@ def maps_link(query: str, label: str) -> str:
     return f'<a href="https://maps.google.com/?q={q}" target="_blank" rel="noopener">{esc(label)}</a>'
 
 
+# ─── New schema (Work 4) helper functions ───────────────────────────────────
+
+def is_new_schema_title(title) -> bool:
+    """Check if title is in new schema (dict with ko_name, ja_name, etc)."""
+    return isinstance(title, dict) and "ko_name" in title
+
+
+def is_new_schema_arrive_from(af) -> bool:
+    """Check if arrive_from is in new schema (has steps array)."""
+    return isinstance(af, dict) and isinstance(af.get("steps"), list)
+
+
+def render_title_display(title) -> str:
+    """Render title for display, supporting both old and new schema.
+
+    New schema: {type, ko_name, ja_name, ja_reading_ko, en_name}
+    Old schema: string
+
+    Returns plain text (no HTML escaping here - caller handles <a> wrapping).
+    """
+    if isinstance(title, str):
+        return title
+
+    if not is_new_schema_title(title):
+        return str(title)
+
+    # New schema: build display string from components
+    ko_name = title.get("ko_name", "").strip()
+    ja_name = title.get("ja_name", "").strip()
+    ja_reading = title.get("ja_reading_ko", "").strip()
+
+    # Render as: "ko_name (ja_name)" or "ko_name (ja_reading)" if ja_name missing
+    parts = [ko_name]
+    if ja_name:
+        parts.append(f"({ja_name})")
+    elif ja_reading:
+        parts.append(f"({ja_reading})")
+
+    return " ".join(parts)
+
+
+def render_transit_line_steps(steps: list, af_dict: dict) -> str:
+    """Render new schema arrive_from with steps array.
+
+    Each step is: {mode, operator, number, from, to, duration_min, fare_jpy, distance_km}
+    """
+    if not steps:
+        return ""
+
+    # For now, render similarly to old schema - show mode + duration
+    # In future: could render each step separately with operator badges
+
+    summaries = []
+    for step in steps:
+        mode = step.get("mode", "walk")
+        icon = MODE_ICONS.get(mode, "·")
+        verb = MODE_VERBS.get(mode, "이동")
+        duration = step.get("duration_min")
+
+        if duration:
+            summaries.append(f"{icon} {verb} {duration}분")
+        else:
+            summaries.append(f"{icon} {verb}")
+
+    summary = " → ".join(summaries) if summaries else "이동"
+
+    # Add map button if available
+    maps_url = (af_dict.get("maps_url") or "").strip()
+    src = (af_dict.get("source") or "").strip()
+    first_token = src.split()[0] if src else ""
+    src_href = first_token if first_token.startswith(("http://", "https://")) else ""
+    href = maps_url or src_href
+
+    if href:
+        summary += f' <a href="{esc(href)}" target="_blank" rel="noopener" class="maps-btn">지도 ↗</a>'
+
+    # For detail, reconstruct route description
+    detail_parts = []
+    for step in steps:
+        mode = step.get("mode")
+        operator = step.get("operator", {})
+        number = step.get("number")
+        from_place = step.get("from", {})
+        to_place = step.get("to", {})
+        duration = step.get("duration_min")
+        fare = step.get("fare_jpy")
+
+        if mode == "bus":
+            op_ko = operator.get("ko") if isinstance(operator, dict) else ""
+            from_ko = from_place.get("ko") if isinstance(from_place, dict) else ""
+            to_ko = to_place.get("ko") if isinstance(to_place, dict) else ""
+
+            line = f"{op_ko}"
+            if number:
+                line += f" {number}번"
+            if from_ko and to_ko:
+                line += f" {from_ko}→{to_ko}"
+            if duration:
+                line += f" {duration}분"
+            if fare:
+                line += f" ¥{fare}"
+            detail_parts.append(line)
+        elif mode == "walk":
+            dist = step.get("distance_km")
+            line = "도보"
+            if duration:
+                line += f" {duration}분"
+            if dist:
+                line += f" ({dist}km)"
+            detail_parts.append(line)
+        else:
+            # Other modes (jr, airport_express, etc)
+            line = MODE_VERBS.get(mode, "이동")
+            if duration:
+                line += f" {duration}분"
+            detail_parts.append(line)
+
+    detail = " · ".join(detail_parts) if detail_parts else summary.strip()
+    return fold(summary, esc(detail))
+
+
 _PLACE_MARKUP_RE = re.compile(r"\[\[([^\|\]]+)(?:\|([^\]]+))?\]\]")
 _PLACEHOLDER_RE = re.compile(r"__PLACE_LINK_\d+__")
 
@@ -798,10 +919,17 @@ def memo_block(note: str, *, style: str = "", cls: str = "sub") -> str:
 def transit_line(af) -> str:
     """도착 경로를 '아이콘 + 평이 요약(소요시간)' summary와 장문 route 상세로 렌더.
 
+    Supports both old schema (mode, route, ...) and new schema (steps array, ...).
     maps_url이 있으면 summary 줄에 '지도 ↗' 버튼 인라인 표시 — 탭하면 구글맵 앱 오픈.
     """
     if not af:
         return ""
+
+    # New schema: has steps array
+    if is_new_schema_arrive_from(af):
+        return render_transit_line_steps(af.get("steps"), af)
+
+    # Old schema: flat structure with mode, route, etc
     mode = af.get("mode")
     icon = MODE_ICONS.get(mode, "·")
     verb = MODE_VERBS.get(mode, "이동")
@@ -840,7 +968,8 @@ def card_itinerary(d) -> str:
     for day in itin["days"]:
         items_html = []
         for it in day["items"]:
-            link = maps_link(it["maps_query"], it["title"]) if it.get("maps_query") else esc(it["title"])
+            title_text = render_title_display(it["title"])
+            link = maps_link(it["maps_query"], title_text) if it.get("maps_query") else esc(title_text)
             transit = transit_line(it.get("arrive_from"))
             items_html.append(f"""
     <div class="day">
@@ -1240,7 +1369,8 @@ def build_itinerary(d) -> str:
     for day in itin["days"]:
         item_rows = []
         for it in day["items"]:
-            link = maps_link(it["maps_query"], it["title"]) if it.get("maps_query") else esc(it["title"])
+            title_text = render_title_display(it["title"])
+            link = maps_link(it["maps_query"], title_text) if it.get("maps_query") else esc(title_text)
             note_html = memo_block(it.get("note"))
             transit = transit_line(it.get("arrive_from"))
             if it.get("image_url"):
@@ -1301,7 +1431,8 @@ def build_itinerary(d) -> str:
         for day in cand["days"]:
             item_rows = []
             for it in day["items"]:
-                link = maps_link(it["maps_query"], it["title"]) if it.get("maps_query") else esc(it["title"])
+                title_text = render_title_display(it["title"])
+                link = maps_link(it["maps_query"], title_text) if it.get("maps_query") else esc(title_text)
                 note_html = memo_block(it.get("note"))
                 food_html = food_quality_html(it.get("food_quality"))
                 link_html = doc_link_html(it.get("link"))

@@ -198,7 +198,10 @@ def check_flights_sync(base: Path) -> list[str]:
 
 
 def check_itinerary_transit(base: Path, today: date) -> tuple[list[str], list[str]]:
-    """검사 G: data/itinerary.json arrive_from 무결성 + walking_km 합 정합성."""
+    """검사 G: data/itinerary.json arrive_from 무결성 + walking_km 합 정합성.
+
+    Supports both old schema (mode, route, ...) and new schema (steps array, ...).
+    """
     errors: list[str] = []
     warnings: list[str] = []
     itin_path = base / "data" / "itinerary.json"
@@ -213,12 +216,44 @@ def check_itinerary_transit(base: Path, today: date) -> tuple[list[str], list[st
             if af is None:
                 continue
             loc = f"{day_label}.items[{idx}].arrive_from ({item.get('title','?')})"
-            for field in ("mode", "source", "source_fetched_at", "data_quality"):
-                if not af.get(field):
-                    errors.append(f"[G] {loc}: missing '{field}'")
-            mode = af.get("mode")
-            if mode and mode not in ITINERARY_MODES:
-                errors.append(f"[G] {loc}: mode {mode!r} not in {sorted(ITINERARY_MODES)}")
+
+            # Detect schema version
+            is_new_schema = isinstance(af.get("steps"), list)
+
+            if is_new_schema:
+                # New schema: steps is array of {mode, operator, number, from, to, duration_min, fare_jpy, distance_km}
+                # Top-level fields: steps, source, source_fetched_at, data_quality, maps_url
+                for field in ("source", "source_fetched_at", "data_quality"):
+                    if not af.get(field):
+                        errors.append(f"[G] {loc}: missing '{field}'")
+
+                # Validate each step
+                steps = af.get("steps", [])
+                for step_idx, step in enumerate(steps):
+                    step_loc = f"{loc}.steps[{step_idx}]"
+                    mode = step.get("mode")
+                    if not mode:
+                        errors.append(f"[G] {step_loc}: missing 'mode'")
+                    elif mode not in ITINERARY_MODES:
+                        errors.append(f"[G] {step_loc}: mode {mode!r} not in {sorted(ITINERARY_MODES)}")
+                    if mode == "walk":
+                        dist = step.get("distance_km")
+                        if isinstance(dist, (int, float)):
+                            walk_sum += dist
+            else:
+                # Old schema: mode, duration_min, distance_km, route, source, source_fetched_at, data_quality, maps_url
+                for field in ("mode", "source", "source_fetched_at", "data_quality"):
+                    if not af.get(field):
+                        errors.append(f"[G] {loc}: missing '{field}'")
+                mode = af.get("mode")
+                if mode and mode not in ITINERARY_MODES:
+                    errors.append(f"[G] {loc}: mode {mode!r} not in {sorted(ITINERARY_MODES)}")
+                if mode == "walk":
+                    dist = af.get("distance_km")
+                    if isinstance(dist, (int, float)):
+                        walk_sum += dist
+
+            # Common validation for both schemas
             qual = af.get("data_quality")
             if qual and qual not in ITINERARY_QUALITY:
                 errors.append(f"[G] {loc}: data_quality {qual!r} not in {sorted(ITINERARY_QUALITY)}")
@@ -231,10 +266,7 @@ def check_itinerary_transit(base: Path, today: date) -> tuple[list[str], list[st
                         errors.append(f"[G] {loc}: source_fetched_at stale {age}d — re-research required")
                     elif age > 30:
                         warnings.append(f"[G] {loc}: source_fetched_at aging {age}d")
-            if mode == "walk":
-                dist = af.get("distance_km")
-                if isinstance(dist, (int, float)):
-                    walk_sum += dist
+
         declared = day.get("walking_km")
         if isinstance(declared, (int, float)) and walk_sum > 0:
             # leg 합은 경내·시장 내부 산책 미포함이므로 declared의 하한.
