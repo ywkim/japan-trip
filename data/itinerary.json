@@ -173,7 +173,7 @@
     ],
     "walking_km_total": 16,
     "walking_km_source": "items[].arrive_from[mode=walk].distance_km 합 + 사찰·시장 내부 산책 추정",
-    "transit_pass_source": "4인 iPhone Apple Wallet ICOCA 통일, 4일 모두 단권. 일자별 근거: days[].pass_recommendation. 4일 합계 ¥5,400 ≈ ₩56,000. 통합 1일권 ¥1,100은 ¥700 시버스 단독 1일권(2023-09 폐지) 대체이나 본전 미달. 분석: docs/decision-log/2026-05-18-04-transit-pass-correction-icoca.md. cost-options.json의 kyoto_local_transit_4pax 항목과 동기화.",
+    "transit_pass_source": "4인 iPhone Apple Wallet ICOCA 통일, 4일 모두 단권. 일자별 근거: days[].pass_recommendation. 4일 합계 ¥9,800 ≈ ₩102,000 (FX ¥1=₩10.4 · 5/31 야간 기온 원정 도자이선 왕복+게이한 + 6/2 시버스 2회 반영). 통합 1일권 ¥1,100은 ¥700 시버스 단독 1일권(2023-09 폐지) 대체이나 본전 미달. 분석: docs/decision-log/2026-05-18-04-transit-pass-correction-icoca.md. cost-options.json의 kyoto_local_transit_4pax(현 ¥5,400)와는 별도 PR에서 동기화 예정.",
     "transit_pass_sources": [
       {
         "label": "Apple Wallet 교통카드 (Apple)",
