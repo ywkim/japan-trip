@@ -70,6 +70,15 @@
       "note": "1인 ¥30,000 가정 (현금 식비·신사 새전·잔돈). 트래블월렛/하나비바X 등 무환전료 카드 권장 · 리서치 완료(2026-05-24): 트래블월렛(USD/EUR/JPY 환전수수료 0·ATM 월$500 무료), 하나 트래블로그(4통화 무료·하나계좌 보유 시 유리), 신한 SOL트래블(ATM 인출수수료 0·한도 큼). 권장: 하나계좌 보유 시 트래블로그, 아니면 트래블월렛 + ATM 인출 잦으면 SOL트래블 병행. 현금 ¥30,000/인은 신사 새전·소액 현금 전용점에 적정. 상세·출처: docs/booking-research-2026-05-24.md (레포)"
     },
     {
+      "id": "iphone_apps",
+      "label": "필수 아이폰 앱 설치 (4인 — ICOCA·Google Maps·Tabelog·번역·Trip.com)",
+      "status": "미정",
+      "due_date": "2026-05-30",
+      "action": "5/30까지 4인 모두 설치·설정 완료. ICOCA ¥3,000/인 초기 충전, Google Maps 오프라인 지도 다운로드, Papago 일본어팩 다운로드 필수",
+      "link": {"label": "앱 가이드", "url": "docs/essential-iphone-apps.md"},
+      "note": "출국 전 필수 설치 리스트: ICOCA(Apple Wallet, ¥3,000 초기 충전·Express Card 설정)·Google Maps(오프라인 교토·오사카 지도 ~200~500MB)·Tabelog(맛집)·Papago·번역(오프라인 일본어팩)·Trip.com·Booking.com(예약 확인). 특히 시부모 4인의 앱 설치·기본 사용법 테스트 필수(현지에서 길 찾기, 메뉴판 번역 사전 연습). 체크리스트: docs/essential-iphone-apps.md §3"
+    },
+    {
       "id": "saihoji_research",
       "label": "사이호지(苔寺·이끼사찰) 입장 예약 (Trip.com)",
       "status": "확정",
