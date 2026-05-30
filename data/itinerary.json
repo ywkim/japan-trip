@@ -17,6 +17,11 @@
       "ja": "三条京阪駅",
       "reading": "산조케이한에키"
     },
+    "kamogawa": {
+      "ko": "가모강",
+      "ja": "鴨川",
+      "reading": "카모가와"
+    },
     "nishiki": {
       "ko": "니시키 시장",
       "ja": "錦市場",
@@ -235,7 +240,7 @@
   "days": [
     {
       "date": "2026-05-31",
-      "day_label": "5/31 (일) — 오후 도착 + 시오 체크인 + 폰토초 야끼니꾸 저녁",
+      "day_label": "5/31 (일) — 오후 도착 + 시오 체크인 + 폰토초 야끼니꾸·가모강 야경",
       "walking_km": 1,
       "lodging": "에어비앤비 시오",
       "items": [
@@ -285,7 +290,7 @@
             "en_name": ""
           },
           "maps_query": "Nijo Station Kyoto",
-          "note": "JR 하루카로 {{kyoto_station}}까지, JR {{sanin_line}}으로 {{nijo_station}}까지 환승 + 도보 7분. 오후 도착편 피로를 고려해 체크인·짐 정리 후 저녁은 폰토초(先斗町) enen 야끼니꾸로 지하철 이동. 동산 관광은 6/2 오후로 이동.",
+          "note": "JR 하루카로 {{kyoto_station}}까지, JR {{sanin_line}}으로 {{nijo_station}}까지 환승 + 도보 7분. 오후 도착편 피로를 고려해 체크인·짐 정리 후 저녁은 폰토초(先斗町) enen 야끼니꾸 + {{kamogawa}} 강변 야경 산책(대중교통 지하철 왕복). 동산 관광은 6/2 오후로 이동.",
           "arrive_from": {
             "steps": [
               {
@@ -349,9 +354,34 @@
             "data_quality": "tbd_needs_browser_mcp",
             "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Nijo+Station,+Kyoto&destination=%E4%BA%AC%E9%83%BD%E7%84%BC%E8%82%89+enen+%E5%85%88%E6%96%97%E7%94%BA%E6%9C%AC%E5%BA%97&travelmode=transit"
           }
+        },
+        {
+          "time": "20:00",
+          "title": {
+            "type": "place",
+            "ko_name": "가모강 야경 산책 (폰토초)",
+            "ja_name": "鴨川・先斗町",
+            "ja_reading_ko": "카모가와·폰토초",
+            "en_name": "Kamogawa riverside & Pontocho"
+          },
+          "maps_query": "鴨川 先斗町 京都",
+          "note": "저녁 후 {{kamogawa}} 강변·폰토초(先斗町) 골목 야경 산책 — enen에서 도보 2분, {{gion_shijo_stop}}역·{{sanjo_keihan_station}} 인근. 강변 가게 불빛·노료유카(納涼床) 분위기. 산책 후 지하철 도자이선 {{sanjo_keihan_station}}→{{nijo_station}}으로 시오 복귀(ICOCA). 시부모 동반·도착일 피로 고려해 무리 없이 짧게.",
+          "arrive_from": {
+            "steps": [
+              {
+                "mode": "walk",
+                "duration_min": 2,
+                "distance_km": 0.15
+              }
+            ],
+            "source": "enen(폰토초)→鴨川 강변 도보 (Google Maps) — 정밀 동선 브라우저 검증 대기",
+            "source_fetched_at": "2026-05-30",
+            "data_quality": "tbd_needs_browser_mcp",
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=%E4%BA%AC%E9%83%BD%E7%84%BC%E8%82%89+enen+%E5%85%88%E6%96%97%E7%94%BA%E6%9C%AC%E5%BA%97&destination=%E9%B4%A8%E5%B7%9D+%E5%85%88%E6%96%97%E7%94%BA&travelmode=walking"
+          }
         }
       ],
-      "walking_km_source": "items[].arrive_from[mode=walk] 합(~0.5km: 三条京阪→enen) + 니조역·교토역 환승 도보 추정. 오후 도착으로 첫날 관광 없음(동산 코스는 6/2로 이동).",
+      "walking_km_source": "items[].arrive_from[mode=walk] 합(~0.65km: 三条京阪→enen 0.5 + enen→鴨川 야경 0.15) + 니조역·교토역 환승 도보 추정. 오후 도착으로 첫날 관광 없음(동산 코스는 6/2로 이동).",
       "pass_recommendation": "iPhone Apple Wallet ICOCA 단권 — JR 하루카는 별도 왕복권(¥2,400/인). {{kyoto_station}}→{{nijo_station}} JR 산인선만 ICOCA 탭(약 ¥190). 저녁 폰토초 enen 이동으로 지하철 도자이선 {{nijo_station}}↔{{sanjo_keihan_station}} 왕복 ICOCA 탭 추가(요금 현지 확인)."
     },
     {
