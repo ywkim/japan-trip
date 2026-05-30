@@ -1,8 +1,8 @@
-# DESIGN.md — Quiet Ledger
+# DESIGN.md — Quiet Gray
 
 > `voltagent/awesome-design-md` 컨벤션. AI 에이전트가 UI 변경 시 본 문서를 1차 출처로 읽고, 정확한 토큰 값은 `data/design-tokens.json`을 참조한다. 두 문서의 drift는 `scripts/validate.py` (H)가 차단한다.
 
-**Theme**: Quiet Ledger · **Version**: 1.0.0
+**Theme**: Quiet Gray · **Version**: 1.0.0
 
 ## 1. Visual Theme & Atmosphere
 
@@ -11,26 +11,26 @@
 - 자극보다 가독, 장식보다 정보.
 - 일본 모티브(torii red, sakura pink) 회피. 본 레포는 "Japan-themed"가 아니라 "Japan-trip decision-making".
 - 빨강 accent 폐기 → **slate-indigo** 단일 accent. 빨강은 오직 danger status에만.
-- 라이트 모드는 따뜻한 종이톤(`#F7F6F2`), 다크 모드는 진청색 잉크톤(`#161821`).
+- 라이트 모드는 중립 회색톤(`#F5F5F7`), 다크 모드는 진청색 잉크톤(`#161821`).
 - 한국어 본문이 1차. macOS·iOS 시스템 폰트를 우선하고 Pretendard로 fallback.
 
 ## 2. Color Palette & Roles
 
 | 역할 | Light | Dark | 비고 |
 |---|---|---|---|
-| `bg` | `#F7F6F2` | `#161821` | 페이지 배경 |
+| `bg` | `#F5F5F7` | `#161821` | 페이지 배경 |
 | `surface` | `#FFFFFF` | `#1F222C` | 카드 표면 |
-| `surface_sunken` | `#EFEDE6` | `#13151D` | 서브카드·표 스트라이프 |
+| `surface_sunken` | `#EBEBED` | `#13151D` | 서브카드·표 스트라이프 |
 | `ink` | `#1B1D24` | `#E8E6DE` | 본문 텍스트 |
 | `ink_muted` | `#5B6070` | `#9A9DA8` | 보조 텍스트·라벨 |
-| `border` | `#D9D6CC` | `#2E3140` | 보더·디바이더 |
+| `border` | `#D2D2D7` | `#2E3140` | 보더·디바이더 |
 | `accent` | `#3E5C76` | `#8AA8C7` | 단일 강조 (slate-indigo). 링크 hover·강조 테두리·진행 바 |
-| `accent_soft` | `#E3EAF3` | `#262E3A` | accent 배경 (hover surface, bar track) |
+| `accent_soft` | `#E3EAF3` | `#262E3A` | accent 배경 (hover surface) |
 | `ok` | `#2F7D5B` | `#6FB58E` | status "ok" (예산 통과·확정) |
 | `warn` | `#B5811F` | `#D4B36A` | status "near"·"예약중"·조기 입림 |
 | `danger` | `#9A3B3B` | `#D08585` | status "over"·"미정"·예산 초과 |
-| `table_stripe` | `#EFEDE6` | `#262E3A` | 표 짝수 행 |
-| `bar_track` | `#E3EAF3` | `#262E3A` | 진행 바 트랙 |
+| `table_stripe` | `#EBEBED` | `#262E3A` | 표 짝수 행 |
+| `bar_track` | `#E0E0E5` | `#262E3A` | 진행 바 트랙 |
 
 **규칙**:
 - `accent`는 한 번에 한 컴포넌트만 강조. 페이지 안에서 5회 이상 노출되면 시각 노이즈.

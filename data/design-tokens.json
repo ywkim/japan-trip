@@ -1,22 +1,22 @@
 {
   "_doc": "단일 출처: 시각 디자인 토큰 (색·타이포·간격·반경). DESIGN.md §2~§6과 동기화. scripts/build_index.py의 render_css(tokens)가 6개 산출물(index.html·viz/itinerary.html·viz/itinerary-table.html·viz/lodging.html·viz/checklist.html·viz/archive.html)의 인라인 CSS를 공통 생성. scripts/validate.py (H)가 DESIGN.md ↔ 본 JSON의 drift를 차단.",
   "version": "1.0.0",
-  "theme_name": "Quiet Ledger",
+  "theme_name": "Quiet Gray",
   "color": {
     "light": {
-      "bg": "#F7F6F2",
+      "bg": "#F5F5F7",
       "surface": "#FFFFFF",
-      "surface_sunken": "#EFEDE6",
+      "surface_sunken": "#EBEBED",
       "ink": "#1B1D24",
       "ink_muted": "#5B6070",
-      "border": "#D9D6CC",
+      "border": "#D2D2D7",
       "accent": "#3E5C76",
       "accent_soft": "#E3EAF3",
       "ok": "#2F7D5B",
       "warn": "#B5811F",
       "danger": "#9A3B3B",
-      "table_stripe": "#EFEDE6",
-      "bar_track": "#E3EAF3"
+      "table_stripe": "#EBEBED",
+      "bar_track": "#E0E0E5"
     },
     "dark": {
       "bg": "#161821",
