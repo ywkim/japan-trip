@@ -1464,15 +1464,7 @@ def build_itinerary(d) -> str:
   {''.join(cand_day_cards)}
 </details>""")
 
-    candidates_section = ""
-    if candidate_cards:
-        candidates_section = f"""
-<section class="card">
-  <h2>후보 코스</h2>
-  <div class="sub" style="margin-bottom:0.5rem;">숙소·날짜(5/31~6/3) 동일. 동선만 다른 대안 코스. 제목 탭하면 펼쳐짐.</div>
-  {''.join(candidate_cards)}
-</section>
-"""
+    candidates_section = ""  # 의사결정 완료 — 후보 코스 웹 노출 안 함
 
     body = f"""<h1>교토 3박4일 일정</h1>
 <div class="status">{esc(trip['dates'])} · {trip['nights']}박 · {trip['travelers']}인 · {esc(trip.get('composition',''))}</div>
