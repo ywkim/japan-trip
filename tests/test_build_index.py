@@ -997,6 +997,23 @@ class DocPageTests(unittest.TestCase):
                 self.assertIn('property="og:title"', html)
                 self.assertIn("/assets/og-", html)
 
+    def test_place_refs_expanded_in_itinerary(self):
+        """data/itinerary.json places 레지스트리의 {{id}} 참조가 'ko(ja)'로
+        확장 렌더되고, 미확장 {{...}} 토큰이 산출물에 남지 않아야 한다.
+        병기 단일 출처(레지스트리) 회귀 가드."""
+        run()
+        import json as _json
+        data = _json.loads((BASE / "data" / "itinerary.json").read_text(encoding="utf-8"))
+        places = data.get("places", {})
+        self.assertGreater(len(places), 0, "places registry must be populated")
+        html = ITINERARY.read_text(encoding="utf-8")
+        self.assertNotIn("{{", html, "unexpanded place ref leaked into itinerary.html")
+        # 니시키 레지스트리 항목이 ko(ja) 병기 형태로 확장됐는지
+        if "nishiki" in places:
+            p = places["nishiki"]
+            self.assertIn(f'{p["ko"]}({p["ja"]})', html,
+                          "nishiki place ref not expanded to ko(ja) in itinerary.html")
+
     def test_doc_pages_drift_detected_by_check(self):
         run()
         for path in DOC_PAGE_OUTPUTS:

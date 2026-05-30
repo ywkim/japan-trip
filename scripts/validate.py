@@ -36,6 +36,12 @@
      viz/*.html 전체)에 'github.com' 문자열(링크·raw URL 모두)이 등장하면 fail.
      가족 공유 페이지에서 레포 노출 방지 — 외부 문서는 사이트 내 HTML로 연결하거나
      일반 텍스트(레포 경로)로만 표기.
+  K. 장소 레지스트리 병기 무결성: data/itinerary.json의 산문 필드(note·
+     food_quality·pass_recommendation·arrive_from.route)에서 (1) {{place_id}}
+     참조가 places 레지스트리에 정의돼 있고, (2) 레지스트리 장소의 ko(한글)명이
+     참조도 ko(漢字) 병기도 없이 '생으로' 나타나지 않아야 함. 같은 장소가 문서
+     전체에서 동일 병기되도록 강제 — 수기 병기 드리프트 차단. title은 구조화/기
+     병기라 제외, steps의 from/to는 구조화(ko/ja)라 제외. route_candidates도 순회.
 
 exit 0 = 모두 통과 또는 경고만, exit 1 = 실패.
 
@@ -410,6 +416,81 @@ def check_no_github_links(base: Path) -> list[str]:
     return errors
 
 
+PLACE_REF_RE = re.compile(r"\{\{([a-z0-9_]+)\}\}")
+HANJA_RE = re.compile(r"[぀-ヿ㐀-鿿]")  # 히라가나·가타카나·CJK 한자
+
+
+def _iter_prose_fields(data: dict):
+    """검사 K 대상 산문 필드(location, text)를 순회.
+
+    title은 구조화(신스키마) 또는 이미 병기된 문자열(구스키마)이라 제외.
+    arrive_from.steps의 from/to는 구조화(ko/ja)라 제외. note·food_quality·
+    pass_recommendation·arrive_from.route만 스캔. route_candidates도 순회.
+    """
+    def walk_days(days, prefix):
+        for day in days:
+            label = day.get("date") or day.get("day_label", "?")
+            for idx, item in enumerate(day.get("items", [])):
+                loc = f"{prefix}{label}.items[{idx}]"
+                if item.get("note"):
+                    yield f"{loc}.note", item["note"]
+                fq = item.get("food_quality") or {}
+                for k in ("rating", "note"):
+                    if fq.get(k):
+                        yield f"{loc}.food_quality.{k}", fq[k]
+                af = item.get("arrive_from") or {}
+                if af.get("route"):
+                    yield f"{loc}.arrive_from.route", af["route"]
+            if day.get("pass_recommendation"):
+                yield f"{prefix}{label}.pass_recommendation", day["pass_recommendation"]
+
+    yield from walk_days(data.get("days", []), "")
+    for cand in data.get("route_candidates", []):
+        yield from walk_days(cand.get("days", []), f"candidate({cand.get('name','?')}).")
+
+
+def check_place_registry(base: Path) -> list[str]:
+    """검사 K: 장소 레지스트리 참조 무결성 + 생(生) 장소명 무병기 차단.
+
+    (K1) 산문 필드의 {{place_id}}가 places 레지스트리에 정의돼 있어야 함.
+    (K2) 레지스트리에 ja(한자)가 있는 장소의 ko(한글)명이 산문에 '생으로'(참조도
+         아니고 ko(漢字) 병기도 없이) 나타나면 차단 — 병기 드리프트 방지.
+    """
+    errors: list[str] = []
+    itin_path = base / "data" / "itinerary.json"
+    if not itin_path.exists():
+        return errors
+    data = json.loads(itin_path.read_text(encoding="utf-8"))
+    places = data.get("places", {})
+    if not places:
+        return errors
+
+    for loc, text in _iter_prose_fields(data):
+        # K1: 미정의 참조
+        for pid in PLACE_REF_RE.findall(text):
+            if pid not in places:
+                errors.append(f"[K] {loc}: undefined place ref {{{{{pid}}}}} — places에 없음")
+        # K2: 생 장소명 (참조 토큰 제거 후 스캔)
+        stripped = PLACE_REF_RE.sub(" ", text)
+        for pid, p in places.items():
+            ko = p.get("ko", "")
+            ja = p.get("ja", "")
+            if not ko or not ja:
+                continue
+            for m in re.finditer(re.escape(ko), stripped):
+                rest = stripped[m.end():]
+                # 병기 인정: ko 뒤 (선택적 한글 +) '(...漢字...)' 가 곧바로 오면 OK
+                am = re.match(r"[가-힣]*\(([^)]*)\)", rest)
+                if am and HANJA_RE.search(am.group(1)):
+                    continue
+                errors.append(
+                    f"[K] {loc}: 생 장소명 {ko!r} 무병기 — {{{{{pid}}}}} 참조 또는 "
+                    f"'{ko}({ja})' 병기 필요"
+                )
+                break  # 필드당 장소별 1건만 보고
+    return errors
+
+
 def run(base: Path, today: date) -> tuple[list[str], list[str]]:
     errors: list[str] = []
     warnings: list[str] = []
@@ -427,6 +508,7 @@ def run(base: Path, today: date) -> tuple[list[str], list[str]]:
     errors.extend(e)
     warnings.extend(w)
     errors.extend(check_no_github_links(base))
+    errors.extend(check_place_registry(base))
     return errors, warnings
 
 

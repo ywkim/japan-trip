@@ -144,6 +144,7 @@ japan-trip/
 
 - **실행 단일 출처(정본)** — 본 레포의 현재 1차 데이터:
   - `data/itinerary.json` — 교토 3박4일 일정. `days`: 확정 코스 (일자·시간대·동선·메모·도보거리·보류). `route_candidates`: 대안 코스 3개 (여유형·서북 사찰 집중형·미식+문화 체험형). days[].items[].`arrive_from`(mode/duration_min/distance_km/route/source/source_fetched_at/data_quality)으로 장소 간 이동 출처 명시. data_quality는 `official_fare`/`researched_market_rate`/`tbd_needs_browser_mcp`(Playwright MCP 후속 세션 위임). 옵션 필드 `source_url`(텍스트 source의 URL 보완), `source_verified_at`(Playwright로 도달성 검증한 ISO 날짜 — 빌드 시 ✓ 표시) — `scripts/list_sources.py`로 인벤토리, validate.py G가 형식 검증. 식사 항목은 days[].items[].`food_quality`(rating/source/source_fetched_at/data_quality/note)로 맛집 근거(타베로그·구글·미쉐린 등 평점) 명시 — 추측 금지, 출처 없으면 검사 I가 머지 차단. days[].items[].`link`(url/label)는 항목 참조 문서를 화면에서 탭 가능한 `doc-link` 앵커로 렌더(`build_index.py`의 `doc_link_html()`, 조식 슬롯 → `viz/breakfast.html`). url이 사이트 내 경로면 같은 탭, 외부(http)면 새 탭. **Vercel 운영 화면에는 외부 GitHub 링크 금지** — 레포 내 문서 참조는 `.md`(Vercel raw 서빙) 대신 사이트 내 HTML 페이지로 렌더해 연결한다. 사람용 사본은 `docs/kyoto-itinerary-may31-jun3-2026.md`
+    - **장소명 병기 단일 출처 `places` 레지스트리**: `data/itinerary.json` 최상위 `places`(`{place_id: {ko, ja}}`)가 장소명 한자 병기의 유일한 출처. 산문 필드(note·food_quality·pass_recommendation·route)에서 `{{place_id}}`로 **참조**하면 `build_index.py`의 `expand_place_refs()`(load 시 `expand_refs_in_obj` 재귀)가 `ko(ja)`로 확장 — 같은 장소가 문서 전체에서 동일 병기된다. 역명 합성어(`아라시야마역(嵐山駅)`)는 참조 대신 리터럴 병기(둘 다 검사 K 통과). **신규 장소는 `places`에 1줄 추가 후 참조**. 검사 K(`scripts/validate.py`)가 미정의 참조·생(生) 장소명 무병기를 머지 차단 — 수기 병기 드리프트를 구조적으로 봉쇄. 근거: `docs/decision-log/2026-05-30-place-registry-annotation.md`
   - `data/booking-checklist.json` — 예약 진행 상태
   - `data/cost-options.json` — 항공·숙박·고정비·일회성·시나리오 (확정 금액은 `confirmed_booking` 라벨로 승격)
   - `data/breakfast.json` — 숙소 인근 조식 옵션 단일 출처 (아침 3회·숙소별 가게표·아침별 권장·출처). `build_index.py`가 `viz/breakfast.html`로 렌더. 가게명은 `map_query`(없으면 가게명+숙소 `map_area`)로 구글 지도 검색 링크(`.map-link`)로 렌더 — 모바일 탭 시 지도 앱이 열린다(좌표 추정 금지, 검색 질의만 생성). 가게별 `menu`(메뉴·가격, 출처는 §5 리서치)는 `.bf-menu` 전용 라인으로 노출. 사람용 사본은 `docs/breakfast-near-lodging.md`
@@ -194,6 +195,7 @@ japan-trip/
 | DESIGN MD↔JSON 동기화 | `scripts/validate.py` (H) | `DESIGN.md`의 hex가 `data/design-tokens.json`에 없거나 그 반대, theme_name·version drift |
 | itinerary food_quality 무결성 | `scripts/validate.py` (I) | `data/itinerary.json` 식사 항목 food_quality에 rating/source/source_fetched_at/data_quality 누락, data_quality 화이트리스트 외, source_fetched_at > 60d. food_quality 없는 항목(동네 끼니)은 면제. route_candidates도 순회 |
 | Vercel GitHub 링크 금지 | `scripts/validate.py` (J) | `index.html` + `viz/*.html`(glob 전체) 중 하나라도 `github.com` 문자열(링크·raw URL) 포함. 산출물은 검증 전에 빌드되므로 갓 생성된 HTML을 스캔 |
+| 장소 레지스트리 병기 무결성 | `scripts/validate.py` (K) | `data/itinerary.json` 산문 필드(note·food_quality·pass_recommendation·route)에서 ① `{{place_id}}` 참조가 `places`에 미정의, ② 레지스트리 장소 ko명이 참조·`ko(漢字)` 병기 없이 '생으로' 등장. title·steps from/to는 제외. route_candidates도 순회 |
 | 빌드 실행 (산출물 생성) | `scripts/build_index.py` | exit ≠ 0 (빌드 오류). 산출물은 gitignore이므로 검증 전에 생성. 재현성·drift·콘텐츠 검사는 `tests/test_build_index.py`(unittest)가 담당 |
 
 ## 디자인 워크플로우

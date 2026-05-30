@@ -143,6 +143,45 @@ def maps_link(query: str, label: str) -> str:
     return f'<a href="https://maps.google.com/?q={q}" target="_blank" rel="noopener">{esc(label)}</a>'
 
 
+# ─── 장소 레지스트리 (병기 단일 출처) ────────────────────────────────────────
+# data/itinerary.json의 "places"가 장소명 ko/ja 병기의 유일한 출처.
+# 산문 필드(note·food_quality·pass_recommendation·route)는 {{place_id}}로 참조하고,
+# 빌드 시 'ko(ja)'로 확장한다 — 같은 장소가 문서 전체에서 동일하게 병기된다.
+# validate.py 검사 K가 (1) 미정의 참조, (2) 참조/병기 없는 생(生) 장소명을 차단한다.
+PLACE_REGISTRY: dict = {}
+PLACE_REF_RE = re.compile(r"\{\{([a-z0-9_]+)\}\}")
+
+
+def expand_place_refs(text: str) -> str:
+    """문자열 내 {{place_id}}를 레지스트리의 'ko(ja)' 병기로 확장.
+
+    미정의 id는 원문({{id}})을 그대로 남겨 validate.py 검사 K가 잡도록 한다.
+    """
+    if not text or "{{" not in text:
+        return text
+
+    def sub(m):
+        pid = m.group(1)
+        p = PLACE_REGISTRY.get(pid)
+        if not p:
+            return m.group(0)
+        ko, ja = p.get("ko", ""), p.get("ja", "")
+        return f"{ko}({ja})" if ja else ko
+
+    return PLACE_REF_RE.sub(sub, text)
+
+
+def expand_refs_in_obj(obj):
+    """중첩 dict/list의 모든 문자열 값에서 {{place_id}}를 확장 (재귀)."""
+    if isinstance(obj, dict):
+        return {k: expand_refs_in_obj(v) for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [expand_refs_in_obj(v) for v in obj]
+    if isinstance(obj, str):
+        return expand_place_refs(obj)
+    return obj
+
+
 # ─── New schema (Work 4) helper functions ───────────────────────────────────
 
 def is_new_schema_title(title) -> bool:
@@ -391,11 +430,16 @@ def run_json(script: str) -> dict:
 
 
 def load_data():
+    itinerary = json.loads((DATA / "itinerary.json").read_text(encoding="utf-8"))
+    # 장소 레지스트리를 모듈 전역에 적재 후 {{place_id}} 참조를 'ko(ja)'로 확장.
+    global PLACE_REGISTRY
+    PLACE_REGISTRY = itinerary.get("places", {})
+    itinerary = expand_refs_in_obj(itinerary)
     return {
         "decision": json.loads((DATA / "decision.json").read_text(encoding="utf-8")),
         "cost": json.loads((DATA / "cost-options.json").read_text(encoding="utf-8")),
         "weather": json.loads((DATA / "weather.json").read_text(encoding="utf-8")),
-        "itinerary": json.loads((DATA / "itinerary.json").read_text(encoding="utf-8")),
+        "itinerary": itinerary,
         "checklist": json.loads((DATA / "booking-checklist.json").read_text(encoding="utf-8")),
         "breakfast": json.loads((DATA / "breakfast.json").read_text(encoding="utf-8")),
         "tokens": json.loads((DATA / "design-tokens.json").read_text(encoding="utf-8")),

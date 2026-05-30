@@ -660,6 +660,76 @@ class SourceVerificationFieldTests(unittest.TestCase):
         self.assertTrue(any(e.startswith("[G]") and "source_url" in e for e in errs), errs)
 
 
+def _itin_with_places(places, items, pass_rec=None):
+    itin = {
+        "trip": {"destination": "교토", "dates": "2026-05-31 → 2026-06-03", "nights": 3,
+                 "travelers": 4, "walking_km_total": 1},
+        "places": places,
+        "days": [
+            {"date": "2026-05-31", "day_label": "D1", "walking_km": 1, "lodging": "—", "items": items}
+        ],
+    }
+    if pass_rec is not None:
+        itin["days"][0]["pass_recommendation"] = pass_rec
+    return itin
+
+
+class PlaceRegistryTests(unittest.TestCase):
+    """검사 K: 장소 레지스트리 참조 무결성 + 생(生) 장소명 무병기 차단."""
+
+    PLACES = {"kyoto_station": {"ko": "교토역", "ja": "京都駅"}}
+
+    def _run(self, itin):
+        with tempfile.TemporaryDirectory() as td:
+            base = make_fixture(Path(td), cost=VALID_COST, index_html="<html></html>", itinerary=itin)
+            return validate.run(base, date(2026, 5, 17))[0]
+
+    def test_ref_to_registered_place_passes(self):
+        itin = _itin_with_places(self.PLACES, [
+            {"time": "09:00", "title": "A", "maps_query": "A", "note": "{{kyoto_station}}은 가깝다"},
+        ])
+        self.assertEqual([e for e in self._run(itin) if e.startswith("[K]")], [])
+
+    def test_manually_annotated_place_passes(self):
+        itin = _itin_with_places(self.PLACES, [
+            {"time": "09:00", "title": "A", "maps_query": "A", "note": "교토역(京都駅)은 가깝다"},
+        ])
+        self.assertEqual([e for e in self._run(itin) if e.startswith("[K]")], [])
+
+    def test_bare_place_name_fails(self):
+        itin = _itin_with_places(self.PLACES, [
+            {"time": "09:00", "title": "A", "maps_query": "A", "note": "교토역은 가깝다"},
+        ])
+        self.assertTrue(any(e.startswith("[K]") and "교토역" in e for e in self._run(itin)))
+
+    def test_undefined_ref_fails(self):
+        itin = _itin_with_places(self.PLACES, [
+            {"time": "09:00", "title": "A", "maps_query": "A", "note": "{{ghost_place}} 방문"},
+        ])
+        self.assertTrue(any(e.startswith("[K]") and "ghost_place" in e for e in self._run(itin)))
+
+    def test_bare_place_in_pass_recommendation_fails(self):
+        itin = _itin_with_places(self.PLACES,
+            [{"time": "09:00", "title": "A", "maps_query": "A"}],
+            pass_rec="시버스로 교토역까지 — 근거 텍스트가 길어지는 부분입니다 어쩌고 저쩌고 추가 설명",
+        )
+        self.assertTrue(any(e.startswith("[K]") and "교토역" in e for e in self._run(itin)))
+
+    def test_annotated_compound_not_false_flagged(self):
+        # '금각사' 등록 시 '금각사도(金閣寺道)' 같은 병기된 합성어는 통과해야 한다.
+        places = {"kinkakuji": {"ko": "금각사", "ja": "金閣寺"}}
+        itin = _itin_with_places(places, [
+            {"time": "09:00", "title": "A", "maps_query": "A", "note": "금각사도(金閣寺道) 정류장 하차"},
+        ])
+        self.assertEqual([e for e in self._run(itin) if e.startswith("[K]")], [])
+
+    def test_no_places_registry_is_noop(self):
+        itin = _itin([
+            {"time": "09:00", "title": "교토역 방문", "maps_query": "A", "note": "교토역은 가깝다"},
+        ])
+        self.assertEqual([e for e in self._run(itin) if e.startswith("[K]")], [])
+
+
 class ProductionDataTests(unittest.TestCase):
     """현재 레포 데이터가 validate를 통과하는지 회귀 검사."""
 
