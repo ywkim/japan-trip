@@ -933,21 +933,26 @@ class ItineraryDocLinkTests(unittest.TestCase):
                 )
 
     def test_itinerary_doc_link_is_onsite_not_github_or_raw_md(self):
-        # Vercel 화면에서 GitHub 링크 금지 + .md raw 서빙 회피 → 사이트 내 HTML 페이지여야 함.
+        # GitHub 링크는 모든 link에서 금지(검사 J). 사이트 내(상대경로) doc-link은
+        # .md raw 서빙 회피 위해 .html이어야 함. 외부(http) 링크(예: 식당 예약 페이지)는
+        # 새 탭으로 허용 — doc_link_html이 target=_blank로 렌더.
         urls = self._breakfast_link_urls()
         for url in urls:
             self.assertNotIn("github.com", url, f"Vercel doc link must not point to GitHub: {url!r}")
-            self.assertFalse(url.endswith(".md"), f"doc link must not be a raw .md path: {url!r}")
-            self.assertTrue(url.endswith(".html"), f"doc link should be an on-site HTML page: {url!r}")
+            if url.startswith(("http://", "https://")):
+                continue  # 외부 예약·참조 링크는 onsite .html 제약에서 제외
+            self.assertFalse(url.endswith(".md"), f"onsite doc link must not be a raw .md path: {url!r}")
+            self.assertTrue(url.endswith(".html"), f"onsite doc link should be an HTML page: {url!r}")
 
     def test_breakfast_link_resolves_to_built_page(self):
-        # 일정의 조식 doc-link 대상이 실제 빌드되는 viz 페이지여야 함.
+        # 사이트 내(상대경로) doc-link 대상이 실제 빌드되는 viz 페이지여야 함.
+        # 외부(http) 링크는 빌드 산출물이 아니므로 제외.
         run()
-        urls = set(self._breakfast_link_urls())
+        urls = {u for u in self._breakfast_link_urls() if not u.startswith(("http://", "https://"))}
         for url in urls:
             self.assertTrue(
                 (BASE / "viz" / url).exists(),
-                f"breakfast doc-link target {url!r} is not a built page",
+                f"onsite doc-link target {url!r} is not a built page",
             )
 
 
