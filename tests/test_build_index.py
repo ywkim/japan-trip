@@ -183,12 +183,15 @@ class BuildIndexTests(unittest.TestCase):
         self.assertIn("data/booking-checklist.json", cl)
 
     def test_all_html_outputs_use_token_palette(self):
-        """HTML 6종: light(#F7F6F2/#3E5C76) + dark 토큰 모두 인라인 CSS에 등장."""
+        """HTML 6종: light bg(#F5F5F7) + accent(#3E5C76) 토큰 모두 인라인 CSS에 등장.
+        index.html은 Apple-style 랜딩 리디자인으로 별도 팔레트 사용 — 제외."""
         run()
         for path in ALL_HTML_OUTPUTS:
+            if path == INDEX:
+                continue  # 랜딩 페이지는 Apple-style 팔레트 사용
             with self.subTest(path=path.name):
                 content = path.read_text(encoding="utf-8")
-                self.assertIn("#F7F6F2", content, f"{path.name}: light bg token not injected")
+                self.assertIn("#F5F5F7", content, f"{path.name}: light bg token not injected")
                 self.assertIn("#3E5C76", content, f"{path.name}: slate-indigo accent not injected")
                 for legacy in ("#d33", "#fafafa", "#ff6464", "#c33", "#c80", "#2a7"):
                     self.assertNotIn(
@@ -289,6 +292,30 @@ class BuildIndexTests(unittest.TestCase):
                 for src in sources:
                     self.assertIn(src["url"], html, f"source url {src['url']!r} not in {path.name}")
                     self.assertIn(src["label"], html, f"source label {src['label']!r} not in {path.name}")
+
+    def test_source_links_have_44px_touch_target(self):
+        """출처 링크는 .source-link 클래스로 렌더되고 CSS에 min-height:44px가
+        있어야 한다. 시부모 동반 모바일 조작성 회귀 가드.
+        """
+        run()
+        for path in (INDEX, ITINERARY):
+            with self.subTest(path=path.name):
+                html = path.read_text(encoding="utf-8")
+                self.assertIn("source-link", html, f"no .source-link in {path.name}")
+                self.assertIn("min-height: 44px", html, f"no 44px touch target CSS in {path.name}")
+
+    def test_verified_source_shows_tick(self):
+        """source_verified_at가 있는 transit leg은 ✓ 검증 표시를 노출해야 한다."""
+        run()
+        import json as _json
+        data = _json.loads((BASE / "data" / "itinerary.json").read_text(encoding="utf-8"))
+        has_verified = any(
+            (it.get("arrive_from") or {}).get("source_verified_at")
+            for day in data["days"] for it in day["items"]
+        )
+        self.assertTrue(has_verified, "fixture must have a verified leg")
+        itin = ITINERARY.read_text(encoding="utf-8")
+        self.assertIn("✓", itin, "verified tick ✓ missing in itinerary.html")
 
     def test_route_candidates_rendered_in_itinerary(self):
         run()
@@ -876,7 +903,7 @@ class BreakfastPageTests(unittest.TestCase):
 
 
 class TabBarTests(unittest.TestCase):
-    TAB_PAGES = (INDEX, ITINERARY, TABLE, CHECKLIST, LODGING, ARCHIVE)
+    TAB_PAGES = (ITINERARY, TABLE, CHECKLIST, LODGING, ARCHIVE)  # index.html은 랜딩 리디자인으로 탭바 없음
 
     def test_tab_bar_present_on_all_pages(self):
         run()
@@ -887,8 +914,8 @@ class TabBarTests(unittest.TestCase):
 
     def test_each_page_has_correct_active_tab(self):
         run()
+        # index.html은 랜딩 페이지 리디자인으로 탭바 없음 — viz/* 페이지만 검사
         cases = {
-            INDEX:    "home",
             ITINERARY: "itinerary",
             TABLE:    "itinerary",
             CHECKLIST: "checklist",

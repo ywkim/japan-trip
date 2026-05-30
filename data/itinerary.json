@@ -29,19 +29,23 @@
     "transit_pass_sources": [
       {
         "label": "Apple Wallet 교통카드 (Apple)",
-        "url": "https://support.apple.com/en-us/108772"
+        "url": "https://support.apple.com/en-us/108772",
+        "source_verified_at": "2026-05-28"
       },
       {
         "label": "iPhone ICOCA 활용법 (Inside Kyoto)",
-        "url": "https://www.insidekyoto.com/iphone-the-killer-japan-travel-hack"
+        "url": "https://www.insidekyoto.com/iphone-the-killer-japan-travel-hack",
+        "source_verified_at": "2026-05-28"
       },
       {
         "label": "현 통합 1일권 ¥1,100 (교토시 공식)",
-        "url": "https://www2.city.kyoto.lg.jp/kotsu/webguide/en/ticket/regular_1day_card_comm.html"
+        "url": "https://www2.city.kyoto.lg.jp/kotsu/webguide/en/ticket/regular_1day_card_comm.html",
+        "source_verified_at": "2026-05-28"
       },
       {
         "label": "¥700 시버스 1일권 폐지 (SoraNews24)",
-        "url": "https://soranews24.com/2023/03/30/kyoto-will-abolish-one-day-bus-passes-to-combat-tourism-overcrowding/"
+        "url": "https://soranews24.com/2023/03/30/kyoto-will-abolish-one-day-bus-passes-to-combat-tourism-overcrowding/",
+        "source_verified_at": "2026-05-28"
       }
     ],
     "transit_pass_playbook": [
@@ -173,6 +177,7 @@
             ],
             "source": "https://www.google.com/maps/search/restaurants+near+Shio+Machiya+Kyoto",
             "source_fetched_at": "2026-05-28",
+            "source_verified_at": "2026-05-28",
             "data_quality": "tbd_needs_browser_mcp",
             "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Nijo+Station,+Kyoto&destination=%E5%A4%A7%E9%B5%AC+Kyoto&travelmode=walking"
           }
@@ -210,6 +215,7 @@
             "route": "JR 산인본선(嵯峨野線) 니조역(二条駅)→사가아라시야마역(嵯峨嵐山駅). 약 12분, ¥200",
             "source": "https://www.kyotostation.com/jr-sagano-line-for-nijo-uzumasa-saga-arashiyama/",
             "source_fetched_at": "2026-05-17",
+            "source_verified_at": "2026-05-28",
             "data_quality": "researched_market_rate",
             "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Nijo+Station,+Kyoto&destination=Arashiyama+Bamboo+Grove,+Kyoto&travelmode=transit"
           },
@@ -239,6 +245,7 @@
             "route": "죽림길 → 텐류지 북문 (竹林の小径 경유 7m, Maps 1분; 정원 경내 진입 도보 ~3분 가산)",
             "source": "https://www.google.com/maps/dir/Arashiyama+Bamboo+Grove/Tenryu-ji",
             "source_fetched_at": "2026-05-18",
+            "source_verified_at": "2026-05-28",
             "data_quality": "researched_market_rate",
             "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Arashiyama+Bamboo+Grove,+Kyoto&destination=Tenryu-ji+Temple,+Kyoto&travelmode=walking"
           },
@@ -267,6 +274,7 @@
             "route": "텐류지(天龍寺)/아라시야마(嵐山) → 교토버스(京都バス) 73계통 '코케데라·스즈무시데라(苔寺・鈴虫寺)' 정류장 → 도보 3분",
             "source": "https://saihoji-kokedera.com/en/",
             "source_fetched_at": "2026-05-26",
+            "source_verified_at": "2026-05-28",
             "data_quality": "tbd_needs_browser_mcp",
             "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Tenryu-ji+Temple,+Kyoto&destination=Saihoji+Temple,+Kyoto&travelmode=transit"
           },
@@ -389,6 +397,7 @@
             "route": "시버스(市バス) 11번을 타고 야마고에나카마치(山越中町)에서 59번으로 환승. 약 29분 + 도보 2분, ¥460. (11번은 40분 간격 — 놓치면 택시 22분 대안)",
             "source": "https://www.google.com/maps/dir/Tenryu-ji+Temple,+Kyoto/Kinkaku-ji+Temple,+Kyoto",
             "source_fetched_at": "2026-05-18",
+            "source_verified_at": "2026-05-28",
             "data_quality": "researched_market_rate",
             "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Tenryu-ji+Temple,+Kyoto&destination=Kinkaku-ji,+Kyoto&travelmode=transit"
           },
@@ -423,6 +432,7 @@
             "route": "시버스(市バス) 59번 금각사도(金閣寺道)→료안지마에(竜安寺前). 약 4분, ¥230",
             "source": "https://kinukake.com/en/day-tour.html · https://www.tripadvisor.com/ShowTopic-g298564-i2712-k6637145",
             "source_fetched_at": "2026-05-17",
+            "source_verified_at": "2026-05-28",
             "data_quality": "researched_market_rate",
             "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Kinkaku-ji,+Kyoto&destination=Ryoan-ji,+Kyoto&travelmode=transit"
           }
@@ -449,6 +459,7 @@
             "route": "시버스(市バス) 59번 료안지마에(竜安寺前)→시조가와라마치(四条河原町). 약 42분, ¥230",
             "source": "https://www.google.com/maps/dir/Ryoan-ji/Kawaramachi",
             "source_fetched_at": "2026-05-18",
+            "source_verified_at": "2026-05-28",
             "data_quality": "researched_market_rate",
             "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Ryoan-ji,+Kyoto&destination=Pontocho+Alley,+Kyoto&travelmode=transit"
           }
@@ -486,6 +497,7 @@
             "route": "JR 산인본선(嵯峨野線)으로 니조역(二条駅)→교토역(京都駅) 환승, JR 나라선(奈良線)으로 이나리역(稲荷駅)까지. 약 20분, ¥200",
             "source": "https://www.kyotostation.com/jr-nara-line-for-tofukuji-inari-uji-nara/",
             "source_fetched_at": "2026-05-18",
+            "source_verified_at": "2026-05-28",
             "data_quality": "researched_market_rate",
             "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Nijo+Station,+Kyoto&destination=Fushimi+Inari+Taisha,+Kyoto&travelmode=transit"
           },
@@ -520,6 +532,7 @@
             "route": "JR 나라선(奈良線) 이나리역(稲荷駅)→토후쿠지역(東福寺駅). 1정거장 + 도보 10분",
             "source": "https://www.kyotostation.com/jr-nara-line-for-tofukuji-inari-uji-nara/",
             "source_fetched_at": "2026-05-17",
+            "source_verified_at": "2026-05-28",
             "data_quality": "researched_market_rate",
             "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Fushimi+Inari+Taisha,+Kyoto&destination=Tofuku-ji,+Kyoto&travelmode=transit"
           },
@@ -556,6 +569,7 @@
             "route": "JR 나라선(奈良線) 토후쿠지역(東福寺駅)→교토역(京都駅). 1정거장, ¥150",
             "source": "https://www.kyotostation.com/jr-nara-line-for-tofukuji-inari-uji-nara/",
             "source_fetched_at": "2026-05-17",
+            "source_verified_at": "2026-05-28",
             "data_quality": "researched_market_rate",
             "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Tofuku-ji,+Kyoto&destination=Kyoto+Station,+Kyoto&travelmode=transit"
           }
@@ -572,6 +586,7 @@
             "route": "교토역(京都駅)에서 도보 8분, 약 0.6km. JR 우메코지교토니시역(梅小路京都西駅) 이용 시 1정거장도 가능",
             "source": "https://livejapan.com/en/in-kansai/in-pref-kyoto/in-kyoto-station_to-ji-temple/spot-lj0091598/",
             "source_fetched_at": "2026-05-17",
+            "source_verified_at": "2026-05-28",
             "data_quality": "researched_market_rate",
             "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Kyoto+Station,+Kyoto&destination=Umekoji+Kadensho,+Kyoto&travelmode=walking"
           }
@@ -737,10 +752,10 @@
           }
         },
         {
-          "time": "06:15",
+          "time": "06:00",
           "title": "카덴쇼 체크아웃 → 교토역",
           "maps_query": "Kyoto Station",
-          "note": "KIX 10:05 출발(에어서울 A8YW58)이라 06:45 하루카 탑승 목표. 조식 미포함 — 전날 구매분으로 차내 식사.",
+          "note": "KIX 10:05 출발(에어서울 A8YW58)이라 06:21 하루카 탑승 목표. 조식 미포함 — 전날 구매분으로 차내 식사.",
           "arrive_from": {
             "mode": "walk",
             "duration_min": 8,
@@ -748,15 +763,16 @@
             "route": "카덴쇼에서 교토역(京都駅)까지 도보 8분, 약 0.6km",
             "source": "https://livejapan.com/en/in-kansai/in-pref-kyoto/in-kyoto-station_to-ji-temple/spot-lj0091598/",
             "source_fetched_at": "2026-05-17",
+            "source_verified_at": "2026-05-28",
             "data_quality": "researched_market_rate",
             "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Umekoji+Kadensho,+Kyoto&destination=Kyoto+Station,+Kyoto&travelmode=walking"
           }
         },
         {
-          "time": "06:45",
+          "time": "06:21",
           "title": "JR 하루카 → 간사이공항 → 인천",
           "maps_query": "Kansai International Airport",
-          "note": "에어서울 A8YW58 KIX 10:05 출발 → ICN 12:05 도착. 국제선 2시간 전(약 08:00) KIX 도착 위해 교토역 06:45 하루카 탑승(약 75분). 시부모 동반이라 여유 버퍼 확보.",
+          "note": "에어서울 A8YW58 KIX 10:05 출발 → ICN 12:05 도착. 06:21 하루카 → KIX 약 07:36 도착 (비행 2시간 29분 전 · 여유롭게 수속 후 대기 가능). 귀국편 Trip.com 확정.",
           "arrive_from": {
             "mode": "airport_express",
             "duration_min": 75,
