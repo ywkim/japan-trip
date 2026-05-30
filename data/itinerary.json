@@ -22,6 +22,11 @@
       "ja": "鴨川",
       "reading": "카모가와"
     },
+    "enen": {
+      "ko": "엔엔",
+      "ja": "京都焼肉 enen",
+      "reading": "엔엔"
+    },
     "nishiki": {
       "ko": "니시키 시장",
       "ja": "錦市場",
@@ -349,6 +354,8 @@
               },
               {
                 "mode": "walk",
+                "from": "{{sanjo_keihan_station}}",
+                "to": "{{enen}}",
                 "duration_min": 7,
                 "distance_km": 0.5
               }

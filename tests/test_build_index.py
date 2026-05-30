@@ -307,13 +307,22 @@ class BuildIndexTests(unittest.TestCase):
     def test_verified_source_shows_tick(self):
         """source_verified_at가 있는 출처 칩만 ✓ 검증 표시를 노출해야 한다.
 
-        production days[] 레그가 모두 미검증(tbd_needs_browser_mcp)일 수 있으므로
-        ✓ 렌더 규칙은 source_chip 단위로 격리 검증한다(TDD 규칙: 규칙 검증은 fixture).
+        ① source_chip 단위로 ✓ 렌더 규칙을 격리 검증(days[] 레그가 모두 미검증
+           tbd_needs_browser_mcp일 수 있으므로). ② production fixture의 verified
+           출처(transit_pass_sources[].source_verified_at)가 실제 빌드 산출물에
+           class="source-tick"로 노출되는지 HTML 회귀 가드도 유지.
         """
         verified = build_index.source_chip("https://example.com/x", "경로 출처", verified=True)
         self.assertIn("✓", verified, "verified chip must render ✓")
         plain = build_index.source_chip("https://example.com/x", "경로 출처", verified=False)
         self.assertNotIn("✓", plain, "unverified chip must not render ✓")
+
+        run()
+        rendered = INDEX.read_text(encoding="utf-8") + ITINERARY.read_text(encoding="utf-8")
+        self.assertIn(
+            'class="source-tick"', rendered,
+            "verified source (transit_pass_sources) must render ✓ tick in built HTML",
+        )
 
     def test_route_candidates_not_rendered_in_itinerary(self):
         """의사결정 완료 후 후보 코스 섹션은 웹에 노출하지 않는다."""
