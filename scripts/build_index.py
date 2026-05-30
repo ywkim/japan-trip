@@ -91,6 +91,12 @@ DOC_PAGES = (
         "checklist", "checklist", "checklist.html", "← 예약",
     ),
     DocPage(
+        "docs/cash-withdrawal-plan-2026.md", "viz/cash-plan.html",
+        "현금 환전 계획 · 교토 2026",
+        "일정 기반 현지 현금 필요액·권장 환전 (트래블카드 위주)",
+        "checklist", "checklist", "checklist.html", "← 예약",
+    ),
+    DocPage(
         "docs/decision-log/2026-05-11-may31-jun3-kyoto-update.md", "viz/decision-kyoto.html",
         "교토 일정 변경 결정 (2026-05-11)",
         "5/24~27 → 5/31~6/3 변경 + 카덴쇼 가용 재확인",

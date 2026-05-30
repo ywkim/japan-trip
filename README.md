@@ -84,6 +84,7 @@
 - `docs/transit-pass-jr-kansai-2026.md` — JR 간사이 에어리어 패스 1/2/3/4일권 비교·권장 (예약 탭 `transit_pass` 근거)
 - `docs/breakfast-near-lodging.md` — 숙소(시오·카덴쇼) 인근 조식 옵션 사람용 사본 (단일 출처는 `data/breakfast.json` → `viz/breakfast.html`)
 - `docs/booking-research-2026-05-24.md` — 미정 예약 4항목(여행자보험·하루카 발권·eSIM·환전/트래블카드) 실시간 리서치·권장 발권 채널 (예약 탭 미정 항목 근거)
+- `docs/cash-withdrawal-plan-2026.md` — 현금 환전 계획 (일정 기반 현지 현금 필요액 산출 → 권장 환전 4인 ¥60,000~80,000, 트래블카드 위주. 예약 탭 `fx` 항목 근거)
 - `docs/icoca-iphone-setup.md` — ICOCA 아이폰(Apple Wallet) 셋업 가이드 (4인 사전 요건·등록 단계·충전·트러블슈팅·5/30 체크리스트)
 - `docs/soyeon-maps-list.md` — 소연 구글맵 저장 목록 41개 장소 (카페·식사·명소·쇼핑 카테고리별 정리, 일정 참고용)
 - `docs/saihoji-reservation-2026-06.md` — 사이호지(苔寺) 참배 예약 가능성 리서치 (예약 방법·7일 전 선착순·참배료·사경 면제·시부모 적합성·6월 이끼)

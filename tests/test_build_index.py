@@ -840,6 +840,7 @@ DOC_PAGE_OUTPUTS = (
     BASE / "viz" / "research.html",
     BASE / "viz" / "transit-pass.html",
     BASE / "viz" / "decision-kyoto.html",
+    BASE / "viz" / "cash-plan.html",
     BASE / "viz" / "decision-log.html",
 )
 
@@ -882,6 +883,7 @@ class DocPageTests(unittest.TestCase):
         html = CHECKLIST.read_text(encoding="utf-8")
         self.assertIn('href="research.html"', html, "research doc link should resolve in-site")
         self.assertIn('href="transit-pass.html"', html, "transit-pass doc link should resolve in-site")
+        self.assertIn('href="cash-plan.html"', html, "cash-plan doc link should resolve in-site")
         self.assertNotIn("docs/booking-research-2026-05-24.md\"", html,
                          "raw repo md path should not be used as href")
 

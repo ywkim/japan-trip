@@ -106,6 +106,7 @@ japan-trip/
 │   ├── transit-pass-jr-kansai-2026.md     # JR 간사이 에어리어 패스 1/2/3/4일권 비교·권장 (booking-checklist transit_pass 근거)
 │   ├── breakfast-near-lodging.md          # 숙소(시오·카덴쇼) 인근 조식 옵션 — 거리·영업시간·아침별 권장 (조식 정보 단일 출처)
 │   ├── booking-research-2026-05-24.md     # 미정 예약 4항목(보험·하루카 발권·eSIM·환전카드) 실시간 리서치·권장 채널
+│   ├── cash-withdrawal-plan-2026.md       # 현금 환전 계획 (일정 기반 현지 현금 필요액 산출·권장 환전액 — booking-checklist fx 항목 근거)
 │   ├── transit-mcp-handoff.md             # 후속 세션(Playwright MCP) 위임 가이드 (tbd_needs_browser_mcp leg 측정)
 │   ├── icoca-iphone-setup.md              # ICOCA 아이폰(Apple Wallet) 셋업 가이드 (사전 요건·등록·충전·트러블슈팅·체크리스트)
 │   ├── soyeon-maps-list.md                # 소연 구글맵 저장 목록 41개 장소 (카테고리별 정리, 일정 참고용)
