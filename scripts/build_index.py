@@ -96,6 +96,18 @@ DOC_PAGES = (
         "5/24~27 → 5/31~6/3 변경 + 카덴쇼 가용 재확인",
         "archive", "home", "decision-log.html", "← 결정 일지",
     ),
+    DocPage(
+        "docs/icoca-iphone-setup.md", "viz/icoca-setup.html",
+        "ICOCA 아이폰(Apple Wallet) 셋업 가이드",
+        "출국 전 4인 ICOCA 설정 및 초기 충전 가이드 (2026-05-25)",
+        "checklist", "checklist", "checklist.html", "← 예약",
+    ),
+    DocPage(
+        "docs/essential-iphone-apps.md", "viz/essential-iphone-apps.html",
+        "필수 아이폰 앱 가이드",
+        "교토 여행 필수 앱 5개 설치·설정·운영 가이드 (2026-05-28)",
+        "checklist", "checklist", "checklist.html", "← 예약",
+    ),
 )
 
 DOC_SOURCE_TO_OUT = {p.source: p.out for p in DOC_PAGES}
@@ -114,16 +126,13 @@ def esc(s) -> str:
 
 
 _URL_RE = re.compile(r"(https?://[^\s)]+)")
+# 마크다운 [라벨](url) — url은 http(s) 또는 tel: 만 허용 (javascript: 등 차단)
+_MD_LINK_RE = re.compile(r"\[([^\]]+)\]\((tel:[^)\s]+|https?://[^)\s]+)\)")
 
 
-def linkify(s) -> str:
-    """자유 텍스트를 HTML escape하되 http(s) URL은 클릭 가능한 <a> 링크로 변환.
-
-    체크리스트 노트 등 출처 URL이 모바일에서 탭으로 열리도록 한다.
-    """
-    if s is None:
-        return ""
-    parts = _URL_RE.split(str(s))
+def _autolink(s) -> str:
+    """벌거벗은 http(s) URL을 새 탭 <a>로, 나머지는 HTML escape."""
+    parts = _URL_RE.split(s)
     out = []
     for i, part in enumerate(parts):
         if i % 2 == 1:  # 캡처된 URL
@@ -134,6 +143,31 @@ def linkify(s) -> str:
     return "".join(out)
 
 
+def linkify(s) -> str:
+    """자유 텍스트를 HTML escape하되 클릭 가능한 링크로 변환.
+
+    - 마크다운 `[라벨](url)`: url이 http(s)면 새 탭, `tel:`이면 전화 탭(라벨 표시).
+    - 벌거벗은 http(s) URL: 원문을 라벨로 한 새 탭 링크.
+    체크리스트 노트 등 예약 채널·전화·출처가 모바일에서 탭으로 열리도록 한다.
+    """
+    if s is None:
+        return ""
+    s = str(s)
+    out = []
+    pos = 0
+    for m in _MD_LINK_RE.finditer(s):
+        out.append(_autolink(s[pos:m.start()]))
+        label = esc(m.group(1))
+        href = esc(m.group(2))
+        if m.group(2).startswith("tel:"):
+            out.append(f'<a href="{href}">{label}</a>')
+        else:
+            out.append(f'<a href="{href}" target="_blank" rel="noopener">{label}</a>')
+        pos = m.end()
+    out.append(_autolink(s[pos:]))
+    return "".join(out)
+
+
 def won(n: int) -> str:
     return f"₩{n:,}"
 
@@ -141,6 +175,310 @@ def won(n: int) -> str:
 def maps_link(query: str, label: str) -> str:
     q = esc(query.replace(" ", "+"))
     return f'<a href="https://maps.google.com/?q={q}" target="_blank" rel="noopener">{esc(label)}</a>'
+
+
+# ─── 장소 레지스트리 (병기 단일 출처) ────────────────────────────────────────
+# data/itinerary.json의 "places"가 장소명 ko/ja 병기의 유일한 출처.
+# 산문 필드(note·food_quality·pass_recommendation·route)는 {{place_id}}로 참조하고,
+# 빌드 시 'ko(ja)'로 확장한다 — 같은 장소가 문서 전체에서 동일하게 병기된다.
+# validate.py 검사 K가 (1) 미정의 참조, (2) 참조/병기 없는 생(生) 장소명을 차단한다.
+PLACE_REGISTRY: dict = {}
+PLACE_REF_RE = re.compile(r"\{\{([a-z0-9_]+)\}\}")
+# 확장된 'ko(ja)' 라벨 → reading(일본어 발음 한글표기) 역방향 맵.
+# 교통 타임라인이 역·정류장 발음을 노출하기 위해 load_data에서 채운다.
+PLACE_LABEL_TO_READING: dict = {}
+
+
+def build_place_reading_map() -> dict:
+    """PLACE_REGISTRY에서 확장 라벨('ko(ja)' 또는 'ko') → reading 맵을 만든다."""
+    m = {}
+    for p in PLACE_REGISTRY.values():
+        reading = (p.get("reading") or "").strip()
+        if not reading:
+            continue
+        ko, ja = p.get("ko", ""), p.get("ja", "")
+        label = f"{ko}({ja})" if ja else ko
+        m[label] = reading
+    return m
+
+
+def expand_place_refs(text: str) -> str:
+    """문자열 내 {{place_id}}를 레지스트리의 'ko(ja)' 병기로 확장.
+
+    미정의 id는 원문({{id}})을 그대로 남겨 validate.py 검사 K가 잡도록 한다.
+    """
+    if not text or "{{" not in text:
+        return text
+
+    def sub(m):
+        pid = m.group(1)
+        p = PLACE_REGISTRY.get(pid)
+        if not p:
+            return m.group(0)
+        ko, ja = p.get("ko", ""), p.get("ja", "")
+        return f"{ko}({ja})" if ja else ko
+
+    return PLACE_REF_RE.sub(sub, text)
+
+
+def expand_refs_in_obj(obj):
+    """중첩 dict/list의 모든 문자열 값에서 {{place_id}}를 확장 (재귀)."""
+    if isinstance(obj, dict):
+        return {k: expand_refs_in_obj(v) for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [expand_refs_in_obj(v) for v in obj]
+    if isinstance(obj, str):
+        return expand_place_refs(obj)
+    return obj
+
+
+# ─── New schema (Work 4) helper functions ───────────────────────────────────
+
+def is_new_schema_title(title) -> bool:
+    """Check if title is in new schema (dict with ko_name, ja_name, etc)."""
+    return isinstance(title, dict) and "ko_name" in title
+
+
+def is_new_schema_arrive_from(af) -> bool:
+    """Check if arrive_from is in new schema (has steps array)."""
+    return isinstance(af, dict) and isinstance(af.get("steps"), list)
+
+
+def render_title_display(title) -> str:
+    """Render title for display, supporting both old and new schema.
+
+    New schema: {type, ko_name, ja_name, ja_reading_ko, en_name}
+    Old schema: string
+
+    Returns plain text (no HTML escaping here - caller handles <a> wrapping).
+    """
+    if isinstance(title, str):
+        return title
+
+    if not is_new_schema_title(title):
+        return str(title)
+
+    # New schema: build display string from components
+    ko_name = title.get("ko_name", "").strip()
+    ja_name = title.get("ja_name", "").strip()
+    ja_reading = title.get("ja_reading_ko", "").strip()
+
+    # Render as: "ko_name (ja_name)" or "ko_name (ja_reading)" if ja_name missing
+    parts = [ko_name]
+    if ja_name:
+        parts.append(f"({ja_name})")
+    elif ja_reading:
+        parts.append(f"({ja_reading})")
+
+    return " ".join(parts)
+
+
+def title_reading_html(title) -> str:
+    """발음 줄 렌더 (🗣️ {ja_reading_ko}). title이 dict이고 ja_reading_ko가 있으면 HTML, 없으면 빈 문자열."""
+    if not isinstance(title, dict):
+        return ""
+    reading = title.get("ja_reading_ko", "").strip()
+    if not reading:
+        return ""
+    return f'<div class="pron">🗣️ {esc(reading)}</div>'
+
+
+def _station_label(value) -> str:
+    """from/to 값에서 화면용 라벨을 얻는다.
+
+    신스키마: from/to는 '{{place_id}}' 문자열이 expand_refs_in_obj로 이미
+    'ko(ja)'로 확장된 상태(예: '니조역(二条駅)'). 그대로 사용.
+    """
+    if isinstance(value, str):
+        return value.strip()
+    # 안전망: 구 dict 형태가 남아 있으면 ko(ja)로 합성
+    if isinstance(value, dict):
+        ko, ja = value.get("ko", ""), value.get("ja", "")
+        return f"{ko}({ja})" if ko and ja else (ko or "")
+    return ""
+
+
+def _segment_pill(step: dict) -> str:
+    """이동 수단 pill 라벨 (아이콘 + 운영사·노선). 색이 아니라 아이콘·텍스트로 구분.
+
+    Quiet Gray 테마: 운영사별 브랜드색(빨강·파랑) 도입 금지 — 단일 accent 유지.
+    """
+    mode = step.get("mode")
+    operator = step.get("operator") or {}
+    op_ko = operator.get("ko") if isinstance(operator, dict) else ""
+    icon = MODE_ICONS.get(mode, "·")
+    if mode == "bus":
+        text = op_ko or "버스"
+        number = step.get("number")
+        if number:
+            text += f" {number}번"
+    elif mode == "jr":
+        jr_line = step.get("line")
+        text = f"JR {jr_line}" if jr_line else "JR"
+    elif mode == "airport_express":
+        text = op_ko or "공항특급"
+    elif mode == "walk":
+        text = "도보"
+    else:
+        text = MODE_VERBS.get(mode, "이동")
+    return f'<span class="tl-mode">{icon} {esc(text)}</span>'
+
+
+def _segment_meta(step: dict) -> str:
+    """분·거리·요금 메타 (tabular-nums). 없으면 빈 문자열."""
+    parts = []
+    if step.get("duration_min"):
+        parts.append(f'{step["duration_min"]}분')
+    if step.get("distance_km"):
+        parts.append(f'{step["distance_km"]}km')
+    if step.get("fare_jpy"):
+        parts.append(f'¥{step["fare_jpy"]}')
+    if not parts:
+        return ""
+    return f'<span class="tl-meta">{esc(" · ".join(parts))}</span>'
+
+
+def _render_transit_timeline(steps: list) -> str:
+    """역·정류장 from/to가 있는 steps를 세로 레일 타임라인으로 렌더.
+
+    - 각 step.from을 도트 노드로(첫 step은 출발, 이후 step의 from은 환승점),
+      마지막 step.to를 도착 노드로 렌더 → 노드 사이를 레일 선이 잇는다.
+    - 환승점은 강조 도트 + '환승' 태그. 운영사/소요/요금은 도트 옆 pill·메타.
+    인접 step이 to[i]==from[i+1]로 이어진다는 전제(우리 데이터의 환승 모델).
+    """
+    parts = ['<div class="tl">']
+    for i, step in enumerate(steps):
+        from_label = _station_label(step.get("from"))
+        is_transfer = i > 0
+        dot_cls = "tl-dot transfer" if is_transfer else "tl-dot start"
+        rail = f'<span class="{dot_cls}"></span><span class="tl-line"></span>'
+        station = f'<div class="tl-station">{esc(from_label)}'
+        if is_transfer:
+            station += '<span class="tl-tag">환승</span>'
+        station += '</div>'
+        station += _station_reading_html(from_label)
+        seg = f'<div class="tl-seg">{_segment_pill(step)}{_segment_meta(step)}</div>'
+        parts.append(
+            f'<div class="tl-node"><div class="tl-rail">{rail}</div>'
+            f'<div class="tl-content">{station}{seg}</div></div>'
+        )
+    to_label = _station_label(steps[-1].get("to"))
+    parts.append(
+        f'<div class="tl-node"><div class="tl-rail"><span class="tl-dot end"></span></div>'
+        f'<div class="tl-content"><div class="tl-station">{esc(to_label)}</div>'
+        f'{_station_reading_html(to_label)}</div></div>'
+    )
+    parts.append('</div>')
+    return ''.join(parts)
+
+
+def _station_reading_html(label: str) -> str:
+    """확장 라벨('ko(ja)')에 대응하는 역·정류장 발음 줄. 없으면 빈 문자열."""
+    reading = PLACE_LABEL_TO_READING.get(label.strip())
+    if not reading:
+        return ""
+    return f'<div class="tl-reading">🗣️ {esc(reading)}</div>'
+
+
+def _render_transit_simple(steps: list) -> str:
+    """역 정보가 없는 steps(도보 등)를 간결한 pill 줄로 렌더."""
+    rows = []
+    for step in steps:
+        rows.append(f'<div class="tl-simple">{_segment_pill(step)}{_segment_meta(step)}</div>')
+    return ''.join(rows)
+
+
+def render_transit_line_steps(steps: list, af_dict: dict) -> str:
+    """새 스키마 arrive_from를 '역 타임라인'으로 렌더 (모바일 ONE LONG STRING 해소).
+
+    - 접힘 요약: 모드별 한국어 동사 + 총 소요시간(+환승 횟수). 길게 늘어지지 않음.
+    - 펼침 상세: 세로 레일 + 역·정류장 도트 타임라인(역 기반 leg) 또는 간결 pill(도보).
+    - 운영사/노선은 색이 아니라 아이콘+pill로 구분 (Quiet Gray: 단일 accent 유지).
+    - af_dict.advisory(선택)는 warn 보더 안내 박스.
+    """
+    if not steps:
+        return ""
+
+    ride_modes = ("bus", "jr", "subway", "train", "airport_express")
+    rides = [s for s in steps if s.get("mode") in ride_modes]
+    transfers = max(0, len(rides) - 1)
+    total_dur = sum(s.get("duration_min") or 0 for s in steps)
+    primary = rides[0] if rides else steps[0]
+    icon = MODE_ICONS.get(primary.get("mode"), "·")
+    verb = MODE_VERBS.get(primary.get("mode"), "이동")
+    if transfers >= 1:
+        summary = f"{icon} {verb} 환승 {transfers}회 · 약 {total_dur}분"
+    elif total_dur:
+        summary = f"{icon} {verb} {total_dur}분"
+    else:
+        summary = f"{icon} {verb}"
+
+    # 지도 버튼
+    maps_url = (af_dict.get("maps_url") or "").strip()
+    src = (af_dict.get("source") or "").strip()
+    first_token = src.split()[0] if src else ""
+    src_href = first_token if first_token.startswith(("http://", "https://")) else ""
+    href = maps_url or src_href
+    if href:
+        summary += f' <a href="{esc(href)}" target="_blank" rel="noopener" class="maps-btn">지도 ↗</a>'
+
+    station_based = all(
+        _station_label(s.get("from")) and _station_label(s.get("to")) for s in steps
+    )
+    detail = _render_transit_timeline(steps) if station_based else _render_transit_simple(steps)
+
+    advisory = (af_dict.get("advisory") or "").strip()
+    if advisory:
+        detail += f'<div class="tl-advisory">⚠️ {esc(advisory)}</div>'
+
+    return fold(summary, detail)
+
+
+_PLACE_MARKUP_RE = re.compile(r"\[\[([^\|\]]+)(?:\|([^\]]+))?\]\]")
+_PLACEHOLDER_RE = re.compile(r"__PLACE_LINK_\d+__")
+
+
+def strip_place_markup(text: str) -> str:
+    """note 텍스트에서 wiki 마크업 [[label|query]]을 제거하고 label만 남긴다.
+
+    memo_block의 길이 판정용 — 보이는 텍스트 길이로 계산하도록.
+    """
+    if not text:
+        return text
+    return _PLACE_MARKUP_RE.sub(r"\1", text)
+
+
+def link_places(text: str) -> str:
+    """note 텍스트의 위키식 마크육 [[label|query]]을 Google Maps 링크로 변환.
+
+    - [[label|query]]: label을 query로 검색
+    - [[label]]: label을 query로 사용
+    나머지 텍스트는 linkify()로 처리해 URL도 링크화하고 HTML escape.
+
+    double-escape 방지: markup을 먼저 처리해 placeholder로 치환, 나머지 텍스트를 escape+linkify,
+    마지막에 placeholder를 실제 HTML로 복구.
+    """
+    if not text:
+        return text
+
+    placeholders = {}
+    counter = [0]
+
+    def store_markup(m):
+        label = m.group(1)
+        query = m.group(2) or label
+        placeholder = f"__PLACE_LINK_{counter[0]}__"
+        placeholders[placeholder] = maps_link(query, label)
+        counter[0] += 1
+        return placeholder
+
+    text = _PLACE_MARKUP_RE.sub(store_markup, text)
+    text = linkify(text)
+
+    for placeholder, html in placeholders.items():
+        text = text.replace(esc(placeholder), html)
+
+    return text
 
 
 def lodging_photo_strip(photos: list, img_prefix: str = "") -> str:
@@ -223,11 +561,17 @@ def run_json(script: str) -> dict:
 
 
 def load_data():
+    itinerary = json.loads((DATA / "itinerary.json").read_text(encoding="utf-8"))
+    # 장소 레지스트리를 모듈 전역에 적재 후 {{place_id}} 참조를 'ko(ja)'로 확장.
+    global PLACE_REGISTRY, PLACE_LABEL_TO_READING
+    PLACE_REGISTRY = itinerary.get("places", {})
+    PLACE_LABEL_TO_READING = build_place_reading_map()
+    itinerary = expand_refs_in_obj(itinerary)
     return {
         "decision": json.loads((DATA / "decision.json").read_text(encoding="utf-8")),
         "cost": json.loads((DATA / "cost-options.json").read_text(encoding="utf-8")),
         "weather": json.loads((DATA / "weather.json").read_text(encoding="utf-8")),
-        "itinerary": json.loads((DATA / "itinerary.json").read_text(encoding="utf-8")),
+        "itinerary": itinerary,
         "checklist": json.loads((DATA / "booking-checklist.json").read_text(encoding="utf-8")),
         "breakfast": json.loads((DATA / "breakfast.json").read_text(encoding="utf-8")),
         "tokens": json.loads((DATA / "design-tokens.json").read_text(encoding="utf-8")),
@@ -312,6 +656,7 @@ def render_css(tokens: dict) -> str:
   .day:last-child {{ border-bottom: none; }}
   .day .date {{ font-size: 0.9rem; }}
   .day .date .k {{ display: inline-block; min-width: 3.2rem; color: var(--fg); font-weight: 600; font-variant-numeric: tabular-nums; }}
+  .pron {{ color: var(--muted); font-size: 0.8em; margin-top: 0.1rem; }}
   /* ── 접기(쉬운 설명 + 펼침 상세) ── */
   details.leg {{ margin: 0.15rem 0 0.35rem; }}
   details.leg > summary {{
@@ -422,6 +767,40 @@ def render_css(tokens: dict) -> str:
   .lodging-strip {{ display: flex; gap: 0.5rem; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; padding-bottom: 0.25rem; margin: 0.6rem 0 0.4rem; }}
   .lodging-strip::-webkit-scrollbar {{ display: none; }}
   .lodging-thumb {{ flex: 0 0 200px; height: 134px; object-fit: cover; border-radius: 8px; display: block; }}
+  /* ── 이동 경로 타임라인 (역·정류장 노드 + 환승) ── */
+  .tl {{ margin: 0.1rem 0 0.05rem; }}
+  .tl-node {{ display: flex; gap: 0.55rem; align-items: stretch; }}
+  .tl-rail {{ display: flex; flex-direction: column; align-items: center; flex-shrink: 0; width: 11px; }}
+  .tl-dot {{
+    width: 9px; height: 9px; border-radius: 50%; margin-top: 3px; flex-shrink: 0;
+    background: var(--accent); box-shadow: 0 0 0 2px var(--card), 0 0 0 3px var(--accent);
+  }}
+  .tl-dot.transfer {{ background: var(--warn); box-shadow: 0 0 0 2px var(--card), 0 0 0 3px var(--warn); }}
+  .tl-line {{ width: 2px; flex: 1 0 auto; min-height: 1.3rem; background: var(--border); margin: 2px 0; }}
+  .tl-content {{ flex: 1; min-width: 0; padding-bottom: 0.5rem; }}
+  .tl-node:last-child .tl-content {{ padding-bottom: 0; }}
+  .tl-station {{ color: var(--fg); font-weight: 500; font-size: 0.92em; line-height: 1.35; word-break: keep-all; }}
+  .tl-reading {{ color: var(--muted); font-size: 0.78em; line-height: 1.3; margin-top: 0.05rem; }}
+  .tl-tag {{
+    display: inline-block; margin-left: 0.35rem; padding: 0 0.4rem;
+    font-size: 0.72em; font-weight: 600; color: var(--warn);
+    border: 1px solid var(--warn); border-radius: 999px; vertical-align: middle; white-space: nowrap;
+  }}
+  .tl-seg {{ display: flex; align-items: center; flex-wrap: wrap; gap: 0.3rem 0.4rem; margin-top: 0.25rem; }}
+  .tl-mode {{
+    display: inline-flex; align-items: center; gap: 0.25rem; white-space: nowrap;
+    padding: 0.1rem 0.5rem; border-radius: 999px;
+    background: var(--accent-soft); color: var(--accent);
+    font-size: 0.78em; font-weight: 600;
+  }}
+  .tl-meta {{ color: var(--muted); font-size: 0.78em; font-variant-numeric: tabular-nums; }}
+  .tl-simple {{ display: flex; align-items: center; flex-wrap: wrap; gap: 0.3rem 0.4rem; padding: 0.1rem 0; }}
+  .tl-advisory {{
+    margin-top: 0.45rem; padding: 0.4rem 0.55rem;
+    border-left: 2px solid var(--warn); background: var(--subcard);
+    border-radius: 0 4px 4px 0; color: var(--fg);
+    font-size: 0.82em; line-height: 1.4; word-break: keep-all;
+  }}
 """
 
 
@@ -716,9 +1095,22 @@ def note_block(note: str, *, style: str = "") -> str:
     if len(note) <= 60:
         return f'<div class="sub"{style_attr}>{esc(note)}</div>'
     segs = [s for s in note.split(" · ") if s.strip()]
-    if len(segs) >= 3:
-        return fold(esc(" · ".join(segs[:2])), esc(" · ".join(segs[2:])))
-    return fold("상세 보기", esc(note))
+    if len(segs) >= 2:
+        summary = esc(" · ".join(segs[:2]))
+        # 3개 이상 항목이면 나머지를 다중 줄로 렌더
+        if len(segs) >= 3:
+            rest_lines = "".join(f'<div>{esc(s)}</div>' for s in segs[2:])
+            return fold(summary, rest_lines)
+        # 2개 항목: 그대로 접기
+        return fold(summary, esc(" · ".join(segs[1:])))
+    # 구분자 없으면 첫 50자 + "…" 요약 후 다중 줄로 분해
+    break_idx = note.find(" ", 0, 50)
+    if break_idx > 0:
+        first_phrase = note[:break_idx].strip() + "…"
+    else:
+        first_phrase = note[:50].strip() + "…"
+    detail_lines = "".join(f'<div>{esc(line)}</div>' for line in [note])
+    return fold(esc(first_phrase), detail_lines)
 
 
 def pass_block(text: str) -> str:
@@ -732,7 +1124,15 @@ def pass_block(text: str) -> str:
     if len(text) <= 60 or " — " not in text:
         return f'<div class="sub" style="margin-top:0.25rem;">🎫 {esc(text)}</div>'
     head, _, rest = text.partition(" — ")
-    return f'<div style="margin-top:0.25rem;">{fold("🎫 " + esc(head.strip()), esc(rest.strip()))}</div>'
+    # rest를 ` + ` 또는 ` · ` 기준으로 여러 줄로 분해
+    import re
+    lines = re.split(r'\s+\+\s+|\s·\s', rest)
+    lines = [line.strip() for line in lines if line.strip()]
+    if lines:
+        detail_html = "".join(f'<div>{esc(line)}</div>' for line in lines)
+    else:
+        detail_html = esc(rest.strip())
+    return f'<div style="margin-top:0.25rem;">{fold("🎫 " + esc(head.strip()), detail_html)}</div>'
 
 
 def detail_row(label: str, value: str) -> str:
@@ -757,15 +1157,54 @@ def detail_row(label: str, value: str) -> str:
 
 
 def _lead_split(text: str):
-    """첫 문장(". ") 또는 첫 토막(" · ")을 요약 head로, 나머지를 detail로 분리.
+    """첫 문장 또는 첫 토막을 요약 head로, 나머지를 detail로 분리.
 
-    앞 토막이 60자 밖이거나 구분자가 없으면 (None, None) — 통째 접기 폴백.
+    구분자 우선순위: 위치(earlier is better) + 타입(문장 > 항목).
+    1. 60자 이내에서 가장 먼저 나타나는 구분자 찾기: ". " · "다. " · "요. " · "음. " · " — " · " · "
+    2. 구분자 없으면 첫 어절 또는 60자 추출 + "…"
+
+    의도: 항상 의미있는 요약을 생성.
     """
-    for sep in (". ", " · "):
+    separators = [". ", "다. ", "요. ", "음. ", " — ", " · "]
+    # 60자 이내에서 가장 먼저 나타나는 구분자 찾기
+    best_sep = None
+    best_idx = float('inf')
+    for sep in separators:
         idx = text.find(sep)
-        if 0 < idx < 60:
-            return text[:idx].strip(), text[idx + len(sep):].strip()
-    return None, None
+        if 0 < idx < 60 and idx < best_idx:
+            best_idx = idx
+            best_sep = sep
+
+    if best_sep:
+        return text[:best_idx].strip(), text[best_idx + len(best_sep):].strip()
+
+    # 구분자 없으면 첫 어절 또는 60자까지 추출 + "…"
+    if len(text) <= 60:
+        return None, None
+    # 첫 띄어쓰기 찾기 (최대 60자 내)
+    break_idx = text.find(" ", 0, 60)
+    if break_idx > 0:
+        head = text[:break_idx].strip() + "…"
+        return head, text[break_idx + 1:].strip()
+    # 띄어쓰기 없으면 60자 한계
+    return text[:60].strip() + "…", text[60:].strip()
+
+
+def _detail_lines(text: str) -> str:
+    """상세 텍스트를 여러 줄로 분해하여 HTML 렌더링.
+
+    구분자(`. `·`다. `·`요. `·`음. `·` · `)로 항목화하고, 각 항목을 `<div>` 줄로 렌더.
+    마크업([[]]) 변환도 함께.
+    """
+    import re
+    # 구분자 패턴: ". " · "다. " · "요. " · "음. " · " · "
+    sep_pattern = r'(?:\.(?:\s+|$)|다\.\s+|요\.\s+|음\.\s+|\s·\s)'
+    lines = re.split(sep_pattern, text)
+    # 빈 항목과 도미노 공백 제거
+    lines = [line.strip() for line in lines if line.strip()]
+    if not lines:
+        return ""
+    return "".join(f'<div>{link_places(line)}</div>' for line in lines)
 
 
 def memo_block(note: str, *, style: str = "", cls: str = "sub") -> str:
@@ -773,17 +1212,35 @@ def memo_block(note: str, *, style: str = "", cls: str = "sub") -> str:
 
     장소 팁·맛집 설명이 카드를 압도하지 않도록 첫 문장만 보이고 나머지를 접는다.
     예약·숙박 메모용 note_block(' · ' 2항목 요약)과 달리 문장 단위 요약이 자연스럽다.
+
+    [[label|query]] 형식의 place markup을 Google Maps 링크로 변환.
+    길이 판정은 strip_place_markup(note)의 display text로 수행.
     """
     note = (note or "").strip()
     if not note:
         return ""
     style_attr = f' style="{style}"' if style else ""
-    if len(note) <= 50:
-        return f'<div class="{cls}"{style_attr}>{esc(note)}</div>'
+    display_text = strip_place_markup(note)
+    if len(display_text) <= 50:
+        return f'<div class="{cls}"{style_attr}>{link_places(note)}</div>'
     head, rest = _lead_split(note)
     if head and rest:
-        return fold(esc(head), esc(rest))
-    return fold("상세 보기", esc(note))
+        detail_html = _detail_lines(rest)
+        return fold(link_places(head), detail_html)
+    # 구분자를 찾지 못하면 첫 어절 + "…" 추출 + 상세를 여러 줄로
+    if len(display_text) > 60:
+        # 50~60자: 구분자가 없으면 평문 그대로
+        # 60자 초과: 첫 50자 추출 + "…"로 요약, 나머지 다중 줄
+        import re
+        break_idx = note.find(" ", 0, 50)
+        if break_idx > 0:
+            first_phrase = note[:break_idx].strip() + "…"
+        else:
+            first_phrase = note[:50].strip() + "…"
+        detail_html = _detail_lines(note)
+        return fold(link_places(first_phrase), detail_html)
+    # 50~60자: 평문
+    return f'<div class="{cls}"{style_attr}>{link_places(note)}</div>'
 
 
 def source_url_of(text: str) -> str:
@@ -806,10 +1263,17 @@ def source_chip(href: str, label: str, *, verified: bool = False) -> str:
 def transit_line(af) -> str:
     """도착 경로를 '아이콘 + 평이 요약(소요시간)' summary와 장문 route 상세로 렌더.
 
+    Supports both old schema (mode, route, ...) and new schema (steps array, ...).
     maps_url이 있으면 summary 줄에 '지도 ↗' 버튼 인라인 표시 — 탭하면 구글맵 앱 오픈.
     """
     if not af:
         return ""
+
+    # New schema: has steps array
+    if is_new_schema_arrive_from(af):
+        return render_transit_line_steps(af.get("steps"), af)
+
+    # Old schema: flat structure with mode, route, etc
     mode = af.get("mode")
     icon = MODE_ICONS.get(mode, "·")
     verb = MODE_VERBS.get(mode, "이동")
@@ -856,12 +1320,14 @@ def card_itinerary(d) -> str:
     for day in itin["days"]:
         item_rows = []
         for it in day["items"]:
-            link = maps_link(it["maps_query"], it["title"]) if it.get("maps_query") else esc(it["title"])
+            title_text = render_title_display(it["title"])
+            link = maps_link(it["maps_query"], title_text) if it.get("maps_query") else esc(title_text)
+            pronunciation_html = title_reading_html(it["title"])
             note_html = memo_block(it.get("note"))
             transit = transit_line(it.get("arrive_from"))
             if it.get("image_url"):
                 img_html = (
-                    f'<img src="{esc(it["image_url"])}" alt="{esc(it["title"])}" '
+                    f'<img src="{esc(it["image_url"])}" alt="{esc(title_text)}" '
                     f'class="place-img" loading="lazy">'
                     f'<div class="img-credit">{esc(it.get("image_credit",""))}</div>'
                 )
@@ -872,6 +1338,7 @@ def card_itinerary(d) -> str:
             item_rows.append(f"""
     <div class="day">
       <div class="date"><span class="k">{esc(it['time'])}</span> {link}</div>
+      {pronunciation_html}
       {transit}
       {note_html}{link_html}{img_html}{reviews_html}
     </div>""")
@@ -1344,12 +1811,14 @@ def build_itinerary(d) -> str:
     for day in itin["days"]:
         item_rows = []
         for it in day["items"]:
-            link = maps_link(it["maps_query"], it["title"]) if it.get("maps_query") else esc(it["title"])
+            title_text = render_title_display(it["title"])
+            link = maps_link(it["maps_query"], title_text) if it.get("maps_query") else esc(title_text)
+            pronunciation_html = title_reading_html(it["title"])
             note_html = memo_block(it.get("note"))
             transit = transit_line(it.get("arrive_from"))
             if it.get("image_url"):
                 img_html = (
-                    f'<img src="{esc(it["image_url"])}" alt="{esc(it["title"])}" '
+                    f'<img src="{esc(it["image_url"])}" alt="{esc(title_text)}" '
                     f'class="place-img" loading="lazy">'
                     f'<div class="img-credit">{esc(it.get("image_credit",""))}</div>'
                 )
@@ -1361,6 +1830,7 @@ def build_itinerary(d) -> str:
             item_rows.append(f"""
     <div class="day">
       <div class="date"><span class="k">{esc(it['time'])}</span> {link}</div>
+      {pronunciation_html}
       {transit}
       {note_html}{food_html}{link_html}{img_html}{reviews_html}
     </div>""")
@@ -1408,13 +1878,16 @@ def build_itinerary(d) -> str:
         for day in cand["days"]:
             item_rows = []
             for it in day["items"]:
-                link = maps_link(it["maps_query"], it["title"]) if it.get("maps_query") else esc(it["title"])
+                title_text = render_title_display(it["title"])
+                link = maps_link(it["maps_query"], title_text) if it.get("maps_query") else esc(title_text)
+                pronunciation_html = title_reading_html(it["title"])
                 note_html = memo_block(it.get("note"))
                 food_html = food_quality_html(it.get("food_quality"))
                 link_html = doc_link_html(it.get("link"))
                 item_rows.append(f"""
     <div class="day">
       <div class="date"><span class="k">{esc(it['time'])}</span> {link}</div>
+      {pronunciation_html}
       {note_html}{food_html}{link_html}
     </div>""")
             cand_day_cards.append(f"""
@@ -1430,15 +1903,7 @@ def build_itinerary(d) -> str:
   {''.join(cand_day_cards)}
 </details>""")
 
-    candidates_section = ""
-    if candidate_cards:
-        candidates_section = f"""
-<section class="card">
-  <h2>후보 코스</h2>
-  <div class="sub" style="margin-bottom:0.5rem;">숙소·날짜(5/31~6/3) 동일. 동선만 다른 대안 코스. 제목 탭하면 펼쳐짐.</div>
-  {''.join(candidate_cards)}
-</section>
-"""
+    candidates_section = ""  # 의사결정 완료 — 후보 코스 웹 노출 안 함
 
     body = f"""<h1>교토 3박4일 일정</h1>
 <div class="status">{esc(trip['dates'])} · {trip['nights']}박 · {trip['travelers']}인 · {esc(trip.get('composition',''))}</div>
@@ -1601,12 +2066,14 @@ def build_itinerary_table(d) -> str:
         for col in col_items:
             if i < len(col):
                 it = col[i]
-                link = maps_link(it["maps_query"], it["title"]) if it.get("maps_query") else esc(it["title"])
+                title_text = render_title_display(it["title"])
+                link = maps_link(it["maps_query"], title_text) if it.get("maps_query") else esc(title_text)
+                pronunciation_html = title_reading_html(it["title"])
                 note_html = memo_block(it.get("note"), cls="t-note")
                 transit = transit_line(it.get("arrive_from"))
                 if it.get("image_url"):
                     img_html = (
-                        f'<img src="{esc(it["image_url"])}" alt="{esc(it["title"])}" '
+                        f'<img src="{esc(it["image_url"])}" alt="{esc(title_text)}" '
                         f'class="place-img" loading="lazy">'
                         f'<span class="img-credit">{esc(it.get("image_credit",""))}</span>'
                     )
@@ -1616,7 +2083,7 @@ def build_itinerary_table(d) -> str:
                 link_html = doc_link_html(it.get("link"))
                 cells.append(
                     f'<td><span class="t-time">{esc(it["time"])}</span>'
-                    f'<span class="t-title">{link}</span>{transit}{note_html}{food_html}{link_html}{img_html}</td>'
+                    f'<span class="t-title">{link}</span>{pronunciation_html}{transit}{note_html}{food_html}{link_html}{img_html}</td>'
                 )
             else:
                 cells.append("<td></td>")
@@ -1627,12 +2094,14 @@ def build_itinerary_table(d) -> str:
     for day in days:
         item_rows = []
         for it in day["items"]:
-            link = maps_link(it["maps_query"], it["title"]) if it.get("maps_query") else esc(it["title"])
+            title_text = render_title_display(it["title"])
+            link = maps_link(it["maps_query"], title_text) if it.get("maps_query") else esc(title_text)
+            pronunciation_html = title_reading_html(it["title"])
             note_html = memo_block(it.get("note"))
             transit = transit_line(it.get("arrive_from"))
             if it.get("image_url"):
                 img_html = (
-                    f'<img src="{esc(it["image_url"])}" alt="{esc(it["title"])}" '
+                    f'<img src="{esc(it["image_url"])}" alt="{esc(title_text)}" '
                     f'class="place-img" loading="lazy">'
                     f'<div class="img-credit">{esc(it.get("image_credit",""))}</div>'
                 )
@@ -1644,6 +2113,7 @@ def build_itinerary_table(d) -> str:
             item_rows.append(f"""
     <div class="day">
       <div class="date"><span class="k">{esc(it["time"])}</span> {link}</div>
+      {pronunciation_html}
       {transit}
       {note_html}{food_html}{link_html}{img_html}{reviews_html}
     </div>""")
