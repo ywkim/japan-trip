@@ -121,10 +121,10 @@
           }
         },
         {
-          "time": "18:30",
+          "time": "19:00",
           "title": "시오 인근 저녁 (中華 大鵬 — 쓰촨 중식)",
           "maps_query": "Taiho Nijo Kyoto",
-          "note": "시오 도보권(니조역 도보 5분). 도착일 피로 최소화 — 이동 없이 가까운 저녁. 인기점이라 예약·웨이팅 가능, 도착편 지연 시 대안: 京ゆば処 静家(유바).",
+          "note": "시오 도보권(니조역 도보 5분). 도착일 피로 최소화 — 이동 없이 가까운 저녁. 인기점(예약난이도↑)이라 워크인 대기 리스크 큼 → AutoReserve 넷예약 권장(전화 075-822-5598도 가능). 예약 슬롯 17:30·19:00 중 17:45 체크인 직후라 17:30 불가 → 19:00 예약. 도착편 지연 시 대안: 京ゆば処 静家(유바·9석·예약필수·075-813-1517).",
           "food_quality": {
             "rating": "타베로그 3.76 · 미쉐린 빕구르망 2024 · 中国料理WEST百名店2024",
             "source": "Tabelog · Hot Pepper(영업시간) 2026-05-28 · 미쉐린 가이드 교토 2024",
@@ -186,12 +186,12 @@
           "blog_reviews": [
             {
               "url": "https://m.blog.naver.com/mathian97/223963483537",
-              "img": "https://postfiles.pstatic.net/MjAyNTA4MDhfNDEg/MDAxNzU0NTg0NTY4MjEx.yNA_jTyMPk_B3nZxWA-BDu7X49nmu0UwxKg-OVU6ajkg.zK6ozAAxsbnvSu4VHBi7ZkE6H6tOrsiBygtx4SwtiD4g.JPEG/900%EF%BC%BF20250721%EF%BC%BF144641.jpg?type=w800",
+              "img": "https://mblogthumb-phinf.pstatic.net/MjAyNTA4MDhfNDEg/MDAxNzU0NTg0NTY4MjEx.yNA_jTyMPk_B3nZxWA-BDu7X49nmu0UwxKg-OVU6ajkg.zK6ozAAxsbnvSu4VHBi7ZkE6H6tOrsiBygtx4SwtiD4g.JPEG/900%EF%BC%BF20250721%EF%BC%BF144641.jpg?type=w800",
               "comment": "부모님과 가볼만한곳. 강가 따라 걸으면 배 타는 사람들 구경 포함. 역에서 도보"
             },
             {
               "url": "https://m.blog.naver.com/muse_jigelle/224072195788",
-              "img": "https://postfiles.pstatic.net/MjAyNTA4MDhfMTY1/MDAxNzU0NTg0NzUwNjIy.Kw6AO_7M0Q93PGgAid33y-v8SjOL3IgToIN50Q1F-qMg.UTj8VvA5kaMbpKc27c4NKqNBe_3GIxy1hYjzL5AR0lgg.JPEG/900%EF%BC%BFGP017291%EF%BC%BF1753187331058.JPG?type=w800",
+              "img": "https://mblogthumb-phinf.pstatic.net/MjAyNTA4MDhfMTY1/MDAxNzU0NTg0NzUwNjIy.Kw6AO_7M0Q93PGgAid33y-v8SjOL3IgToIN50Q1F-qMg.UTj8VvA5kaMbpKc27c4NKqNBe_3GIxy1hYjzL5AR0lgg.JPEG/900%EF%BC%BFGP017291%EF%BC%BF1753187331058.JPG?type=w800",
               "comment": "낮 시간대 단체 관광객 많음. 아침 일찍 서두를 것. 비 오는 날도 운치 있음"
             }
           ]
@@ -405,14 +405,14 @@
           "time": "18:30",
           "title": "폰토초 저녁 (まんざら亭 — 교마치야 창작 교토요리)",
           "maps_query": "Manzaratei Pontocho Kyoto",
-          "note": "니시키 시장은 17:00 마감이라 낮에 둘러보기",
+          "note": "니시키 시장은 17:00 마감이라 낮에 둘러보기. 워크인 대기 리스크 회피 — 楽天ぐるなび·ヒトサラ 넷예약 권장(전화 075-212-0028도 가능). 6/1(월) 18:30·4인 일반석.",
           "food_quality": {
             "rating": "타베로그 3.30 (92)",
             "source": "Tabelog 2026-05-24",
             "source_fetched_at": "2026-05-24",
             "data_quality": "researched_market_rate",
             "url": "https://tabelog.com/en/kyoto/A2601/A260201/26000957/",
-            "note": "130년 교마치야. 창작 교토요리·오반자이. 가와라마치역 도보 5분. 川床 6~9월 가능. 4인은 일반석(완전개실 6인~). 1인 ¥6,000~8,000"
+            "note": "130년 교마치야. 창작 교토요리·오반자이. 가와라마치역 도보 5분. ※先斗町店은 가모가와 川床(納涼床) 미운영 — 공식 납량상 점포목록(kyoto-yuka.com) 先斗町 구역 미등재. 강상 床席 원하면 별도 카와유카 확정점 필요. 4인은 일반 실내석(완전개실 6인~). 1인 ¥6,000~8,000"
           },
           "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Nishiki_ichiba_kyoto.jpg?width=480",
           "image_credit": "Wikimedia Commons",
@@ -1213,7 +1213,8 @@
     "6/3 출국 시간에 따라 토지 산책·교토역 식사 가능 여부 결정",
     "tbd_needs_browser_mcp 라벨 leg (시오→大鵬 저녁, 카덴쇼/교토역→키요미즈, 기온→카덴쇼) — Playwright MCP 보유 세션에서 Google Maps Directions로 분·거리·노선 확정 필요",
     "사이호지(이끼사찰) — 예약 확정(6/1 10:30, booking-checklist 참조)",
-    "5/31 大鵬 — 일요일 디너 17:30~21:00(L.O.20:30) 확인. 인기점 웨이팅 대비, 필요 시 전화 예약(075-822-5598)"
+    "5/31 大鵬 — 일요일 디너 17:30~21:00(L.O.20:30) 확인. 인기점 웨이팅 대비, 필요 시 전화 예약(075-822-5598)",
+    "박일정님 아들 선물 — 포켓몬 카드 일본판 낱팩 3~5팩(180엔/팩). 6/2 교토역 라멘 점심(11:00) 후 ~ 짐 위탁(12:00) 전 요도바시카메라 교토역점(교토역 도보 2분) 빠른 탐색. 보이면 매수 우선순위 M5 アビスアイ > M4 ニンジャスピナー > M3 ムニキスゼロ(희소성 순). 박스 X. 총액 상한 ¥1,000~1,500. 안 보이면 패스. 시나리오: docs/decision-log/2026-05-27-pokemon-card-shopping.md"
   ],
   "source_doc": "docs/kyoto-itinerary-may31-jun3-2026.md",
   "_arrive_from_schema": {

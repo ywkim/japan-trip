@@ -328,11 +328,22 @@ class BuildIndexTests(unittest.TestCase):
         rendered = build_index.linkify("출처 https://example.com/doc 참고")
         self.assertIn('<a href="https://example.com/doc"', rendered)
 
+        # 마크다운 [라벨](url) 문법 → 라벨 텍스트로 탭 가능한 링크 (새 탭)
+        md = build_index.linkify("예약 [AutoReserve](https://autoreserve.com/x) 권장")
+        self.assertIn('<a href="https://autoreserve.com/x" target="_blank"', md)
+        self.assertIn('>AutoReserve</a>', md)
+        self.assertNotIn(">https://autoreserve.com/x<", md)  # 원문 URL이 라벨로 노출되지 않음
+
+        # tel: 링크 → 전화 탭(새 탭 아님)
+        tel = build_index.linkify("[☎075-822-5598](tel:+81758225598)")
+        self.assertIn('<a href="tel:+81758225598">☎075-822-5598</a>', tel)
+        self.assertNotIn('target="_blank"', tel)
+
         run()
         import json as _json
         import re as _re
         data = _json.loads((BASE / "data" / "booking-checklist.json").read_text(encoding="utf-8"))
-        url_re = _re.compile(r"https?://[^\s]+")
+        url_re = _re.compile(r"https?://[^\s)]+")
         html = CHECKLIST.read_text(encoding="utf-8")
         for it in data["items"]:
             for url in url_re.findall(it.get("note", "")):

@@ -39,7 +39,7 @@
 
 ### 1. 발권·예약 기록
 
-- 단일 출처: `data/booking-checklist.json` (예약 진행 상태 7 항목)
+- 단일 출처: `data/booking-checklist.json` (예약 진행 상태 10 항목)
 - 예약 확정 시: `status`·`reference`(예약번호)·`confirmed_at`(확정일) 갱신 + `docs/decision-log/`에 새 일지 (예약처·금액·취소 정책 요약)
 - 발권/예약 영수증·바우처는 본 레포에 첨부하지 않음 (개인정보·메일/카카오톡 원본 보관)
 - 발권·결제 금액은 `data/cost-options.json`의 시나리오 입력에도 반영 (확정값으로 `confirmed_booking` 라벨로 승격)
@@ -91,7 +91,7 @@ japan-trip/
 │   ├── weather.json           # 후보지 × 시기 기후 + 긴키 매우(梅雨) 평년·실적 + 교토 5/31~6/3 일별 강수 평년
 │   ├── flights.json           # 후보지 × 출발지 항공권 시세 스냅샷 (메타사이트 근사)
 │   ├── itinerary.json         # 단일 출처 (교토 3박4일 일정 — 일자·시간대·동선·메모 + route_candidates 대안 코스 3개)
-│   ├── booking-checklist.json # 단일 출처 (예약 진행 상태 7 항목)
+│   ├── booking-checklist.json # 단일 출처 (예약 진행 상태 10 항목)
 │   ├── breakfast.json         # 단일 출처 (숙소 인근 조식 옵션 — viz/breakfast.html 렌더)
 │   └── design-tokens.json     # 단일 출처 (색·타이포·간격·반경, DESIGN.md §2~§6과 동기화)
 ├── docs/
@@ -163,6 +163,7 @@ japan-trip/
   - 이전 정책(2026-05-26 이전): 외부 문서를 GitHub blob URL(`https://github.com/ywkim/japan-trip/blob/main/...`)로 링크 — Vercel이 `.md`를 raw text로 서빙해 상대 경로가 깨진다는 이유. **2026-05-26 정책 반전**: 받는 사람(시부모 포함)에게 레포 노출을 막기 위해 산출물에서 GitHub 링크 자체를 제거. 근거: `docs/decision-log/2026-05-26-vercel-no-github-links.md`
   - **2026-05-26 보완**: GitHub 링크 금지는 유지하되, 참조 문서를 없애는 대신 레포 마크다운을 사이트 내 HTML(`viz/report.html` 등)로 렌더해 연결. 근거: `docs/decision-log/2026-05-26-02-vercel-docs-as-html-pages.md`
   - `data/booking-checklist.json`의 `link.url`에 레포 마크다운 경로(예: `docs/booking-research-2026-05-24.md`)를 넣으면 `build_index.py`의 `DOC_SOURCE_TO_OUT`가 사이트 내 렌더 페이지로 치환. GitHub URL은 여전히 금지 (검사 J가 렌더 산출물에서 잡는다)
+  - 체크리스트 `note`는 `build_index.py`의 `linkify`로 렌더 — 벌거벗은 http(s) URL은 자동 링크, 마크다운 `[라벨](url)` 문법은 라벨 텍스트로 탭 가능한 링크(url=http(s)는 새 탭, `tel:`은 전화 탭)로 변환. 예약 채널·전화번호는 `[라벨](url)`/`[☎번호](tel:+81…)` 형식으로 적어 모바일에서 바로 탭/통화. javascript: 등 다른 스킴은 무시(http(s)·tel: 화이트리스트). 회귀 가드: `tests/test_build_index.py::test_checklist_note_urls_rendered_as_links`
 
 ## 문서 렌더링 (DOC_PAGES)
 
