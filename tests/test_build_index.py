@@ -452,6 +452,61 @@ class TransitFoldTests(unittest.TestCase):
                     self.assertIn(s["when"], html, f"step.when {s['when']!r} not in {path.name}")
 
 
+class TransitFromToRegistryTests(unittest.TestCase):
+    """arrive_from from/to를 places 레지스트리 '{{ref}}'로 참조 → ko(ja) 병기 렌더 (Work 4.1)."""
+
+    def test_station_label_handles_string_and_dict(self):
+        # 확장된 문자열은 그대로
+        self.assertEqual(build_index._station_label("니조역(二条駅)"), "니조역(二条駅)")
+        # 구 dict 안전망: ko(ja) 합성
+        self.assertEqual(build_index._station_label({"ko": "교토역", "ja": "京都駅"}), "교토역(京都駅)")
+        self.assertEqual(build_index._station_label(None), "")
+
+    def test_render_steps_uses_expanded_fromto(self):
+        steps = [{
+            "mode": "jr", "duration_min": 12, "fare_jpy": 200,
+            "line": "산인본선(嵯峨野線)",
+            "from": "니조역(二条駅)", "to": "사가아라시야마역(嵯峨嵐山駅)",
+        }]
+        html = build_index.render_transit_line_steps(steps, {})
+        self.assertIn("니조역(二条駅) → 사가아라시야마역(嵯峨嵐山駅)", html)
+
+    def test_render_multistep_shows_transfer(self):
+        steps = [
+            {"mode": "bus", "operator": {"ko": "시버스", "type": "shibus"}, "number": "11",
+             "from": "아라시야마텐류지마에(嵐山天龍寺前)", "to": "야마고에나카마치(山越中町)", "duration_min": 29},
+            {"mode": "bus", "operator": {"ko": "시버스", "type": "shibus"}, "number": "59",
+             "from": "야마고에나카마치(山越中町)", "to": "금각사도(金閣寺道)", "duration_min": 9},
+        ]
+        html = build_index.render_transit_line_steps(steps, {"advisory": "11번은 40분 간격"})
+        self.assertIn("↓ 환승 ↓", html)
+        self.assertIn("⚠️ 11번은 40분 간격", html)
+
+    def test_single_step_has_no_transfer(self):
+        steps = [{"mode": "bus", "operator": {"ko": "시버스", "type": "shibus"}, "number": "59",
+                  "from": "금각사도(金閣寺道)", "to": "료안지마에(竜安寺前)", "duration_min": 4}]
+        html = build_index.render_transit_line_steps(steps, {})
+        self.assertNotIn("↓ 환승 ↓", html)
+
+    def test_production_fromto_annotated_in_itinerary(self):
+        """프로덕션 빌드: 역·정류장이 ko(ja)로 병기되어 렌더된다."""
+        run()
+        html = ITINERARY.read_text(encoding="utf-8")
+        for label in (
+            "니조역(二条駅) → 교토역(京都駅)",
+            "교토역(京都駅) → 이나리역(稲荷駅)",
+            "아라시야마텐류지마에(嵐山天龍寺前) → 야마고에나카마치(山越中町)",
+        ):
+            with self.subTest(label=label):
+                self.assertIn(label, html, f"from/to 병기 누락: {label}")
+
+    def test_production_transfer_and_advisory_rendered(self):
+        run()
+        html = ITINERARY.read_text(encoding="utf-8")
+        self.assertIn("↓ 환승 ↓", html)
+        self.assertIn("놓치면 택시 22분 대안", html)
+
+
 class NoteFoldTests(unittest.TestCase):
     """긴 예약·숙박 메모(예약번호·PIN·탑승객 등)를 접기로 렌더하는 회귀 가드."""
 

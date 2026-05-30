@@ -73,6 +73,50 @@
     "kadensho": {
       "ko": "카덴쇼",
       "ja": "嘉寿庄"
+    },
+    "sagaarashiyama_station": {
+      "ko": "사가아라시야마역",
+      "ja": "嵯峨嵐山駅"
+    },
+    "inari_station": {
+      "ko": "이나리역",
+      "ja": "稲荷駅"
+    },
+    "tofukuji_station": {
+      "ko": "토후쿠지역",
+      "ja": "東福寺駅"
+    },
+    "arashiyama_tenryuji_stop": {
+      "ko": "아라시야마텐류지마에",
+      "ja": "嵐山天龍寺前"
+    },
+    "kokedera_stop": {
+      "ko": "코케데라·스즈무시데라",
+      "ja": "苔寺・鈴虫寺"
+    },
+    "kinkakujimichi_stop": {
+      "ko": "금각사도",
+      "ja": "金閣寺道"
+    },
+    "ryoanjimae_stop": {
+      "ko": "료안지마에",
+      "ja": "竜安寺前"
+    },
+    "shijo_kawaramachi_stop": {
+      "ko": "시조가와라마치",
+      "ja": "四条河原町"
+    },
+    "gion_shijo_stop": {
+      "ko": "기온시조",
+      "ja": "祇園四条"
+    },
+    "gojozaka_stop": {
+      "ko": "고조자카·키요미즈미치",
+      "ja": "五条坂・清水道"
+    },
+    "yamagoe_nakamachi_stop": {
+      "ko": "야마고에나카마치",
+      "ja": "山越中町"
     }
   },
   "trip": {
@@ -212,6 +256,8 @@
             "steps": [
               {
                 "mode": "airport_express",
+                "from": "{{kansai_airport}}",
+                "to": "{{nijo_station}}",
                 "duration_min": 90,
                 "distance_km": 99
               }
@@ -315,14 +361,8 @@
                 "distance_km": 8.5,
                 "fare_jpy": 200,
                 "line": "산인본선(嵯峨野線)",
-                "from": {
-                  "ko": "니조역",
-                  "ja": "二条駅"
-                },
-                "to": {
-                  "ko": "사가아라시야마역",
-                  "ja": "嵯峨嵐山駅"
-                }
+                "from": "{{nijo_station}}",
+                "to": "{{sagaarashiyama_station}}"
               }
             ],
             "source": "https://www.kyotostation.com/jr-sagano-line-for-nijo-uzumasa-saga-arashiyama/",
@@ -404,14 +444,8 @@
                   "type": "kyoto_bus"
                 },
                 "number": "73",
-                "from": {
-                  "ko": "/아라시야마",
-                  "ja": "嵐山"
-                },
-                "to": {
-                  "ko": "'코케데라·스즈무시데라",
-                  "ja": ""
-                }
+                "from": "{{arashiyama_tenryuji_stop}}",
+                "to": "{{kokedera_stop}}"
               }
             ],
             "source": "https://saihoji-kokedera.com/en/",
@@ -533,14 +567,8 @@
                   "type": "kyoto_bus"
                 },
                 "number": "73",
-                "from": {
-                  "ko": "코케데라·스즈무시데라",
-                  "ja": "苔寺・鈴虫寺"
-                },
-                "to": {
-                  "ko": "탑승",
-                  "ja": ""
-                }
+                "from": "{{kokedera_stop}}",
+                "to": "{{arashiyama_tenryuji_stop}}"
               }
             ],
             "source": "https://saihoji-kokedera.com/en/ + 교토버스 73계통 노선도",
@@ -565,17 +593,34 @@
             "steps": [
               {
                 "mode": "bus",
-                "duration_min": 38,
-                "distance_km": 7.5,
-                "fare_jpy": 460,
+                "duration_min": 29,
+                "distance_km": 5.9,
+                "fare_jpy": 230,
                 "operator": {
                   "ko": "시버스",
                   "ja": "市バス",
                   "type": "shibus"
                 },
-                "number": "11"
+                "number": "11",
+                "from": "{{arashiyama_tenryuji_stop}}",
+                "to": "{{yamagoe_nakamachi_stop}}"
+              },
+              {
+                "mode": "bus",
+                "duration_min": 9,
+                "distance_km": 1.6,
+                "fare_jpy": 230,
+                "operator": {
+                  "ko": "시버스",
+                  "ja": "市バス",
+                  "type": "shibus"
+                },
+                "number": "59",
+                "from": "{{yamagoe_nakamachi_stop}}",
+                "to": "{{kinkakujimichi_stop}}"
               }
             ],
+            "advisory": "11번은 40분 간격 — 놓치면 택시 22분 대안",
             "source": "https://www.google.com/maps/dir/Tenryu-ji+Temple,+Kyoto/Kinkaku-ji+Temple,+Kyoto",
             "source_fetched_at": "2026-05-18",
             "data_quality": "researched_market_rate",
@@ -624,14 +669,8 @@
                   "type": "shibus"
                 },
                 "number": "59",
-                "from": {
-                  "ko": "금각사도",
-                  "ja": "金閣寺道"
-                },
-                "to": {
-                  "ko": "¥230",
-                  "ja": ""
-                }
+                "from": "{{kinkakujimichi_stop}}",
+                "to": "{{ryoanjimae_stop}}"
               }
             ],
             "source": "https://kinukake.com/en/day-tour.html · https://www.tripadvisor.com/ShowTopic-g298564-i2712-k6637145",
@@ -682,14 +721,8 @@
                   "type": "shibus"
                 },
                 "number": "59",
-                "from": {
-                  "ko": "료안지마에",
-                  "ja": "竜安寺前"
-                },
-                "to": {
-                  "ko": "¥230",
-                  "ja": ""
-                }
+                "from": "{{ryoanjimae_stop}}",
+                "to": "{{shijo_kawaramachi_stop}}"
               }
             ],
             "source": "https://www.google.com/maps/dir/Ryoan-ji/Kawaramachi",
@@ -740,20 +773,22 @@
             "steps": [
               {
                 "mode": "jr",
-                "duration_min": 20,
-                "distance_km": 10.0,
-                "fare_jpy": 200,
-                "line": "산인본선(嵯峨野線)으로",
-                "from": {
-                  "ko": "으로 니조역",
-                  "ja": "二条駅"
-                },
-                "to": {
-                  "ko": "교토역",
-                  "ja": "京都駅"
-                }
+                "duration_min": 9,
+                "distance_km": 4.5,
+                "line": "산인본선(嵯峨野線)",
+                "from": "{{nijo_station}}",
+                "to": "{{kyoto_station}}"
+              },
+              {
+                "mode": "jr",
+                "duration_min": 5,
+                "distance_km": 5.5,
+                "line": "나라선(奈良線)",
+                "from": "{{kyoto_station}}",
+                "to": "{{inari_station}}"
               }
             ],
+            "advisory": "니조→교토 산인본선, 교토역에서 나라선 환승. 합계 약 20분·¥200",
             "source": "https://www.kyotostation.com/jr-nara-line-for-tofukuji-inari-uji-nara/",
             "source_fetched_at": "2026-05-18",
             "data_quality": "researched_market_rate",
@@ -796,14 +831,8 @@
                 "duration_min": 2,
                 "distance_km": 1.0,
                 "line": "나라선(奈良線)",
-                "from": {
-                  "ko": "이나리역",
-                  "ja": "稲荷駅"
-                },
-                "to": {
-                  "ko": "토후쿠지역",
-                  "ja": "東福寺駅"
-                }
+                "from": "{{inari_station}}",
+                "to": "{{tofukuji_station}}"
               }
             ],
             "source": "https://www.kyotostation.com/jr-nara-line-for-tofukuji-inari-uji-nara/",
@@ -859,14 +888,8 @@
                 "distance_km": 2.5,
                 "fare_jpy": 150,
                 "line": "나라선(奈良線)",
-                "from": {
-                  "ko": "토후쿠지역",
-                  "ja": "東福寺駅"
-                },
-                "to": {
-                  "ko": "교토역",
-                  "ja": "京都駅"
-                }
+                "from": "{{tofukuji_station}}",
+                "to": "{{kyoto_station}}"
               }
             ],
             "source": "https://www.kyotostation.com/jr-nara-line-for-tofukuji-inari-uji-nara/",
@@ -924,14 +947,9 @@
                   "ja": "市バス",
                   "type": "shibus"
                 },
-                "from": {
-                  "ko": "{{kadensho}}/{{kyoto_station}}",
-                  "ja": ""
-                },
-                "to": {
-                  "ko": "206",
-                  "ja": ""
-                }
+                "number": "206",
+                "from": "{{kyoto_station}}",
+                "to": "{{gojozaka_stop}}"
               }
             ],
             "source": "https://www.google.com/maps/dir/Kyoto+Station/Kiyomizu-dera",
@@ -1073,16 +1091,12 @@
                   "ja": "市バス",
                   "type": "shibus"
                 },
-                "from": {
-                  "ko": "기온시조",
-                  "ja": "祇園四条"
-                },
-                "to": {
-                  "ko": "케이한",
-                  "ja": ""
-                }
+                "number": "206",
+                "from": "{{gion_shijo_stop}}",
+                "to": "{{kyoto_station}}"
               }
             ],
+            "advisory": "시버스 206/86 또는 케이한+JR 환승 가능",
             "source": "https://www.google.com/maps/dir/Gion+Kyoto/Umekoji+Kadensho",
             "source_fetched_at": "2026-05-28",
             "data_quality": "tbd_needs_browser_mcp",
@@ -1182,7 +1196,9 @@
                 "operator": {
                   "ko": "JR 하루카",
                   "ja": "JR ハルカ"
-                }
+                },
+                "from": "{{kyoto_station}}",
+                "to": "{{kansai_airport}}"
               }
             ],
             "source": "JR 서일본 공식 (haruka_rt_4pax cost-options 인용)",

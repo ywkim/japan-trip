@@ -424,8 +424,10 @@ def _iter_prose_fields(data: dict):
     """검사 K 대상 산문 필드(location, text)를 순회.
 
     title은 구조화(신스키마) 또는 이미 병기된 문자열(구스키마)이라 제외.
-    arrive_from.steps의 from/to는 구조화(ko/ja)라 제외. note·food_quality·
-    pass_recommendation·arrive_from.route만 스캔. route_candidates도 순회.
+    arrive_from.steps의 from/to는 이제 '{{place_id}}' 참조 문자열이라 포함 —
+    K1(미정의 참조)이 검증한다(생 장소명 K2는 {{ref}} 제거 후 빈 문자열이라 무관).
+    note·food_quality·pass_recommendation·arrive_from.route·from/to를 스캔.
+    route_candidates도 순회.
     """
     def walk_days(days, prefix):
         for day in days:
@@ -441,6 +443,11 @@ def _iter_prose_fields(data: dict):
                 af = item.get("arrive_from") or {}
                 if af.get("route"):
                     yield f"{loc}.arrive_from.route", af["route"]
+                for sidx, step in enumerate(af.get("steps") or []):
+                    for key in ("from", "to"):
+                        v = step.get(key)
+                        if isinstance(v, str) and v:
+                            yield f"{loc}.arrive_from.steps[{sidx}].{key}", v
             if day.get("pass_recommendation"):
                 yield f"{prefix}{label}.pass_recommendation", day["pass_recommendation"]
 
@@ -491,6 +498,58 @@ def check_place_registry(base: Path) -> list[str]:
     return errors
 
 
+_FROMTO_REF_RE = re.compile(r"^\{\{([a-z0-9_]+)\}\}$")
+
+
+def check_transit_fromto(base: Path) -> list[str]:
+    """검사 L: arrive_from.steps의 from/to 무결성.
+
+    from/to가 있으면 반드시 '{{place_id}}' 형식(단일 참조) 문자열이고 그 id가
+    places 레지스트리에 정의돼 있어야 한다. inline dict({ko,ja})·요금·노선번호·
+    생 문자열은 머지 차단 — 마이그레이션 오염·드리프트의 구조적 봉쇄.
+    days[] + route_candidates 모두 순회.
+    """
+    errors: list[str] = []
+    itin_path = base / "data" / "itinerary.json"
+    if not itin_path.exists():
+        return errors
+    data = json.loads(itin_path.read_text(encoding="utf-8"))
+    places = data.get("places", {})
+
+    def walk_days(days, prefix):
+        for day in days:
+            label = day.get("date") or day.get("day_label", "?")
+            for idx, item in enumerate(day.get("items", [])):
+                af = item.get("arrive_from") or {}
+                for sidx, step in enumerate(af.get("steps") or []):
+                    for key in ("from", "to"):
+                        if key not in step:
+                            continue
+                        v = step[key]
+                        loc = f"{prefix}{label}.items[{idx}].arrive_from.steps[{sidx}].{key}"
+                        if not isinstance(v, str):
+                            errors.append(
+                                f"[L] {loc}: from/to는 '{{{{place_id}}}}' 참조 문자열이어야 함 "
+                                f"(inline dict·비문자열 금지) — got {type(v).__name__}"
+                            )
+                            continue
+                        m = _FROMTO_REF_RE.match(v.strip())
+                        if not m:
+                            errors.append(
+                                f"[L] {loc}: '{v}' — '{{{{place_id}}}}' 단일 참조 형식이어야 함"
+                            )
+                            continue
+                        if m.group(1) not in places:
+                            errors.append(
+                                f"[L] {loc}: undefined place ref {{{{{m.group(1)}}}}} — places에 없음"
+                            )
+
+    walk_days(data.get("days", []), "")
+    for cand in data.get("route_candidates", []):
+        walk_days(cand.get("days", []), f"candidate({cand.get('name','?')}).")
+    return errors
+
+
 def run(base: Path, today: date) -> tuple[list[str], list[str]]:
     errors: list[str] = []
     warnings: list[str] = []
@@ -509,6 +568,7 @@ def run(base: Path, today: date) -> tuple[list[str], list[str]]:
     warnings.extend(w)
     errors.extend(check_no_github_links(base))
     errors.extend(check_place_registry(base))
+    errors.extend(check_transit_fromto(base))
     return errors, warnings
 
 

@@ -121,48 +121,16 @@ def migrate_title(title_str: str) -> dict:
     }
 
 
-def extract_station_from_text(text: str) -> tuple:
-    """Extract station name from text like '니조역(二条駅)' → ('니조역', '二条駅')."""
-    match = re.search(r'([^\(\)]+)\(([^\(\)]+)\)', text)
-    if match:
-        return (match.group(1).strip(), match.group(2).strip())
-    return (text.strip(), "")
-
-
 def migrate_arrive_from(af_dict: dict) -> dict:
-    """Convert arrive_from from single route string to steps array.
+    """Convert legacy arrive_from (single route string) to a steps array.
 
-    Current schema:
-    {
-      "mode": "bus",
-      "duration_min": 18,
-      "distance_km": 3.0,
-      "route": "텐류지(天龍寺)/아라시야마(嵐山) → 교토버스(京都バス) 73계통 '코케데라·스즈무시데라(苔寺・鈴虫寺)' 정류장 → 도보 3분",
-      "source": "...",
-      "source_fetched_at": "2026-05-26",
-      "data_quality": "tbd_needs_browser_mcp",
-      "maps_url": "..."
-    }
+    Migrates only the reliably-parseable fields: mode/duration/distance/fare and
+    bus operator+number / jr line / airport_express operator.
 
-    New schema:
-    {
-      "steps": [
-        {
-          "mode": "bus",
-          "operator": {"ko": "교토버스", "ja": "京都バス", "type": "kyoto_bus"},
-          "number": "73",
-          "from": {"ko": "...", "ja": "..."},
-          "to": {"ko": "...", "ja": "..."},
-          "duration_min": 18,
-          "fare_jpy": null,
-          "distance_km": 3.0
-        }
-      ],
-      "source": "...",
-      "source_fetched_at": "2026-05-26",
-      "data_quality": "tbd_needs_browser_mcp",
-      "maps_url": "..."
-    }
+    NOTE: from/to 역·정류장은 **마이그레이션에서 생성하지 않는다**. 과거 정규식
+    파서가 요금·노선번호·조사를 장소로 오인해 데이터를 오염시켰다(Work 4.1 일지).
+    from/to는 데이터에서 places 레지스트리 '{{place_id}}' 참조로 수기 작성하고,
+    validate.py 검사 L이 형식을 강제한다.
     """
     if not af_dict:
         return None
@@ -172,86 +140,39 @@ def migrate_arrive_from(af_dict: dict) -> dict:
         return af_dict
 
     mode = af_dict.get("mode", "walk")
-    duration = af_dict.get("duration_min")
-    distance = af_dict.get("distance_km")
     route = af_dict.get("route", "")
-    fare_jpy = None
 
-    # Extract fare from route (e.g., "¥200" or "¥230")
-    fare_match = re.search(r'¥(\d+)', route)
-    if fare_match:
-        fare_jpy = int(fare_match.group(1))
-
-    # Create a single step based on mode
     step = {
         "mode": mode,
-        "duration_min": duration,
-        "distance_km": distance,
+        "duration_min": af_dict.get("duration_min"),
+        "distance_km": af_dict.get("distance_km"),
     }
-    if fare_jpy is not None:
-        step["fare_jpy"] = fare_jpy
 
-    # Handle different modes
+    # Fare (e.g., "¥200")
+    fare_match = re.search(r'¥(\d+)', route)
+    if fare_match:
+        step["fare_jpy"] = int(fare_match.group(1))
+
     if mode == "bus":
-        # Extract operator and number from route
-        operator = None
-        operator_type = None
-        numbers = []
-
         if "시버스" in route or "市バス" in route:
-            operator = {"ko": "시버스", "ja": "市バス", "type": "shibus"}
+            step["operator"] = {"ko": "시버스", "ja": "市バス", "type": "shibus"}
         elif "교토버스" in route or "京都バス" in route:
-            operator = {"ko": "교토버스", "ja": "京都バス", "type": "kyoto_bus"}
-
-        if operator:
-            step["operator"] = operator
-
-            # Extract all bus numbers (handles transfers like "11번 ... 59번")
-            num_matches = re.findall(r'(\d+)\s*(?:번|計|계통|号線)', route)
-            if num_matches:
-                numbers = num_matches
-                step["number"] = numbers[0]
-
-        # Extract from/to station names using arrow
-        arrows = list(re.finditer(r'([^\(→]*(?:\([^\)]*\))?[^\(→]*)\s*→\s*([^\(→]*(?:\([^\)]*\))?[^\(→]*)', route))
-        if arrows:
-            from_text = arrows[0].group(1).strip()
-            to_text = arrows[0].group(2).strip()
-
-            # Clean up extracted text
-            from_text = re.sub(r'^.*?([^\s\(]+(?:\([^\)]*\))?)\s*$', r'\1', from_text).strip()
-            to_text = re.sub(r'^.*?([^\s\(]+(?:\([^\)]*\))?)\s*$', r'\1', to_text).strip()
-
-            from_ko, from_ja = extract_station_from_text(from_text)
-            to_ko, to_ja = extract_station_from_text(to_text)
-
-            step["from"] = {"ko": from_ko, "ja": from_ja}
-            step["to"] = {"ko": to_ko, "ja": to_ja}
+            step["operator"] = {"ko": "교토버스", "ja": "京都バス", "type": "kyoto_bus"}
+        num_match = re.search(r'(\d+)\s*(?:번|계통|号線)', route)
+        if num_match:
+            step["number"] = num_match.group(1)
 
     elif mode == "jr":
-        # JR routes: "JR 산인본선(嵯峨野線) 니조역(二条駅)→사가아라시야마역(嵯峨嵐山駅)"
         line_match = re.search(r'JR\s+([^→]+?)(?:\s+|$)', route)
         if line_match:
-            line_info = line_match.group(1).strip()
-            step["line"] = line_info
-
-        # Extract stations
-        arrow_match = re.search(r'([^\(→]+(?:\([^\)]*\))?)\s*→\s*([^\(→]+(?:\([^\)]*\))?)', route)
-        if arrow_match:
-            from_ko, from_ja = extract_station_from_text(arrow_match.group(1).strip())
-            to_ko, to_ja = extract_station_from_text(arrow_match.group(2).strip())
-
-            step["from"] = {"ko": from_ko, "ja": from_ja}
-            step["to"] = {"ko": to_ko, "ja": to_ja}
+            step["line"] = line_match.group(1).strip()
 
     elif mode == "airport_express":
         if "하루카" in route or "ハルカ" in route:
             step["operator"] = {"ko": "JR 하루카", "ja": "JR ハルカ"}
 
-    # Create new arrive_from structure (preserve route for warning extraction in rendering)
     return {
         "steps": [step],
-        "route": route,  # Keep original for rendering warnings/alternatives
         "source": af_dict.get("source"),
         "source_fetched_at": af_dict.get("source_fetched_at"),
         "data_quality": af_dict.get("data_quality"),

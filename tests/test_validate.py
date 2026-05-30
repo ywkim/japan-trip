@@ -730,6 +730,57 @@ class PlaceRegistryTests(unittest.TestCase):
         self.assertEqual([e for e in self._run(itin) if e.startswith("[K]")], [])
 
 
+class TransitFromToTests(unittest.TestCase):
+    """검사 L: arrive_from.steps from/to는 '{{place_id}}' 단일 참조여야 함 (Work 4.1)."""
+
+    PLACES = {
+        "nijo_station": {"ko": "니조역", "ja": "二条駅"},
+        "kyoto_station": {"ko": "교토역", "ja": "京都駅"},
+    }
+
+    def _run(self, step):
+        itin = _itin_with_places(self.PLACES, [
+            {"time": "09:00", "title": "A", "maps_query": "A"},
+            {"time": "10:00", "title": "B", "maps_query": "B", "arrive_from": {
+                "steps": [step],
+                "source": "https://example.com", "source_fetched_at": "2026-05-17",
+                "data_quality": "researched_market_rate",
+            }},
+        ])
+        with tempfile.TemporaryDirectory() as td:
+            base = make_fixture(Path(td), cost=VALID_COST, index_html="<html></html>", itinerary=itin)
+            return validate.run(base, date(2026, 5, 17))[0]
+
+    def test_valid_refs_pass(self):
+        errs = self._run({"mode": "jr", "from": "{{nijo_station}}", "to": "{{kyoto_station}}",
+                          "duration_min": 9})
+        self.assertEqual([e for e in errs if e.startswith("[L]")], [])
+
+    def test_absent_fromto_ok(self):
+        errs = self._run({"mode": "walk", "duration_min": 5, "distance_km": 0.3})
+        self.assertEqual([e for e in errs if e.startswith("[L]")], [])
+
+    def test_inline_dict_fails(self):
+        errs = self._run({"mode": "jr", "from": {"ko": "니조역", "ja": "二条駅"},
+                          "to": "{{kyoto_station}}", "duration_min": 9})
+        self.assertTrue(any(e.startswith("[L]") and "inline dict" in e for e in errs), errs)
+
+    def test_undefined_ref_fails(self):
+        errs = self._run({"mode": "jr", "from": "{{ghost_stop}}", "to": "{{kyoto_station}}",
+                          "duration_min": 9})
+        self.assertTrue(any(e.startswith("[L]") and "ghost_stop" in e for e in errs), errs)
+
+    def test_bare_string_fails(self):
+        errs = self._run({"mode": "jr", "from": "니조역", "to": "{{kyoto_station}}",
+                          "duration_min": 9})
+        self.assertTrue(any(e.startswith("[L]") and "단일 참조" in e for e in errs), errs)
+
+    def test_fare_as_destination_fails(self):
+        errs = self._run({"mode": "bus", "from": "{{nijo_station}}", "to": "¥230",
+                          "duration_min": 4})
+        self.assertTrue(any(e.startswith("[L]") for e in errs), errs)
+
+
 class ProductionDataTests(unittest.TestCase):
     """현재 레포 데이터가 validate를 통과하는지 회귀 검사."""
 
