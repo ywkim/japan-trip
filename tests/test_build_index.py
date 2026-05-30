@@ -463,13 +463,18 @@ class TransitFromToRegistryTests(unittest.TestCase):
         self.assertEqual(build_index._station_label(None), "")
 
     def test_render_steps_uses_expanded_fromto(self):
+        """from/to 병기가 렌더된다 (여러 줄 배치에서 각각 포함).
+
+        새 레이아웃(flexbox)에서는 from과 to가 별도 div로 분리되므로 각각 확인.
+        """
         steps = [{
             "mode": "jr", "duration_min": 12, "fare_jpy": 200,
             "line": "산인본선(嵯峨野線)",
             "from": "니조역(二条駅)", "to": "사가아라시야마역(嵯峨嵐山駅)",
         }]
         html = build_index.render_transit_line_steps(steps, {})
-        self.assertIn("니조역(二条駅) → 사가아라시야마역(嵯峨嵐山駅)", html)
+        self.assertIn("니조역(二条駅)", html)
+        self.assertIn("사가아라시야마역(嵯峨嵐山駅)", html)
 
     def test_render_multistep_shows_transfer(self):
         steps = [
@@ -489,16 +494,22 @@ class TransitFromToRegistryTests(unittest.TestCase):
         self.assertNotIn("↓ 환승 ↓", html)
 
     def test_production_fromto_annotated_in_itinerary(self):
-        """프로덕션 빌드: 역·정류장이 ko(ja)로 병기되어 렌더된다."""
+        """프로덕션 빌드: 역·정류장이 ko(ja)로 병기되어 렌더된다.
+
+        새 레이아웃(flexbox 여러 줄)에서는 from과 to가 별도 div로 분리되므로,
+        각각의 역명이 포함되어 있는지 확인한다.
+        """
         run()
         html = ITINERARY.read_text(encoding="utf-8")
-        for label in (
-            "니조역(二条駅) → 교토역(京都駅)",
-            "교토역(京都駅) → 이나리역(稲荷駅)",
-            "아라시야마텐류지마에(嵐山天龍寺前) → 야마고에나카마치(山越中町)",
+        # (from 병기, to 병기) 튜플 검증
+        for from_label, to_label in (
+            ("니조역(二条駅)", "교토역(京都駅)"),
+            ("교토역(京都駅)", "이나리역(稲荷駅)"),
+            ("아라시야마텐류지마에(嵐山天龍寺前)", "야마고에나카마치(山越中町)"),
         ):
-            with self.subTest(label=label):
-                self.assertIn(label, html, f"from/to 병기 누락: {label}")
+            with self.subTest(route=f"{from_label}→{to_label}"):
+                self.assertIn(from_label, html, f"from 병기 누락: {from_label}")
+                self.assertIn(to_label, html, f"to 병기 누락: {to_label}")
 
     def test_production_transfer_and_advisory_rendered(self):
         run()

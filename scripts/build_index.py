@@ -299,47 +299,92 @@ def render_transit_line_steps(steps: list, af_dict: dict) -> str:
 
             # Operator badge
             icon, color = OPERATOR_ICONS.get(op_type, ("🚌", "#666"))
-            badge_html = f'<span style="display:inline-block;background:{color};color:white;padding:2px 6px;border-radius:3px;font-size:0.9em;margin-right:4px;"><strong>{esc(op_ko)}</strong>'
+            badge_html = f'<span style="display:inline-block;background:{color};color:white;padding:3px 8px;border-radius:4px;font-size:0.85em;margin-right:6px;white-space:nowrap;"><strong>{esc(op_ko)}</strong>'
             if number:
                 badge_html += f' {esc(number)}번'
             badge_html += '</span>'
 
-            step_line = badge_html
-            if from_label and to_label:
-                step_line += f' {esc(from_label)} → {esc(to_label)}'
+            # 모바일 최적 레이아웃: 배지 + 역명을 여러 줄로 배치
+            step_html = f'<div style="display:flex;align-items:flex-start;gap:6px;margin:4px 0;">'
+            step_html += badge_html
+
+            # 역명 블록 (여러 줄 표시)
+            meta_parts = []
             if duration:
-                step_line += f' <small>({duration}분'
-                if distance:
-                    step_line += f', {distance}km'
-                if fare:
-                    step_line += f', ¥{fare}'
-                step_line += ')</small>'
-            elif fare:
-                step_line += f' <small>(¥{fare})</small>'
-            detail_html_parts.append(step_line)
+                meta_parts.append(f'{duration}분')
+            if distance:
+                meta_parts.append(f'{distance}km')
+            if fare:
+                meta_parts.append(f'¥{fare}')
+            meta_str = ', '.join(meta_parts)
+
+            step_html += '<div style="flex:1;font-size:0.9em;line-height:1.4;">'
+            if from_label:
+                step_html += f'<div>{esc(from_label)}</div>'
+            if from_label and to_label:
+                step_html += '<div style="text-align:center;color:#999;margin:2px 0;font-size:0.85em;">↓</div>'
+            if to_label:
+                step_html += f'<div>{esc(to_label)}</div>'
+            if meta_str:
+                step_html += f'<div style="color:#666;font-size:0.8em;margin-top:2px;">({meta_str})</div>'
+            step_html += '</div></div>'
+            detail_html_parts.append(step_html)
 
         elif mode == "jr":
-            line = "🚆 JR"
+            line_name = "🚆 JR"
             jr_line = step.get("line")
             if jr_line:
-                line += f" {esc(jr_line)}"
-            if from_label and to_label:
-                line += f" {esc(from_label)} → {esc(to_label)}"
+                line_name += f" {esc(jr_line)}"
+
+            # 모바일 최적 레이아웃: 노선명 + 역명을 여러 줄로 배치
+            meta_parts = []
             if duration:
-                line += f" ({duration}분"
-                if fare:
-                    line += f", ¥{fare}"
-                line += ")"
-            detail_html_parts.append(line)
+                meta_parts.append(f'{duration}분')
+            if distance:
+                meta_parts.append(f'{distance}km')
+            if fare:
+                meta_parts.append(f'¥{fare}')
+            meta_str = ', '.join(meta_parts)
+
+            step_html = f'<div style="display:flex;align-items:flex-start;gap:6px;margin:4px 0;">'
+            step_html += f'<span style="white-space:nowrap;flex-shrink:0;">{line_name}</span>'
+            step_html += '<div style="flex:1;font-size:0.9em;line-height:1.4;">'
+            if from_label:
+                step_html += f'<div>{esc(from_label)}</div>'
+            if from_label and to_label:
+                step_html += '<div style="text-align:center;color:#999;margin:2px 0;font-size:0.85em;">↓</div>'
+            if to_label:
+                step_html += f'<div>{esc(to_label)}</div>'
+            if meta_str:
+                step_html += f'<div style="color:#666;font-size:0.8em;margin-top:2px;">({meta_str})</div>'
+            step_html += '</div></div>'
+            detail_html_parts.append(step_html)
 
         elif mode == "airport_express":
             op_ko = operator.get("ko") if isinstance(operator, dict) else ""
-            line = f"✈️ {esc(op_ko)}" if op_ko else "✈️ 공항 연결 열차"
-            if from_label and to_label:
-                line += f" {esc(from_label)} → {esc(to_label)}"
+            express_name = f"✈️ {esc(op_ko)}" if op_ko else "✈️ 공항 연결 열차"
+
+            # 모바일 최적 레이아웃
+            meta_parts = []
             if duration:
-                line += f" ({duration}분)"
-            detail_html_parts.append(line)
+                meta_parts.append(f'{duration}분')
+            if distance:
+                meta_parts.append(f'{distance}km')
+            meta_str = ', '.join(meta_parts)
+
+            step_html = f'<div style="display:flex;align-items:flex-start;gap:6px;margin:4px 0;">'
+            step_html += f'<span style="white-space:nowrap;flex-shrink:0;">{express_name}</span>'
+            step_html += '<div style="flex:1;font-size:0.9em;line-height:1.4;">'
+            if from_label:
+                step_html += f'<div>{esc(from_label)}</div>'
+            if from_label and to_label:
+                step_html += '<div style="text-align:center;color:#999;margin:2px 0;font-size:0.85em;">↓</div>'
+            if to_label:
+                step_html += f'<div>{esc(to_label)}</div>'
+            if meta_str:
+                step_html += f'<div style="color:#666;font-size:0.8em;margin-top:2px;">({meta_str})</div>'
+            step_html += '</div></div>'
+            detail_html_parts.append(step_html)
 
         elif mode == "walk":
             line = "🚶 도보"
