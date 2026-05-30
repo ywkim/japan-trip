@@ -317,12 +317,11 @@ class BuildIndexTests(unittest.TestCase):
         itin = ITINERARY.read_text(encoding="utf-8")
         self.assertIn("✓", itin, "verified tick ✓ missing in itinerary.html")
 
-    def test_route_candidates_rendered_in_itinerary(self):
+    def test_route_candidates_not_rendered_in_itinerary(self):
+        """의사결정 완료 후 후보 코스 섹션은 웹에 노출하지 않는다."""
         run()
         itin = ITINERARY.read_text(encoding="utf-8")
-        self.assertIn("후보 코스", itin, "route candidates section missing in itinerary.html")
-        for candidate_name in ("여유형", "서북 사찰 집중형", "미식+문화 체험형"):
-            self.assertIn(candidate_name, itin, f"candidate '{candidate_name}' missing in itinerary.html")
+        self.assertNotIn("후보 코스", itin, "route candidates section should not appear in itinerary.html")
 
     def test_checklist_note_urls_rendered_as_links(self):
         """note에 포함된 http URL은 linkify가 클릭 가능한 <a href> 링크로 렌더해야 한다.
@@ -335,11 +334,22 @@ class BuildIndexTests(unittest.TestCase):
         rendered = build_index.linkify("출처 https://example.com/doc 참고")
         self.assertIn('<a href="https://example.com/doc"', rendered)
 
+        # 마크다운 [라벨](url) 문법 → 라벨 텍스트로 탭 가능한 링크 (새 탭)
+        md = build_index.linkify("예약 [AutoReserve](https://autoreserve.com/x) 권장")
+        self.assertIn('<a href="https://autoreserve.com/x" target="_blank"', md)
+        self.assertIn('>AutoReserve</a>', md)
+        self.assertNotIn(">https://autoreserve.com/x<", md)  # 원문 URL이 라벨로 노출되지 않음
+
+        # tel: 링크 → 전화 탭(새 탭 아님)
+        tel = build_index.linkify("[☎075-822-5598](tel:+81758225598)")
+        self.assertIn('<a href="tel:+81758225598">☎075-822-5598</a>', tel)
+        self.assertNotIn('target="_blank"', tel)
+
         run()
         import json as _json
         import re as _re
         data = _json.loads((BASE / "data" / "booking-checklist.json").read_text(encoding="utf-8"))
-        url_re = _re.compile(r"https?://[^\s]+")
+        url_re = _re.compile(r"https?://[^\s)]+")
         html = CHECKLIST.read_text(encoding="utf-8")
         for it in data["items"]:
             for url in url_re.findall(it.get("note", "")):
