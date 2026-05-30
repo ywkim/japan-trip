@@ -126,16 +126,13 @@ def esc(s) -> str:
 
 
 _URL_RE = re.compile(r"(https?://[^\s)]+)")
+# 마크다운 [라벨](url) — url은 http(s) 또는 tel: 만 허용 (javascript: 등 차단)
+_MD_LINK_RE = re.compile(r"\[([^\]]+)\]\((tel:[^)\s]+|https?://[^)\s]+)\)")
 
 
-def linkify(s) -> str:
-    """자유 텍스트를 HTML escape하되 http(s) URL은 클릭 가능한 <a> 링크로 변환.
-
-    체크리스트 노트 등 출처 URL이 모바일에서 탭으로 열리도록 한다.
-    """
-    if s is None:
-        return ""
-    parts = _URL_RE.split(str(s))
+def _autolink(s) -> str:
+    """벌거벗은 http(s) URL을 새 탭 <a>로, 나머지는 HTML escape."""
+    parts = _URL_RE.split(s)
     out = []
     for i, part in enumerate(parts):
         if i % 2 == 1:  # 캡처된 URL
@@ -143,6 +140,31 @@ def linkify(s) -> str:
             out.append(f'<a href="{url}" target="_blank" rel="noopener">{url}</a>')
         else:
             out.append(esc(part))
+    return "".join(out)
+
+
+def linkify(s) -> str:
+    """자유 텍스트를 HTML escape하되 클릭 가능한 링크로 변환.
+
+    - 마크다운 `[라벨](url)`: url이 http(s)면 새 탭, `tel:`이면 전화 탭(라벨 표시).
+    - 벌거벗은 http(s) URL: 원문을 라벨로 한 새 탭 링크.
+    체크리스트 노트 등 예약 채널·전화·출처가 모바일에서 탭으로 열리도록 한다.
+    """
+    if s is None:
+        return ""
+    s = str(s)
+    out = []
+    pos = 0
+    for m in _MD_LINK_RE.finditer(s):
+        out.append(_autolink(s[pos:m.start()]))
+        label = esc(m.group(1))
+        href = esc(m.group(2))
+        if m.group(2).startswith("tel:"):
+            out.append(f'<a href="{href}">{label}</a>')
+        else:
+            out.append(f'<a href="{href}" target="_blank" rel="noopener">{label}</a>')
+        pos = m.end()
+    out.append(_autolink(s[pos:]))
     return "".join(out)
 
 

@@ -163,6 +163,7 @@ japan-trip/
   - 이전 정책(2026-05-26 이전): 외부 문서를 GitHub blob URL(`https://github.com/ywkim/japan-trip/blob/main/...`)로 링크 — Vercel이 `.md`를 raw text로 서빙해 상대 경로가 깨진다는 이유. **2026-05-26 정책 반전**: 받는 사람(시부모 포함)에게 레포 노출을 막기 위해 산출물에서 GitHub 링크 자체를 제거. 근거: `docs/decision-log/2026-05-26-vercel-no-github-links.md`
   - **2026-05-26 보완**: GitHub 링크 금지는 유지하되, 참조 문서를 없애는 대신 레포 마크다운을 사이트 내 HTML(`viz/report.html` 등)로 렌더해 연결. 근거: `docs/decision-log/2026-05-26-02-vercel-docs-as-html-pages.md`
   - `data/booking-checklist.json`의 `link.url`에 레포 마크다운 경로(예: `docs/booking-research-2026-05-24.md`)를 넣으면 `build_index.py`의 `DOC_SOURCE_TO_OUT`가 사이트 내 렌더 페이지로 치환. GitHub URL은 여전히 금지 (검사 J가 렌더 산출물에서 잡는다)
+  - 체크리스트 `note`는 `build_index.py`의 `linkify`로 렌더 — 벌거벗은 http(s) URL은 자동 링크, 마크다운 `[라벨](url)` 문법은 라벨 텍스트로 탭 가능한 링크(url=http(s)는 새 탭, `tel:`은 전화 탭)로 변환. 예약 채널·전화번호는 `[라벨](url)`/`[☎번호](tel:+81…)` 형식으로 적어 모바일에서 바로 탭/통화. javascript: 등 다른 스킴은 무시(http(s)·tel: 화이트리스트). 회귀 가드: `tests/test_build_index.py::test_checklist_note_urls_rendered_as_links`
 
 ## 문서 렌더링 (DOC_PAGES)
 
