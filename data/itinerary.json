@@ -826,7 +826,7 @@
             "en_name": ""
           },
           "maps_query": "Manzaratei Pontocho Kyoto",
-          "note": "⚠️ {{manzaratei}} 월요일 휴무 — 6/1은 월요일이므로 영업하지 않음. {{pontocho}} 골목 내 다른 식당 확인 필요. {{nishiki}}은 17:00 마감이라 낮에 둘러보기 — {{pontocho}} 저녁. {{kawaramachi}} 도보 5분.",
+          "note": "⚠️ {{manzaratei}} 불정휴(부정기 휴무) — 전화 +81-75-212-0028로 6/1 영업 여부 확인 필수. 불가능 시 {{pontocho}} 골목 내 다른 식당 확인. {{nishiki}}은 17:00 마감이라 낮에 둘러보기 — {{pontocho}} 저녁. {{kawaramachi}} 도보 5분.",
           "link": {
             "url": "manzaratei-review.html",
             "label": "만자라테이 상세 안내 및 예약 가이드"
@@ -837,7 +837,7 @@
             "source_fetched_at": "2026-05-31",
             "data_quality": "researched_market_rate",
             "url": "manzaratei-review.html",
-            "note": "오반자이(교토 가정식) 세트: ¥6,500~8,000 — 계절 야채 반찬 5~7종 + 주요리. 카이세키 풀 코스(사전예약·최소 2인): ¥12,000~15,000. 특징: 130년 전통 교마치야·강변 야외석(川床·6~9월)·실내 일반석·개실(6인 이상)·예약 필수. 4인 가족은 일반석 권장(강변은 계단 접근). 저녁 17:00~22:00(L.O. 미정·사전 확인)·월요 휴무. 1인당 ¥6,000~8,000. 타베로그 3.30.",
+            "note": "오반자이(교토 가정식) 세트: ¥6,500~8,000 — 계절 야채 반찬 5~7종 + 주요리. 카이세키 풀 코스(사전예약·최소 2인): ¥12,000~15,000. 특징: 130년 전통 교마치야·강변 야외석(川床·6~9월)·실내 일반석·개실(6인 이상)·예약 필수. 4인 가족은 일반석 권장(강변은 계단 접근). 저녁 17:00~22:00(L.O. 미정·사전 확인)·불정휴(부정기 휴무·전화 확인). 1인당 ¥6,000~8,000. 타베로그 3.30.",
             "place_info": {},
             "business_hours": [],
             "ratings": [
@@ -851,7 +851,7 @@
             {
               "url": "manzaratei-review.html",
               "img": "https://commons.wikimedia.org/wiki/Special:FilePath/Kyoto%20Kamogawa%20Noryo-Yuka.jpg?width=480",
-              "comment": "가모강 강변 야외석(川床) · 여름 한정 운영 · 4인 이상 테이블 · 폰토초의 정취와 함께 → ⚠️ 6/1 월요일 휴무 주의"
+              "comment": "가모강 강변 야외석(川床) · 여름 한정 운영 · 4인 이상 테이블 · 폰토초의 정취와 함께 → ⚠️ 불정휴(부정기) — 사전 전화 확인 필수"
             }
           ],
           "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Pontocho%20Alley%2C%20Kyoto%20-%20Flickr%20-%20Sergiy%20Galyonkin.jpg?width=480",
