@@ -1287,5 +1287,48 @@ class OfflineCapabilityTests(unittest.TestCase):
                 self.assertNotIn("github.com", p.read_text(encoding="utf-8"))
 
 
+class SelfHostedImageTests(unittest.TestCase):
+    """외부 이미지 자가호스팅(B) + SW referer 보정(A) — 비행기 모드 이미지 보장."""
+
+    def _map(self):
+        import json as _json
+        p = BASE / "data" / "local-image-map.json"
+        return _json.loads(p.read_text(encoding="utf-8")) if p.exists() else {}
+
+    def test_local_src_rewrites_mapped_url(self):
+        m = self._map()
+        if not m:
+            self.skipTest("local-image-map.json not populated")
+        url, local = next(iter(m.items()))
+        build_index.LOCAL_IMAGE_MAP = m
+        try:
+            self.assertEqual(build_index.local_src(url), local)
+            self.assertEqual(build_index.local_src("https://x.test/none.jpg"), "https://x.test/none.jpg")
+        finally:
+            build_index.LOCAL_IMAGE_MAP = {}
+
+    def test_mapped_externals_replaced_by_local_paths_in_html(self):
+        m = self._map()
+        if not m:
+            self.skipTest("local-image-map.json not populated")
+        run()
+        blob = "\n".join(p.read_text(encoding="utf-8") for p in ALL_HTML_OUTPUTS)
+        self.assertIn("/assets/place-images/", blob, "no self-hosted image rendered")
+        for ext_url in m:
+            self.assertNotIn(ext_url, blob, f"mapped external URL leaked into HTML: {ext_url}")
+
+    def test_sw_precaches_self_hosted_place_images(self):
+        if not self._map():
+            self.skipTest("local-image-map.json not populated")
+        run()
+        self.assertIn("/assets/place-images/", SW.read_text(encoding="utf-8"))
+
+    def test_sw_install_fetch_uses_no_referrer(self):
+        run()
+        sw = SW.read_text(encoding="utf-8")
+        self.assertIn("referrerPolicy", sw)
+        self.assertIn("no-referrer", sw)
+
+
 if __name__ == "__main__":
     unittest.main()

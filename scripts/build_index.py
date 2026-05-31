@@ -188,6 +188,15 @@ PLACE_REF_RE = re.compile(r"\{\{([a-z0-9_]+)\}\}")
 # 교통 타임라인이 역·정류장 발음을 노출하기 위해 load_data에서 채운다.
 PLACE_LABEL_TO_READING: dict = {}
 
+# 외부 이미지 자가호스팅 맵(url → 로컬 경로). scripts/fetch_assets.py가 생성한
+# data/local-image-map.json을 load_data에서 적재 — 빌드는 네트워크 비의존.
+LOCAL_IMAGE_MAP: dict = {}
+
+
+def local_src(url: str) -> str:
+    """외부 이미지 URL이 로컬에 자가호스팅돼 있으면 로컬 경로로, 아니면 원본 URL로."""
+    return LOCAL_IMAGE_MAP.get(url, url)
+
 
 def build_place_reading_map() -> dict:
     """PLACE_REGISTRY에서 확장 라벨('ko(ja)' 또는 'ko') → reading 맵을 만든다."""
@@ -498,7 +507,7 @@ def blog_reviews_html(reviews: list) -> str:
         return ""
     cards = "".join(
         f'<a href="{esc(r["url"])}" target="_blank" rel="noopener" class="blog-card">'
-        f'<img src="{esc(r["img"])}" class="blog-thumb" loading="lazy" alt="" referrerpolicy="no-referrer">'
+        f'<img src="{esc(local_src(r["img"]))}" class="blog-thumb" loading="lazy" alt="" referrerpolicy="no-referrer">'
         f'<p class="blog-comment">{esc(r["comment"])}</p>'
         f'</a>'
         for r in reviews
@@ -563,9 +572,11 @@ def run_json(script: str) -> dict:
 def load_data():
     itinerary = json.loads((DATA / "itinerary.json").read_text(encoding="utf-8"))
     # 장소 레지스트리를 모듈 전역에 적재 후 {{place_id}} 참조를 'ko(ja)'로 확장.
-    global PLACE_REGISTRY, PLACE_LABEL_TO_READING
+    global PLACE_REGISTRY, PLACE_LABEL_TO_READING, LOCAL_IMAGE_MAP
     PLACE_REGISTRY = itinerary.get("places", {})
     PLACE_LABEL_TO_READING = build_place_reading_map()
+    img_map_path = DATA / "local-image-map.json"
+    LOCAL_IMAGE_MAP = json.loads(img_map_path.read_text(encoding="utf-8")) if img_map_path.exists() else {}
     itinerary = expand_refs_in_obj(itinerary)
     return {
         "decision": json.loads((DATA / "decision.json").read_text(encoding="utf-8")),
@@ -1340,7 +1351,7 @@ def card_itinerary(d) -> str:
             transit = transit_line(it.get("arrive_from"))
             if it.get("image_url"):
                 img_html = (
-                    f'<img src="{esc(it["image_url"])}" alt="{esc(title_text)}" '
+                    f'<img src="{esc(local_src(it["image_url"]))}" alt="{esc(title_text)}" '
                     f'class="place-img" loading="lazy">'
                     f'<div class="img-credit">{esc(it.get("image_credit",""))}</div>'
                 )
@@ -1831,7 +1842,7 @@ def build_itinerary(d) -> str:
             transit = transit_line(it.get("arrive_from"))
             if it.get("image_url"):
                 img_html = (
-                    f'<img src="{esc(it["image_url"])}" alt="{esc(title_text)}" '
+                    f'<img src="{esc(local_src(it["image_url"]))}" alt="{esc(title_text)}" '
                     f'class="place-img" loading="lazy">'
                     f'<div class="img-credit">{esc(it.get("image_credit",""))}</div>'
                 )
@@ -2086,7 +2097,7 @@ def build_itinerary_table(d) -> str:
                 transit = transit_line(it.get("arrive_from"))
                 if it.get("image_url"):
                     img_html = (
-                        f'<img src="{esc(it["image_url"])}" alt="{esc(title_text)}" '
+                        f'<img src="{esc(local_src(it["image_url"]))}" alt="{esc(title_text)}" '
                         f'class="place-img" loading="lazy">'
                         f'<span class="img-credit">{esc(it.get("image_credit",""))}</span>'
                     )
@@ -2114,7 +2125,7 @@ def build_itinerary_table(d) -> str:
             transit = transit_line(it.get("arrive_from"))
             if it.get("image_url"):
                 img_html = (
-                    f'<img src="{esc(it["image_url"])}" alt="{esc(title_text)}" '
+                    f'<img src="{esc(local_src(it["image_url"]))}" alt="{esc(title_text)}" '
                     f'class="place-img" loading="lazy">'
                     f'<div class="img-credit">{esc(it.get("image_credit",""))}</div>'
                 )
@@ -2345,9 +2356,11 @@ OG_CARDS = (
 
 # ─── 오프라인 (서비스 워커 + PWA 매니페스트) ────────────────────────────────
 # 비행기 모드에서 모든 페이지를 다시 열 수 있게 install 시점에 전 페이지·로컬 자산을
-# 사전 캐시한다. 외부 이미지(위키미디어·블로그 썸네일)는 best-effort(no-cors)로
-# 받아두고, 런타임 fetch도 cache-first로 캐시해 한 번 본 자원은 오프라인에 남는다.
+# 사전 캐시한다. 외부 이미지 대부분은 scripts/fetch_assets.py로 assets/place-images/에
+# 자가호스팅돼 CORE에 포함(오프라인 100% 보장). 자가호스팅 안 된(dead URL 등) 소수만
+# best-effort(no-cors + no-referrer)로 받아두고, 런타임 fetch도 cache-first로 캐시한다.
 # 근거: docs/decision-log/2026-05-31-offline-service-worker.md
+#       docs/decision-log/2026-05-31-02-offline-image-selfhosting.md
 
 SW_CACHE_PREFIX = "japan-trip-"
 
@@ -2362,15 +2375,22 @@ def _precache_core_urls() -> list:
                 urls.append(url)
     for img in sorted((BASE / "assets" / "lodging").glob("*.jpg")):
         urls.append("/assets/lodging/" + img.name)
+    # 자가호스팅한 외부 이미지(장소 사진·블로그 썸네일) — 오프라인 100% 보장.
+    place_dir = BASE / "assets" / "place-images"
+    if place_dir.exists():
+        for img in sorted(place_dir.iterdir()):
+            if img.is_file():
+                urls.append("/assets/place-images/" + img.name)
     return urls
 
 
 def _external_image_urls(d) -> list:
-    """일정 데이터의 외부 이미지(장소 사진·블로그 썸네일) — best-effort 사전 캐시."""
+    """자가호스팅되지 않은(다운로드 실패·dead URL) 외부 이미지만 best-effort 사전 캐시.
+    대부분은 로컬로 치환돼 CORE에 들어가므로 여기 남는 건 소수다."""
     seen, out = set(), []
 
     def add(u):
-        if isinstance(u, str) and u.startswith("http") and u not in seen:
+        if isinstance(u, str) and u.startswith("http") and u not in seen and u not in LOCAL_IMAGE_MAP:
             seen.add(u)
             out.append(u)
 
@@ -2418,7 +2438,9 @@ self.addEventListener("install", (event) => {{
     await cache.addAll(CORE);
     await Promise.allSettled(EXTERNAL.map(async (url) => {{
       try {{
-        const res = await fetch(url, {{ mode: "no-cors" }});
+        // referrerPolicy: <img referrerpolicy="no-referrer">와 동일 — 핫링크 보호
+        // 호스트(blogthumb.pstatic·tblg 등)가 referer 붙은 요청을 거부하던 문제 해결.
+        const res = await fetch(url, {{ mode: "no-cors", referrerPolicy: "no-referrer" }});
         await cache.put(url, res);
       }} catch (e) {{ /* 외부 자원 실패는 무시 */ }}
     }}));
