@@ -187,6 +187,7 @@ japan-trip/
   - 이전 정책(2026-05-26 이전): 외부 문서를 GitHub blob URL(`https://github.com/ywkim/japan-trip/blob/main/...`)로 링크 — Vercel이 `.md`를 raw text로 서빙해 상대 경로가 깨진다는 이유. **2026-05-26 정책 반전**: 받는 사람(시부모 포함)에게 레포 노출을 막기 위해 산출물에서 GitHub 링크 자체를 제거. 근거: `docs/decision-log/2026-05-26-vercel-no-github-links.md`
   - **2026-05-26 보완**: GitHub 링크 금지는 유지하되, 참조 문서를 없애는 대신 레포 마크다운을 사이트 내 HTML(`viz/report.html` 등)로 렌더해 연결. 근거: `docs/decision-log/2026-05-26-02-vercel-docs-as-html-pages.md`
   - `data/booking-checklist.json`의 `link.url`에 레포 마크다운 경로(예: `docs/booking-research-2026-05-24.md`)를 넣으면 `build_index.py`의 `DOC_SOURCE_TO_OUT`가 사이트 내 렌더 페이지로 치환. GitHub URL은 여전히 금지 (검사 J가 렌더 산출물에서 잡는다)
+- **장소 Google Maps 링크 — 가게 식별 강도에 차등(좌표 추정 금지)**. 일정(`itinerary.json`의 `maps_query`)·번역 문서(카페·식당 비교)의 지도 링크는 가게의 식별 강도에 맞춰 방식을 고른다. ① **상호에 지점명이 포함돼 고유한 가게**(`嵐山本店`·`嵐山店`·`先斗町店`·`嵐山庭園` 등) → **가게명+지점명 검색**(`maps/search/<가게명+지점>`): 구글이 정확한 그 POI에 매칭돼 카드(가게 정보)와 좌표를 동시에 안착. ② **질의로도 모호한 복수 지점 브랜드**(예: `% Arabica` 嵐山·東山) → **Place ID(CID) 직링크**(`https://maps.google.com/?cid=<10진 CID>`): 가게 고유 ID라 이름 중복에 면역. CID 획득 절차 = `WebSearch`로 구글 canonical place URL 노출 → feature ID(`0x…:0x…`) 확보 → 두 번째 hex를 10진 변환(`int(hex,16)`). **주소만으로 검색하면**(`maps/search/<주소>`) 밀집 구역에서 인접 가게 카드가 오표시되므로 단독 사용 금지. **보이는 주소 텍스트는 검증된 일본어 주소(Tabelog 등)를 그대로 유지**하고 링크 href만 위 방식으로 설정. breakfast.json `map_query`도 동일 계열(좌표 추정 금지·검색 질의만). 근거: `docs/decision-log/2026-05-31-05-cafe-maps-links-name-branch-cid.md`
 
 ## 문서 렌더링 (DOC_PAGES)
 
