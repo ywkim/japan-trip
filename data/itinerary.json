@@ -245,7 +245,7 @@
   "days": [
     {
       "date": "2026-05-31",
-      "day_label": "5/31 (일) — 오후 도착 + 시오 체크인 + 폰토초 야끼니꾸·가모강 야경",
+      "day_label": "5/31 (일) — 오후 도착 + 시오 체크인 + 쿄 우나와 본점 장어 저녁",
       "walking_km": 1,
       "lodging": "에어비앤비 시오",
       "items": [
@@ -295,7 +295,7 @@
             "en_name": ""
           },
           "maps_query": "Nijo Station Kyoto",
-          "note": "JR 하루카로 {{kyoto_station}}까지, JR {{sanin_line}}으로 {{nijo_station}}까지 환승 + 도보 7분. 오후 도착편 피로를 고려해 체크인·짐 정리 후 저녁은 폰토초(先斗町) enen 야끼니꾸 + {{kamogawa}} 강변 야경 산책(대중교통 지하철 왕복). 동산 관광은 6/2 오후로 이동.",
+          "note": "JR 하루카로 {{kyoto_station}}까지, JR {{sanin_line}}으로 {{nijo_station}}까지 환승 + 도보 7분. 오후 도착편 피로를 고려해 체크인·짐 정리 후, 저녁은 시버스로 시내(四条)까지 가 쿄 우나와 본점(京うな和本店) 장어만 먹고 복귀하는 단출한 동선. 야사카·{{kamogawa}} 등 동산 관광은 6/2 오후로 이동.",
           "arrive_from": {
             "steps": [
               {
@@ -313,87 +313,42 @@
           }
         },
         {
-          "time": "18:30",
+          "time": "18:00",
           "title": {
             "type": "restaurant",
-            "ko_name": "엔엔 — 폰토초 야끼니꾸 저녁",
-            "ja_name": "京都焼肉 enen 先斗町本店",
-            "ja_reading_ko": "엔엔",
-            "en_name": "Kyoto Yakiniku enen"
+            "ko_name": "쿄 우나와 본점 — 장어 저녁",
+            "ja_name": "京うな和本店 四条堺町",
+            "ja_reading_ko": "쿄 우나와 혼텐",
+            "en_name": "Kyo Unawa Honten"
           },
-          "maps_query": "京都焼肉 enen 先斗町本店",
-          "note": "{{shio_machiya}}·{{nijo_station}}에서 도보권 아님 — 폰토초(先斗町)로 지하철 이동 후 야끼니꾸 저녁. 도착편 지연·피로 시 휴식 후 출발. 예약 준비 — 5/31(일) 18:30·4인(시부모 2 포함)·테이블석 요청. 영어 즉시예약 [타베로그](https://tabelog.com/en/kyoto/A2601/A260201/26034057/)·[핫페퍼](https://www.hotpepper.jp/strJ001246287/) 또는 전화 [☎075-286-7479](tel:+81752867479)(일본어). 영어 메뉴·응대 가능. 도착편 지연 시 시간 변경·취소는 같은 채널로.",
+          "maps_query": "京うな和本店 四条堺町",
+          "note": "오후 도착·시부모 동반이라 첫 저녁은 {{shio_machiya}}에서 시버스로 시내(四条)까지 가 쿄 우나와 본점(京うな和本店) 장어만 먹고 바로 복귀하는 단출한 동선. 야사카·{{kamogawa}} 산책은 생략(동산 코스는 6/2 오후로 이동). 영어 메뉴·예약 가능 — 5/31(일) 4인(시부모 2 포함) 테이블석 사전 예약 권장.",
           "link": {
-            "url": "https://tabelog.com/en/kyoto/A2601/A260201/26034057/",
-            "label": "enen 예약 (타베로그 영어·즉시예약)"
+            "url": "https://kyo-unawa.com/en/",
+            "label": "쿄 우나와 본점 공식 (영어)"
           },
           "food_quality": {
-            "rating": "타베로그 3.44 · A5 흑모와규 창작 야끼니꾸(프렌치 터치)",
-            "source": "Tabelog · enen 공식사이트(주소·영업시간) 2026-05-30",
-            "source_fetched_at": "2026-05-30",
+            "rating": "장어(우나기) 전문점 · 디너 1인 약 ¥5,500 · 영업 11:00~20:30(L.O.20:00)",
+            "source": "구르나비·핫페퍼·공식(kyo-unawa.com) 2026-05-31",
+            "source_fetched_at": "2026-05-31",
             "data_quality": "researched_market_rate",
-            "url": "https://tabelog.com/en/kyoto/A2601/A260201/26034057/",
-            "note": "흑모와규 창작 야끼니꾸. 中京区鍋屋町209-13(폰토초·先斗町) — 한큐 교토카와라마치(京都河原町)역·게이한 {{gion_shijo_stop}}역 도보 2분, {{shio_machiya}}에서 도보권 아님. 일요일 디너 17:00~22:00(L.O.21:30)·1인 ¥5,000~6,000. 인기점·예약 권장.",
-            "place_info": {},
-            "business_hours": [],
-            "ratings": [
-              {
-                "source": "tabelog",
-                "score": 3.44
-              }
-            ]
+            "url": "https://r.gnavi.co.jp/dzdmmfsr0000/",
+            "note": "나고야 계열 장어요리 전문점(2020 교토 개업)·和풍 모던. 우나기주·히츠마부시. 京都市中京区 四条堺町 — 시조카라스마(四条烏丸)·시조카와라마치(四条河原町)역 도보 5분. 영업 11:00~20:30(L.O.20:00). 같은 이름의 神宮道(진구미치)점이 별도로 있으니 예약·방문 시 '四条堺町 본점' 확인."
           },
           "arrive_from": {
-            "steps": [
-              {
-                "mode": "subway",
-                "from": "{{nijo_station}}",
-                "to": "{{sanjo_keihan_station}}",
-                "duration_min": 8,
-                "distance_km": 3.4
-              },
-              {
-                "mode": "walk",
-                "from": "{{sanjo_keihan_station}}",
-                "to": "{{enen}}",
-                "duration_min": 7,
-                "distance_km": 0.5
-              }
-            ],
-            "source": "교토 지하철 도자이선 二条→三条京阪 + 폰토초 도보 (Google Maps 경로) — 정밀 노선·요금 브라우저 검증 대기",
-            "source_fetched_at": "2026-05-30",
-            "data_quality": "tbd_needs_browser_mcp",
-            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Nijo+Station,+Kyoto&destination=%E4%BA%AC%E9%83%BD%E7%84%BC%E8%82%89+enen+%E5%85%88%E6%96%97%E7%94%BA%E6%9C%AC%E5%BA%97&travelmode=transit"
-          }
-        },
-        {
-          "time": "20:00",
-          "title": {
-            "type": "place",
-            "ko_name": "가모강 야경 산책 (폰토초)",
-            "ja_name": "鴨川・先斗町",
-            "ja_reading_ko": "카모가와·폰토초",
-            "en_name": "Kamogawa riverside & Pontocho"
-          },
-          "maps_query": "鴨川 先斗町 京都",
-          "note": "저녁 후 {{kamogawa}} 강변·폰토초(先斗町) 골목 야경 산책 — enen에서 도보 2분, {{gion_shijo_stop}}역·{{sanjo_keihan_station}} 인근. 강변 가게 불빛·노료유카(納涼床) 분위기. 산책 후 지하철 도자이선 {{sanjo_keihan_station}}→{{nijo_station}}으로 시오 복귀(ICOCA). 시부모 동반·도착일 피로 고려해 무리 없이 짧게.",
-          "arrive_from": {
-            "steps": [
-              {
-                "mode": "walk",
-                "duration_min": 2,
-                "distance_km": 0.15
-              }
-            ],
-            "source": "enen(폰토초)→鴨川 강변 도보 (Google Maps) — 정밀 동선 브라우저 검증 대기",
-            "source_fetched_at": "2026-05-30",
-            "data_quality": "tbd_needs_browser_mcp",
-            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=%E4%BA%AC%E9%83%BD%E7%84%BC%E8%82%89+enen+%E5%85%88%E6%96%97%E7%94%BA%E6%9C%AC%E5%BA%97&destination=%E9%B4%A8%E5%B7%9D+%E5%85%88%E6%96%97%E7%94%BA&travelmode=walking"
+            "mode": "bus",
+            "duration_min": 18,
+            "distance_km": 2.5,
+            "route": "{{shio_machiya}} → 가까운 시버스 정류장 → 四条烏丸·四条堺町 방면 하차 → 도보 5분. 교토 시버스 균일 ¥230. 정확한 노선번호·정류장은 당일 구글맵/시버스 앱으로 확인. 식후 같은 경로로 복귀.",
+            "source": "교토시 교통국 시버스 균일운임 ¥230(공식) + Google Maps 대중교통 경로 — 노선번호 브라우저 미검증",
+            "source_fetched_at": "2026-05-31",
+            "data_quality": "researched_market_rate",
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Nijo+Station,+Kyoto&destination=%E4%BA%AC%E3%81%86%E3%81%AA%E5%92%8C%E6%9C%AC%E5%BA%97+%E5%9B%9B%E6%9D%A1%E5%A0%BA%E7%94%BA&travelmode=transit"
           }
         }
       ],
-      "walking_km_source": "items[].arrive_from[mode=walk] 합(~0.65km: 三条京阪→enen 0.5 + enen→鴨川 야경 0.15) + 니조역·교토역 환승 도보 추정. 오후 도착으로 첫날 관광 없음(동산 코스는 6/2로 이동).",
-      "pass_recommendation": "iPhone Apple Wallet ICOCA 단권 — JR 하루카는 별도 왕복권(¥2,400/인). {{kyoto_station}}→{{nijo_station}} JR 산인선만 ICOCA 탭(약 ¥190). 저녁 폰토초 enen 이동으로 지하철 도자이선 {{nijo_station}}↔{{sanjo_keihan_station}} 왕복 ICOCA 탭 추가(요금 현지 확인)."
+      "walking_km_source": "버스 정류장 도보(~1km: 시오↔정류장 + 정류장↔쿄 우나와 본점) + 니조역·교토역 환승 도보 추정. 오후 도착으로 첫날 관광 없음(동산 코스는 6/2로 이동).",
+      "pass_recommendation": "iPhone Apple Wallet ICOCA 단권 — JR 하루카는 별도 왕복권(¥2,400/인). {{kyoto_station}}→{{nijo_station}} JR 산인선만 ICOCA 탭(약 ¥190). 저녁 시내 쿄 우나와 본점 왕복 시버스(¥230×2)도 ICOCA 탭. 이동 적어 1일권 불요."
     },
     {
       "date": "2026-06-01",
