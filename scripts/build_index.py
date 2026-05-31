@@ -823,6 +823,15 @@ def og_meta(*, title: str, description: str, slug: str, page_path: str) -> str:
 <meta name="twitter:image" content="{esc(image)}">"""
 
 
+# 서비스 워커 등록 — 비행기 모드 완전 오프라인. 외부 fetch 없이 register만 호출하므로
+# "산출물에 fetch 없음" 규약 유지(실제 캐싱 fetch는 별도 파일 sw.js가 담당).
+SW_REGISTER_SCRIPT = (
+    '<script>if("serviceWorker" in navigator){'
+    'window.addEventListener("load",function(){'
+    'navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>'
+)
+
+
 def html_doc(
     title: str,
     body: str,
@@ -846,10 +855,14 @@ def html_doc(
 <meta name="theme-color" content="{bg_dark}" media="(prefers-color-scheme: dark)">
 <title>{esc(title)}</title>
 {meta}
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" type="image/svg+xml" href="/assets/icon.svg">
+<link rel="apple-touch-icon" href="/assets/icon.svg">
 <style>{css}</style>
 </head>
 <body>
 {body}
+{SW_REGISTER_SCRIPT}
 </body>
 </html>
 """
@@ -2330,6 +2343,153 @@ OG_CARDS = (
 )
 
 
+# ─── 오프라인 (서비스 워커 + PWA 매니페스트) ────────────────────────────────
+# 비행기 모드에서 모든 페이지를 다시 열 수 있게 install 시점에 전 페이지·로컬 자산을
+# 사전 캐시한다. 외부 이미지(위키미디어·블로그 썸네일)는 best-effort(no-cors)로
+# 받아두고, 런타임 fetch도 cache-first로 캐시해 한 번 본 자원은 오프라인에 남는다.
+# 근거: docs/decision-log/2026-05-31-offline-service-worker.md
+
+SW_CACHE_PREFIX = "japan-trip-"
+
+
+def _precache_core_urls() -> list:
+    """install 시 반드시 캐시할 동일 출처 URL(전 HTML 페이지 + 로컬 자산)."""
+    urls = ["/", "/index.html", "/manifest.json", "/assets/icon.svg"]
+    for label, _path_fn, _build_fn in OUTPUTS:
+        if label.endswith(".html"):
+            url = "/" + label
+            if url not in urls:
+                urls.append(url)
+    for img in sorted((BASE / "assets" / "lodging").glob("*.jpg")):
+        urls.append("/assets/lodging/" + img.name)
+    return urls
+
+
+def _external_image_urls(d) -> list:
+    """일정 데이터의 외부 이미지(장소 사진·블로그 썸네일) — best-effort 사전 캐시."""
+    seen, out = set(), []
+
+    def add(u):
+        if isinstance(u, str) and u.startswith("http") and u not in seen:
+            seen.add(u)
+            out.append(u)
+
+    itin = d.get("itinerary", {})
+    days = list(itin.get("days", []))
+    for rc in itin.get("route_candidates", []):
+        if isinstance(rc, dict):
+            days.extend(rc.get("days", []))
+    for day in days:
+        for it in day.get("items", []):
+            add(it.get("image_url"))
+            for r in it.get("blog_reviews", []) or []:
+                add(r.get("img"))
+    return out
+
+
+def compute_cache_version(d) -> str:
+    """전 산출물 콘텐츠 해시 → 콘텐츠 변경 시 캐시 자동 무효화(결정론)."""
+    import hashlib
+
+    parts = []
+    for label, _path_fn, build_fn in OUTPUTS:
+        if label in ("sw.js", "manifest.json"):
+            continue  # 순환·자기참조 방지
+        parts.append(label)
+        parts.append(build_fn(d))
+    digest = hashlib.sha256("\x00".join(parts).encode("utf-8")).hexdigest()
+    return SW_CACHE_PREFIX + digest[:12]
+
+
+def build_service_worker(d) -> str:
+    version = compute_cache_version(d)
+    core = json.dumps(_precache_core_urls(), ensure_ascii=False, indent=2)
+    external = json.dumps(_external_image_urls(d), ensure_ascii=False, indent=2)
+    return f"""// 교토 가족여행 오프라인 서비스 워커 (build_index.py 산출물 — 직접 편집 금지).
+// install: 전 페이지·로컬 자산 사전 캐시 + 외부 이미지 best-effort.
+// fetch: cache-first, 오프라인 내비게이션은 캐시된 페이지로 폴백.
+const CACHE = "{version}";
+const CORE = {core};
+const EXTERNAL = {external};
+
+self.addEventListener("install", (event) => {{
+  event.waitUntil((async () => {{
+    const cache = await caches.open(CACHE);
+    await cache.addAll(CORE);
+    await Promise.allSettled(EXTERNAL.map(async (url) => {{
+      try {{
+        const res = await fetch(url, {{ mode: "no-cors" }});
+        await cache.put(url, res);
+      }} catch (e) {{ /* 외부 자원 실패는 무시 */ }}
+    }}));
+    await self.skipWaiting();
+  }})());
+}});
+
+self.addEventListener("activate", (event) => {{
+  event.waitUntil((async () => {{
+    const keys = await caches.keys();
+    await Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k)));
+    await self.clients.claim();
+  }})());
+}});
+
+self.addEventListener("fetch", (event) => {{
+  const req = event.request;
+  if (req.method !== "GET") return;
+  event.respondWith((async () => {{
+    const cached = await caches.match(req, {{ ignoreSearch: true }});
+    if (cached) return cached;
+    try {{
+      const res = await fetch(req);
+      if (res && (res.status === 200 || res.type === "opaque")) {{
+        const cache = await caches.open(CACHE);
+        cache.put(req, res.clone());
+      }}
+      return res;
+    }} catch (err) {{
+      if (req.mode === "navigate") {{
+        const fallback = (await caches.match("/index.html")) || (await caches.match("/"));
+        if (fallback) return fallback;
+      }}
+      throw err;
+    }}
+  }})());
+}});
+"""
+
+
+def build_manifest(d) -> str:
+    cl = d["tokens"]["color"]["light"]
+    manifest = {
+        "name": SITE_NAME,
+        "short_name": "교토여행",
+        "description": "교토 5/31~6/3 4인 가족여행 일정·예약·체크리스트 (오프라인 가능)",
+        "lang": "ko",
+        "start_url": "/",
+        "scope": "/",
+        "display": "standalone",
+        "orientation": "portrait",
+        "background_color": cl["bg"],
+        "theme_color": cl["bg"],
+        "icons": [
+            {"src": "/assets/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any"},
+            {"src": "/assets/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable"},
+        ],
+    }
+    return json.dumps(manifest, ensure_ascii=False, indent=2) + "\n"
+
+
+def build_icon_svg(d) -> str:
+    """maskable-safe 앱 아이콘: full-bleed accent 배경 + 중앙 '교토' 글자(토큰 색만)."""
+    cd = d["tokens"]["color"]["dark"]
+    return f"""<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <rect width="512" height="512" fill="{cd['accent']}"/>
+  <text x="256" y="256" font-family="{OG_FONT_STACK}" font-size="176" font-weight="700" fill="{cd['ink']}" text-anchor="middle" dominant-baseline="central">교토</text>
+</svg>
+"""
+
+
 # ─── 메인 ──────────────────────────────────────────────────────────────────
 
 OUTPUTS = (
@@ -2349,6 +2509,9 @@ OUTPUTS = (
     for page in DOC_PAGES
 ) + (
     (DECISION_LOG_OUT, lambda p: p / "viz" / "decision-log.html", build_decision_log_index),
+    ("sw.js",           lambda p: p / "sw.js",                  build_service_worker),
+    ("manifest.json",   lambda p: p / "manifest.json",          build_manifest),
+    ("assets/icon.svg", lambda p: p / "assets" / "icon.svg",    build_icon_svg),
 ) + tuple(
     (
         f"assets/og-{slug}.svg",

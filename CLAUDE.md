@@ -83,8 +83,12 @@ japan-trip/
 ├── DESIGN.md            # 시각 디자인 단일 출처 (awesome-design-md 9섹션, Quiet Ledger 테마)
 ├── vercel.json          # Vercel 배포 설정 (buildCommand: uv run python scripts/build_index.py — 배포 시점 빌드, uv가 markdown 설치)
 ├── index.html           # 메인 운영 페이지 (build_index.py 산출물 — gitignore·배포 시 빌드, 직접 편집 금지)
+├── sw.js                # 오프라인 서비스 워커 (전 페이지·로컬 자산 사전 캐시 + 외부 이미지 best-effort, build_index.py 산출물 — gitignore, 직접 편집 금지)
+├── manifest.json        # PWA 웹 앱 매니페스트 (홈 화면 추가·standalone, build_index.py 산출물 — gitignore, 직접 편집 금지)
 ├── assets/
-│   └── og-*.svg                 # OG/Twitter 카드 이미지 6장 (build_index.py 산출물 — gitignore·배포 시 빌드, 직접 편집 금지)
+│   ├── og-*.svg                 # OG/Twitter 카드 이미지 6장 (build_index.py 산출물 — gitignore·배포 시 빌드, 직접 편집 금지)
+│   ├── icon.svg                 # PWA 앱 아이콘 (maskable, build_index.py 산출물 — gitignore, 직접 편집 금지)
+│   └── lodging/                 # 숙소 사진 (커밋 — 서비스 워커 사전 캐시 대상)
 ├── data/
 │   ├── decision.json          # 단일 출처 (criteria + candidates + scores)
 │   ├── cost-options.json      # 단일 출처 (flights/lodging/daily_fixed/one_time/scenarios)
@@ -134,7 +138,7 @@ japan-trip/
 ├── scripts/
 │   ├── score.py         # 종합 점수 계산 (--json 지원)
 │   ├── budget.py        # 3M 예산 시나리오 평가 (--json 지원)
-│   ├── build_index.py   # index.html + viz/*.html(12개) + assets/og-*.svg(6장) 빌드 (공통 토큰 주입, DOC_PAGES 문서 렌더 + breakfast). 산출물은 gitignore — Vercel·CI·로컬에서 빌드
+│   ├── build_index.py   # index.html + viz/*.html(12개) + assets/og-*.svg(6장) + 오프라인 산출물(sw.js·manifest.json·assets/icon.svg) 빌드 (공통 토큰 주입, DOC_PAGES 문서 렌더 + breakfast). 산출물은 gitignore — Vercel·CI·로컬에서 빌드
 │   ├── validate.py      # 가격 필드·묵은 가격·SYNC 주석·MD↔JSON·DESIGN 동기화·GitHub 링크 검사
 │   ├── list_sources.py  # 출처 인벤토리 — data/*.json 근거 URL 추출·분류 (--json, Playwright 검증용)
 │   └── render-pdf.sh    # PDF 생성
@@ -160,6 +164,7 @@ japan-trip/
   - `data/weather.json` — 후보지×시기 기후 + `tsuyu_normals`(긴키 매우입·매우명 평년 + 최근 7년 실적) + `cities.kyoto.sub_monthly_precip`(순계열)·`trip_window_daily_precip`(5/31~6/3 일별). 원자료: JMA 매우 평년값·京都(47759) 일별 평년값 1991–2020. `docs/weather.md` §5와 동기화. 5/31~6/3 실측 기상 추적이 필요해지면 본 파일의 `cities.kyoto`에 새 키로 추가
   - `data/flights.json` — 후보지×출발지 항공권 시세 스냅샷 (시점 스냅샷, snapshot_date 명시). 발권은 별도 PR로 `data/booking-checklist.json`·`data/cost-options.json`에 기록
 - **`index.html`·`viz/*.html`(12개)·`assets/og-*.svg`(6장)는 `scripts/build_index.py` 산출물 — 직접 편집 금지**. **이 산출물(13 HTML + 6 SVG = 19개)은 레포에 커밋하지 않는다(`.gitignore`)** — 배포(CD)와 소스를 분리해 거대한 기계 생성 diff로 인한 PR 머지 충돌을 없앤다(근거: `docs/decision-log/2026-05-27-cd-artifact-separation.md`). 데이터(`data/*.json`)·스크립트·렌더 대상 `.md` 변경 후 `uv run python scripts/build_index.py`로 로컬 빌드(클론 직후 1회 필요, `markdown` 의존 — `uv sync`/`uv run`이 자동 설치). 실제 배포는 Vercel이 `vercel.json`의 `buildCommand`(`uv run python scripts/build_index.py` — Vercel 빌드 이미지의 uv가 lockfile에서 markdown 설치 후 빌드)로 매 배포 시점 생성. CI는 검증 전에 `build_index.py`를 실행해 산출물을 만들고(빌드 무오류 + 검사 J가 가드), 재현성(idempotent)·콘텐츠 검사는 `tests/test_build_index.py`가 담당
+- **오프라인(PWA) 산출물 — `sw.js`·`manifest.json`·`assets/icon.svg`도 `build_index.py` 산출물(gitignore, 직접 편집 금지)**. 비행기 모드에서 모든 페이지를 다시 열 수 있게 서비스 워커가 install 시 전 HTML 페이지 + 로컬 자산(숙소 사진·아이콘·매니페스트)을 `cache.addAll`로 사전 캐시하고, 외부 이미지(장소 사진·블로그 썸네일)는 `no-cors` best-effort로 받아둔다. fetch는 cache-first(런타임 캐시) + 오프라인 내비게이션 폴백. 캐시 버전(`CACHE`)은 `compute_cache_version(d)` — 전 산출물 콘텐츠 SHA-256 해시(앞 12자, 결정론 → `--check` 통과). `html_doc()`이 전 페이지에 매니페스트 링크 + `SW_REGISTER_SCRIPT`(외부 fetch 없이 register만 — "산출물에 fetch 없음" 규약 유지) 주입. 새 페이지를 `OUTPUTS`에 추가하면 `_precache_core_urls()`가 `.html` 라벨을 자동 사전 캐시. **서비스 워커는 HTTPS/localhost에서만 동작**(`file://` 더블클릭 미동작 — 로컬 미리보기는 페이지만 열림). 외부 이미지 100% 보장이 필요하면 별도 PR로 빌드 시 자가호스팅 검토. 근거: `docs/decision-log/2026-05-31-offline-service-worker.md`
 - 모바일 가독성: 장문 블록(이동 경로 `arrive_from.route`·ICOCA 실행 단계·비선택 예산 시나리오·긴 예약/숙박 메모·일자별 교통패스 추천·조식 가게 그룹·조식 영업시간 주의)은 `build_index.py`의 `fold(summary, detail)` 헬퍼로 "평이 요약 + `<details>` 접기"로 렌더. 이동은 모드별 한국어 동사(`MODE_VERBS`)+소요시간 요약(환승 leg는 "환승 N회 · 약 M분"), 상세는 **역 타임라인 컴포넌트**(`.tl*`, `render_transit_line_steps`→`_render_transit_timeline`)로 렌더 — 역·정류장마다 도트 노드, 환승점은 warn 도트+'환승' 태그, 운영사·노선은 색 대신 아이콘+`.tl-mode` pill, 분·거리·요금은 `.tl-meta`. 역 정보 없는 leg(도보)는 `.tl-simple` 폴백, `advisory`는 `.tl-advisory`(warn 보더). 운영사 브랜드색(인라인 hex) 금지 — 기존 토큰만(근거: `docs/decision-log/2026-05-30-02-transit-timeline-ui.md`, DESIGN.md §4 Transit timeline). 예약·숙박 메모는 `note_block()`이 60자 초과 시 `·` 앞 2개 항목을 요약으로 노출하고 나머지(예약번호·PIN·탑승객 등)를 접는다. 교통패스 추천은 `pass_block()`이 `' — '` 앞 추천명만 보이고 비용 근거를 접는다. 예약 체크리스트(`checklist_card`)의 긴 예약번호·권장 값은 `detail_row(label, value)`이 44자 초과 시 `·` 앞 토막만 요약에 노출하고 나머지(②예약·PIN·취소정책 등)를 접어 우측 정렬 셀(`.row .v`) 오버플로를 막는다(짧으면 기존 k/v 행 유지). lodging 화면 운영 메모도 모두 `note_block()` 경유 — 하드코딩 장문 라인 금지. 일정 카드·시간표의 긴 장소 메모(`note`)·맛집 상세 노트(`food_quality.note`)는 `memo_block()`이 50자 초과 시 첫 문장(". " 또는 " · " 앞 토막, 60자 미만일 때)을 요약으로 노출하고 나머지를 접는다(맛집 평점 줄 `🍽️ …`은 항상 노출 — 검증 신호 유지). 조식 페이지(`viz/breakfast.html`)는 `_breakfast_group()`이 가게 그룹을 "라벨 · N곳"으로 접되 숙소별 첫(가장 편리) 그룹은 펼친 채(`open=True`) 둬 가격·메뉴를 즉시 노출하고, 아침 3회 표·아침별 권장은 긴 텍스트라 우측정렬 k/v 행 대신 좌측정렬 블록(`.bf-item`/`.bf-body`)으로 렌더한다. 문서 렌더 페이지(`viz/report.html`·`itinerary-doc.html`·`research.html`·`transit-pass.html`·`decision-kyoto.html`·`decision-log.html`)는 `DOC_PAGES`로 레포 마크다운을 사이트 내 HTML로 변환(아래 "문서 렌더링" 절). 모든 화면(index·itinerary·itinerary-table·lodging·checklist·archive·breakfast)이 동일 fold 패턴 적용. 새 장문 정보도 이 패턴을 따른다
 - 메인 페이지(`index.html`)는 **운영 모드** — 요약·일자별 일정만. 분석·결정 자료(장마 확률·9 예산 시나리오·7 후보지 점수)는 `viz/archive.html`로 분리. 받는 사람에게 "아직 결정 중"으로 읽히는 콘텐츠는 메인에서 제외
 - `docs/weather.md`·`docs/flights.md`의 표는 각각 `data/weather.json`·`data/flights.json`의 사람용 사본 — JSON 수정 시 함께 갱신 (CI 게이트: `scripts/validate.py` E·F가 도시·시기 수치, snapshot_date, 시세 표기의 drift를 PR 단계에서 차단)

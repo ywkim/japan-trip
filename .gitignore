@@ -25,6 +25,9 @@ reports/final-report.pdf
 /index.html
 /viz/*.html
 /assets/og-*.svg
+/assets/icon.svg
+/sw.js
+/manifest.json
 
 # 로컬 상태
 *.local
