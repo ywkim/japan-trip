@@ -397,7 +397,6 @@ class BuildIndexTests(unittest.TestCase):
         run()
         html = CHECKLIST.read_text(encoding="utf-8")
         self.assertIn("<details", html, "checklist long note should be collapsible (<details>)")
-        self.assertIn("자세히", html, "collapsible note should have a '자세히' summary")
 
     def test_checklist_pending_due_has_dday(self):
         """미정(처리 필요) 항목의 마감일은 D-day 계산용 data-due 속성과
@@ -1224,6 +1223,50 @@ class DocPageTests(unittest.TestCase):
         self.assertIn("ICOCA", result, "should show recommendation")
         self.assertIn("<details", result, "should have collapsible section")
         self.assertIn("시버스", result, "should contain detail items")
+
+
+class ChecklistCardNoteFoldTests(unittest.TestCase):
+    """checklist_card note가 PR #71 fold 패턴(의미있는 요약 + 접기)을 따르는지 검증."""
+
+    def test_note_with_dot_separators_shows_first_two_as_summary(self):
+        """' · ' 구분자가 있는 note는 앞 2항목이 summary로 노출되고 나머지는 접혀야 한다."""
+        import sys
+        sys.path.insert(0, str(BASE / "scripts"))
+        import build_index
+        it = {
+            "label": "항공", "status": "확정",
+            "note": "에어서울 RS · 예약번호 A8YW58 · ICN 13:15→KIX 15:15 / KIX 10:05→ICN 12:05 · 시부 결제",
+        }
+        html = build_index.checklist_card(it)
+        self.assertIn("<details", html, "long note should be collapsible")
+        summary = html.split("<summary>")[1].split("</summary>")[0]
+        self.assertNotIn("자세히", summary, "summary must not be the generic '자세히' label")
+        self.assertIn("에어서울 RS", summary, "first segment must appear in summary")
+        self.assertIn("예약번호 A8YW58", summary, "second segment must appear in summary")
+
+    def test_note_with_markdown_links_preserves_clickable_links(self):
+        """note 안의 markdown [text](url) 링크가 <a>로 렌더되어야 한다 (linkify 유지)."""
+        import sys
+        sys.path.insert(0, str(BASE / "scripts"))
+        import build_index
+        it = {
+            "label": "식당", "status": "예약중",
+            "note": "링크 [예약](https://example.com) 참조 · 전화 [☎02-000](tel:+8200000)",
+        }
+        html = build_index.checklist_card(it)
+        self.assertIn('<a href="https://example.com"', html)
+        self.assertIn('<a href="tel:+8200000"', html)
+
+    def test_checklist_html_note_summary_is_not_generic(self):
+        """생성된 viz/checklist.html에서 note summary가 '자세히'가 아니어야 한다."""
+        run()
+        html = CHECKLIST.read_text(encoding="utf-8")
+        # <summary> 태그 내에 '자세히'가 없어야 함 (권장·예약번호 등 다른 label은 허용)
+        import re
+        summaries = re.findall(r"<summary>(.*?)</summary>", html)
+        for s in summaries:
+            self.assertNotEqual(s.strip(), "자세히",
+                                f"note summary must not be generic '자세히': {s!r}")
 
 
 class ChecklistCardDocLinkTests(unittest.TestCase):

@@ -1086,35 +1086,38 @@ def fold(summary_html: str, detail_html: str, *, open: bool = False) -> str:
     )
 
 
-def note_block(note: str, *, style: str = "") -> str:
+def note_block(note: str, *, style: str = "", render_fn=None) -> str:
     """예약·숙박 메모를 짧으면 평문, 길면 '앞 항목 요약 + 접기'로 렌더.
 
     ' · '로 구분된 장문 운영 메모(예약번호·PIN·탑승객·체크인시각 등)가
     카드를 압도하지 않도록, 식별용 앞 2개 항목만 보이고 나머지는 접는다.
+    render_fn: 텍스트→HTML 변환 함수 (기본 esc, linkify 전달 시 URL·마크다운 링크도 변환).
     """
+    if render_fn is None:
+        render_fn = esc
     note = (note or "").strip()
     if not note:
         return ""
     style_attr = f' style="{style}"' if style else ""
     if len(note) <= 60:
-        return f'<div class="sub"{style_attr}>{esc(note)}</div>'
+        return f'<div class="sub"{style_attr}>{render_fn(note)}</div>'
     segs = [s for s in note.split(" · ") if s.strip()]
     if len(segs) >= 2:
-        summary = esc(" · ".join(segs[:2]))
+        summary = render_fn(" · ".join(segs[:2]))
         # 3개 이상 항목이면 나머지를 다중 줄로 렌더
         if len(segs) >= 3:
-            rest_lines = "".join(f'<div>{esc(s)}</div>' for s in segs[2:])
+            rest_lines = "".join(f'<div>{render_fn(s)}</div>' for s in segs[2:])
             return fold(summary, rest_lines)
         # 2개 항목: 그대로 접기
-        return fold(summary, esc(" · ".join(segs[1:])))
+        return fold(summary, render_fn(" · ".join(segs[1:])))
     # 구분자 없으면 첫 50자 + "…" 요약 후 다중 줄로 분해
     break_idx = note.find(" ", 0, 50)
     if break_idx > 0:
         first_phrase = note[:break_idx].strip() + "…"
     else:
         first_phrase = note[:50].strip() + "…"
-    detail_lines = "".join(f'<div>{esc(line)}</div>' for line in [note])
-    return fold(esc(first_phrase), detail_lines)
+    detail_lines = f'<div>{render_fn(note)}</div>'
+    return fold(render_fn(first_phrase), detail_lines)
 
 
 def pass_block(text: str) -> str:
@@ -1436,7 +1439,7 @@ def checklist_card(it, in_viz: bool = False) -> str:
     note = it.get("note", "")
     note_html = ""
     if note:
-        note_html = "\n    " + fold("자세히", linkify(note))
+        note_html = "\n    " + note_block(note, render_fn=linkify)
     return f"""
   <div class="subcard status-{state}">
     <div class="ck-head"><span class="subtitle">{esc(it['label'])}</span><span class="badge badge-{state}">{esc(st)}</span></div>
