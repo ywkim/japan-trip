@@ -188,6 +188,15 @@ PLACE_REF_RE = re.compile(r"\{\{([a-z0-9_]+)\}\}")
 # 교통 타임라인이 역·정류장 발음을 노출하기 위해 load_data에서 채운다.
 PLACE_LABEL_TO_READING: dict = {}
 
+# 외부 이미지 자가호스팅 맵(url → 로컬 경로). scripts/fetch_assets.py가 생성한
+# data/local-image-map.json을 load_data에서 적재 — 빌드는 네트워크 비의존.
+LOCAL_IMAGE_MAP: dict = {}
+
+
+def local_src(url: str) -> str:
+    """외부 이미지 URL이 로컬에 자가호스팅돼 있으면 로컬 경로로, 아니면 원본 URL로."""
+    return LOCAL_IMAGE_MAP.get(url, url)
+
 
 def build_place_reading_map() -> dict:
     """PLACE_REGISTRY에서 확장 라벨('ko(ja)' 또는 'ko') → reading 맵을 만든다."""
@@ -498,7 +507,7 @@ def blog_reviews_html(reviews: list) -> str:
         return ""
     cards = "".join(
         f'<a href="{esc(r["url"])}" target="_blank" rel="noopener" class="blog-card">'
-        f'<img src="{esc(r["img"])}" class="blog-thumb" loading="lazy" alt="" referrerpolicy="no-referrer" onerror="this.closest(\'.blog-card\').style.display=\'none\'">'
+        f'<img src="{esc(local_src(r["img"]))}" class="blog-thumb" loading="lazy" alt="" referrerpolicy="no-referrer" onerror="this.closest(\'.blog-card\').style.display=\'none\'">'
         f'<p class="blog-comment">{esc(r["comment"])}</p>'
         f'</a>'
         for r in reviews
@@ -563,9 +572,11 @@ def run_json(script: str) -> dict:
 def load_data():
     itinerary = json.loads((DATA / "itinerary.json").read_text(encoding="utf-8"))
     # 장소 레지스트리를 모듈 전역에 적재 후 {{place_id}} 참조를 'ko(ja)'로 확장.
-    global PLACE_REGISTRY, PLACE_LABEL_TO_READING
+    global PLACE_REGISTRY, PLACE_LABEL_TO_READING, LOCAL_IMAGE_MAP
     PLACE_REGISTRY = itinerary.get("places", {})
     PLACE_LABEL_TO_READING = build_place_reading_map()
+    img_map_path = DATA / "local-image-map.json"
+    LOCAL_IMAGE_MAP = json.loads(img_map_path.read_text(encoding="utf-8")) if img_map_path.exists() else {}
     itinerary = expand_refs_in_obj(itinerary)
     return {
         "decision": json.loads((DATA / "decision.json").read_text(encoding="utf-8")),
@@ -823,6 +834,15 @@ def og_meta(*, title: str, description: str, slug: str, page_path: str) -> str:
 <meta name="twitter:image" content="{esc(image)}">"""
 
 
+# 서비스 워커 등록 — 비행기 모드 완전 오프라인. 외부 fetch 없이 register만 호출하므로
+# "산출물에 fetch 없음" 규약 유지(실제 캐싱 fetch는 별도 파일 sw.js가 담당).
+SW_REGISTER_SCRIPT = (
+    '<script>if("serviceWorker" in navigator){'
+    'window.addEventListener("load",function(){'
+    'navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>'
+)
+
+
 def html_doc(
     title: str,
     body: str,
@@ -846,10 +866,14 @@ def html_doc(
 <meta name="theme-color" content="{bg_dark}" media="(prefers-color-scheme: dark)">
 <title>{esc(title)}</title>
 {meta}
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" type="image/svg+xml" href="/assets/icon.svg">
+<link rel="apple-touch-icon" href="/assets/icon.svg">
 <style>{css}</style>
 </head>
 <body>
 {body}
+{SW_REGISTER_SCRIPT}
 </body>
 </html>
 """
@@ -1327,7 +1351,7 @@ def card_itinerary(d) -> str:
             transit = transit_line(it.get("arrive_from"))
             if it.get("image_url"):
                 img_html = (
-                    f'<img src="{esc(it["image_url"])}" alt="{esc(title_text)}" '
+                    f'<img src="{esc(local_src(it["image_url"]))}" alt="{esc(title_text)}" '
                     f'class="place-img" loading="lazy">'
                     f'<div class="img-credit">{esc(it.get("image_credit",""))}</div>'
                 )
@@ -1818,7 +1842,7 @@ def build_itinerary(d) -> str:
             transit = transit_line(it.get("arrive_from"))
             if it.get("image_url"):
                 img_html = (
-                    f'<img src="{esc(it["image_url"])}" alt="{esc(title_text)}" '
+                    f'<img src="{esc(local_src(it["image_url"]))}" alt="{esc(title_text)}" '
                     f'class="place-img" loading="lazy">'
                     f'<div class="img-credit">{esc(it.get("image_credit",""))}</div>'
                 )
@@ -2073,7 +2097,7 @@ def build_itinerary_table(d) -> str:
                 transit = transit_line(it.get("arrive_from"))
                 if it.get("image_url"):
                     img_html = (
-                        f'<img src="{esc(it["image_url"])}" alt="{esc(title_text)}" '
+                        f'<img src="{esc(local_src(it["image_url"]))}" alt="{esc(title_text)}" '
                         f'class="place-img" loading="lazy">'
                         f'<span class="img-credit">{esc(it.get("image_credit",""))}</span>'
                     )
@@ -2101,7 +2125,7 @@ def build_itinerary_table(d) -> str:
             transit = transit_line(it.get("arrive_from"))
             if it.get("image_url"):
                 img_html = (
-                    f'<img src="{esc(it["image_url"])}" alt="{esc(title_text)}" '
+                    f'<img src="{esc(local_src(it["image_url"]))}" alt="{esc(title_text)}" '
                     f'class="place-img" loading="lazy">'
                     f'<div class="img-credit">{esc(it.get("image_credit",""))}</div>'
                 )
@@ -2330,6 +2354,164 @@ OG_CARDS = (
 )
 
 
+# ─── 오프라인 (서비스 워커 + PWA 매니페스트) ────────────────────────────────
+# 비행기 모드에서 모든 페이지를 다시 열 수 있게 install 시점에 전 페이지·로컬 자산을
+# 사전 캐시한다. 외부 이미지 대부분은 scripts/fetch_assets.py로 assets/place-images/에
+# 자가호스팅돼 CORE에 포함(오프라인 100% 보장). 자가호스팅 안 된(dead URL 등) 소수만
+# best-effort(no-cors + no-referrer)로 받아두고, 런타임 fetch도 cache-first로 캐시한다.
+# 근거: docs/decision-log/2026-05-31-offline-service-worker.md
+#       docs/decision-log/2026-05-31-02-offline-image-selfhosting.md
+
+SW_CACHE_PREFIX = "japan-trip-"
+
+
+def _precache_core_urls() -> list:
+    """install 시 반드시 캐시할 동일 출처 URL(전 HTML 페이지 + 로컬 자산)."""
+    urls = ["/", "/index.html", "/manifest.json", "/assets/icon.svg"]
+    for label, _path_fn, _build_fn in OUTPUTS:
+        if label.endswith(".html"):
+            url = "/" + label
+            if url not in urls:
+                urls.append(url)
+    for img in sorted((BASE / "assets" / "lodging").glob("*.jpg")):
+        urls.append("/assets/lodging/" + img.name)
+    # 자가호스팅한 외부 이미지(장소 사진·블로그 썸네일) — 오프라인 100% 보장.
+    place_dir = BASE / "assets" / "place-images"
+    if place_dir.exists():
+        for img in sorted(place_dir.iterdir()):
+            if img.is_file():
+                urls.append("/assets/place-images/" + img.name)
+    return urls
+
+
+def _external_image_urls(d) -> list:
+    """자가호스팅되지 않은(다운로드 실패·dead URL) 외부 이미지만 best-effort 사전 캐시.
+    대부분은 로컬로 치환돼 CORE에 들어가므로 여기 남는 건 소수다."""
+    seen, out = set(), []
+
+    def add(u):
+        if isinstance(u, str) and u.startswith("http") and u not in seen and u not in LOCAL_IMAGE_MAP:
+            seen.add(u)
+            out.append(u)
+
+    itin = d.get("itinerary", {})
+    days = list(itin.get("days", []))
+    for rc in itin.get("route_candidates", []):
+        if isinstance(rc, dict):
+            days.extend(rc.get("days", []))
+    for day in days:
+        for it in day.get("items", []):
+            add(it.get("image_url"))
+            for r in it.get("blog_reviews", []) or []:
+                add(r.get("img"))
+    return out
+
+
+def compute_cache_version(d) -> str:
+    """전 산출물 콘텐츠 해시 → 콘텐츠 변경 시 캐시 자동 무효화(결정론)."""
+    import hashlib
+
+    parts = []
+    for label, _path_fn, build_fn in OUTPUTS:
+        if label in ("sw.js", "manifest.json"):
+            continue  # 순환·자기참조 방지
+        parts.append(label)
+        parts.append(build_fn(d))
+    digest = hashlib.sha256("\x00".join(parts).encode("utf-8")).hexdigest()
+    return SW_CACHE_PREFIX + digest[:12]
+
+
+def build_service_worker(d) -> str:
+    version = compute_cache_version(d)
+    core = json.dumps(_precache_core_urls(), ensure_ascii=False, indent=2)
+    external = json.dumps(_external_image_urls(d), ensure_ascii=False, indent=2)
+    return f"""// 교토 가족여행 오프라인 서비스 워커 (build_index.py 산출물 — 직접 편집 금지).
+// install: 전 페이지·로컬 자산 사전 캐시 + 외부 이미지 best-effort.
+// fetch: cache-first, 오프라인 내비게이션은 캐시된 페이지로 폴백.
+const CACHE = "{version}";
+const CORE = {core};
+const EXTERNAL = {external};
+
+self.addEventListener("install", (event) => {{
+  event.waitUntil((async () => {{
+    const cache = await caches.open(CACHE);
+    await cache.addAll(CORE);
+    await Promise.allSettled(EXTERNAL.map(async (url) => {{
+      try {{
+        // referrerPolicy: <img referrerpolicy="no-referrer">와 동일 — 핫링크 보호
+        // 호스트(blogthumb.pstatic·tblg 등)가 referer 붙은 요청을 거부하던 문제 해결.
+        const res = await fetch(url, {{ mode: "no-cors", referrerPolicy: "no-referrer" }});
+        await cache.put(url, res);
+      }} catch (e) {{ /* 외부 자원 실패는 무시 */ }}
+    }}));
+    await self.skipWaiting();
+  }})());
+}});
+
+self.addEventListener("activate", (event) => {{
+  event.waitUntil((async () => {{
+    const keys = await caches.keys();
+    await Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k)));
+    await self.clients.claim();
+  }})());
+}});
+
+self.addEventListener("fetch", (event) => {{
+  const req = event.request;
+  if (req.method !== "GET") return;
+  event.respondWith((async () => {{
+    const cached = await caches.match(req, {{ ignoreSearch: true }});
+    if (cached) return cached;
+    try {{
+      const res = await fetch(req);
+      if (res && (res.status === 200 || res.type === "opaque")) {{
+        const cache = await caches.open(CACHE);
+        cache.put(req, res.clone());
+      }}
+      return res;
+    }} catch (err) {{
+      if (req.mode === "navigate") {{
+        const fallback = (await caches.match("/index.html")) || (await caches.match("/"));
+        if (fallback) return fallback;
+      }}
+      throw err;
+    }}
+  }})());
+}});
+"""
+
+
+def build_manifest(d) -> str:
+    cl = d["tokens"]["color"]["light"]
+    manifest = {
+        "name": SITE_NAME,
+        "short_name": "교토여행",
+        "description": "교토 5/31~6/3 4인 가족여행 일정·예약·체크리스트 (오프라인 가능)",
+        "lang": "ko",
+        "start_url": "/",
+        "scope": "/",
+        "display": "standalone",
+        "orientation": "portrait",
+        "background_color": cl["bg"],
+        "theme_color": cl["bg"],
+        "icons": [
+            {"src": "/assets/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any"},
+            {"src": "/assets/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable"},
+        ],
+    }
+    return json.dumps(manifest, ensure_ascii=False, indent=2) + "\n"
+
+
+def build_icon_svg(d) -> str:
+    """maskable-safe 앱 아이콘: full-bleed accent 배경 + 중앙 '교토' 글자(토큰 색만)."""
+    cd = d["tokens"]["color"]["dark"]
+    return f"""<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <rect width="512" height="512" fill="{cd['accent']}"/>
+  <text x="256" y="256" font-family="{OG_FONT_STACK}" font-size="176" font-weight="700" fill="{cd['ink']}" text-anchor="middle" dominant-baseline="central">교토</text>
+</svg>
+"""
+
+
 # ─── 메인 ──────────────────────────────────────────────────────────────────
 
 OUTPUTS = (
@@ -2349,6 +2531,9 @@ OUTPUTS = (
     for page in DOC_PAGES
 ) + (
     (DECISION_LOG_OUT, lambda p: p / "viz" / "decision-log.html", build_decision_log_index),
+    ("sw.js",           lambda p: p / "sw.js",                  build_service_worker),
+    ("manifest.json",   lambda p: p / "manifest.json",          build_manifest),
+    ("assets/icon.svg", lambda p: p / "assets" / "icon.svg",    build_icon_svg),
 ) + tuple(
     (
         f"assets/og-{slug}.svg",

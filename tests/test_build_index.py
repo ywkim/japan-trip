@@ -19,6 +19,9 @@ ALL_HTML_OUTPUTS = (INDEX, ITINERARY, CHECKLIST, TABLE, LODGING, ARCHIVE, BREAKF
 OG_SLUGS = ("home", "itinerary", "itinerary-table", "lodging", "checklist", "archive")
 ALL_OG_SVGS = tuple(BASE / "assets" / f"og-{s}.svg" for s in OG_SLUGS)
 ALL_OUTPUTS = ALL_HTML_OUTPUTS + ALL_OG_SVGS
+SW = BASE / "sw.js"
+MANIFEST = BASE / "manifest.json"
+ICON = BASE / "assets" / "icon.svg"
 SCRIPT = BASE / "scripts" / "build_index.py"
 
 sys.path.insert(0, str(BASE / "scripts"))
@@ -596,11 +599,11 @@ class NoteFoldTests(unittest.TestCase):
                               f"{path.name} should collapse long notes into a fold")
 
     def test_collapsed_note_detail_preserved(self):
-        """접어도 운영 메모 텍스트(PIN·확정번호)는 HTML에 그대로 남아야 한다."""
+        """접어도 운영 메모 텍스트는 HTML에 그대로 남아야 한다."""
         run()
         html = CHECKLIST.read_text(encoding="utf-8")
-        self.assertIn("PIN 5647", html, "checklist note detail (PIN) lost after fold")
-        self.assertIn("20260513170241828", html, "checklist note detail (confirm no.) lost after fold")
+        self.assertIn("체크인 6/2 15:00", html, "checklist note detail (check-in time) lost after fold")
+        self.assertIn("체크아웃 6/3 11:00", html, "checklist note detail (check-out time) lost after fold")
 
 
 class ChecklistDetailFoldTests(unittest.TestCase):
@@ -612,7 +615,7 @@ class ChecklistDetailFoldTests(unittest.TestCase):
 
     SHORT = "에어서울 RS · A8YW58 · 발권"
     LONG = ("Trip.com ① 1400827143416024 (성인2, ₩94,108) · ② 1400827143410570 "
-            "(성인2, PIN 2362) · 6/1 10:30 · LEE/SOYEON · 조건부 취소")
+            "(성인2) · 6/1 10:30 · LEE/SOYEON · 조건부 취소")
 
     def test_short_value_stays_plain_row(self):
         out = build_index.detail_row("예약번호", self.SHORT)
@@ -628,7 +631,7 @@ class ChecklistDetailFoldTests(unittest.TestCase):
 
     def test_long_value_detail_is_lossless(self):
         out = build_index.detail_row("예약번호", self.LONG)
-        for tok in ("1400827143416024", "1400827143410570", "PIN 2362", "LEE/SOYEON", "조건부 취소"):
+        for tok in ("1400827143416024", "1400827143410570", "LEE/SOYEON", "조건부 취소"):
             with self.subTest(tok=tok):
                 self.assertIn(tok, out, f"detail_row dropped {tok!r} after folding")
 
@@ -1236,6 +1239,107 @@ class DocPageTests(unittest.TestCase):
         self.assertIn("ICOCA", result, "should show recommendation")
         self.assertIn("<details", result, "should have collapsible section")
         self.assertIn("시버스", result, "should contain detail items")
+
+
+class OfflineCapabilityTests(unittest.TestCase):
+    """비행기 모드 완전 사전 캐시: 서비스 워커 + PWA 매니페스트 + 등록 스크립트."""
+
+    def test_service_worker_manifest_and_icon_generated(self):
+        run()
+        for p in (SW, MANIFEST, ICON):
+            with self.subTest(file=p.name):
+                self.assertTrue(p.exists(), f"{p.name} not generated")
+                self.assertTrue(p.read_text(encoding="utf-8").strip(), f"{p.name} empty")
+
+    def test_all_pages_register_sw_and_link_manifest(self):
+        run()
+        for path in ALL_HTML_OUTPUTS:
+            with self.subTest(path=path.name):
+                content = path.read_text(encoding="utf-8")
+                self.assertIn("serviceWorker", content, f"{path.name}: no SW registration")
+                self.assertIn("/sw.js", content, f"{path.name}: no /sw.js reference")
+                self.assertIn('rel="manifest"', content, f"{path.name}: no manifest link")
+
+    def test_sw_precaches_every_page_and_local_assets(self):
+        run()
+        sw = SW.read_text(encoding="utf-8")
+        for label, _pf, _bf in build_index.OUTPUTS:
+            if label.endswith(".html"):
+                url = "/" + label
+                self.assertIn(url, sw, f"sw.js precache list missing {url}")
+        self.assertIn('"/"', sw, "sw.js must precache root /")
+        self.assertIn("/assets/lodging/", sw, "sw.js must precache local lodging images")
+
+    def test_sw_has_lifecycle_and_offline_navigation_fallback(self):
+        run()
+        sw = SW.read_text(encoding="utf-8")
+        for needle in ("install", "activate", "fetch", "navigate"):
+            self.assertIn(needle, sw, f"sw.js missing {needle!r} handler/branch")
+
+    def test_sw_embeds_content_hash_cache_version(self):
+        d = build_index.load_data()
+        ver = build_index.compute_cache_version(d)
+        self.assertTrue(ver, "compute_cache_version returned empty")
+        run()
+        self.assertIn(ver, SW.read_text(encoding="utf-8"), "sw.js must embed content-hash version")
+
+    def test_manifest_is_valid_pwa(self):
+        run()
+        import json as _json
+        m = _json.loads(MANIFEST.read_text(encoding="utf-8"))
+        for key in ("name", "short_name", "start_url", "display", "icons"):
+            self.assertIn(key, m, f"manifest missing {key}")
+        self.assertTrue(m["icons"], "manifest needs at least one icon")
+        self.assertEqual(m["display"], "standalone")
+
+    def test_offline_artifacts_have_no_github_links(self):
+        run()
+        for p in (SW, MANIFEST, ICON):
+            with self.subTest(file=p.name):
+                self.assertNotIn("github.com", p.read_text(encoding="utf-8"))
+
+
+class SelfHostedImageTests(unittest.TestCase):
+    """외부 이미지 자가호스팅(B) + SW referer 보정(A) — 비행기 모드 이미지 보장."""
+
+    def _map(self):
+        import json as _json
+        p = BASE / "data" / "local-image-map.json"
+        return _json.loads(p.read_text(encoding="utf-8")) if p.exists() else {}
+
+    def test_local_src_rewrites_mapped_url(self):
+        m = self._map()
+        if not m:
+            self.skipTest("local-image-map.json not populated")
+        url, local = next(iter(m.items()))
+        build_index.LOCAL_IMAGE_MAP = m
+        try:
+            self.assertEqual(build_index.local_src(url), local)
+            self.assertEqual(build_index.local_src("https://x.test/none.jpg"), "https://x.test/none.jpg")
+        finally:
+            build_index.LOCAL_IMAGE_MAP = {}
+
+    def test_mapped_externals_replaced_by_local_paths_in_html(self):
+        m = self._map()
+        if not m:
+            self.skipTest("local-image-map.json not populated")
+        run()
+        blob = "\n".join(p.read_text(encoding="utf-8") for p in ALL_HTML_OUTPUTS)
+        self.assertIn("/assets/place-images/", blob, "no self-hosted image rendered")
+        for ext_url in m:
+            self.assertNotIn(ext_url, blob, f"mapped external URL leaked into HTML: {ext_url}")
+
+    def test_sw_precaches_self_hosted_place_images(self):
+        if not self._map():
+            self.skipTest("local-image-map.json not populated")
+        run()
+        self.assertIn("/assets/place-images/", SW.read_text(encoding="utf-8"))
+
+    def test_sw_install_fetch_uses_no_referrer(self):
+        run()
+        sw = SW.read_text(encoding="utf-8")
+        self.assertIn("referrerPolicy", sw)
+        self.assertIn("no-referrer", sw)
 
 
 if __name__ == "__main__":
