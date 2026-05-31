@@ -589,11 +589,11 @@ class NoteFoldTests(unittest.TestCase):
                               f"{path.name} should collapse long notes into a fold")
 
     def test_collapsed_note_detail_preserved(self):
-        """접어도 운영 메모 텍스트(PIN·확정번호)는 HTML에 그대로 남아야 한다."""
+        """접어도 운영 메모 텍스트는 HTML에 그대로 남아야 한다."""
         run()
         html = CHECKLIST.read_text(encoding="utf-8")
-        self.assertIn("PIN 5647", html, "checklist note detail (PIN) lost after fold")
-        self.assertIn("20260513170241828", html, "checklist note detail (confirm no.) lost after fold")
+        self.assertIn("체크인 6/2 15:00", html, "checklist note detail (check-in time) lost after fold")
+        self.assertIn("체크아웃 6/3 11:00", html, "checklist note detail (check-out time) lost after fold")
 
 
 class ChecklistDetailFoldTests(unittest.TestCase):
