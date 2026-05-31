@@ -414,7 +414,7 @@ class BuildIndexTests(unittest.TestCase):
         클라이언트 스크립트를 동반해야 한다 (빌드 결정성 유지)."""
         run()
         html = CHECKLIST.read_text(encoding="utf-8")
-        self.assertIn('data-due="2026-05-25"', html,
+        self.assertIn('data-due="2026-05-30"', html,
                       "pending due date should carry data-due for client-side D-day")
         self.assertIn('class="dday"', html, "checklist should render a .dday slot")
         self.assertIn("getAttribute('data-due')", html,
