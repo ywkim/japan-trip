@@ -329,6 +329,22 @@ def expand_refs_in_obj(obj):
 
 # ─── New schema (Work 4) helper functions ───────────────────────────────────
 
+_PRIORITY_META = {
+    "필수": ("badge-priority-필수", "✅ 필수"),
+    "권장": ("badge-priority-권장", "⚠️ 권장"),
+    "대체": ("badge-priority-대체", "🔄 대체"),
+}
+
+
+def priority_badge_html(priority: str) -> str:
+    if not priority:
+        return ""
+    cls, label = _PRIORITY_META.get(priority, ("", priority))
+    if not cls:
+        return ""
+    return f' <span class="badge {cls}">{esc(label)}</span>'
+
+
 def is_new_schema_title(title) -> bool:
     """Check if title is in new schema (dict with ko_name, ja_name, etc)."""
     return isinstance(title, dict) and "ko_name" in title
@@ -836,6 +852,9 @@ def render_css(tokens: dict) -> str:
   .badge-done {{ color: var(--ok); border-color: var(--ok); }}
   .badge-pending {{ color: var(--warn); border-color: var(--warn); }}
   .badge-progress {{ color: var(--accent); border-color: var(--accent); }}
+  .badge-priority-필수 {{ color: var(--ok); border-color: var(--ok); }}
+  .badge-priority-권장 {{ color: var(--warn); border-color: var(--warn); }}
+  .badge-priority-대체 {{ color: var(--muted); border-color: var(--border); }}
   .subcard.status-done {{ border-left: 3px solid var(--ok); }}
   .subcard.status-pending {{ border-left: 3px solid var(--warn); }}
   .subcard.status-progress {{ border-left: 3px solid var(--accent); }}
@@ -1480,9 +1499,10 @@ def card_itinerary(d) -> str:
                 img_html = ""
             reviews_html = blog_reviews_html(it.get("blog_reviews", []))
             link_html = doc_link_html(it.get("link"))
+            pbadge = priority_badge_html(it.get("priority", ""))
             item_rows.append(f"""
     <div class="day">
-      <div class="date"><span class="k">{esc(it['time'])}</span> {link}</div>
+      <div class="date"><span class="k">{esc(it['time'])}</span> {link}{pbadge}</div>
       {pronunciation_html}
       {transit}
       {note_html}{link_html}{img_html}{reviews_html}
@@ -2033,9 +2053,10 @@ def build_itinerary(d) -> str:
             reviews_html = blog_reviews_html(it.get("blog_reviews", []), in_viz=True)
             food_html = food_quality_html(it.get("food_quality"))
             link_html = doc_link_html(it.get("link"), in_viz=True)
+            pbadge = priority_badge_html(it.get("priority", ""))
             item_rows.append(f"""
     <div class="day">
-      <div class="date"><span class="k">{esc(it['time'])}</span> {link}</div>
+      <div class="date"><span class="k">{esc(it['time'])}</span> {link}{pbadge}</div>
       {pronunciation_html}
       {transit}
       {note_html}{food_html}{link_html}{img_html}{reviews_html}
