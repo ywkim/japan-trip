@@ -21,6 +21,8 @@
 
 만자라테이는 이 거리 한복판에 자리 잡고 있으며, 목재 내부와 작은 정원이 어우러진 공간에서 **창작 교토요리**를 제공합니다.
 
+![폰토초 골목 (Wikimedia Commons)](https://commons.wikimedia.org/wiki/Special:FilePath/Pontocho%20Alley%2C%20Kyoto%20-%20Flickr%20-%20Sergiy%20Galyonkin.jpg?width=480)
+
 ## 창작 교토요리와 오반자이
 
 **오반자이(おばんざい)** 는 교토의 가정식을 의미합니다. 계절 야채와 지역 재료를 사용한 소박하면서도 정교한 요리들입니다.
@@ -33,6 +35,8 @@
 ## 여름의 강변 야외석(川床) — 감상
 
 6월부터 9월까지는 **가와베(川床)** 라 불리는 강변 야외 플랫폼에서 식사가 가능합니다. 가모강의 수음(水音)과 함께 저녁 식사를 하는 경험은 **교토 특유의 감각**입니다.
+
+![가모강 강변 야외석 노료유카 (Wikimedia Commons)](https://commons.wikimedia.org/wiki/Special:FilePath/Kyoto%20Kamogawa%20Noryo-Yuka.jpg?width=480)
 
 - 가와베 좌석: 4인 이상만 가능 (개실 분위기)
 - 실내 일반석: 4인도 안내 가능
