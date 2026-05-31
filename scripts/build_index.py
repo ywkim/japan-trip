@@ -628,9 +628,10 @@ def blog_reviews_html(reviews: list, in_viz: bool = False) -> str:
         return ""
     def card(r):
         href, attr = _blog_card_href(r["url"], in_viz)
+        img_tag = f'<img src="{esc(local_src(r["img"]))}" class="blog-thumb" loading="lazy" alt="" referrerpolicy="no-referrer" onerror="this.closest(\'.blog-card\').style.display=\'none\'">' if r.get("img") else ''
         return (
             f'<a href="{href}"{attr} class="blog-card">'
-            f'<img src="{esc(local_src(r["img"]))}" class="blog-thumb" loading="lazy" alt="" referrerpolicy="no-referrer" onerror="this.closest(\'.blog-card\').style.display=\'none\'">'
+            f'{img_tag}'
             f'<p class="blog-comment">{esc(r["comment"])}</p>'
             f'<span class="blog-read">후기 읽기 →</span>'
             f'</a>'
