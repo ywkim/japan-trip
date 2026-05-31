@@ -1103,21 +1103,22 @@ def note_block(note: str, *, style: str = "", render_fn=None) -> str:
         return f'<div class="sub"{style_attr}>{render_fn(note)}</div>'
     segs = [s for s in note.split(" · ") if s.strip()]
     if len(segs) >= 2:
-        summary = render_fn(" · ".join(segs[:2]))
-        # 3개 이상 항목이면 나머지를 다중 줄로 렌더
-        if len(segs) >= 3:
-            rest_lines = "".join(f'<div>{render_fn(s)}</div>' for s in segs[2:])
-            return fold(summary, rest_lines)
-        # 2개 항목: 그대로 접기
-        return fold(summary, render_fn(" · ".join(segs[1:])))
-    # 구분자 없으면 첫 50자 + "…" 요약 후 다중 줄로 분해
+        # 요약은 60자 예산 내에서 앞 세그먼트만: seg0 항상, seg1은 합쳐서 60자 이내일 때만.
+        # (eSIM처럼 seg0이 길면 1개로 제한해 요약이 여러 줄로 늘어지지 않게 한다.)
+        n = 1
+        if len(segs[0]) + 3 + len(segs[1]) <= 60:
+            n = 2
+        summary = render_fn(" · ".join(segs[:n]))
+        rest_lines = "".join(f'<div>{render_fn(s)}</div>' for s in segs[n:])
+        return fold(summary, rest_lines)
+    # 구분자 없으면 문장 인식 폴백(_lead_split) — 첫 문장을 요약으로, 나머지는 다중 줄
+    head, rest = _lead_split(note)
+    if head and rest:
+        return fold(render_fn(head), _detail_lines(rest, render_fn))
+    # 폴백도 실패하면 첫 어절 + "…"
     break_idx = note.find(" ", 0, 50)
-    if break_idx > 0:
-        first_phrase = note[:break_idx].strip() + "…"
-    else:
-        first_phrase = note[:50].strip() + "…"
-    detail_lines = f'<div>{render_fn(note)}</div>'
-    return fold(render_fn(first_phrase), detail_lines)
+    first_phrase = (note[:break_idx].strip() + "…") if break_idx > 0 else (note[:50].strip() + "…")
+    return fold(render_fn(first_phrase), f'<div>{render_fn(note)}</div>')
 
 
 def pass_block(text: str) -> str:
@@ -1197,12 +1198,14 @@ def _lead_split(text: str):
     return text[:60].strip() + "…", text[60:].strip()
 
 
-def _detail_lines(text: str) -> str:
+def _detail_lines(text: str, render_fn=None) -> str:
     """상세 텍스트를 여러 줄로 분해하여 HTML 렌더링.
 
     구분자(`. `·`다. `·`요. `·`음. `·` · `)로 항목화하고, 각 항목을 `<div>` 줄로 렌더.
-    마크업([[]]) 변환도 함께.
+    render_fn: 각 줄의 텍스트→HTML 변환 함수 (기본 link_places, linkify 전달 시 마크다운 링크 변환).
     """
+    if render_fn is None:
+        render_fn = link_places
     import re
     # 구분자 패턴: ". " · "다. " · "요. " · "음. " · " · "
     sep_pattern = r'(?:\.(?:\s+|$)|다\.\s+|요\.\s+|음\.\s+|\s·\s)'
@@ -1211,7 +1214,7 @@ def _detail_lines(text: str) -> str:
     lines = [line.strip() for line in lines if line.strip()]
     if not lines:
         return ""
-    return "".join(f'<div>{link_places(line)}</div>' for line in lines)
+    return "".join(f'<div>{render_fn(line)}</div>' for line in lines)
 
 
 def memo_block(note: str, *, style: str = "", cls: str = "sub") -> str:

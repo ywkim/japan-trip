@@ -46,7 +46,7 @@
       "amount": "영욱 Airalo 5GB ₩13,800 + 소연 Airalo 3GB ₩11,040 + 시부모 핫스팟 ₩0 = 합계 ₩24,840",
       "action": "출국 전 영욱·소연 각 Airalo 앱서 구매·설치 → 5/31 도착 후 데이터 ON (시부모 영욱 핫스팟 공유)",
       "link": {"label": "리서치 상세", "url": "docs/booking-research-2026-05-24.md"},
-      "note": "영욱 라인 = Airalo Moshi Moshi 5GB/7일 $10≈₩13,800 확정(2026-05-26) · 소연 라인 = Airalo Moshi Moshi 3GB/7일 $8≈₩11,040 추가(2026-05-28) · 소연 예상 450MB→1GB/3일($4) 기간 부족(여행 4일)·1GB/7일 옵션 없음 → 최소 7일권 3GB/7일로 결정 · 시부모 영욱 핫스팟 ₩0 유지(4인 합계 ₩24,840) · 선정 근거: 영욱-Airalo 가격·핫스팟 Playwright MCP 직접 검증(스크린샷 docs/screenshots/airalo-japan-2026-05-26.png)·소연-Airalo 공식 2026-05-28 조회($8.00) · KDDI/Softbank 4G 교토·오사카 도심 충분 · 소연 독립 라인은 영욱 핫스팟 자동 종료(90초·연결 기기 없음) 우회 · 구매·결제 완료 시 confirmed_booking 승격 + 일지 · FX $1≈₩1,380 · 출처: airalo.com 2026-05-28 조회 · 상세·출처: docs/booking-research-2026-05-24.md (레포)"
+      "note": "데이터 = Airalo eSIM 부부 2라인 + 시부모 핫스팟 공유 · 영욱 라인 = Airalo Moshi Moshi 5GB/7일 $10≈₩13,800 확정(2026-05-26) · 소연 라인 = Airalo Moshi Moshi 3GB/7일 $8≈₩11,040 추가(2026-05-28) · 소연 예상 450MB→1GB/3일($4) 기간 부족(여행 4일)·1GB/7일 옵션 없음 → 최소 7일권 3GB/7일로 결정 · 시부모 영욱 핫스팟 ₩0 유지(4인 합계 ₩24,840) · 선정 근거: 영욱-Airalo 가격·핫스팟 Playwright MCP 직접 검증(스크린샷 docs/screenshots/airalo-japan-2026-05-26.png)·소연-Airalo 공식 2026-05-28 조회($8.00) · KDDI/Softbank 4G 교토·오사카 도심 충분 · 소연 독립 라인은 영욱 핫스팟 자동 종료(90초·연결 기기 없음) 우회 · 구매·결제 완료 시 confirmed_booking 승격 + 일지 · FX $1≈₩1,380 · 출처: airalo.com 2026-05-28 조회 · 상세·출처: docs/booking-research-2026-05-24.md (레포)"
     },
     {
       "id": "transit_pass",
@@ -76,7 +76,7 @@
       "due_date": "2026-05-30",
       "action": "5/30까지 4인 모두 설치·설정 완료. ICOCA ¥3,000/인 초기 충전, Google Maps 오프라인 지도 다운로드, Papago 일본어팩 다운로드 필수",
       "link": {"label": "앱 가이드", "url": "docs/essential-iphone-apps.md"},
-      "note": "출국 전 필수 설치 리스트: ICOCA(Apple Wallet, ¥3,000 초기 충전·Express Card 설정)·Google Maps(오프라인 교토·오사카 지도 ~200~500MB)·Tabelog(맛집)·Papago·번역(오프라인 일본어팩)·Trip.com·Booking.com(예약 확인). 특히 시부모 4인의 앱 설치·기본 사용법 테스트 필수(현지에서 길 찾기, 메뉴판 번역 사전 연습). 체크리스트: docs/essential-iphone-apps.md §3"
+      "note": "출국 전 4인 모두 설치·설정 완료(5/30 마감) · ICOCA(Apple Wallet, ¥3,000 초기 충전·Express Card 설정) · Google Maps(오프라인 교토·오사카 지도 ~200~500MB) · Tabelog(맛집)·Papago·번역(오프라인 일본어팩) · Trip.com·Booking.com(예약 확인) · 시부모 4인 앱 설치·기본 사용법 테스트 필수(현지 길 찾기·메뉴판 번역 사전 연습) · 체크리스트 docs/essential-iphone-apps.md §3"
     },
     {
       "id": "saihoji_research",

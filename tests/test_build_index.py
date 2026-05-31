@@ -1257,6 +1257,41 @@ class ChecklistCardNoteFoldTests(unittest.TestCase):
         self.assertIn('<a href="https://example.com"', html)
         self.assertIn('<a href="tel:+8200000"', html)
 
+    def test_note_without_dot_separator_uses_sentence_summary(self):
+        """' · ' 구분자가 없고 '. '(문장) 구분이 있는 note는 첫 문장을 요약으로 써야 한다.
+
+        첫 어절만 덜렁 남는 '두…' 같은 의미 없는 잘림을 방지.
+        """
+        import sys
+        sys.path.insert(0, str(BASE / "scripts"))
+        import build_index
+        it = {
+            "label": "식당", "status": "예약중",
+            "note": "두 저녁 모두 워크인 대기 리스크 커 사전 넷예약 권장(전화 불요). "
+                    "① 大鵬은 AutoReserve로 예약. ② まんざら亭은 楽天으로 예약.",
+        }
+        html = build_index.checklist_card(it)
+        self.assertIn("<details", html, "long note should be collapsible")
+        summary = html.split("<summary>")[1].split("</summary>")[0]
+        # 첫 어절 '두…'가 아니라 첫 문장 전체가 요약이어야 함
+        self.assertNotIn("…", summary, "summary must not be a dangling first-word truncation")
+        self.assertIn("워크인 대기 리스크", summary, "first full sentence should be the summary")
+
+    def test_long_first_segment_summary_capped_to_one(self):
+        """seg0이 길면 seg1을 합쳐 60자를 넘으므로 요약은 seg0 하나로 제한해야 한다."""
+        import sys
+        sys.path.insert(0, str(BASE / "scripts"))
+        import build_index
+        long_seg0 = "영욱 라인 = Airalo Moshi Moshi 5GB/7일 $10≈₩13,800 확정(2026-05-26)"
+        it = {
+            "label": "eSIM", "status": "예약중",
+            "note": f"{long_seg0} · 소연 라인 = Airalo Moshi Moshi 3GB/7일 $8≈₩11,040 추가 · 시부모 핫스팟 ₩0",
+        }
+        html = build_index.checklist_card(it)
+        summary = html.split("<summary>")[1].split("</summary>")[0]
+        self.assertNotIn("소연 라인", summary, "second long segment must be folded, not in summary")
+        self.assertIn("영욱 라인", summary, "first segment stays in summary")
+
     def test_checklist_html_note_summary_is_not_generic(self):
         """생성된 viz/checklist.html에서 note summary가 '자세히'가 아니어야 한다."""
         run()
@@ -1267,6 +1302,18 @@ class ChecklistCardNoteFoldTests(unittest.TestCase):
         for s in summaries:
             self.assertNotEqual(s.strip(), "자세히",
                                 f"note summary must not be generic '자세히': {s!r}")
+
+    def test_checklist_html_note_summary_no_dangling_word(self):
+        """생성된 viz/checklist.html에서 note summary가 '단어…' 형태의 의미 없는 잘림이 아니어야 한다."""
+        run()
+        html = CHECKLIST.read_text(encoding="utf-8")
+        import re
+        summaries = re.findall(r"<summary>(.*?)</summary>", html)
+        for s in summaries:
+            s = s.strip()
+            # '출국…' '두…'처럼 공백 없는 한 어절 + '…' 으로 끝나면 실패
+            if s.endswith("…") and " " not in s.rstrip("…"):
+                self.fail(f"note summary is a dangling single-word truncation: {s!r}")
 
 
 class ChecklistCardDocLinkTests(unittest.TestCase):
