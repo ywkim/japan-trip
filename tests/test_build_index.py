@@ -596,11 +596,11 @@ class NoteFoldTests(unittest.TestCase):
                               f"{path.name} should collapse long notes into a fold")
 
     def test_collapsed_note_detail_preserved(self):
-        """접어도 운영 메모 텍스트(PIN·확정번호)는 HTML에 그대로 남아야 한다."""
+        """접어도 운영 메모 텍스트는 HTML에 그대로 남아야 한다."""
         run()
         html = CHECKLIST.read_text(encoding="utf-8")
-        self.assertIn("PIN 5647", html, "checklist note detail (PIN) lost after fold")
-        self.assertIn("20260513170241828", html, "checklist note detail (confirm no.) lost after fold")
+        self.assertIn("체크인 6/2 15:00", html, "checklist note detail (check-in time) lost after fold")
+        self.assertIn("체크아웃 6/3 11:00", html, "checklist note detail (check-out time) lost after fold")
 
 
 class ChecklistDetailFoldTests(unittest.TestCase):
@@ -612,7 +612,7 @@ class ChecklistDetailFoldTests(unittest.TestCase):
 
     SHORT = "에어서울 RS · A8YW58 · 발권"
     LONG = ("Trip.com ① 1400827143416024 (성인2, ₩94,108) · ② 1400827143410570 "
-            "(성인2, PIN 2362) · 6/1 10:30 · LEE/SOYEON · 조건부 취소")
+            "(성인2) · 6/1 10:30 · LEE/SOYEON · 조건부 취소")
 
     def test_short_value_stays_plain_row(self):
         out = build_index.detail_row("예약번호", self.SHORT)
@@ -628,7 +628,7 @@ class ChecklistDetailFoldTests(unittest.TestCase):
 
     def test_long_value_detail_is_lossless(self):
         out = build_index.detail_row("예약번호", self.LONG)
-        for tok in ("1400827143416024", "1400827143410570", "PIN 2362", "LEE/SOYEON", "조건부 취소"):
+        for tok in ("1400827143416024", "1400827143410570", "LEE/SOYEON", "조건부 취소"):
             with self.subTest(tok=tok):
                 self.assertIn(tok, out, f"detail_row dropped {tok!r} after folding")
 
