@@ -4,7 +4,7 @@
 
 ## 상태: 예약 완료 (2026-05-25)
 
-소연이 **Trip.com '사이호지 입장권' 상품**으로 **6/1(월) 10:30 성인 4인**을 예약 확정. 예약당 2명 제한이라 2건으로 분할. **4인 총 ₩188,216**, 조건부 취소(건당 예상 수수료 ₩18,822). 일정은 `data/itinerary.json` 6/1에 텐류지 직후(교토버스 73계통)로 편입. 예약 세부 정보(예약번호·PIN)는 예약처 이메일·카톡 원본 보관. 단일 출처: `data/booking-checklist.json`(saihoji_research)·`data/cost-options.json`(saihoji_admission_4pax). 일지: `docs/decision-log/2026-05-26-03-saihoji-booked.md`.
+소연이 **Trip.com '사이호지 입장권' 상품**으로 **6/1(월) 10:30 성인 4인**을 예약 확정. 예약당 2명 제한이라 2건으로 분할: ① `1400827143416024`(성인2, ₩94,108) + ② `1400827143410570`(성인2). **4인 총 ₩188,216**, 조건부 취소(건당 예상 수수료 ₩18,822). 일정은 `data/itinerary.json` 6/1에 텐류지 직후(교토버스 73계통)로 편입. PIN 등 민감 정보는 예약처 이메일·카톡 원본 보관. 단일 출처: `data/booking-checklist.json`(saihoji_research)·`data/cost-options.json`(saihoji_admission_4pax). 일지: `docs/decision-log/2026-05-26-03-saihoji-booked.md`.
 
 > 아래는 예약 전 가능성 리서치(2026-05-26) — 시점 스냅샷으로 보존.
 
