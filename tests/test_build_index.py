@@ -1183,6 +1183,16 @@ class DocPageTests(unittest.TestCase):
                 self.assertIn('property="og:title"', html)
                 self.assertIn("/assets/og-", html)
 
+    def test_doc_images_constrained_to_container(self):
+        """문서 본문 이미지는 컨테이너 폭에 맞춰 축소돼야 한다(모바일 가로 넘침 방지)."""
+        run()
+        html = (BASE / "viz" / "report.html").read_text(encoding="utf-8")
+        self.assertIn(".doc img", html, ".doc img rule missing from DOC_CSS")
+        # max-width:100% + height:auto 로 가로 스크롤·왜곡 방지
+        doc_img_block = html.split(".doc img", 1)[1][:120]
+        self.assertIn("max-width", doc_img_block)
+        self.assertIn("100%", doc_img_block)
+
     def test_place_refs_expanded_in_itinerary(self):
         """data/itinerary.json places 레지스트리의 {{id}} 참조가 'ko(ja)'로
         확장 렌더되고, 미확장 {{...}} 토큰이 산출물에 남지 않아야 한다.

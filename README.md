@@ -32,6 +32,8 @@
 - `viz/report.html`·`viz/itinerary-doc.html`·`viz/research.html`·`viz/transit-pass.html`·`viz/decision-kyoto.html` — 레포 마크다운 문서(최종 보고서·일정 문서·예약 리서치·교통패스 비교·교토 변경 결정)를 사이트 내 HTML로 렌더한 페이지. 가족 공유 시 GitHub 노출 없이 열람 (검사 J: `github.com` 링크 금지)
 - `viz/kaneyo-review.html` — 교고쿠 카네요(京極かねよ) 일본어 방문기 한국어 번역 페이지. `docs/kaneyo-review-translation.md` 정본. 5/31 저녁 식당 후기 카드에서 탭 진입
 - `viz/shinkyogoku-review.html` — 신쿄고쿠 상점가(新京極商店街) 안내·방문기 번역 페이지. `docs/shinkyogoku-review-translation.md` 정본. 5/31 20:00 야경 산책 카드에서 탭 진입
+- `viz/excafe-review.html` — eX cafe(イクスカフェ)·아라시야마 카페 비교 페이지. `docs/excafe-review-translation.md` 정본(Tabelog 일본어 정보). 6/1 12:00 카드에서 탭 진입
+- `viz/manzaratei-review.html` — 만자라테이 先斗町店 창작 교토요리 페이지. `docs/manzaratei-review-translation.md` 정본(Tabelog·ぐるなび). 6/1 18:30 카드에서 탭 진입
 - `viz/decision-log.html` — 결정 일지 인덱스 (`docs/decision-log/*.md` 최신순 제목 목록, 교토 변경 결정만 링크)
 - `assets/og-*.svg` — 6장의 OG/Twitter 카드 이미지 (1200×630). 카톡·Slack·X 공유 시 페이지별 썸네일·제목·설명 노출
 - `sw.js`·`manifest.json`·`assets/icon.svg` — **오프라인(PWA) 산출물**. 서비스 워커가 전 페이지·로컬 자산을 사전 캐시해 **비행기 모드에서도 모든 페이지가 다시 열린다**(HTTPS 한 번 방문 후). PWA 매니페스트로 홈 화면 추가(앱 모드) 가능. 근거: `docs/decision-log/2026-05-31-offline-service-worker.md`

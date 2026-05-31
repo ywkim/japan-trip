@@ -122,14 +122,14 @@ DOC_PAGES = (
     ),
     DocPage(
         "docs/excafe-review-translation.md", "viz/excafe-review.html",
-        "eX cafe — 당고 직화구이와 100년 목조 가옥",
-        "일본어 후기 한국어 번역 — 당고 직화구이·여름 말차 빙수·아라시야마 카페 비교",
+        "eX cafe — 당고 직화구이와 정원 카페",
+        "Tabelog 일본어 정보 한국어 번역 — 당고 직화구이·말차 디저트·아라시야마 카페 비교",
         "itinerary", "itinerary", "itinerary.html", "← 일정",
     ),
     DocPage(
         "docs/manzaratei-review-translation.md", "viz/manzaratei-review.html",
-        "만자라테이 — 130년 전통 교마치야의 창작 교토요리",
-        "일본어 후기 한국어 번역 — 130년 전통·오반자이·강변 야외석(川床)",
+        "만자라테이 先斗町店 — 폰토초의 창작 교토요리",
+        "Tabelog 일본어 정보 한국어 번역 — 폰토초 교마치야·오반자이·창작 교토요리",
         "itinerary", "itinerary", "itinerary.html", "← 일정",
     ),
     # ── 아카이브 문서 (8개) ───────────────────────────────────────────────────
@@ -2430,6 +2430,10 @@ DOC_CSS = """
     background: var(--subcard); color: var(--muted); border-radius: 0 4px 4px 0;
   }
   .doc blockquote p { margin: 0.3rem 0; }
+  .doc img {
+    max-width: 100%; height: auto; display: block;
+    margin: 0.6rem auto; border-radius: 8px; border: 1px solid var(--border);
+  }
   .doc table {
     border-collapse: collapse; width: 100%; margin: 0.6rem 0; font-size: 0.85rem;
     display: block; overflow-x: auto; -webkit-overflow-scrolling: touch;
