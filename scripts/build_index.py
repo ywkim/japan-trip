@@ -543,18 +543,22 @@ def food_quality_html(fq) -> str:
     )
 
 
-def doc_link_html(link) -> str:
+def doc_link_html(link, in_viz: bool = False) -> str:
     """일정 항목 참조 문서 링크 (data/itinerary.json item.link = {url, label}).
 
     조식 슬롯 등이 가리키는 문서를 화면에서 바로 탭해 열 수 있는 <a>로 렌더.
     url이 사이트 내 상대 경로면 같은 탭 내비게이션, 외부(http)면 새 탭으로 연다.
     Vercel은 .md를 raw로 서빙하므로 운영 화면 링크는 사이트 내 HTML 페이지를
     가리킨다(예: 조식 슬롯 → breakfast.html). 외부 GitHub blob 링크 금지.
+    in_viz=False(루트 index.html)일 때 viz-상대 경로에 viz/ 접두어 추가.
     """
     link = link or {}
     url = (link.get("url") or "").strip()
     if not url:
         return ""
+    # viz-상대 경로(breakfast.html 등)를 루트에서 렌더할 때 viz/ 접두어 보정
+    if not in_viz and url.endswith(".html") and not url.startswith(("http://", "https://", "viz/", "/", "#")):
+        url = "viz/" + url
     label = esc(link.get("label", "상세"))
     external = url.startswith(("http://", "https://"))
     attr = ' target="_blank" rel="noopener"' if external else ""
@@ -1106,35 +1110,39 @@ def fold(summary_html: str, detail_html: str, *, open: bool = False) -> str:
     )
 
 
-def note_block(note: str, *, style: str = "") -> str:
+def note_block(note: str, *, style: str = "", render_fn=None) -> str:
     """예약·숙박 메모를 짧으면 평문, 길면 '앞 항목 요약 + 접기'로 렌더.
 
     ' · '로 구분된 장문 운영 메모(예약번호·PIN·탑승객·체크인시각 등)가
     카드를 압도하지 않도록, 식별용 앞 2개 항목만 보이고 나머지는 접는다.
+    render_fn: 텍스트→HTML 변환 함수 (기본 esc, linkify 전달 시 URL·마크다운 링크도 변환).
     """
+    if render_fn is None:
+        render_fn = esc
     note = (note or "").strip()
     if not note:
         return ""
     style_attr = f' style="{style}"' if style else ""
     if len(note) <= 60:
-        return f'<div class="sub"{style_attr}>{esc(note)}</div>'
+        return f'<div class="sub"{style_attr}>{render_fn(note)}</div>'
     segs = [s for s in note.split(" · ") if s.strip()]
     if len(segs) >= 2:
-        summary = esc(" · ".join(segs[:2]))
-        # 3개 이상 항목이면 나머지를 다중 줄로 렌더
-        if len(segs) >= 3:
-            rest_lines = "".join(f'<div>{esc(s)}</div>' for s in segs[2:])
-            return fold(summary, rest_lines)
-        # 2개 항목: 그대로 접기
-        return fold(summary, esc(" · ".join(segs[1:])))
-    # 구분자 없으면 첫 50자 + "…" 요약 후 다중 줄로 분해
+        # 요약은 60자 예산 내에서 앞 세그먼트만: seg0 항상, seg1은 합쳐서 60자 이내일 때만.
+        # (eSIM처럼 seg0이 길면 1개로 제한해 요약이 여러 줄로 늘어지지 않게 한다.)
+        n = 1
+        if len(segs[0]) + 3 + len(segs[1]) <= 60:
+            n = 2
+        summary = render_fn(" · ".join(segs[:n]))
+        rest_lines = "".join(f'<div>{render_fn(s)}</div>' for s in segs[n:])
+        return fold(summary, rest_lines)
+    # 구분자 없으면 문장 인식 폴백(_lead_split) — 첫 문장을 요약으로, 나머지는 다중 줄
+    head, rest = _lead_split(note)
+    if head and rest:
+        return fold(render_fn(head), _detail_lines(rest, render_fn))
+    # 폴백도 실패하면 첫 어절 + "…"
     break_idx = note.find(" ", 0, 50)
-    if break_idx > 0:
-        first_phrase = note[:break_idx].strip() + "…"
-    else:
-        first_phrase = note[:50].strip() + "…"
-    detail_lines = "".join(f'<div>{esc(line)}</div>' for line in [note])
-    return fold(esc(first_phrase), detail_lines)
+    first_phrase = (note[:break_idx].strip() + "…") if break_idx > 0 else (note[:50].strip() + "…")
+    return fold(render_fn(first_phrase), f'<div>{render_fn(note)}</div>')
 
 
 def pass_block(text: str) -> str:
@@ -1214,12 +1222,14 @@ def _lead_split(text: str):
     return text[:60].strip() + "…", text[60:].strip()
 
 
-def _detail_lines(text: str) -> str:
+def _detail_lines(text: str, render_fn=None) -> str:
     """상세 텍스트를 여러 줄로 분해하여 HTML 렌더링.
 
     구분자(`. `·`다. `·`요. `·`음. `·` · `)로 항목화하고, 각 항목을 `<div>` 줄로 렌더.
-    마크업([[]]) 변환도 함께.
+    render_fn: 각 줄의 텍스트→HTML 변환 함수 (기본 link_places, linkify 전달 시 마크다운 링크 변환).
     """
+    if render_fn is None:
+        render_fn = link_places
     import re
     # 구분자 패턴: ". " · "다. " · "요. " · "음. " · " · "
     sep_pattern = r'(?:\.(?:\s+|$)|다\.\s+|요\.\s+|음\.\s+|\s·\s)'
@@ -1228,7 +1238,7 @@ def _detail_lines(text: str) -> str:
     lines = [line.strip() for line in lines if line.strip()]
     if not lines:
         return ""
-    return "".join(f'<div>{link_places(line)}</div>' for line in lines)
+    return "".join(f'<div>{render_fn(line)}</div>' for line in lines)
 
 
 def memo_block(note: str, *, style: str = "", cls: str = "sub") -> str:
@@ -1419,11 +1429,13 @@ def card_itinerary(d) -> str:
 _STATE_CLASS = {"확정": "done", "예약중": "progress", "미정": "pending"}
 
 
-def checklist_card(it) -> str:
+def checklist_card(it, in_viz: bool = False) -> str:
     """예약 항목 1개를 구조화 카드로 렌더.
 
     제목+상태 배지 / 금액·마감(D-day)·예약번호·권장 행 / 출처 링크 / 접히는 상세 노트.
     마감 D-day는 빌드 결정성을 위해 클라이언트 스크립트가 data-due에서 계산한다.
+    in_viz=True: viz/checklist.html에서 렌더 (viz/ 접두어 불요).
+    in_viz=False: index.html(루트)에서 렌더 (viz/ 접두어 필요).
     """
     st = it.get("status", "미정")
     state = _STATE_CLASS.get(st, "pending")
@@ -1445,9 +1457,8 @@ def checklist_card(it) -> str:
     if link.get("url"):
         url = link["url"]
         # 레포 문서 경로는 사이트 내 렌더 페이지로 치환 (GitHub 링크 금지·검사 J).
-        # 체크리스트는 viz/checklist.html에서만 렌더되므로 in_viz=True.
         if url in DOC_SOURCE_TO_OUT:
-            url = doc_href(DOC_SOURCE_TO_OUT[url], in_viz=True)
+            url = doc_href(DOC_SOURCE_TO_OUT[url], in_viz=in_viz)
         link_html = (
             f'\n    <a class="doc-link" href="{esc(url)}" target="_blank" '
             f'rel="noopener">{esc(link.get("label", "상세"))} ↗</a>'
@@ -1455,7 +1466,7 @@ def checklist_card(it) -> str:
     note = it.get("note", "")
     note_html = ""
     if note:
-        note_html = "\n    " + fold("자세히", linkify(note))
+        note_html = "\n    " + note_block(note, render_fn=linkify)
     return f"""
   <div class="subcard status-{state}">
     <div class="ck-head"><span class="subtitle">{esc(it['label'])}</span><span class="badge badge-{state}">{esc(st)}</span></div>
@@ -1850,7 +1861,7 @@ def build_itinerary(d) -> str:
                 img_html = ""
             reviews_html = blog_reviews_html(it.get("blog_reviews", []))
             food_html = food_quality_html(it.get("food_quality"))
-            link_html = doc_link_html(it.get("link"))
+            link_html = doc_link_html(it.get("link"), in_viz=True)
             item_rows.append(f"""
     <div class="day">
       <div class="date"><span class="k">{esc(it['time'])}</span> {link}</div>
@@ -1907,7 +1918,7 @@ def build_itinerary(d) -> str:
                 pronunciation_html = title_reading_html(it["title"])
                 note_html = memo_block(it.get("note"))
                 food_html = food_quality_html(it.get("food_quality"))
-                link_html = doc_link_html(it.get("link"))
+                link_html = doc_link_html(it.get("link"), in_viz=True)
                 item_rows.append(f"""
     <div class="day">
       <div class="date"><span class="k">{esc(it['time'])}</span> {link}</div>
@@ -1988,7 +1999,7 @@ def build_checklist(d) -> str:
     )
 
     sorted_items = sorted(items, key=checklist_sort_key)
-    item_cards = [checklist_card(it) for it in sorted_items]
+    item_cards = [checklist_card(it, in_viz=True) for it in sorted_items]
 
 
     body = f"""<h1>예약 체크리스트</h1>
@@ -2104,7 +2115,7 @@ def build_itinerary_table(d) -> str:
                 else:
                     img_html = ""
                 food_html = food_quality_html(it.get("food_quality"))
-                link_html = doc_link_html(it.get("link"))
+                link_html = doc_link_html(it.get("link"), in_viz=True)
                 cells.append(
                     f'<td><span class="t-time">{esc(it["time"])}</span>'
                     f'<span class="t-title">{link}</span>{pronunciation_html}{transit}{note_html}{food_html}{link_html}{img_html}</td>'
@@ -2133,7 +2144,7 @@ def build_itinerary_table(d) -> str:
                 img_html = ""
             reviews_html = blog_reviews_html(it.get("blog_reviews", []))
             food_html = food_quality_html(it.get("food_quality"))
-            link_html = doc_link_html(it.get("link"))
+            link_html = doc_link_html(it.get("link"), in_viz=True)
             item_rows.append(f"""
     <div class="day">
       <div class="date"><span class="k">{esc(it["time"])}</span> {link}</div>
