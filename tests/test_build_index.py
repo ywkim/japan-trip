@@ -651,6 +651,43 @@ class ChecklistDetailFoldTests(unittest.TestCase):
                       "folded reference detail (saihoji 2nd booking) lost")
 
 
+class ChecklistMultiLinkTests(unittest.TestCase):
+    """체크리스트 항목이 참조 문서 링크를 2개 이상(links 배열) 가질 수 있어야 한다.
+
+    교통패스 카드처럼 '패스 비교'와 'ICOCA·PASMO 셋업'을 동시에 연결해야 하는 경우를 지원.
+    단일 link(dict)는 하위 호환 유지.
+    """
+
+    def test_single_link_still_renders(self):
+        out = build_index.checklist_card(
+            {"label": "x", "link": {"url": "https://example.com/a", "label": "비교"}}
+        )
+        self.assertIn('href="https://example.com/a"', out)
+        self.assertIn("비교 ↗", out)
+
+    def test_links_array_renders_all(self):
+        out = build_index.checklist_card({
+            "label": "x",
+            "links": [
+                {"url": "docs/transit-pass-jr-kansai-2026.md", "label": "패스 비교"},
+                {"url": "docs/icoca-iphone-setup.md", "label": "ICOCA·PASMO 셋업"},
+            ],
+        })
+        self.assertIn("패스 비교 ↗", out)
+        self.assertIn("ICOCA·PASMO 셋업 ↗", out)
+        # 레포 .md 경로는 사이트 내 페이지로 치환 (검사 J)
+        self.assertIn('href="transit-pass.html"', out)
+        self.assertIn('href="icoca-setup.html"', out)
+        self.assertNotIn("docs/icoca-iphone-setup.md\"", out)
+
+    def test_transit_pass_card_links_to_icoca_setup(self):
+        """프로덕션 빌드: 교통패스 카드가 ICOCA·PASMO 셋업 페이지로 연결돼야 한다."""
+        run()
+        html = CHECKLIST.read_text(encoding="utf-8")
+        self.assertIn('href="icoca-setup.html"', html,
+                      "transit_pass card should link to in-site ICOCA/PASMO setup page")
+
+
 class PlaceLinkMarkupTests(unittest.TestCase):
     """note 본문의 위키식 마크업 [[label|query]]을 Google Maps 링크로 변환하는 헬퍼."""
 

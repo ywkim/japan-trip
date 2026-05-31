@@ -1440,17 +1440,20 @@ def checklist_card(it) -> str:
         rows.append(detail_row("예약번호", it["reference"]))
     if it.get("action"):
         rows.append(detail_row("권장", it["action"]))
-    link = it.get("link") or {}
+    # 항목당 참조 문서 링크는 단일 link(dict) 또는 links(list) 모두 지원 (하위 호환).
+    links = it.get("links") or ([it["link"]] if it.get("link") else [])
     link_html = ""
-    if link.get("url"):
-        url = link["url"]
+    for ln in links:
+        url = (ln or {}).get("url")
+        if not url:
+            continue
         # 레포 문서 경로는 사이트 내 렌더 페이지로 치환 (GitHub 링크 금지·검사 J).
         # 체크리스트는 viz/checklist.html에서만 렌더되므로 in_viz=True.
         if url in DOC_SOURCE_TO_OUT:
             url = doc_href(DOC_SOURCE_TO_OUT[url], in_viz=True)
-        link_html = (
+        link_html += (
             f'\n    <a class="doc-link" href="{esc(url)}" target="_blank" '
-            f'rel="noopener">{esc(link.get("label", "상세"))} ↗</a>'
+            f'rel="noopener">{esc(ln.get("label", "상세"))} ↗</a>'
         )
     note = it.get("note", "")
     note_html = ""
