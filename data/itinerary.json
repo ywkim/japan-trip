@@ -579,7 +579,7 @@
           },
           "food_quality": {
             "rating": "당고 직화구이 체험 (¥1,320) · 여름 말차 빙수 대형 (¥1,650)",
-            "source": "katakuri-cafe.com · Naver 블로그 (ramu0527·khy7804755·whataday_·minji5153) 2026-05-31",
+            "source": "Tabelog 2026-05-31",
             "source_fetched_at": "2026-05-31",
             "data_quality": "researched_market_rate",
             "url": "excafe-review.html",
@@ -591,8 +591,51 @@
           "blog_reviews": [
             {
               "url": "excafe-review.html",
-              "img": "https://commons.wikimedia.org/wiki/Special:FilePath/Macha%20kakigori%20snow%20cone.jpg?width=480",
-              "comment": "여름 한정 말차 빙수 대형 · 4인 가족과 함께 즐기기 좋음 · 다다미방·테라스·실외 좌석 선택 가능 → 상세 후기 및 아라시야마 카페 비교"
+              "comment": "당고 세트+말차 파르페 실식 후기. 미니 화로 직화구이 체험, 일본 정원 뷰 좌석 추천"
+            },
+            {
+              "url": "excafe-review.html",
+              "comment": "100년 가옥 개조 카페. 여름 한정 말차 빙수 대형 사이즈. 아라시야마역 1분"
+            },
+            {
+              "url": "https://arabica.coffee/en/our-locations/japan/",
+              "comment": "08:00~18:00 조기 오픈. 도게츠교 바로 앞. 입구 계단 포토스팟 필수"
+            },
+            {
+              "url": "https://tabelog.com/kyoto/A2616/A261601/26005622/",
+              "comment": "다이쇼 시대 목욕탕 개조 카페. 팬케이크+파스타. 아라시야마역 1분 — tabelog 3.56"
+            },
+            {
+              "url": "https://tabelog.com/kyoto/A2616/A261601/26005622/",
+              "comment": "목욕탕 레트로 인테리어 포토스팟. 런치 메뉴 가격 합리적 — 11:00~19:00"
+            },
+            {
+              "url": "https://search.naver.com/search.naver?where=blog&query=嵯峨野湯+아라시야마+교토+카페",
+              "comment": "완전 실내 냉방. 아라시야마 죽림길 인근 도보 2분 — 네이버 블로그 후기 검색"
+            },
+            {
+              "url": "https://tabelog.com/kyoto/A2616/A261601/26017917/",
+              "comment": "210년 고택 문화재 카페. 빵+에스프레소. 08:00~18:00 — tabelog 3.39"
+            },
+            {
+              "url": "https://tabelog.com/kyoto/A2616/A261601/26017917/",
+              "comment": "목조 고택 중정 뷰. 드라이 가든+아침 8시 오픈 — 아라시야마역 도보 5분"
+            },
+            {
+              "url": "https://search.naver.com/search.naver?where=blog&query=파인투에스프레소+아라시야마+교토+카페",
+              "comment": "식빵+에스프레소 조합. 완전 실내 냉방, 반려동물 동반 가능 — 네이버 검색"
+            },
+            {
+              "url": "https://tabelog.com/kyoto/A2616/A261601/26029877/",
+              "comment": "대나무 테마 일본 차 카페. 시그니처 대나무통 티라미수. 10:00~17:30"
+            },
+            {
+              "url": "https://tabelog.com/kyoto/A2616/A261601/26029877/",
+              "comment": "말차라떼·호지차라떼. 실내 완전 냉방, 죽림길 도보 2분 — tabelog 3.13"
+            },
+            {
+              "url": "https://tabelog.com/kyoto/A2616/A261601/26029877/",
+              "comment": "두유·귀리우유 변경 가능. 와가시 디저트 세트. 아라시야마역 도보 3분"
             }
           ],
           "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Mitarashi%20Dango%20at%20Kyoto.jpg?width=480",
