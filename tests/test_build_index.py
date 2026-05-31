@@ -305,17 +305,24 @@ class BuildIndexTests(unittest.TestCase):
                 self.assertIn("min-height: 44px", html, f"no 44px touch target CSS in {path.name}")
 
     def test_verified_source_shows_tick(self):
-        """source_verified_at가 있는 transit leg은 ✓ 검증 표시를 노출해야 한다."""
+        """source_verified_at가 있는 출처 칩만 ✓ 검증 표시를 노출해야 한다.
+
+        ① source_chip 단위로 ✓ 렌더 규칙을 격리 검증(days[] 레그가 모두 미검증
+           tbd_needs_browser_mcp일 수 있으므로). ② production fixture의 verified
+           출처(transit_pass_sources[].source_verified_at)가 실제 빌드 산출물에
+           class="source-tick"로 노출되는지 HTML 회귀 가드도 유지.
+        """
+        verified = build_index.source_chip("https://example.com/x", "경로 출처", verified=True)
+        self.assertIn("✓", verified, "verified chip must render ✓")
+        plain = build_index.source_chip("https://example.com/x", "경로 출처", verified=False)
+        self.assertNotIn("✓", plain, "unverified chip must not render ✓")
+
         run()
-        import json as _json
-        data = _json.loads((BASE / "data" / "itinerary.json").read_text(encoding="utf-8"))
-        has_verified = any(
-            (it.get("arrive_from") or {}).get("source_verified_at")
-            for day in data["days"] for it in day["items"]
+        rendered = INDEX.read_text(encoding="utf-8") + ITINERARY.read_text(encoding="utf-8")
+        self.assertIn(
+            'class="source-tick"', rendered,
+            "verified source (transit_pass_sources) must render ✓ tick in built HTML",
         )
-        self.assertTrue(has_verified, "fixture must have a verified leg")
-        itin = ITINERARY.read_text(encoding="utf-8")
-        self.assertIn("✓", itin, "verified tick ✓ missing in itinerary.html")
 
     def test_route_candidates_not_rendered_in_itinerary(self):
         """의사결정 완료 후 후보 코스 섹션은 웹에 노출하지 않는다."""
@@ -901,8 +908,8 @@ class ItineraryMemoFoldTests(unittest.TestCase):
         run()
         html = ITINERARY.read_text(encoding="utf-8")
         self.assertIn('class="food-quality"', html, "rating line must stay visible")
-        self.assertIn("쓰촨 중식</summary>", html, "long food note should fold to first sentence")
-        self.assertIn("1인 ¥4,000~5,000", html, "food note detail lost after folding")
+        self.assertIn("흑모와규 창작 야끼니꾸</summary>", html, "long food note should fold to first sentence")
+        self.assertIn("1인 ¥5,000~6,000", html, "food note detail lost after folding")
 
 
 class ItineraryDocLinkTests(unittest.TestCase):
@@ -935,21 +942,26 @@ class ItineraryDocLinkTests(unittest.TestCase):
                 )
 
     def test_itinerary_doc_link_is_onsite_not_github_or_raw_md(self):
-        # Vercel 화면에서 GitHub 링크 금지 + .md raw 서빙 회피 → 사이트 내 HTML 페이지여야 함.
+        # GitHub 링크는 모든 link에서 금지(검사 J). 사이트 내(상대경로) doc-link은
+        # .md raw 서빙 회피 위해 .html이어야 함. 외부(http) 링크(예: 식당 예약 페이지)는
+        # 새 탭으로 허용 — doc_link_html이 target=_blank로 렌더.
         urls = self._breakfast_link_urls()
         for url in urls:
             self.assertNotIn("github.com", url, f"Vercel doc link must not point to GitHub: {url!r}")
-            self.assertFalse(url.endswith(".md"), f"doc link must not be a raw .md path: {url!r}")
-            self.assertTrue(url.endswith(".html"), f"doc link should be an on-site HTML page: {url!r}")
+            if url.startswith(("http://", "https://")):
+                continue  # 외부 예약·참조 링크는 onsite .html 제약에서 제외
+            self.assertFalse(url.endswith(".md"), f"onsite doc link must not be a raw .md path: {url!r}")
+            self.assertTrue(url.endswith(".html"), f"onsite doc link should be an HTML page: {url!r}")
 
     def test_breakfast_link_resolves_to_built_page(self):
-        # 일정의 조식 doc-link 대상이 실제 빌드되는 viz 페이지여야 함.
+        # 사이트 내(상대경로) doc-link 대상이 실제 빌드되는 viz 페이지여야 함.
+        # 외부(http) 링크는 빌드 산출물이 아니므로 제외.
         run()
-        urls = set(self._breakfast_link_urls())
+        urls = {u for u in self._breakfast_link_urls() if not u.startswith(("http://", "https://"))}
         for url in urls:
             self.assertTrue(
                 (BASE / "viz" / url).exists(),
-                f"breakfast doc-link target {url!r} is not a built page",
+                f"onsite doc-link target {url!r} is not a built page",
             )
 
 
