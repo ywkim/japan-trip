@@ -543,13 +543,17 @@ def food_quality_html(fq) -> str:
     )
 
 
-def doc_link_html(link) -> str:
+def doc_link_html(link, in_viz: bool = True) -> str:
     """일정 항목 참조 문서 링크 (data/itinerary.json item.link = {url, label}).
 
     조식 슬롯 등이 가리키는 문서를 화면에서 바로 탭해 열 수 있는 <a>로 렌더.
     url이 사이트 내 상대 경로면 같은 탭 내비게이션, 외부(http)면 새 탭으로 연다.
     Vercel은 .md를 raw로 서빙하므로 운영 화면 링크는 사이트 내 HTML 페이지를
     가리킨다(예: 조식 슬롯 → breakfast.html). 외부 GitHub blob 링크 금지.
+
+    사이트 내 링크(예: breakfast.html)는 viz/ 하위 페이지를 viz-상대로 적은 것이다.
+    in_viz=True(viz/*.html에 렌더)이면 그대로, in_viz=False(루트 index.html에 임베드)이면
+    viz/ 접두사를 붙인다 — 안 그러면 루트에서 /<page>로 풀려 404.
     """
     link = link or {}
     url = (link.get("url") or "").strip()
@@ -558,6 +562,8 @@ def doc_link_html(link) -> str:
     label = esc(link.get("label", "상세"))
     external = url.startswith(("http://", "https://"))
     attr = ' target="_blank" rel="noopener"' if external else ""
+    if not external and not in_viz and not url.startswith(("/", "viz/")):
+        url = "viz/" + url
     return f'<a class="doc-link" href="{esc(url)}"{attr}>{label} ↗</a>'
 
 
@@ -1358,7 +1364,7 @@ def card_itinerary(d) -> str:
             else:
                 img_html = ""
             reviews_html = blog_reviews_html(it.get("blog_reviews", []))
-            link_html = doc_link_html(it.get("link"))
+            link_html = doc_link_html(it.get("link"), in_viz=False)
             item_rows.append(f"""
     <div class="day">
       <div class="date"><span class="k">{esc(it['time'])}</span> {link}</div>
@@ -1419,11 +1425,15 @@ def card_itinerary(d) -> str:
 _STATE_CLASS = {"확정": "done", "예약중": "progress", "미정": "pending"}
 
 
-def checklist_card(it) -> str:
+def checklist_card(it, in_viz: bool = True) -> str:
     """예약 항목 1개를 구조화 카드로 렌더.
 
     제목+상태 배지 / 금액·마감(D-day)·예약번호·권장 행 / 출처 링크 / 접히는 상세 노트.
     마감 D-day는 빌드 결정성을 위해 클라이언트 스크립트가 data-due에서 계산한다.
+
+    in_viz: 이 카드가 viz/checklist.html에 렌더되면 True(같은 디렉토리이므로 사이트 내
+    링크는 접두사 없이), 루트 index.html에 임베드되면 False(viz/ 접두사 필요 — 안 그러면
+    상대경로가 /<page>로 풀려 404).
     """
     st = it.get("status", "미정")
     state = _STATE_CLASS.get(st, "pending")
@@ -1448,9 +1458,8 @@ def checklist_card(it) -> str:
         if not url:
             continue
         # 레포 문서 경로는 사이트 내 렌더 페이지로 치환 (GitHub 링크 금지·검사 J).
-        # 체크리스트는 viz/checklist.html에서만 렌더되므로 in_viz=True.
         if url in DOC_SOURCE_TO_OUT:
-            url = doc_href(DOC_SOURCE_TO_OUT[url], in_viz=True)
+            url = doc_href(DOC_SOURCE_TO_OUT[url], in_viz=in_viz)
         link_html += (
             f'\n    <a class="doc-link" href="{esc(url)}" target="_blank" '
             f'rel="noopener">{esc(ln.get("label", "상세"))} ↗</a>'
@@ -1490,7 +1499,7 @@ CHECKLIST_DDAY_SCRIPT = """
 
 def card_checklist(d) -> str:
     items = sorted(d["checklist"]["items"], key=checklist_sort_key)
-    cards = "".join(checklist_card(it) for it in items)
+    cards = "".join(checklist_card(it, in_viz=False) for it in items)
     return f"""
 <!-- SYNC: data/booking-checklist.json -->
 <section id="checklist" class="card">

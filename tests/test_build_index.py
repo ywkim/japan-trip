@@ -672,7 +672,7 @@ class ChecklistMultiLinkTests(unittest.TestCase):
                 {"url": "docs/transit-pass-jr-kansai-2026.md", "label": "패스 비교"},
                 {"url": "docs/icoca-iphone-setup.md", "label": "ICOCA·PASMO 셋업"},
             ],
-        })
+        }, in_viz=True)
         self.assertIn("패스 비교 ↗", out)
         self.assertIn("ICOCA·PASMO 셋업 ↗", out)
         # 레포 .md 경로는 사이트 내 페이지로 치환 (검사 J)
@@ -686,6 +686,66 @@ class ChecklistMultiLinkTests(unittest.TestCase):
         html = CHECKLIST.read_text(encoding="utf-8")
         self.assertIn('href="icoca-setup.html"', html,
                       "transit_pass card should link to in-site ICOCA/PASMO setup page")
+
+
+class RootPageInternalLinkTests(unittest.TestCase):
+    """루트 index.html에 임베드된 체크리스트·일정 섹션의 사이트 내 링크는
+    viz/ 접두사를 가져야 한다 (루트에서 상대경로가 /<page>로 풀려 404 나는 회귀 가드).
+    viz/*.html 출력은 접두사 없이 그대로 유지(페이지가 이미 /viz/ 하위)."""
+
+    DOC_ITEM = {
+        "label": "교통패스",
+        "links": [
+            {"url": "docs/transit-pass-jr-kansai-2026.md", "label": "패스 비교"},
+            {"url": "docs/icoca-iphone-setup.md", "label": "ICOCA·PASMO 셋업"},
+        ],
+    }
+
+    def test_checklist_card_root_prefixes_viz(self):
+        out = build_index.checklist_card(self.DOC_ITEM, in_viz=False)
+        self.assertIn('href="viz/transit-pass.html"', out)
+        self.assertIn('href="viz/icoca-setup.html"', out)
+        self.assertNotIn('href="icoca-setup.html"', out)
+
+    def test_checklist_card_viz_stays_bare(self):
+        out = build_index.checklist_card(self.DOC_ITEM, in_viz=True)
+        self.assertIn('href="icoca-setup.html"', out)
+        self.assertNotIn('href="viz/icoca-setup.html"', out)
+
+    def test_doc_link_html_root_prefixes_viz(self):
+        out = build_index.doc_link_html({"url": "breakfast.html", "label": "조식"}, in_viz=False)
+        self.assertIn('href="viz/breakfast.html"', out)
+
+    def test_doc_link_html_viz_stays_bare(self):
+        out = build_index.doc_link_html({"url": "breakfast.html", "label": "조식"}, in_viz=True)
+        self.assertIn('href="breakfast.html"', out)
+        self.assertNotIn('href="viz/breakfast.html"', out)
+
+    def test_doc_link_html_external_unchanged(self):
+        url = "https://tabelog.com/en/kyoto/x"
+        for in_viz in (True, False):
+            out = build_index.doc_link_html({"url": url, "label": "타베로그"}, in_viz=in_viz)
+            self.assertIn(f'href="{url}"', out)
+
+    def test_root_index_internal_links_are_viz_prefixed(self):
+        """프로덕션 루트 index.html의 체크리스트·조식 사이트 내 링크는 viz/ 접두사."""
+        run()
+        html = INDEX.read_text(encoding="utf-8")
+        for page in ("icoca-setup.html", "transit-pass.html", "research.html",
+                     "essential-iphone-apps.html", "breakfast.html"):
+            with self.subTest(page=page):
+                self.assertIn(f'href="viz/{page}"', html,
+                              f"root index must link to viz/{page} (not bare → /{page} 404)")
+                self.assertNotIn(f'class="doc-link" href="{page}"', html,
+                                 f"root index has bare doc-link {page} that 404s from /")
+
+    def test_viz_pages_internal_links_stay_bare(self):
+        """viz/*.html은 같은 디렉토리이므로 접두사 없이 유지(회귀 가드)."""
+        run()
+        for path in (CHECKLIST, ITINERARY):
+            html = path.read_text(encoding="utf-8")
+            self.assertNotIn('href="viz/icoca-setup.html"', html)
+            self.assertNotIn('href="viz/breakfast.html"', html)
 
 
 class PlaceLinkMarkupTests(unittest.TestCase):
