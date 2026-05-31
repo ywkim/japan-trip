@@ -121,6 +121,8 @@ japan-trip/
 │   ├── icoca-iphone-setup.md              # ICOCA 아이폰(Apple Wallet) 셋업 가이드 (사전 요건·등록·충전·트러블슈팅·체크리스트)
 │   ├── soyeon-maps-list.md                # 소연 구글맵 저장 목록 41개 장소 (카테고리별 정리, 일정 참고용)
 │   ├── saihoji-reservation-2026-06.md     # 사이호지(苔寺) 참배 예약 가능성 리서치 (예약 방법·선착순·참배료·사경·접근성)
+│   ├── kaneyo-review-translation.md       # 교고쿠 카네요(京極かねよ) 방문기 한국어 번역 (unagiudou.com 2025-05-27 원문) → viz/kaneyo-review.html
+│   ├── shinkyogoku-review-translation.md  # 신쿄고쿠 상점가(新京極商店街) 안내·복수 방문기 번역·재구성 → viz/shinkyogoku-review.html
 │   └── screenshots/                       # 리서치 근거 스크린샷 (예: airalo-japan-2026-05-26.png — eSIM 실가격·핫스팟 정책 1차 출처)
 ├── viz/
 │   ├── itinerary.html         # 일자별 카드 뷰 (build_index.py 산출물 — 직접 편집 금지)
@@ -134,13 +136,15 @@ japan-trip/
 │   ├── research.html          # 예약 리서치 렌더 페이지 (docs/booking-research-2026-05-24.md → HTML, 산출물)
 │   ├── transit-pass.html      # 교통패스 비교 렌더 페이지 (docs/transit-pass-jr-kansai-2026.md → HTML, 산출물)
 │   ├── decision-kyoto.html    # 교토 변경 결정 렌더 페이지 (docs/decision-log/2026-05-11-...md → HTML, 산출물)
+│   ├── kaneyo-review.html     # 교고쿠 카네요 방문기 번역 페이지 (docs/kaneyo-review-translation.md → HTML, 산출물)
+│   ├── shinkyogoku-review.html # 신쿄고쿠 상점가 안내 번역 페이지 (docs/shinkyogoku-review-translation.md → HTML, 산출물)
 │   └── decision-log.html      # 의사결정 일지 인덱스 (docs/decision-log/*.md 목록, build_index.py 산출물 — 직접 편집 금지)
 ├── pyproject.toml       # 프로젝트 메타 + 빌드 의존성 (markdown==3.7 — build_index.py 문서 렌더용). uv virtual project
 ├── uv.lock              # uv 잠금 파일 (markdown 정확 버전·해시 고정 — 빌드 산출물 결정성)
 ├── scripts/
 │   ├── score.py         # 종합 점수 계산 (--json 지원)
 │   ├── budget.py        # 3M 예산 시나리오 평가 (--json 지원)
-│   ├── build_index.py   # index.html + viz/*.html(25개) + assets/og-*.svg(6장) + 오프라인 산출물(sw.js·manifest.json·assets/icon.svg) 빌드 (공통 토큰 주입, DOC_PAGES 문서 렌더 + breakfast). 산출물은 gitignore — Vercel·CI·로컬에서 빌드
+│   ├── build_index.py   # index.html + viz/*.html(27개) + assets/og-*.svg(6장) + 오프라인 산출물(sw.js·manifest.json·assets/icon.svg) 빌드 (공통 토큰 주입, DOC_PAGES 문서 렌더 + breakfast). 산출물은 gitignore — Vercel·CI·로컬에서 빌드
 │   ├── validate.py      # 가격 필드·묵은 가격·SYNC 주석·MD↔JSON·DESIGN 동기화·GitHub 링크 검사
 │   ├── list_sources.py  # 출처 인벤토리 — data/*.json 근거 URL 추출·분류 (--json, Playwright 검증용)
 │   ├── fetch_assets.py  # 외부 일정 이미지 자가호스팅 다운로드 (referer 없이 → assets/place-images/ + data/local-image-map.json). 오프라인 이미지 보장. --check로 누락 감시
@@ -187,11 +191,12 @@ japan-trip/
 - **의존성**: `markdown==3.7` (`pyproject.toml` + `uv.lock`, 정확 버전·해시 고정). `build_index.py`가 `tables`·`sane_lists` 확장으로 변환. 로컬·CI 모두 uv 사용: `uv sync --locked` 후 `uv run python ...`. CI는 `astral-sh/setup-uv` + `uv sync --locked`. Vercel은 빌드 이미지에 uv가 있어 `buildCommand`를 `uv run python ...`으로 실행(시스템 pip는 PEP 668 externally-managed로 차단됨). **잠금 버전이 빌드 산출물을 결정적으로 고정** — 재현성은 `tests/test_build_index.py`가 검사. 의존성 갱신 시 `uv lock` 재실행 + 빌드 재실행 + 일지화.
 - **단일 출처**: 레포 `.md`가 정본, `viz/*.html`은 빌드 산출물(gitignore — 커밋하지 않음, CI·Vercel이 빌드 시 생성). `.md` 수정 후 `uv run python scripts/build_index.py`로 재빌드(로컬 미리보기). 재현성·콘텐츠는 `tests/test_build_index.py`가 검사.
 - **렌더 대상 등록**: `build_index.py`의 `DOC_PAGES` 튜플에 `DocPage(source, out, title, description, og_slug, tab, back_href, back_label)` 1줄 추가. `og_slug`는 기존 OG 카드 슬러그 재사용(신규 SVG 불필요). 등록 즉시 `OUTPUTS`·검사 J(glob)가 자동 커버.
-- **현재 19 페이지** (DOC_PAGES 18개 + decision-log 인덱스 1개):
-  - `viz/report.html`(최종 보고서)·`viz/itinerary-doc.html`(일정 문서)·`viz/research.html`(예약 리서치)·`viz/transit-pass.html`(교통패스 비교)·`viz/decision-kyoto.html`(교토 변경 결정)·`viz/icoca-setup.html`(ICOCA 셋업)·`viz/essential-iphone-apps.html`(필수 앱 가이드)
+- **현재 21 페이지** (DOC_PAGES 20개 + decision-log 인덱스 1개):
+  - 기본 문서(7): `viz/report.html`·`viz/itinerary-doc.html`·`viz/research.html`·`viz/transit-pass.html`·`viz/decision-kyoto.html`·`viz/icoca-setup.html`·`viz/essential-iphone-apps.html`
+  - 후기·안내(2): `viz/kaneyo-review.html`(카네요 방문기 번역 — 5/31 저녁 blog_reviews 목적지)·`viz/shinkyogoku-review.html`(신쿄고쿠 안내 번역 — 5/31 20:00 blog_reviews 목적지)
   - 아카이브 문서(8): `viz/candidates.html`·`viz/weather.html`·`viz/flights.html`·`viz/budget-options.html`·`viz/airbnb-comparison.html`·`viz/jejuair.html`·`viz/itinerary-may.html`·`viz/transit-mcp-handoff.html`
   - 운영 문서(4): `viz/transit-guide.html`·`viz/saihoji.html`·`viz/soyeon-maps.html`·`viz/breakfast-doc.html`
-  - `viz/decision-log.html`(결정 일지 인덱스 — `docs/decision-log/*.md` 최신순 제목 목록, 교토 결정만 링크·나머지는 텍스트·본문 미게시)
+  - `viz/decision-log.html`(결정 일지 인덱스)
   - 아카이브 문서·운영 문서는 `viz/archive.html`의 "참고 문서" 카드 섹션에서 탐색 가능.
 - **GitHub 링크 금지(검사 J) 유지**: 렌더 대상 `.md`에 `github.com`이 들어가면 산출물에 섞여 머지 차단. 새 문서 등록 시 사전 확인.
 - **링크 치환**: `link.url`/내부 참조에 레포 `.md` 경로를 쓰면 `DOC_SOURCE_TO_OUT`가 in-site 페이지로 치환 (`doc_href(out, in_viz)`가 루트/viz 상대경로 결정).
