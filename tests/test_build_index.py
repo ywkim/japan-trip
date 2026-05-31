@@ -791,8 +791,15 @@ class BlogReviewsTests(unittest.TestCase):
     def test_blog_reviews_css_present(self):
         run()
         itin = ITINERARY.read_text(encoding="utf-8")
-        for cls in (".blog-strip", ".blog-card", ".blog-thumb", ".blog-comment"):
+        for cls in (".blog-strip", ".blog-card", ".blog-thumb", ".blog-comment", ".blog-read"):
             self.assertIn(cls, itin, f"CSS class '{cls}' missing in itinerary.html")
+
+    def test_blog_reviews_read_more_label(self):
+        """각 blog card에 '후기 읽기 →' 라벨이 렌더되어야 한다."""
+        reviews = [{"url": "kaneyo-review.html", "img": "https://x/y.jpg", "comment": "c"}]
+        html = build_index.blog_reviews_html(reviews, in_viz=True)
+        self.assertIn('class="blog-read"', html, "blog-read span missing from card")
+        self.assertIn("후기 읽기 →", html, "'후기 읽기 →' label missing from blog card")
 
     def test_blog_reviews_rendered_for_key_places(self):
         run()

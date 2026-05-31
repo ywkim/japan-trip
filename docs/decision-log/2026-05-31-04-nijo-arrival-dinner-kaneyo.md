@@ -46,3 +46,18 @@ Accepted
 - **Consequences (2)**: `blog_reviews_html(reviews, in_viz)` 시그니처 변경(viz 호출 2곳 `in_viz=True`). TDD로 테스트 2건 선행 추가(루트 viz/ 접두어·viz bare·외부 새 탭). 검사 J(github 링크)·K 무관(blog_reviews 미스캔). 외부 URL 후기는 기존대로 새 탭 동작 유지.
 
 - **Consequences**: 메뉴·후기 출처는 공식 사이트(kyogoku-kaneyo.co.jp)·flywithmoxie·Tabelog(26001330)·공식 메뉴 2026-05-31. `data/local-image-map.json`에 매핑 4건 추가(flywithmoxie 2 + 부수적으로 기존 외부였던 아라시야마 죽림 후기 pstatic 썸네일 2장도 자가호스팅 — 오프라인 커버리지 개선). `test_build_index`의 food-note 폴딩 회귀 가드 detail-tail 문자열을 새 메뉴(우나기동 並¥3,200…)로 갱신. `validate.py` 검사 K는 `blog_reviews.comment`를 스캔하지 않아 후기 문구는 무관, `food_quality.note`(스캔 대상)에는 생(生) 레지스트리 장소명을 넣지 않음.
+
+### 후속 보강 3 (같은 PR) — 신쿄고쿠 상점가 후기 번역 페이지 + blog_reviews + UI 개선 + 메타 문서화
+
+- **Context**: 사용자 요청: ① 신쿄고쿠 야경 산책(items[5])에도 일본어 후기 번역 추가, ② UI 아름답게, ③ 메타 문서화(README·CLAUDE.md 갱신).
+- **Decision**:
+  1. `docs/shinkyogoku-review-translation.md` 신규 — 신쿄고쿠 상점가 진흥조합 공식 자료·note.com 복수 방문기 번역·재구성. Wikimedia Commons CC 이미지 2장 사용(Shinkyogoku_Shotengai.jpg·LondonYaki.jpg).
+  2. `build_index.py` `DOC_PAGES`에 `viz/shinkyogoku-review.html` 등록.
+  3. `data/itinerary.json` items[5]에 `blog_reviews` 2장 추가(url: `shinkyogoku-review.html`, Wikimedia 이미지).
+  4. `scripts/fetch_assets.py`로 Wikimedia 이미지 자가호스팅 → `data/local-image-map.json` 갱신.
+  5. **UI 개선**: 블로그 카드 너비 140→156px·이미지 높이 100→112px·`border-radius` 6→8px·scroll-snap·`-webkit-scrollbar: none`·`:active` opacity·`.blog-read "후기 읽기 →"` 라벨 추가. TDD: `test_blog_reviews_read_more_label`·`test_blog_reviews_css_present`(blog-read 클래스) 선행 추가.
+  6. **메타 문서화**: `README.md`에 `viz/kaneyo-review.html`·`viz/shinkyogoku-review.html` 1줄씩 추가. `CLAUDE.md` DOC_PAGES "현재 8 페이지"로 갱신 + 디렉토리 트리에 신규 파일 4개 추가.
+- **Consequences**:
+  - 긍정: 5/31 저녁·야경 산책 두 슬롯 모두 blog_reviews 카드를 통해 상세 후기 페이지로 이동 가능. 카드 UI가 더 세련되고 탭 목적이 명확해짐.
+  - 이미지 출처: Wikimedia Commons (CC-BY-SA), referer 없이 접근 가능 — `fetch_assets.py`로 자가호스팅 확인.
+  - 영향 받은 파일: `docs/shinkyogoku-review-translation.md`(신규), `data/itinerary.json`(items[5] blog_reviews), `scripts/build_index.py`(DOC_PAGES·CSS·blog_reviews_html), `data/local-image-map.json`(2건 추가), `README.md`, `CLAUDE.md`, `tests/test_build_index.py`(2개 테스트 추가).

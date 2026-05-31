@@ -418,7 +418,19 @@
             "source_fetched_at": "2026-05-31",
             "data_quality": "researched_market_rate",
             "maps_url": "https://www.google.com/maps/dir/?api=1&origin=%E4%BA%AC%E6%A5%B5%E3%81%8B%E3%81%AD%E3%82%88&destination=%E6%96%B0%E4%BA%AC%E6%A5%B5%E5%95%86%E5%BA%97%E8%A1%97&travelmode=walking"
-          }
+          },
+          "blog_reviews": [
+            {
+              "url": "shinkyogoku-review.html",
+              "img": "https://upload.wikimedia.org/wikipedia/commons/c/c9/Shinkyogoku_Shotengai.jpg",
+              "comment": "지붕 아케이드라 비 와도 OK. 교고쿠 카네요 바로 옆. 기념품·먹거리가 즐비한 550m 상점가 → 상세 안내"
+            },
+            {
+              "url": "shinkyogoku-review.html",
+              "img": "https://upload.wikimedia.org/wikipedia/commons/a/a4/LondonYaki.jpg",
+              "comment": "명물 로쿄쿠야키부터 니시키텐만구·세이간지 신사까지 — 식후 30분 산책에 딱 좋은 교토 번화가 → 상세 안내"
+            }
+          ]
         }
       ],
       "walking_km_source": "items[].arrive_from[mode=walk] 합(~0.7km: 京都市役所前→카네요 0.5 + 카네요→신쿄고쿠 0.2) + 니조역·교토역 환승 도보 추정. 오후 도착으로 첫날 관광 없음(동산 코스는 6/2로 이동).",
