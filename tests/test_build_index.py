@@ -791,8 +791,15 @@ class BlogReviewsTests(unittest.TestCase):
     def test_blog_reviews_css_present(self):
         run()
         itin = ITINERARY.read_text(encoding="utf-8")
-        for cls in (".blog-strip", ".blog-card", ".blog-thumb", ".blog-comment"):
+        for cls in (".blog-strip", ".blog-card", ".blog-thumb", ".blog-comment", ".blog-read"):
             self.assertIn(cls, itin, f"CSS class '{cls}' missing in itinerary.html")
+
+    def test_blog_reviews_read_more_label(self):
+        """각 blog card에 '후기 읽기 →' 라벨이 렌더되어야 한다."""
+        reviews = [{"url": "kaneyo-review.html", "img": "https://x/y.jpg", "comment": "c"}]
+        html = build_index.blog_reviews_html(reviews, in_viz=True)
+        self.assertIn('class="blog-read"', html, "blog-read span missing from card")
+        self.assertIn("후기 읽기 →", html, "'후기 읽기 →' label missing from blog card")
 
     def test_blog_reviews_rendered_for_key_places(self):
         run()
@@ -823,6 +830,25 @@ class BlogReviewsTests(unittest.TestCase):
         run()
         html = TABLE.read_text(encoding="utf-8")
         self.assertIn('class="blog-reviews"', html, "blog-reviews missing from itinerary-table.html mobile view")
+
+    def test_blog_reviews_insite_url_prefixed_at_root(self):
+        """사이트 내 .html url(예: kaneyo-review.html)은 루트(index.html)에서
+        viz/ 접두어가 붙어야 하고, viz/ 페이지에서는 그대로여야 한다(상대경로 깨짐 방지)."""
+        reviews = [{"url": "kaneyo-review.html", "img": "https://x/y.jpg", "comment": "c"}]
+        root_html = build_index.blog_reviews_html(reviews, in_viz=False)
+        self.assertIn('href="viz/kaneyo-review.html"', root_html, "root: viz/ prefix missing")
+        viz_html = build_index.blog_reviews_html(reviews, in_viz=True)
+        self.assertIn('href="kaneyo-review.html"', viz_html)
+        self.assertNotIn('href="viz/kaneyo-review.html"', viz_html, "viz: must not double-prefix")
+        # 내부 링크는 같은 탭(새 탭 target 금지), 외부는 새 탭 유지
+        self.assertNotIn('target="_blank"', root_html, "in-site link should open in same tab")
+
+    def test_blog_reviews_external_url_new_tab(self):
+        reviews = [{"url": "https://unagiudou.com/x/", "img": "https://x/y.jpg", "comment": "c"}]
+        for in_viz in (False, True):
+            html = build_index.blog_reviews_html(reviews, in_viz=in_viz)
+            self.assertIn('href="https://unagiudou.com/x/"', html)
+            self.assertIn('target="_blank"', html, "external link must open in new tab")
 
 
 class FoodQualityRenderTests(unittest.TestCase):
@@ -910,8 +936,9 @@ class ItineraryMemoFoldTests(unittest.TestCase):
         run()
         html = ITINERARY.read_text(encoding="utf-8")
         self.assertIn('class="food-quality"', html, "rating line must stay visible")
-        self.assertIn("흑모와규 창작 야끼니꾸</summary>", html, "long food note should fold to first sentence")
-        self.assertIn("1인 ¥5,000~6,000", html, "food note detail lost after folding")
+        self.assertIn("우나기 명물 킨시동(京風 두툼한 다시마키 계란 얹은 우나동)</summary>", html,
+                      "long food note should fold to first sentence")
+        self.assertIn("우나기동(장어만) 並¥3,200/上¥4,500/特¥6,600", html, "food note detail lost after folding")
 
 
 class ItineraryDocLinkTests(unittest.TestCase):

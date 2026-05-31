@@ -27,6 +27,21 @@
       "ja": "京都焼肉 enen",
       "reading": "엔엔"
     },
+    "kaneyo": {
+      "ko": "교고쿠 카네요",
+      "ja": "京極かねよ",
+      "reading": "쿄고쿠카네요"
+    },
+    "kyoto_shiyakushomae_station": {
+      "ko": "교토시야쿠쇼마에역",
+      "ja": "京都市役所前駅",
+      "reading": "쿄토시야쿠쇼마에에키"
+    },
+    "shinkyogoku_shotengai": {
+      "ko": "신쿄고쿠 상점가",
+      "ja": "新京極商店街",
+      "reading": "신쿄고쿠쇼텐가이"
+    },
     "nishiki": {
       "ko": "니시키 시장",
       "ja": "錦市場",
@@ -265,7 +280,7 @@
   "days": [
     {
       "date": "2026-05-31",
-      "day_label": "5/31 (일) — 오후 도착 + 시오 체크인 + 폰토초 야끼니꾸·가모강 야경",
+      "day_label": "5/31 (일) — 오후 도착 + 시오 체크인 + 카네요 우나기 킨시동·신쿄고쿠 산책",
       "walking_km": 1,
       "lodging": "에어비앤비 시오",
       "items": [
@@ -336,30 +351,30 @@
           "time": "18:30",
           "title": {
             "type": "restaurant",
-            "ko_name": "엔엔 — 폰토초 야끼니꾸 저녁",
-            "ja_name": "京都焼肉 enen 先斗町本店",
-            "ja_reading_ko": "엔엔",
-            "en_name": "Kyoto Yakiniku enen"
+            "ko_name": "교고쿠 카네요 — 우나기 킨시동 저녁",
+            "ja_name": "京極かねよ",
+            "ja_reading_ko": "쿄고쿠카네요",
+            "en_name": "Kyogoku Kaneyo (Unagi)"
           },
-          "maps_query": "京都焼肉 enen 先斗町本店",
-          "note": "{{shio_machiya}}·{{nijo_station}}에서 도보권 아님 — 폰토초(先斗町)로 지하철 이동 후 야끼니꾸 저녁. 도착편 지연·피로 시 휴식 후 출발. 예약 준비 — 5/31(일) 18:30·4인(시부모 2 포함)·테이블석 요청. 영어 즉시예약 [타베로그](https://tabelog.com/en/kyoto/A2601/A260201/26034057/)·[핫페퍼](https://www.hotpepper.jp/strJ001246287/) 또는 전화 [☎075-286-7479](tel:+81752867479)(일본어). 영어 메뉴·응대 가능. 도착편 지연 시 시간 변경·취소는 같은 채널로.",
+          "maps_query": "京極かねよ",
+          "note": "{{shio_machiya}}·{{nijo_station}}에서 도보권 아님 — 지하철 도자이선 {{nijo_station}}→{{kyoto_shiyakushomae_station}}(6분·¥220·ICOCA)+도보 7분. 도착편 피로 시 휴식 후 출발. 명물 킨시동(다시마키 계란 얹은 우나동)·주문 단순해 시부모 친화. 예약 준비 — 5/31(일) 18:30·4인(시부모 2 포함)·테이블석 요청. 넷예약 [핫페퍼](https://www.hotpepper.jp/strJ000903290/)·[타베로그](https://tabelog.com/en/kyoto/A2601/A260201/26001330/) 또는 전화(일본어). 일요 L.O.20:00이라 18:30 착석 권장.",
           "link": {
-            "url": "https://tabelog.com/en/kyoto/A2601/A260201/26034057/",
-            "label": "enen 예약 (타베로그 영어·즉시예약)"
+            "url": "https://tabelog.com/en/kyoto/A2601/A260201/26001330/",
+            "label": "카네요 예약 (타베로그·핫페퍼)"
           },
           "food_quality": {
-            "rating": "타베로그 3.44 · A5 흑모와규 창작 야끼니꾸(프렌치 터치)",
-            "source": "Tabelog · enen 공식사이트(주소·영업시간) 2026-05-30",
-            "source_fetched_at": "2026-05-30",
+            "rating": "타베로그 3.49 (리뷰 1399) · 우나기 명물 킨시동(きんし丼)",
+            "source": "Tabelog(26001330)·핫페퍼·공식사이트 2026-05-31",
+            "source_fetched_at": "2026-05-31",
             "data_quality": "researched_market_rate",
-            "url": "https://tabelog.com/en/kyoto/A2601/A260201/26034057/",
-            "note": "흑모와규 창작 야끼니꾸. 中京区鍋屋町209-13(폰토초(先斗町)) — 한큐 교토카와라마치(京都河原町)역·게이한 {{gion_shijo_stop}}역 도보 2분, {{shio_machiya}}에서 도보권 아님. 일요일 디너 17:00~22:00(L.O.21:30)·1인 ¥5,000~6,000. 인기점·예약 권장.",
+            "url": "https://tabelog.com/en/kyoto/A2601/A260201/26001330/",
+            "note": "우나기 명물 킨시동(京風 두툼한 다시마키 계란 얹은 우나동). 中京区 新京極通六角 — {{kyoto_shiyakushomae_station}} 도보 7분(京阪三条·阪急河原町 도보 10분). 일요일 11:30~15:30/17:00~20:30(L.O.20:00)·수요일 휴무. 메뉴: 킨시동(계란지단 덮밥) 並¥3,000/上¥4,000/特¥6,100 · 우나기동(장어만) 並¥3,200/上¥4,500/特¥6,600 · 키모야키(장어 간 꼬치구이) ¥1,500 · 키모스이(간 맑은국) ¥500 · 우나기 카이세키 코스(사전예약 필수) ¥15,000 · 포장 +¥100. 明治 창업 노포·인기점.",
             "place_info": {},
             "business_hours": [],
             "ratings": [
               {
                 "source": "tabelog",
-                "score": 3.44
+                "score": 3.49
               }
             ]
           },
@@ -368,52 +383,78 @@
               {
                 "mode": "subway",
                 "from": "{{nijo_station}}",
-                "to": "{{sanjo_keihan_station}}",
-                "duration_min": 8,
-                "distance_km": 3.4
+                "to": "{{kyoto_shiyakushomae_station}}",
+                "duration_min": 6,
+                "distance_km": 2.5
               },
               {
                 "mode": "walk",
-                "from": "{{sanjo_keihan_station}}",
-                "to": "{{enen}}",
+                "from": "{{kyoto_shiyakushomae_station}}",
+                "to": "{{kaneyo}}",
                 "duration_min": 7,
                 "distance_km": 0.5
               }
             ],
-            "source": "교토 지하철 도자이선 二条→三条京阪 + 폰토초 도보 (Google Maps 경로) — 정밀 노선·요금 브라우저 검증 대기",
-            "source_fetched_at": "2026-05-30",
-            "data_quality": "tbd_needs_browser_mcp",
-            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Nijo+Station,+Kyoto&destination=%E4%BA%AC%E9%83%BD%E7%84%BC%E8%82%89+enen+%E5%85%88%E6%96%97%E7%94%BA%E6%9C%AC%E5%BA%97&travelmode=transit"
-          }
+            "source": "교토 지하철 도자이선 二条→京都市役所前 ¥220·6분 (ekitan·교토시 교통국) + 京都市役所前→카네요 도보 (Google Maps)",
+            "source_fetched_at": "2026-05-31",
+            "data_quality": "researched_market_rate",
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Nijo+Station,+Kyoto&destination=%E4%BA%AC%E6%A5%B5%E3%81%8B%E3%81%AD%E3%82%88&travelmode=transit"
+          },
+          "blog_reviews": [
+            {
+              "url": "kaneyo-review.html",
+              "img": "https://unagiudou.com/wp-content/uploads/2025/05/IMG_4760.jpg",
+              "comment": "그릇에서 넘칠 듯한 계란의 임팩트. 계란에 다시가 듬뿍 배어 탱글탱글. 킨시타마고가 아닌 다시마키 계란이 이 집만의 포인트 → 상세 후기(번역)"
+            },
+            {
+              "url": "kaneyo-review.html",
+              "img": "https://unagiudou.com/wp-content/uploads/2025/05/IMG_4770.jpg",
+              "comment": "숯불 향 강하고 폭신폭신한 장어. 짭조름한 타레가 밥과 잘 어울림. 대정시대부터 이어온 레트로 노포 → 상세 후기(번역)"
+            }
+          ]
         },
         {
           "time": "20:00",
           "title": {
             "type": "place",
-            "ko_name": "가모강 야경 산책 (폰토초)",
-            "ja_name": "鴨川・先斗町",
-            "ja_reading_ko": "카모가와·폰토초",
-            "en_name": "Kamogawa riverside & Pontocho"
+            "ko_name": "신쿄고쿠 상점가 야경 산책",
+            "ja_name": "新京極商店街",
+            "ja_reading_ko": "신쿄고쿠쇼텐가이",
+            "en_name": "Shinkyogoku arcade stroll"
           },
-          "maps_query": "鴨川 先斗町 京都",
-          "note": "저녁 후 {{kamogawa}} 강변·폰토초(先斗町) 골목 야경 산책 — enen에서 도보 2분, {{gion_shijo_stop}}역·{{sanjo_keihan_station}} 인근. 강변 가게 불빛·노료유카(納涼床) 분위기. 산책 후 지하철 도자이선 {{sanjo_keihan_station}}→{{nijo_station}}으로 시오 복귀(ICOCA). 시부모 동반·도착일 피로 고려해 무리 없이 짧게.",
+          "maps_query": "新京極商店街 京都",
+          "note": "저녁 후 {{kaneyo}} 바로 옆 {{shinkyogoku_shotengai}}·데라마치(寺町) 지붕 아케이드 가볍게 산책 — 비 와도 OK. 이후 지하철 도자이선 {{kyoto_shiyakushomae_station}}→{{nijo_station}}(6분·¥220·ICOCA)으로 시오 복귀. 시부모 동반·도착일 피로 고려 짧게.",
           "arrive_from": {
             "steps": [
               {
                 "mode": "walk",
-                "duration_min": 2,
-                "distance_km": 0.15
+                "from": "{{kaneyo}}",
+                "to": "{{shinkyogoku_shotengai}}",
+                "duration_min": 3,
+                "distance_km": 0.2
               }
             ],
-            "source": "enen(폰토초)→鴨川 강변 도보 (Google Maps) — 정밀 동선 브라우저 검증 대기",
-            "source_fetched_at": "2026-05-30",
-            "data_quality": "tbd_needs_browser_mcp",
-            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=%E4%BA%AC%E9%83%BD%E7%84%BC%E8%82%89+enen+%E5%85%88%E6%96%97%E7%94%BA%E6%9C%AC%E5%BA%97&destination=%E9%B4%A8%E5%B7%9D+%E5%85%88%E6%96%97%E7%94%BA&travelmode=walking"
-          }
+            "source": "京極かねよ→新京極商店街 도보 (Google Maps)",
+            "source_fetched_at": "2026-05-31",
+            "data_quality": "researched_market_rate",
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=%E4%BA%AC%E6%A5%B5%E3%81%8B%E3%81%AD%E3%82%88&destination=%E6%96%B0%E4%BA%AC%E6%A5%B5%E5%95%86%E5%BA%97%E8%A1%97&travelmode=walking"
+          },
+          "blog_reviews": [
+            {
+              "url": "shinkyogoku-review.html",
+              "img": "https://upload.wikimedia.org/wikipedia/commons/c/c9/Shinkyogoku_Shotengai.jpg",
+              "comment": "지붕 아케이드라 비 와도 OK. 교고쿠 카네요 바로 옆. 기념품·먹거리가 즐비한 550m 상점가 → 상세 안내"
+            },
+            {
+              "url": "shinkyogoku-review.html",
+              "img": "https://upload.wikimedia.org/wikipedia/commons/a/a4/LondonYaki.jpg",
+              "comment": "명물 로쿄쿠야키부터 니시키텐만구·세이간지 신사까지 — 식후 30분 산책에 딱 좋은 교토 번화가 → 상세 안내"
+            }
+          ]
         }
       ],
-      "walking_km_source": "items[].arrive_from[mode=walk] 합(~0.65km: 三条京阪→enen 0.5 + enen→鴨川 야경 0.15) + 니조역·교토역 환승 도보 추정. 오후 도착으로 첫날 관광 없음(동산 코스는 6/2로 이동).",
-      "pass_recommendation": "iPhone Apple Wallet ICOCA 단권 — JR 하루카는 별도 왕복권(¥2,400/인). {{kyoto_station}}→{{nijo_station}} JR 산인선만 ICOCA 탭(약 ¥190). 저녁 폰토초(先斗町) enen 이동으로 지하철 도자이선 {{nijo_station}}↔{{sanjo_keihan_station}} 왕복 ICOCA 탭 추가(요금 현지 확인)."
+      "walking_km_source": "items[].arrive_from[mode=walk] 합(~0.7km: 京都市役所前→카네요 0.5 + 카네요→신쿄고쿠 0.2) + 니조역·교토역 환승 도보 추정. 오후 도착으로 첫날 관광 없음(동산 코스는 6/2로 이동).",
+      "pass_recommendation": "iPhone Apple Wallet ICOCA 단권 — JR 하루카는 별도 왕복권(¥2,400/인). {{kyoto_station}}→{{nijo_station}} JR 산인선만 ICOCA 탭(약 ¥190). 저녁 카네요 이동으로 지하철 도자이선 {{nijo_station}}↔{{kyoto_shiyakushomae_station}} 왕복 ICOCA 탭 추가(편도 ¥220·6분)."
     },
     {
       "date": "2026-06-01",
@@ -423,6 +464,7 @@
       "items": [
         {
           "time": "07:00",
+          "priority": "권장",
           "title": {
             "type": "restaurant",
             "ko_name": "조식 — 마치야 또는 코메다",
@@ -438,6 +480,7 @@
         },
         {
           "time": "08:00",
+          "priority": "필수",
           "title": {
             "type": "place",
             "ko_name": "죽림길",
@@ -481,6 +524,7 @@
         },
         {
           "time": "09:30",
+          "priority": "권장",
           "title": {
             "type": "place",
             "ko_name": "텐류지",
@@ -519,6 +563,7 @@
         },
         {
           "time": "10:30",
+          "priority": "필수",
           "title": {
             "type": "place",
             "ko_name": "사이호지",
@@ -564,6 +609,7 @@
         },
         {
           "time": "12:00",
+          "priority": "대체",
           "title": {
             "type": "restaurant",
             "ko_name": "eX cafe — 당고 직화구이",
@@ -667,6 +713,7 @@
         },
         {
           "time": "13:30",
+          "priority": "필수",
           "title": {
             "type": "place",
             "ko_name": "금각사",
@@ -734,6 +781,7 @@
         },
         {
           "time": "15:00",
+          "priority": "권장",
           "title": {
             "type": "place",
             "ko_name": "료안지",
@@ -769,6 +817,7 @@
         },
         {
           "time": "18:30",
+          "priority": "대체",
           "title": {
             "type": "restaurant",
             "ko_name": "만자라테이 — 창작 교토요리",
