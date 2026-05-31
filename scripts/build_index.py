@@ -2436,10 +2436,9 @@ DOC_CSS = """
   }
   .doc table {
     border-collapse: collapse; width: 100%; margin: 0.6rem 0; font-size: 0.85rem;
-    display: block; overflow-x: auto; -webkit-overflow-scrolling: touch;
   }
-  .doc th, .doc td { border: 1px solid var(--border); padding: 0.4rem 0.55rem; text-align: left; vertical-align: top; }
-  .doc th { background: var(--subcard); font-weight: 600; white-space: nowrap; }
+  .doc th, .doc td { border: 1px solid var(--border); padding: 0.4rem 0.55rem; text-align: left; vertical-align: top; word-break: break-word; }
+  .doc th { background: var(--subcard); font-weight: 600; white-space: normal; }
   .doc hr { border: none; border-top: 1px solid var(--border); margin: 1.2rem 0; }
 """
 
