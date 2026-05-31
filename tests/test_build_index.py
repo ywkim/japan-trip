@@ -824,6 +824,25 @@ class BlogReviewsTests(unittest.TestCase):
         html = TABLE.read_text(encoding="utf-8")
         self.assertIn('class="blog-reviews"', html, "blog-reviews missing from itinerary-table.html mobile view")
 
+    def test_blog_reviews_insite_url_prefixed_at_root(self):
+        """사이트 내 .html url(예: kaneyo-review.html)은 루트(index.html)에서
+        viz/ 접두어가 붙어야 하고, viz/ 페이지에서는 그대로여야 한다(상대경로 깨짐 방지)."""
+        reviews = [{"url": "kaneyo-review.html", "img": "https://x/y.jpg", "comment": "c"}]
+        root_html = build_index.blog_reviews_html(reviews, in_viz=False)
+        self.assertIn('href="viz/kaneyo-review.html"', root_html, "root: viz/ prefix missing")
+        viz_html = build_index.blog_reviews_html(reviews, in_viz=True)
+        self.assertIn('href="kaneyo-review.html"', viz_html)
+        self.assertNotIn('href="viz/kaneyo-review.html"', viz_html, "viz: must not double-prefix")
+        # 내부 링크는 같은 탭(새 탭 target 금지), 외부는 새 탭 유지
+        self.assertNotIn('target="_blank"', root_html, "in-site link should open in same tab")
+
+    def test_blog_reviews_external_url_new_tab(self):
+        reviews = [{"url": "https://unagiudou.com/x/", "img": "https://x/y.jpg", "comment": "c"}]
+        for in_viz in (False, True):
+            html = build_index.blog_reviews_html(reviews, in_viz=in_viz)
+            self.assertIn('href="https://unagiudou.com/x/"', html)
+            self.assertIn('target="_blank"', html, "external link must open in new tab")
+
 
 class FoodQualityRenderTests(unittest.TestCase):
     def test_food_quality_rendered_in_itinerary(self):

@@ -507,17 +507,38 @@ def lodging_photo_strip(photos: list, img_prefix: str = "") -> str:
     return f'<div class="lodging-strip">{imgs}</div>'
 
 
-def blog_reviews_html(reviews: list) -> str:
-    """Render a scrollable photo strip of Naver blog reviews."""
+def _blog_card_href(url: str, in_viz: bool) -> tuple[str, str]:
+    """후기 카드 링크의 (href, 새 탭 속성)을 반환.
+
+    외부(http) 링크는 새 탭. 사이트 내 .html 경로(예: kaneyo-review.html)는
+    같은 탭으로 열되, 루트(index.html)에서 렌더될 때 viz/ 접두어를 보정한다
+    (doc_link_html과 동일 규칙 — 루트/viz 양쪽 상대경로 깨짐 방지).
+    """
+    url = (url or "").strip()
+    external = url.startswith(("http://", "https://"))
+    if not external and url.endswith(".html") and not url.startswith(("viz/", "/", "#")):
+        if not in_viz:
+            url = "viz/" + url
+    attr = ' target="_blank" rel="noopener"' if external else ""
+    return esc(url), attr
+
+
+def blog_reviews_html(reviews: list, in_viz: bool = False) -> str:
+    """Render a scrollable photo strip of blog reviews.
+
+    url이 외부(http)면 새 탭, 사이트 내 .html이면 같은 탭(루트에서 viz/ 보정).
+    """
     if not reviews:
         return ""
-    cards = "".join(
-        f'<a href="{esc(r["url"])}" target="_blank" rel="noopener" class="blog-card">'
-        f'<img src="{esc(local_src(r["img"]))}" class="blog-thumb" loading="lazy" alt="" referrerpolicy="no-referrer" onerror="this.closest(\'.blog-card\').style.display=\'none\'">'
-        f'<p class="blog-comment">{esc(r["comment"])}</p>'
-        f'</a>'
-        for r in reviews
-    )
+    def card(r):
+        href, attr = _blog_card_href(r["url"], in_viz)
+        return (
+            f'<a href="{href}"{attr} class="blog-card">'
+            f'<img src="{esc(local_src(r["img"]))}" class="blog-thumb" loading="lazy" alt="" referrerpolicy="no-referrer" onerror="this.closest(\'.blog-card\').style.display=\'none\'">'
+            f'<p class="blog-comment">{esc(r["comment"])}</p>'
+            f'</a>'
+        )
+    cards = "".join(card(r) for r in reviews)
     return f'<div class="blog-reviews"><div class="blog-strip">{cards}</div></div>'
 
 
@@ -1865,7 +1886,7 @@ def build_itinerary(d) -> str:
                 )
             else:
                 img_html = ""
-            reviews_html = blog_reviews_html(it.get("blog_reviews", []))
+            reviews_html = blog_reviews_html(it.get("blog_reviews", []), in_viz=True)
             food_html = food_quality_html(it.get("food_quality"))
             link_html = doc_link_html(it.get("link"), in_viz=True)
             item_rows.append(f"""
@@ -2148,7 +2169,7 @@ def build_itinerary_table(d) -> str:
                 )
             else:
                 img_html = ""
-            reviews_html = blog_reviews_html(it.get("blog_reviews", []))
+            reviews_html = blog_reviews_html(it.get("blog_reviews", []), in_viz=True)
             food_html = food_quality_html(it.get("food_quality"))
             link_html = doc_link_html(it.get("link"), in_viz=True)
             item_rows.append(f"""
