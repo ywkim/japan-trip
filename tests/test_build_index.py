@@ -19,6 +19,9 @@ ALL_HTML_OUTPUTS = (INDEX, ITINERARY, CHECKLIST, TABLE, LODGING, ARCHIVE, BREAKF
 OG_SLUGS = ("home", "itinerary", "itinerary-table", "lodging", "checklist", "archive")
 ALL_OG_SVGS = tuple(BASE / "assets" / f"og-{s}.svg" for s in OG_SLUGS)
 ALL_OUTPUTS = ALL_HTML_OUTPUTS + ALL_OG_SVGS
+SW = BASE / "sw.js"
+MANIFEST = BASE / "manifest.json"
+ICON = BASE / "assets" / "icon.svg"
 SCRIPT = BASE / "scripts" / "build_index.py"
 
 sys.path.insert(0, str(BASE / "scripts"))
@@ -305,20 +308,24 @@ class BuildIndexTests(unittest.TestCase):
                 self.assertIn("min-height: 44px", html, f"no 44px touch target CSS in {path.name}")
 
     def test_verified_source_shows_tick(self):
-        """source_verified_at가 있는 출처(transit leg·교통패스 출처)는 ✓ 검증 표시를 노출해야 한다."""
+        """source_verified_at가 있는 출처 칩만 ✓ 검증 표시를 노출해야 한다.
+
+        ① source_chip 단위로 ✓ 렌더 규칙을 격리 검증(days[] 레그가 모두 미검증
+           tbd_needs_browser_mcp일 수 있으므로). ② production fixture의 verified
+           출처(transit_pass_sources[].source_verified_at)가 실제 빌드 산출물에
+           class="source-tick"로 노출되는지 HTML 회귀 가드도 유지.
+        """
+        verified = build_index.source_chip("https://example.com/x", "경로 출처", verified=True)
+        self.assertIn("✓", verified, "verified chip must render ✓")
+        plain = build_index.source_chip("https://example.com/x", "경로 출처", verified=False)
+        self.assertNotIn("✓", plain, "unverified chip must not render ✓")
+
         run()
-        import json as _json
-        data = _json.loads((BASE / "data" / "itinerary.json").read_text(encoding="utf-8"))
-        has_verified = any(
-            (it.get("arrive_from") or {}).get("source_verified_at")
-            for day in data["days"] for it in day["items"]
-        ) or any(
-            s.get("source_verified_at")
-            for s in data.get("trip", {}).get("transit_pass_sources", [])
+        rendered = INDEX.read_text(encoding="utf-8") + ITINERARY.read_text(encoding="utf-8")
+        self.assertIn(
+            'class="source-tick"', rendered,
+            "verified source (transit_pass_sources) must render ✓ tick in built HTML",
         )
-        self.assertTrue(has_verified, "fixture must have a verified source")
-        itin = ITINERARY.read_text(encoding="utf-8")
-        self.assertIn("✓", itin, "verified tick ✓ missing in itinerary.html")
 
     def test_route_candidates_not_rendered_in_itinerary(self):
         """의사결정 완료 후 후보 코스 섹션은 웹에 노출하지 않는다."""
@@ -400,14 +407,13 @@ class BuildIndexTests(unittest.TestCase):
         run()
         html = CHECKLIST.read_text(encoding="utf-8")
         self.assertIn("<details", html, "checklist long note should be collapsible (<details>)")
-        self.assertIn("자세히", html, "collapsible note should have a '자세히' summary")
 
     def test_checklist_pending_due_has_dday(self):
         """미정(처리 필요) 항목의 마감일은 D-day 계산용 data-due 속성과
         클라이언트 스크립트를 동반해야 한다 (빌드 결정성 유지)."""
         run()
         html = CHECKLIST.read_text(encoding="utf-8")
-        self.assertIn('data-due="2026-05-25"', html,
+        self.assertIn('data-due="2026-05-30"', html,
                       "pending due date should carry data-due for client-side D-day")
         self.assertIn('class="dday"', html, "checklist should render a .dday slot")
         self.assertIn("getAttribute('data-due')", html,
@@ -592,11 +598,11 @@ class NoteFoldTests(unittest.TestCase):
                               f"{path.name} should collapse long notes into a fold")
 
     def test_collapsed_note_detail_preserved(self):
-        """접어도 운영 메모 텍스트(PIN·확정번호)는 HTML에 그대로 남아야 한다."""
+        """접어도 운영 메모 텍스트는 HTML에 그대로 남아야 한다."""
         run()
         html = CHECKLIST.read_text(encoding="utf-8")
-        self.assertIn("PIN 5647", html, "checklist note detail (PIN) lost after fold")
-        self.assertIn("20260513170241828", html, "checklist note detail (confirm no.) lost after fold")
+        self.assertIn("체크인 6/2 15:00", html, "checklist note detail (check-in time) lost after fold")
+        self.assertIn("체크아웃 6/3 11:00", html, "checklist note detail (check-out time) lost after fold")
 
 
 class ChecklistDetailFoldTests(unittest.TestCase):
@@ -608,7 +614,7 @@ class ChecklistDetailFoldTests(unittest.TestCase):
 
     SHORT = "에어서울 RS · A8YW58 · 발권"
     LONG = ("Trip.com ① 1400827143416024 (성인2, ₩94,108) · ② 1400827143410570 "
-            "(성인2, PIN 2362) · 6/1 10:30 · LEE/SOYEON · 조건부 취소")
+            "(성인2) · 6/1 10:30 · LEE/SOYEON · 조건부 취소")
 
     def test_short_value_stays_plain_row(self):
         out = build_index.detail_row("예약번호", self.SHORT)
@@ -624,7 +630,7 @@ class ChecklistDetailFoldTests(unittest.TestCase):
 
     def test_long_value_detail_is_lossless(self):
         out = build_index.detail_row("예약번호", self.LONG)
-        for tok in ("1400827143416024", "1400827143410570", "PIN 2362", "LEE/SOYEON", "조건부 취소"):
+        for tok in ("1400827143416024", "1400827143410570", "LEE/SOYEON", "조건부 취소"):
             with self.subTest(tok=tok):
                 self.assertIn(tok, out, f"detail_row dropped {tok!r} after folding")
 
@@ -938,21 +944,26 @@ class ItineraryDocLinkTests(unittest.TestCase):
                 )
 
     def test_itinerary_doc_link_is_onsite_not_github_or_raw_md(self):
-        # Vercel 화면에서 GitHub 링크 금지 + .md raw 서빙 회피 → 사이트 내 HTML 페이지여야 함.
+        # GitHub 링크는 모든 link에서 금지(검사 J). 사이트 내(상대경로) doc-link은
+        # .md raw 서빙 회피 위해 .html이어야 함. 외부(http) 링크(예: 식당 예약 페이지)는
+        # 새 탭으로 허용 — doc_link_html이 target=_blank로 렌더.
         urls = self._breakfast_link_urls()
         for url in urls:
             self.assertNotIn("github.com", url, f"Vercel doc link must not point to GitHub: {url!r}")
-            self.assertFalse(url.endswith(".md"), f"doc link must not be a raw .md path: {url!r}")
-            self.assertTrue(url.endswith(".html"), f"doc link should be an on-site HTML page: {url!r}")
+            if url.startswith(("http://", "https://")):
+                continue  # 외부 예약·참조 링크는 onsite .html 제약에서 제외
+            self.assertFalse(url.endswith(".md"), f"onsite doc link must not be a raw .md path: {url!r}")
+            self.assertTrue(url.endswith(".html"), f"onsite doc link should be an HTML page: {url!r}")
 
     def test_breakfast_link_resolves_to_built_page(self):
-        # 일정의 조식 doc-link 대상이 실제 빌드되는 viz 페이지여야 함.
+        # 사이트 내(상대경로) doc-link 대상이 실제 빌드되는 viz 페이지여야 함.
+        # 외부(http) 링크는 빌드 산출물이 아니므로 제외.
         run()
-        urls = set(self._breakfast_link_urls())
+        urls = {u for u in self._breakfast_link_urls() if not u.startswith(("http://", "https://"))}
         for url in urls:
             self.assertTrue(
                 (BASE / "viz" / url).exists(),
-                f"breakfast doc-link target {url!r} is not a built page",
+                f"onsite doc-link target {url!r} is not a built page",
             )
 
 
@@ -1077,6 +1088,22 @@ DOC_PAGE_OUTPUTS = (
     BASE / "viz" / "transit-pass.html",
     BASE / "viz" / "decision-kyoto.html",
     BASE / "viz" / "decision-log.html",
+    BASE / "viz" / "icoca-setup.html",
+    BASE / "viz" / "essential-iphone-apps.html",
+    # 아카이브 문서
+    BASE / "viz" / "candidates.html",
+    BASE / "viz" / "weather.html",
+    BASE / "viz" / "flights.html",
+    BASE / "viz" / "budget-options.html",
+    BASE / "viz" / "airbnb-comparison.html",
+    BASE / "viz" / "jejuair.html",
+    BASE / "viz" / "itinerary-may.html",
+    BASE / "viz" / "transit-mcp-handoff.html",
+    # 운영 문서
+    BASE / "viz" / "transit-guide.html",
+    BASE / "viz" / "saihoji.html",
+    BASE / "viz" / "soyeon-maps.html",
+    BASE / "viz" / "breakfast-doc.html",
 )
 
 
@@ -1227,6 +1254,248 @@ class DocPageTests(unittest.TestCase):
         self.assertIn("ICOCA", result, "should show recommendation")
         self.assertIn("<details", result, "should have collapsible section")
         self.assertIn("시버스", result, "should contain detail items")
+
+
+class ChecklistCardNoteFoldTests(unittest.TestCase):
+    """checklist_card note가 PR #71 fold 패턴(의미있는 요약 + 접기)을 따르는지 검증."""
+
+    def test_note_with_dot_separators_shows_first_two_as_summary(self):
+        """' · ' 구분자가 있는 note는 앞 2항목이 summary로 노출되고 나머지는 접혀야 한다."""
+        import sys
+        sys.path.insert(0, str(BASE / "scripts"))
+        import build_index
+        it = {
+            "label": "항공", "status": "확정",
+            "note": "에어서울 RS · 예약번호 A8YW58 · ICN 13:15→KIX 15:15 / KIX 10:05→ICN 12:05 · 시부 결제",
+        }
+        html = build_index.checklist_card(it)
+        self.assertIn("<details", html, "long note should be collapsible")
+        summary = html.split("<summary>")[1].split("</summary>")[0]
+        self.assertNotIn("자세히", summary, "summary must not be the generic '자세히' label")
+        self.assertIn("에어서울 RS", summary, "first segment must appear in summary")
+        self.assertIn("예약번호 A8YW58", summary, "second segment must appear in summary")
+
+    def test_note_with_markdown_links_preserves_clickable_links(self):
+        """note 안의 markdown [text](url) 링크가 <a>로 렌더되어야 한다 (linkify 유지)."""
+        import sys
+        sys.path.insert(0, str(BASE / "scripts"))
+        import build_index
+        it = {
+            "label": "식당", "status": "예약중",
+            "note": "링크 [예약](https://example.com) 참조 · 전화 [☎02-000](tel:+8200000)",
+        }
+        html = build_index.checklist_card(it)
+        self.assertIn('<a href="https://example.com"', html)
+        self.assertIn('<a href="tel:+8200000"', html)
+
+    def test_note_without_dot_separator_uses_sentence_summary(self):
+        """' · ' 구분자가 없고 '. '(문장) 구분이 있는 note는 첫 문장을 요약으로 써야 한다.
+
+        첫 어절만 덜렁 남는 '두…' 같은 의미 없는 잘림을 방지.
+        """
+        import sys
+        sys.path.insert(0, str(BASE / "scripts"))
+        import build_index
+        it = {
+            "label": "식당", "status": "예약중",
+            "note": "두 저녁 모두 워크인 대기 리스크 커 사전 넷예약 권장(전화 불요). "
+                    "① 大鵬은 AutoReserve로 예약. ② まんざら亭은 楽天으로 예약.",
+        }
+        html = build_index.checklist_card(it)
+        self.assertIn("<details", html, "long note should be collapsible")
+        summary = html.split("<summary>")[1].split("</summary>")[0]
+        # 첫 어절 '두…'가 아니라 첫 문장 전체가 요약이어야 함
+        self.assertNotIn("…", summary, "summary must not be a dangling first-word truncation")
+        self.assertIn("워크인 대기 리스크", summary, "first full sentence should be the summary")
+
+    def test_long_first_segment_summary_capped_to_one(self):
+        """seg0이 길면 seg1을 합쳐 60자를 넘으므로 요약은 seg0 하나로 제한해야 한다."""
+        import sys
+        sys.path.insert(0, str(BASE / "scripts"))
+        import build_index
+        long_seg0 = "영욱 라인 = Airalo Moshi Moshi 5GB/7일 $10≈₩13,800 확정(2026-05-26)"
+        it = {
+            "label": "eSIM", "status": "예약중",
+            "note": f"{long_seg0} · 소연 라인 = Airalo Moshi Moshi 3GB/7일 $8≈₩11,040 추가 · 시부모 핫스팟 ₩0",
+        }
+        html = build_index.checklist_card(it)
+        summary = html.split("<summary>")[1].split("</summary>")[0]
+        self.assertNotIn("소연 라인", summary, "second long segment must be folded, not in summary")
+        self.assertIn("영욱 라인", summary, "first segment stays in summary")
+
+    def test_checklist_html_note_summary_is_not_generic(self):
+        """생성된 viz/checklist.html에서 note summary가 '자세히'가 아니어야 한다."""
+        run()
+        html = CHECKLIST.read_text(encoding="utf-8")
+        # <summary> 태그 내에 '자세히'가 없어야 함 (권장·예약번호 등 다른 label은 허용)
+        import re
+        summaries = re.findall(r"<summary>(.*?)</summary>", html)
+        for s in summaries:
+            self.assertNotEqual(s.strip(), "자세히",
+                                f"note summary must not be generic '자세히': {s!r}")
+
+    def test_checklist_html_note_summary_no_dangling_word(self):
+        """생성된 viz/checklist.html에서 note summary가 '단어…' 형태의 의미 없는 잘림이 아니어야 한다."""
+        run()
+        html = CHECKLIST.read_text(encoding="utf-8")
+        import re
+        summaries = re.findall(r"<summary>(.*?)</summary>", html)
+        for s in summaries:
+            s = s.strip()
+            # '출국…' '두…'처럼 공백 없는 한 어절 + '…' 으로 끝나면 실패
+            if s.endswith("…") and " " not in s.rstrip("…"):
+                self.fail(f"note summary is a dangling single-word truncation: {s!r}")
+
+
+class ChecklistCardDocLinkTests(unittest.TestCase):
+    """checklist_card doc-link가 렌더 컨텍스트(root vs viz)에 맞는 경로를 생성해야 한다.
+
+    booking-checklist.json 항목의 link.url(예: docs/essential-iphone-apps.md)은
+    - index.html(루트)에서는 viz/essential-iphone-apps.html
+    - viz/checklist.html(viz/)에서는 essential-iphone-apps.html
+    로 렌더되어야 한다. 잘못 생성된 경로는 Vercel에서 404를 유발한다.
+    """
+
+    def _find_checklist_doc_links(self, html: str) -> list[str]:
+        import re
+        return re.findall(r'class="doc-link"\s+href="([^"]+)"', html)
+
+    def test_index_checklist_doc_link_has_viz_prefix(self):
+        """index.html의 checklist doc-link는 viz/ 접두어가 있어야 한다."""
+        run()
+        html = INDEX.read_text(encoding="utf-8")
+        hrefs = self._find_checklist_doc_links(html)
+        for href in hrefs:
+            if href.endswith(".html") and not href.startswith("http"):
+                self.assertTrue(
+                    href.startswith("viz/"),
+                    f"index.html checklist doc-link must start with viz/: {href!r}",
+                )
+
+    def test_checklist_page_doc_link_has_no_viz_prefix(self):
+        """viz/checklist.html의 doc-link는 viz/ 없는 상대경로여야 한다."""
+        run()
+        html = CHECKLIST.read_text(encoding="utf-8")
+        hrefs = self._find_checklist_doc_links(html)
+        for href in hrefs:
+            if href.endswith(".html") and not href.startswith("http"):
+                self.assertFalse(
+                    href.startswith("viz/"),
+                    f"viz/checklist.html doc-link must NOT start with viz/: {href!r}",
+                )
+
+    def test_index_checklist_doc_link_target_exists(self):
+        """index.html checklist doc-link 대상 파일이 실제로 빌드되어야 한다."""
+        run()
+        html = INDEX.read_text(encoding="utf-8")
+        hrefs = self._find_checklist_doc_links(html)
+        for href in hrefs:
+            if href.endswith(".html") and not href.startswith("http"):
+                self.assertTrue(
+                    (BASE / href).exists(),
+                    f"index.html checklist doc-link target not built: {href!r}",
+                )
+
+
+class OfflineCapabilityTests(unittest.TestCase):
+    """비행기 모드 완전 사전 캐시: 서비스 워커 + PWA 매니페스트 + 등록 스크립트."""
+
+    def test_service_worker_manifest_and_icon_generated(self):
+        run()
+        for p in (SW, MANIFEST, ICON):
+            with self.subTest(file=p.name):
+                self.assertTrue(p.exists(), f"{p.name} not generated")
+                self.assertTrue(p.read_text(encoding="utf-8").strip(), f"{p.name} empty")
+
+    def test_all_pages_register_sw_and_link_manifest(self):
+        run()
+        for path in ALL_HTML_OUTPUTS:
+            with self.subTest(path=path.name):
+                content = path.read_text(encoding="utf-8")
+                self.assertIn("serviceWorker", content, f"{path.name}: no SW registration")
+                self.assertIn("/sw.js", content, f"{path.name}: no /sw.js reference")
+                self.assertIn('rel="manifest"', content, f"{path.name}: no manifest link")
+
+    def test_sw_precaches_every_page_and_local_assets(self):
+        run()
+        sw = SW.read_text(encoding="utf-8")
+        for label, _pf, _bf in build_index.OUTPUTS:
+            if label.endswith(".html"):
+                url = "/" + label
+                self.assertIn(url, sw, f"sw.js precache list missing {url}")
+        self.assertIn('"/"', sw, "sw.js must precache root /")
+        self.assertIn("/assets/lodging/", sw, "sw.js must precache local lodging images")
+
+    def test_sw_has_lifecycle_and_offline_navigation_fallback(self):
+        run()
+        sw = SW.read_text(encoding="utf-8")
+        for needle in ("install", "activate", "fetch", "navigate"):
+            self.assertIn(needle, sw, f"sw.js missing {needle!r} handler/branch")
+
+    def test_sw_embeds_content_hash_cache_version(self):
+        d = build_index.load_data()
+        ver = build_index.compute_cache_version(d)
+        self.assertTrue(ver, "compute_cache_version returned empty")
+        run()
+        self.assertIn(ver, SW.read_text(encoding="utf-8"), "sw.js must embed content-hash version")
+
+    def test_manifest_is_valid_pwa(self):
+        run()
+        import json as _json
+        m = _json.loads(MANIFEST.read_text(encoding="utf-8"))
+        for key in ("name", "short_name", "start_url", "display", "icons"):
+            self.assertIn(key, m, f"manifest missing {key}")
+        self.assertTrue(m["icons"], "manifest needs at least one icon")
+        self.assertEqual(m["display"], "standalone")
+
+    def test_offline_artifacts_have_no_github_links(self):
+        run()
+        for p in (SW, MANIFEST, ICON):
+            with self.subTest(file=p.name):
+                self.assertNotIn("github.com", p.read_text(encoding="utf-8"))
+
+
+class SelfHostedImageTests(unittest.TestCase):
+    """외부 이미지 자가호스팅(B) + SW referer 보정(A) — 비행기 모드 이미지 보장."""
+
+    def _map(self):
+        import json as _json
+        p = BASE / "data" / "local-image-map.json"
+        return _json.loads(p.read_text(encoding="utf-8")) if p.exists() else {}
+
+    def test_local_src_rewrites_mapped_url(self):
+        m = self._map()
+        if not m:
+            self.skipTest("local-image-map.json not populated")
+        url, local = next(iter(m.items()))
+        build_index.LOCAL_IMAGE_MAP = m
+        try:
+            self.assertEqual(build_index.local_src(url), local)
+            self.assertEqual(build_index.local_src("https://x.test/none.jpg"), "https://x.test/none.jpg")
+        finally:
+            build_index.LOCAL_IMAGE_MAP = {}
+
+    def test_mapped_externals_replaced_by_local_paths_in_html(self):
+        m = self._map()
+        if not m:
+            self.skipTest("local-image-map.json not populated")
+        run()
+        blob = "\n".join(p.read_text(encoding="utf-8") for p in ALL_HTML_OUTPUTS)
+        self.assertIn("/assets/place-images/", blob, "no self-hosted image rendered")
+        for ext_url in m:
+            self.assertNotIn(ext_url, blob, f"mapped external URL leaked into HTML: {ext_url}")
+
+    def test_sw_precaches_self_hosted_place_images(self):
+        if not self._map():
+            self.skipTest("local-image-map.json not populated")
+        run()
+        self.assertIn("/assets/place-images/", SW.read_text(encoding="utf-8"))
+
+    def test_sw_install_fetch_uses_no_referrer(self):
+        run()
+        sw = SW.read_text(encoding="utf-8")
+        self.assertIn("referrerPolicy", sw)
+        self.assertIn("no-referrer", sw)
 
 
 if __name__ == "__main__":

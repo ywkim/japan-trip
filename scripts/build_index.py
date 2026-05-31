@@ -108,6 +108,80 @@ DOC_PAGES = (
         "교토 여행 필수 앱 5개 설치·설정·운영 가이드 (2026-05-28)",
         "checklist", "checklist", "checklist.html", "← 예약",
     ),
+    # ── 아카이브 문서 (8개) ───────────────────────────────────────────────────
+    DocPage(
+        "docs/candidates.md", "viz/candidates.html",
+        "후보지 상세 비교",
+        "6개 여행지 후보 상세 비교 (아카이브)",
+        "archive", "home", "archive.html", "← 아카이브",
+    ),
+    DocPage(
+        "docs/weather.md", "viz/weather.html",
+        "날씨 분석",
+        "6개 후보지 × 4개 시기 기후 비교 (아카이브)",
+        "archive", "home", "archive.html", "← 아카이브",
+    ),
+    DocPage(
+        "docs/flights.md", "viz/flights.html",
+        "항공권 분석",
+        "후보지별 항공권 시세 분석 (아카이브)",
+        "archive", "home", "archive.html", "← 아카이브",
+    ),
+    DocPage(
+        "docs/budget-options.md", "viz/budget-options.html",
+        "3M 예산 비교",
+        "예산 시나리오 9개 비교 도구 (아카이브)",
+        "archive", "home", "archive.html", "← 아카이브",
+    ),
+    DocPage(
+        "docs/airbnb-kyoto-may31-jun2-2026.md", "viz/airbnb-comparison.html",
+        "에어비앤비 후보 비교",
+        "교토 에어비앤비 5개 후보 비교 (아카이브)",
+        "archive", "home", "archive.html", "← 아카이브",
+    ),
+    DocPage(
+        "docs/jejuair-icn-kobe-june-2026.md", "viz/jejuair.html",
+        "제주항공 인천-고베 리서치",
+        "제주항공 인천-고베 신규 취항 조사 (아카이브)",
+        "archive", "home", "archive.html", "← 아카이브",
+    ),
+    DocPage(
+        "docs/kyoto-itinerary-may-2026.md", "viz/itinerary-may.html",
+        "교토 일정 구버전 (5/24~27)",
+        "5/31~6/3 확정 전 구버전 일정 (아카이브)",
+        "archive", "home", "archive.html", "← 아카이브",
+    ),
+    DocPage(
+        "docs/transit-mcp-handoff.md", "viz/transit-mcp-handoff.html",
+        "교통 MCP 위임 가이드",
+        "tbd_needs_browser_mcp 교통 leg 측정 위임 노트",
+        "archive", "home", "archive.html", "← 아카이브",
+    ),
+    # ── 운영 문서 (4개) ───────────────────────────────────────────────────────
+    DocPage(
+        "docs/transit-guide-may31-jun3.md", "viz/transit-guide.html",
+        "이동 경로 상세 가이드",
+        "5/31~6/3 4인 이동 경로 상세 가이드",
+        "itinerary", "itinerary", "itinerary.html", "← 일정",
+    ),
+    DocPage(
+        "docs/saihoji-reservation-2026-06.md", "viz/saihoji.html",
+        "사이호지 예약 가능성",
+        "사이호지(苔寺) 참배 예약 가능성 리서치 (2026-06)",
+        "itinerary", "itinerary", "itinerary.html", "← 일정",
+    ),
+    DocPage(
+        "docs/soyeon-maps-list.md", "viz/soyeon-maps.html",
+        "소연 구글맵 목록",
+        "소연 구글맵 저장 장소 41개 (카테고리별 정리)",
+        "itinerary", "itinerary", "itinerary.html", "← 일정",
+    ),
+    DocPage(
+        "docs/breakfast-near-lodging.md", "viz/breakfast-doc.html",
+        "숙소 인근 조식 상세",
+        "숙소(시오·카덴쇼) 인근 조식 옵션 상세 문서",
+        "itinerary", "itinerary", "breakfast.html", "← 조식",
+    ),
 )
 
 DOC_SOURCE_TO_OUT = {p.source: p.out for p in DOC_PAGES}
@@ -187,6 +261,15 @@ PLACE_REF_RE = re.compile(r"\{\{([a-z0-9_]+)\}\}")
 # 확장된 'ko(ja)' 라벨 → reading(일본어 발음 한글표기) 역방향 맵.
 # 교통 타임라인이 역·정류장 발음을 노출하기 위해 load_data에서 채운다.
 PLACE_LABEL_TO_READING: dict = {}
+
+# 외부 이미지 자가호스팅 맵(url → 로컬 경로). scripts/fetch_assets.py가 생성한
+# data/local-image-map.json을 load_data에서 적재 — 빌드는 네트워크 비의존.
+LOCAL_IMAGE_MAP: dict = {}
+
+
+def local_src(url: str) -> str:
+    """외부 이미지 URL이 로컬에 자가호스팅돼 있으면 로컬 경로로, 아니면 원본 URL로."""
+    return LOCAL_IMAGE_MAP.get(url, url)
 
 
 def build_place_reading_map() -> dict:
@@ -498,7 +581,7 @@ def blog_reviews_html(reviews: list) -> str:
         return ""
     cards = "".join(
         f'<a href="{esc(r["url"])}" target="_blank" rel="noopener" class="blog-card">'
-        f'<img src="{esc(r["img"])}" class="blog-thumb" loading="lazy" alt="" referrerpolicy="no-referrer">'
+        f'<img src="{esc(local_src(r["img"]))}" class="blog-thumb" loading="lazy" alt="" referrerpolicy="no-referrer" onerror="this.closest(\'.blog-card\').style.display=\'none\'">'
         f'<p class="blog-comment">{esc(r["comment"])}</p>'
         f'</a>'
         for r in reviews
@@ -534,18 +617,22 @@ def food_quality_html(fq) -> str:
     )
 
 
-def doc_link_html(link) -> str:
+def doc_link_html(link, in_viz: bool = False) -> str:
     """일정 항목 참조 문서 링크 (data/itinerary.json item.link = {url, label}).
 
     조식 슬롯 등이 가리키는 문서를 화면에서 바로 탭해 열 수 있는 <a>로 렌더.
     url이 사이트 내 상대 경로면 같은 탭 내비게이션, 외부(http)면 새 탭으로 연다.
     Vercel은 .md를 raw로 서빙하므로 운영 화면 링크는 사이트 내 HTML 페이지를
     가리킨다(예: 조식 슬롯 → breakfast.html). 외부 GitHub blob 링크 금지.
+    in_viz=False(루트 index.html)일 때 viz-상대 경로에 viz/ 접두어 추가.
     """
     link = link or {}
     url = (link.get("url") or "").strip()
     if not url:
         return ""
+    # viz-상대 경로(breakfast.html 등)를 루트에서 렌더할 때 viz/ 접두어 보정
+    if not in_viz and url.endswith(".html") and not url.startswith(("http://", "https://", "viz/", "/", "#")):
+        url = "viz/" + url
     label = esc(link.get("label", "상세"))
     external = url.startswith(("http://", "https://"))
     attr = ' target="_blank" rel="noopener"' if external else ""
@@ -563,9 +650,11 @@ def run_json(script: str) -> dict:
 def load_data():
     itinerary = json.loads((DATA / "itinerary.json").read_text(encoding="utf-8"))
     # 장소 레지스트리를 모듈 전역에 적재 후 {{place_id}} 참조를 'ko(ja)'로 확장.
-    global PLACE_REGISTRY, PLACE_LABEL_TO_READING
+    global PLACE_REGISTRY, PLACE_LABEL_TO_READING, LOCAL_IMAGE_MAP
     PLACE_REGISTRY = itinerary.get("places", {})
     PLACE_LABEL_TO_READING = build_place_reading_map()
+    img_map_path = DATA / "local-image-map.json"
+    LOCAL_IMAGE_MAP = json.loads(img_map_path.read_text(encoding="utf-8")) if img_map_path.exists() else {}
     itinerary = expand_refs_in_obj(itinerary)
     return {
         "decision": json.loads((DATA / "decision.json").read_text(encoding="utf-8")),
@@ -823,6 +912,15 @@ def og_meta(*, title: str, description: str, slug: str, page_path: str) -> str:
 <meta name="twitter:image" content="{esc(image)}">"""
 
 
+# 서비스 워커 등록 — 비행기 모드 완전 오프라인. 외부 fetch 없이 register만 호출하므로
+# "산출물에 fetch 없음" 규약 유지(실제 캐싱 fetch는 별도 파일 sw.js가 담당).
+SW_REGISTER_SCRIPT = (
+    '<script>if("serviceWorker" in navigator){'
+    'window.addEventListener("load",function(){'
+    'navigator.serviceWorker.register("/sw.js").catch(function(){});});}</script>'
+)
+
+
 def html_doc(
     title: str,
     body: str,
@@ -846,10 +944,14 @@ def html_doc(
 <meta name="theme-color" content="{bg_dark}" media="(prefers-color-scheme: dark)">
 <title>{esc(title)}</title>
 {meta}
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" type="image/svg+xml" href="/assets/icon.svg">
+<link rel="apple-touch-icon" href="/assets/icon.svg">
 <style>{css}</style>
 </head>
 <body>
 {body}
+{SW_REGISTER_SCRIPT}
 </body>
 </html>
 """
@@ -1082,35 +1184,39 @@ def fold(summary_html: str, detail_html: str, *, open: bool = False) -> str:
     )
 
 
-def note_block(note: str, *, style: str = "") -> str:
+def note_block(note: str, *, style: str = "", render_fn=None) -> str:
     """예약·숙박 메모를 짧으면 평문, 길면 '앞 항목 요약 + 접기'로 렌더.
 
     ' · '로 구분된 장문 운영 메모(예약번호·PIN·탑승객·체크인시각 등)가
     카드를 압도하지 않도록, 식별용 앞 2개 항목만 보이고 나머지는 접는다.
+    render_fn: 텍스트→HTML 변환 함수 (기본 esc, linkify 전달 시 URL·마크다운 링크도 변환).
     """
+    if render_fn is None:
+        render_fn = esc
     note = (note or "").strip()
     if not note:
         return ""
     style_attr = f' style="{style}"' if style else ""
     if len(note) <= 60:
-        return f'<div class="sub"{style_attr}>{esc(note)}</div>'
+        return f'<div class="sub"{style_attr}>{render_fn(note)}</div>'
     segs = [s for s in note.split(" · ") if s.strip()]
     if len(segs) >= 2:
-        summary = esc(" · ".join(segs[:2]))
-        # 3개 이상 항목이면 나머지를 다중 줄로 렌더
-        if len(segs) >= 3:
-            rest_lines = "".join(f'<div>{esc(s)}</div>' for s in segs[2:])
-            return fold(summary, rest_lines)
-        # 2개 항목: 그대로 접기
-        return fold(summary, esc(" · ".join(segs[1:])))
-    # 구분자 없으면 첫 50자 + "…" 요약 후 다중 줄로 분해
+        # 요약은 60자 예산 내에서 앞 세그먼트만: seg0 항상, seg1은 합쳐서 60자 이내일 때만.
+        # (eSIM처럼 seg0이 길면 1개로 제한해 요약이 여러 줄로 늘어지지 않게 한다.)
+        n = 1
+        if len(segs[0]) + 3 + len(segs[1]) <= 60:
+            n = 2
+        summary = render_fn(" · ".join(segs[:n]))
+        rest_lines = "".join(f'<div>{render_fn(s)}</div>' for s in segs[n:])
+        return fold(summary, rest_lines)
+    # 구분자 없으면 문장 인식 폴백(_lead_split) — 첫 문장을 요약으로, 나머지는 다중 줄
+    head, rest = _lead_split(note)
+    if head and rest:
+        return fold(render_fn(head), _detail_lines(rest, render_fn))
+    # 폴백도 실패하면 첫 어절 + "…"
     break_idx = note.find(" ", 0, 50)
-    if break_idx > 0:
-        first_phrase = note[:break_idx].strip() + "…"
-    else:
-        first_phrase = note[:50].strip() + "…"
-    detail_lines = "".join(f'<div>{esc(line)}</div>' for line in [note])
-    return fold(esc(first_phrase), detail_lines)
+    first_phrase = (note[:break_idx].strip() + "…") if break_idx > 0 else (note[:50].strip() + "…")
+    return fold(render_fn(first_phrase), f'<div>{render_fn(note)}</div>')
 
 
 def pass_block(text: str) -> str:
@@ -1190,12 +1296,14 @@ def _lead_split(text: str):
     return text[:60].strip() + "…", text[60:].strip()
 
 
-def _detail_lines(text: str) -> str:
+def _detail_lines(text: str, render_fn=None) -> str:
     """상세 텍스트를 여러 줄로 분해하여 HTML 렌더링.
 
     구분자(`. `·`다. `·`요. `·`음. `·` · `)로 항목화하고, 각 항목을 `<div>` 줄로 렌더.
-    마크업([[]]) 변환도 함께.
+    render_fn: 각 줄의 텍스트→HTML 변환 함수 (기본 link_places, linkify 전달 시 마크다운 링크 변환).
     """
+    if render_fn is None:
+        render_fn = link_places
     import re
     # 구분자 패턴: ". " · "다. " · "요. " · "음. " · " · "
     sep_pattern = r'(?:\.(?:\s+|$)|다\.\s+|요\.\s+|음\.\s+|\s·\s)'
@@ -1204,7 +1312,7 @@ def _detail_lines(text: str) -> str:
     lines = [line.strip() for line in lines if line.strip()]
     if not lines:
         return ""
-    return "".join(f'<div>{link_places(line)}</div>' for line in lines)
+    return "".join(f'<div>{render_fn(line)}</div>' for line in lines)
 
 
 def memo_block(note: str, *, style: str = "", cls: str = "sub") -> str:
@@ -1327,7 +1435,7 @@ def card_itinerary(d) -> str:
             transit = transit_line(it.get("arrive_from"))
             if it.get("image_url"):
                 img_html = (
-                    f'<img src="{esc(it["image_url"])}" alt="{esc(title_text)}" '
+                    f'<img src="{esc(local_src(it["image_url"]))}" alt="{esc(title_text)}" '
                     f'class="place-img" loading="lazy">'
                     f'<div class="img-credit">{esc(it.get("image_credit",""))}</div>'
                 )
@@ -1395,11 +1503,13 @@ def card_itinerary(d) -> str:
 _STATE_CLASS = {"확정": "done", "예약중": "progress", "미정": "pending"}
 
 
-def checklist_card(it) -> str:
+def checklist_card(it, in_viz: bool = False) -> str:
     """예약 항목 1개를 구조화 카드로 렌더.
 
     제목+상태 배지 / 금액·마감(D-day)·예약번호·권장 행 / 출처 링크 / 접히는 상세 노트.
     마감 D-day는 빌드 결정성을 위해 클라이언트 스크립트가 data-due에서 계산한다.
+    in_viz=True: viz/checklist.html에서 렌더 (viz/ 접두어 불요).
+    in_viz=False: index.html(루트)에서 렌더 (viz/ 접두어 필요).
     """
     st = it.get("status", "미정")
     state = _STATE_CLASS.get(st, "pending")
@@ -1421,9 +1531,8 @@ def checklist_card(it) -> str:
     if link.get("url"):
         url = link["url"]
         # 레포 문서 경로는 사이트 내 렌더 페이지로 치환 (GitHub 링크 금지·검사 J).
-        # 체크리스트는 viz/checklist.html에서만 렌더되므로 in_viz=True.
         if url in DOC_SOURCE_TO_OUT:
-            url = doc_href(DOC_SOURCE_TO_OUT[url], in_viz=True)
+            url = doc_href(DOC_SOURCE_TO_OUT[url], in_viz=in_viz)
         link_html = (
             f'\n    <a class="doc-link" href="{esc(url)}" target="_blank" '
             f'rel="noopener">{esc(link.get("label", "상세"))} ↗</a>'
@@ -1431,7 +1540,7 @@ def checklist_card(it) -> str:
     note = it.get("note", "")
     note_html = ""
     if note:
-        note_html = "\n    " + fold("자세히", linkify(note))
+        note_html = "\n    " + note_block(note, render_fn=linkify)
     return f"""
   <div class="subcard status-{state}">
     <div class="ck-head"><span class="subtitle">{esc(it['label'])}</span><span class="badge badge-{state}">{esc(st)}</span></div>
@@ -1618,12 +1727,70 @@ def build_index(d) -> str:
 ARCHIVE_TITLE = "의사결정 아카이브 · 교토 가족여행 2026"
 ARCHIVE_DESCRIPTION = "의사결정 아카이브 · 장마 확률·예산 시나리오·후보지 점수 (2026-05-12 종료)"
 
+ARCHIVE_EXTRA_CSS = """
+  .doc-card-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+    gap: 0.6rem; margin: 0.6rem 0 1.1rem;
+  }
+  .doc-card-link {
+    display: flex; flex-direction: column; gap: 0.2rem;
+    padding: 0.75rem 0.9rem; border: 1px solid var(--border); border-radius: 8px;
+    text-decoration: none; color: var(--fg); background: var(--card);
+  }
+  .doc-card-link:hover { border-color: var(--accent); }
+  .doc-card-title { font-weight: 600; font-size: 0.88rem; }
+  .doc-card-desc { font-size: 0.78rem; color: var(--muted); }
+  .docs-subhead { font-size: 0.82rem; color: var(--muted); margin: 1rem 0 0.4rem; font-weight: 500; }
+"""
+
+_ARCHIVE_DOC_CARDS = (
+    ("candidates.html", "후보지 상세 비교", "6개 후보지 × 기준 비교"),
+    ("weather.html", "날씨 분석", "6개 후보지 × 4개 시기 기후"),
+    ("flights.html", "항공권 분석", "후보지별 항공권 시세"),
+    ("budget-options.html", "3M 예산 비교", "예산 시나리오 9개"),
+    ("airbnb-comparison.html", "에어비앤비 후보 비교", "교토 매물 5개 비교"),
+    ("jejuair.html", "제주항공 인천-고베", "신규 취항 리서치"),
+    ("itinerary-may.html", "구버전 일정 (5/24~27)", "확정 전 초안"),
+    ("transit-mcp-handoff.html", "교통 MCP 위임 노트", "tbd leg 측정 위임"),
+)
+
+_OPERATIONAL_DOC_CARDS = (
+    ("transit-guide.html", "이동 경로 상세", "5/31~6/3 4인 교통 가이드"),
+    ("saihoji.html", "사이호지 예약", "苔寺 참배 예약 가능성"),
+    ("soyeon-maps.html", "소연 구글맵 목록", "저장 장소 41개"),
+    ("breakfast-doc.html", "조식 옵션 상세 문서", "숙소별 조식 리서치"),
+)
+
+
+def _doc_card_item(href: str, title: str, desc: str) -> str:
+    return (
+        f'<a class="doc-card-link" href="{esc(href)}">'
+        f'<span class="doc-card-title">{esc(title)}</span>'
+        f'<span class="doc-card-desc">{esc(desc)}</span>'
+        f'</a>'
+    )
+
+
+def card_docs_archive(d) -> str:  # noqa: ARG001
+    ops_items = "".join(_doc_card_item(h, t, de) for h, t, de in _OPERATIONAL_DOC_CARDS)
+    arch_items = "".join(_doc_card_item(h, t, de) for h, t, de in _ARCHIVE_DOC_CARDS)
+    return (
+        f'<section id="docs" class="card">'
+        f'<h2 style="margin-bottom:0.1rem;">참고 문서</h2>'
+        f'<p class="docs-subhead">운영</p>'
+        f'<div class="doc-card-grid">{ops_items}</div>'
+        f'<p class="docs-subhead">아카이브</p>'
+        f'<div class="doc-card-grid">{arch_items}</div>'
+        f'</section>'
+    )
+
 
 def build_archive(d) -> str:
     sections = [
         card_tsuyu(d),
         card_budget(d),
         card_score(d),
+        card_docs_archive(d),
     ]
     head = f"""<h1>의사결정 아카이브</h1>
 <div class="status">2026-05-12 의사결정 종료 · 회귀 가드·재참조용 분석 자료</div>
@@ -1633,6 +1800,7 @@ def build_archive(d) -> str:
   <a href="#tsuyu">장마</a>
   <a href="#budget">예산 시나리오</a>
   <a href="#score">후보지 점수</a>
+  <a href="#docs">참고 문서</a>
 </nav>
 """
     footer = """
@@ -1646,6 +1814,7 @@ def build_archive(d) -> str:
         description=ARCHIVE_DESCRIPTION,
         og_slug="archive",
         page_path="viz/archive.html",
+        extra_css=ARCHIVE_EXTRA_CSS,
     )
 
 
@@ -1818,7 +1987,7 @@ def build_itinerary(d) -> str:
             transit = transit_line(it.get("arrive_from"))
             if it.get("image_url"):
                 img_html = (
-                    f'<img src="{esc(it["image_url"])}" alt="{esc(title_text)}" '
+                    f'<img src="{esc(local_src(it["image_url"]))}" alt="{esc(title_text)}" '
                     f'class="place-img" loading="lazy">'
                     f'<div class="img-credit">{esc(it.get("image_credit",""))}</div>'
                 )
@@ -1826,7 +1995,7 @@ def build_itinerary(d) -> str:
                 img_html = ""
             reviews_html = blog_reviews_html(it.get("blog_reviews", []))
             food_html = food_quality_html(it.get("food_quality"))
-            link_html = doc_link_html(it.get("link"))
+            link_html = doc_link_html(it.get("link"), in_viz=True)
             item_rows.append(f"""
     <div class="day">
       <div class="date"><span class="k">{esc(it['time'])}</span> {link}</div>
@@ -1883,7 +2052,7 @@ def build_itinerary(d) -> str:
                 pronunciation_html = title_reading_html(it["title"])
                 note_html = memo_block(it.get("note"))
                 food_html = food_quality_html(it.get("food_quality"))
-                link_html = doc_link_html(it.get("link"))
+                link_html = doc_link_html(it.get("link"), in_viz=True)
                 item_rows.append(f"""
     <div class="day">
       <div class="date"><span class="k">{esc(it['time'])}</span> {link}</div>
@@ -1964,7 +2133,7 @@ def build_checklist(d) -> str:
     )
 
     sorted_items = sorted(items, key=checklist_sort_key)
-    item_cards = [checklist_card(it) for it in sorted_items]
+    item_cards = [checklist_card(it, in_viz=True) for it in sorted_items]
 
 
     body = f"""<h1>예약 체크리스트</h1>
@@ -2073,14 +2242,14 @@ def build_itinerary_table(d) -> str:
                 transit = transit_line(it.get("arrive_from"))
                 if it.get("image_url"):
                     img_html = (
-                        f'<img src="{esc(it["image_url"])}" alt="{esc(title_text)}" '
+                        f'<img src="{esc(local_src(it["image_url"]))}" alt="{esc(title_text)}" '
                         f'class="place-img" loading="lazy">'
                         f'<span class="img-credit">{esc(it.get("image_credit",""))}</span>'
                     )
                 else:
                     img_html = ""
                 food_html = food_quality_html(it.get("food_quality"))
-                link_html = doc_link_html(it.get("link"))
+                link_html = doc_link_html(it.get("link"), in_viz=True)
                 cells.append(
                     f'<td><span class="t-time">{esc(it["time"])}</span>'
                     f'<span class="t-title">{link}</span>{pronunciation_html}{transit}{note_html}{food_html}{link_html}{img_html}</td>'
@@ -2101,7 +2270,7 @@ def build_itinerary_table(d) -> str:
             transit = transit_line(it.get("arrive_from"))
             if it.get("image_url"):
                 img_html = (
-                    f'<img src="{esc(it["image_url"])}" alt="{esc(title_text)}" '
+                    f'<img src="{esc(local_src(it["image_url"]))}" alt="{esc(title_text)}" '
                     f'class="place-img" loading="lazy">'
                     f'<div class="img-credit">{esc(it.get("image_credit",""))}</div>'
                 )
@@ -2109,7 +2278,7 @@ def build_itinerary_table(d) -> str:
                 img_html = ""
             reviews_html = blog_reviews_html(it.get("blog_reviews", []))
             food_html = food_quality_html(it.get("food_quality"))
-            link_html = doc_link_html(it.get("link"))
+            link_html = doc_link_html(it.get("link"), in_viz=True)
             item_rows.append(f"""
     <div class="day">
       <div class="date"><span class="k">{esc(it["time"])}</span> {link}</div>
@@ -2330,6 +2499,164 @@ OG_CARDS = (
 )
 
 
+# ─── 오프라인 (서비스 워커 + PWA 매니페스트) ────────────────────────────────
+# 비행기 모드에서 모든 페이지를 다시 열 수 있게 install 시점에 전 페이지·로컬 자산을
+# 사전 캐시한다. 외부 이미지 대부분은 scripts/fetch_assets.py로 assets/place-images/에
+# 자가호스팅돼 CORE에 포함(오프라인 100% 보장). 자가호스팅 안 된(dead URL 등) 소수만
+# best-effort(no-cors + no-referrer)로 받아두고, 런타임 fetch도 cache-first로 캐시한다.
+# 근거: docs/decision-log/2026-05-31-offline-service-worker.md
+#       docs/decision-log/2026-05-31-02-offline-image-selfhosting.md
+
+SW_CACHE_PREFIX = "japan-trip-"
+
+
+def _precache_core_urls() -> list:
+    """install 시 반드시 캐시할 동일 출처 URL(전 HTML 페이지 + 로컬 자산)."""
+    urls = ["/", "/index.html", "/manifest.json", "/assets/icon.svg"]
+    for label, _path_fn, _build_fn in OUTPUTS:
+        if label.endswith(".html"):
+            url = "/" + label
+            if url not in urls:
+                urls.append(url)
+    for img in sorted((BASE / "assets" / "lodging").glob("*.jpg")):
+        urls.append("/assets/lodging/" + img.name)
+    # 자가호스팅한 외부 이미지(장소 사진·블로그 썸네일) — 오프라인 100% 보장.
+    place_dir = BASE / "assets" / "place-images"
+    if place_dir.exists():
+        for img in sorted(place_dir.iterdir()):
+            if img.is_file():
+                urls.append("/assets/place-images/" + img.name)
+    return urls
+
+
+def _external_image_urls(d) -> list:
+    """자가호스팅되지 않은(다운로드 실패·dead URL) 외부 이미지만 best-effort 사전 캐시.
+    대부분은 로컬로 치환돼 CORE에 들어가므로 여기 남는 건 소수다."""
+    seen, out = set(), []
+
+    def add(u):
+        if isinstance(u, str) and u.startswith("http") and u not in seen and u not in LOCAL_IMAGE_MAP:
+            seen.add(u)
+            out.append(u)
+
+    itin = d.get("itinerary", {})
+    days = list(itin.get("days", []))
+    for rc in itin.get("route_candidates", []):
+        if isinstance(rc, dict):
+            days.extend(rc.get("days", []))
+    for day in days:
+        for it in day.get("items", []):
+            add(it.get("image_url"))
+            for r in it.get("blog_reviews", []) or []:
+                add(r.get("img"))
+    return out
+
+
+def compute_cache_version(d) -> str:
+    """전 산출물 콘텐츠 해시 → 콘텐츠 변경 시 캐시 자동 무효화(결정론)."""
+    import hashlib
+
+    parts = []
+    for label, _path_fn, build_fn in OUTPUTS:
+        if label in ("sw.js", "manifest.json"):
+            continue  # 순환·자기참조 방지
+        parts.append(label)
+        parts.append(build_fn(d))
+    digest = hashlib.sha256("\x00".join(parts).encode("utf-8")).hexdigest()
+    return SW_CACHE_PREFIX + digest[:12]
+
+
+def build_service_worker(d) -> str:
+    version = compute_cache_version(d)
+    core = json.dumps(_precache_core_urls(), ensure_ascii=False, indent=2)
+    external = json.dumps(_external_image_urls(d), ensure_ascii=False, indent=2)
+    return f"""// 교토 가족여행 오프라인 서비스 워커 (build_index.py 산출물 — 직접 편집 금지).
+// install: 전 페이지·로컬 자산 사전 캐시 + 외부 이미지 best-effort.
+// fetch: cache-first, 오프라인 내비게이션은 캐시된 페이지로 폴백.
+const CACHE = "{version}";
+const CORE = {core};
+const EXTERNAL = {external};
+
+self.addEventListener("install", (event) => {{
+  event.waitUntil((async () => {{
+    const cache = await caches.open(CACHE);
+    await cache.addAll(CORE);
+    await Promise.allSettled(EXTERNAL.map(async (url) => {{
+      try {{
+        // referrerPolicy: <img referrerpolicy="no-referrer">와 동일 — 핫링크 보호
+        // 호스트(blogthumb.pstatic·tblg 등)가 referer 붙은 요청을 거부하던 문제 해결.
+        const res = await fetch(url, {{ mode: "no-cors", referrerPolicy: "no-referrer" }});
+        await cache.put(url, res);
+      }} catch (e) {{ /* 외부 자원 실패는 무시 */ }}
+    }}));
+    await self.skipWaiting();
+  }})());
+}});
+
+self.addEventListener("activate", (event) => {{
+  event.waitUntil((async () => {{
+    const keys = await caches.keys();
+    await Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k)));
+    await self.clients.claim();
+  }})());
+}});
+
+self.addEventListener("fetch", (event) => {{
+  const req = event.request;
+  if (req.method !== "GET") return;
+  event.respondWith((async () => {{
+    const cached = await caches.match(req, {{ ignoreSearch: true }});
+    if (cached) return cached;
+    try {{
+      const res = await fetch(req);
+      if (res && (res.status === 200 || res.type === "opaque")) {{
+        const cache = await caches.open(CACHE);
+        cache.put(req, res.clone());
+      }}
+      return res;
+    }} catch (err) {{
+      if (req.mode === "navigate") {{
+        const fallback = (await caches.match("/index.html")) || (await caches.match("/"));
+        if (fallback) return fallback;
+      }}
+      throw err;
+    }}
+  }})());
+}});
+"""
+
+
+def build_manifest(d) -> str:
+    cl = d["tokens"]["color"]["light"]
+    manifest = {
+        "name": SITE_NAME,
+        "short_name": "교토여행",
+        "description": "교토 5/31~6/3 4인 가족여행 일정·예약·체크리스트 (오프라인 가능)",
+        "lang": "ko",
+        "start_url": "/",
+        "scope": "/",
+        "display": "standalone",
+        "orientation": "portrait",
+        "background_color": cl["bg"],
+        "theme_color": cl["bg"],
+        "icons": [
+            {"src": "/assets/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any"},
+            {"src": "/assets/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable"},
+        ],
+    }
+    return json.dumps(manifest, ensure_ascii=False, indent=2) + "\n"
+
+
+def build_icon_svg(d) -> str:
+    """maskable-safe 앱 아이콘: full-bleed accent 배경 + 중앙 '교토' 글자(토큰 색만)."""
+    cd = d["tokens"]["color"]["dark"]
+    return f"""<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <rect width="512" height="512" fill="{cd['accent']}"/>
+  <text x="256" y="256" font-family="{OG_FONT_STACK}" font-size="176" font-weight="700" fill="{cd['ink']}" text-anchor="middle" dominant-baseline="central">교토</text>
+</svg>
+"""
+
+
 # ─── 메인 ──────────────────────────────────────────────────────────────────
 
 OUTPUTS = (
@@ -2349,6 +2676,9 @@ OUTPUTS = (
     for page in DOC_PAGES
 ) + (
     (DECISION_LOG_OUT, lambda p: p / "viz" / "decision-log.html", build_decision_log_index),
+    ("sw.js",           lambda p: p / "sw.js",                  build_service_worker),
+    ("manifest.json",   lambda p: p / "manifest.json",          build_manifest),
+    ("assets/icon.svg", lambda p: p / "assets" / "icon.svg",    build_icon_svg),
 ) + tuple(
     (
         f"assets/og-{slug}.svg",
