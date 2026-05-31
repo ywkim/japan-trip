@@ -120,6 +120,18 @@ DOC_PAGES = (
         "교토 도심 550m 지붕 아케이드 — 로쿄쿠야키·니시키텐만구·식후 산책 코스",
         "itinerary", "itinerary", "itinerary.html", "← 일정",
     ),
+    DocPage(
+        "docs/excafe-review-translation.md", "viz/excafe-review.html",
+        "eX cafe — 당고 직화구이와 100년 목조 가옥",
+        "일본어 후기 한국어 번역 — 당고 직화구이·여름 말차 빙수·아라시야마 카페 비교",
+        "itinerary", "itinerary", "itinerary.html", "← 일정",
+    ),
+    DocPage(
+        "docs/manzaratei-review-translation.md", "viz/manzaratei-review.html",
+        "만자라테이 — 130년 전통 교마치야의 창작 교토요리",
+        "일본어 후기 한국어 번역 — 130년 전통·오반자이·강변 야외석(川床)",
+        "itinerary", "itinerary", "itinerary.html", "← 일정",
+    ),
     # ── 아카이브 문서 (8개) ───────────────────────────────────────────────────
     DocPage(
         "docs/candidates.md", "viz/candidates.html",
