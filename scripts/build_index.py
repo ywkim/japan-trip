@@ -108,6 +108,12 @@ DOC_PAGES = (
         "교토 여행 필수 앱 5개 설치·설정·운영 가이드 (2026-05-28)",
         "checklist", "checklist", "checklist.html", "← 예약",
     ),
+    DocPage(
+        "docs/kaneyo-review-translation.md", "viz/kaneyo-review.html",
+        "교고쿠 카네요 후기 번역 — 킨시동",
+        "일본어 후기(unagiudou.com) 한국어 번역 — 킨시동·장어·대정 노포 분위기",
+        "itinerary", "itinerary", "itinerary.html", "← 일정",
+    ),
 )
 
 DOC_SOURCE_TO_OUT = {p.source: p.out for p in DOC_PAGES}
