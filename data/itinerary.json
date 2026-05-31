@@ -403,6 +403,7 @@
       "items": [
         {
           "time": "07:00",
+          "priority": "권장",
           "title": {
             "type": "restaurant",
             "ko_name": "조식 — 마치야 또는 코메다",
@@ -418,6 +419,7 @@
         },
         {
           "time": "08:00",
+          "priority": "필수",
           "title": {
             "type": "place",
             "ko_name": "죽림길",
@@ -461,6 +463,7 @@
         },
         {
           "time": "09:30",
+          "priority": "권장",
           "title": {
             "type": "place",
             "ko_name": "텐류지",
@@ -499,6 +502,7 @@
         },
         {
           "time": "10:30",
+          "priority": "필수",
           "title": {
             "type": "place",
             "ko_name": "사이호지",
@@ -544,6 +548,7 @@
         },
         {
           "time": "12:00",
+          "priority": "대체",
           "title": {
             "type": "place",
             "ko_name": "eX cafe — 당고 직화구이",
@@ -655,6 +660,7 @@
         },
         {
           "time": "13:30",
+          "priority": "필수",
           "title": {
             "type": "place",
             "ko_name": "금각사",
@@ -722,6 +728,7 @@
         },
         {
           "time": "15:00",
+          "priority": "권장",
           "title": {
             "type": "place",
             "ko_name": "료안지",
@@ -757,6 +764,7 @@
         },
         {
           "time": "18:30",
+          "priority": "대체",
           "title": {
             "type": "restaurant",
             "ko_name": "폰토초 저녁",
