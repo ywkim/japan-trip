@@ -13,7 +13,7 @@ Accepted
 ## Decision (무엇)
 
 - 사이호지 입장을 **6/1(월) 10:30, 성인 4인** 예약 확정으로 데이터에 반영:
-  - 예약 ① `1400827143416024`(성인2, ₩94,108) · ② `1400827143410570`(성인2, PIN 2362) · 4인 총 **₩188,216** · 조건부 취소(건당 예상 수수료 ₩18,822).
+  - 예약 2건, 4인 총 **₩188,216** · 조건부 취소(건당 예상 수수료 ₩18,822). 예약 세부 정보(예약번호·PIN)는 예약처 이메일·카톡 원본 보관.
   - `booking-checklist.json` saihoji_research: status `미정`→`확정`, reference·amount·confirmed_at 갱신.
   - `cost-options.json`: `saihoji_admission_4pax`(₩188,216, `confirmed_booking`) 추가 + 확정 시나리오 `kyoto_may31_kadensho_early_bird` one_time에 편입.
   - `itinerary.json` 6/1: 텐류지 09:45→09:30로 당기고 **10:30 사이호지** 삽입(교토버스 73계통), 점심(쇼라이안) 도착 경로를 사이호지발로 갱신, walking_km 4→5.

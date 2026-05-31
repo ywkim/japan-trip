@@ -604,8 +604,7 @@ class ChecklistDetailFoldTests(unittest.TestCase):
     """
 
     SHORT = "에어서울 RS · A8YW58 · 발권"
-    LONG = ("Trip.com ① 1400827143416024 (성인2, ₩94,108) · ② 1400827143410570 "
-            "(성인2, PIN 2362) · 6/1 10:30 · LEE/SOYEON · 조건부 취소")
+    LONG = ("Trip.com · 6/1 10:30 · LEE/SOYEON · 조건부 취소(건당 수수료 ₩18,822)")
 
     def test_short_value_stays_plain_row(self):
         out = build_index.detail_row("예약번호", self.SHORT)
@@ -621,7 +620,7 @@ class ChecklistDetailFoldTests(unittest.TestCase):
 
     def test_long_value_detail_is_lossless(self):
         out = build_index.detail_row("예약번호", self.LONG)
-        for tok in ("1400827143416024", "1400827143410570", "PIN 2362", "LEE/SOYEON", "조건부 취소"):
+        for tok in ("6/1 10:30", "LEE/SOYEON", "조건부 취소", "₩18,822"):
             with self.subTest(tok=tok):
                 self.assertIn(tok, out, f"detail_row dropped {tok!r} after folding")
 
