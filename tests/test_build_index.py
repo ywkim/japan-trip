@@ -407,14 +407,13 @@ class BuildIndexTests(unittest.TestCase):
         run()
         html = CHECKLIST.read_text(encoding="utf-8")
         self.assertIn("<details", html, "checklist long note should be collapsible (<details>)")
-        self.assertIn("자세히", html, "collapsible note should have a '자세히' summary")
 
     def test_checklist_pending_due_has_dday(self):
         """미정(처리 필요) 항목의 마감일은 D-day 계산용 data-due 속성과
         클라이언트 스크립트를 동반해야 한다 (빌드 결정성 유지)."""
         run()
         html = CHECKLIST.read_text(encoding="utf-8")
-        self.assertIn('data-due="2026-05-25"', html,
+        self.assertIn('data-due="2026-05-30"', html,
                       "pending due date should carry data-due for client-side D-day")
         self.assertIn('class="dday"', html, "checklist should render a .dday slot")
         self.assertIn("getAttribute('data-due')", html,
@@ -1239,6 +1238,147 @@ class DocPageTests(unittest.TestCase):
         self.assertIn("ICOCA", result, "should show recommendation")
         self.assertIn("<details", result, "should have collapsible section")
         self.assertIn("시버스", result, "should contain detail items")
+
+
+class ChecklistCardNoteFoldTests(unittest.TestCase):
+    """checklist_card note가 PR #71 fold 패턴(의미있는 요약 + 접기)을 따르는지 검증."""
+
+    def test_note_with_dot_separators_shows_first_two_as_summary(self):
+        """' · ' 구분자가 있는 note는 앞 2항목이 summary로 노출되고 나머지는 접혀야 한다."""
+        import sys
+        sys.path.insert(0, str(BASE / "scripts"))
+        import build_index
+        it = {
+            "label": "항공", "status": "확정",
+            "note": "에어서울 RS · 예약번호 A8YW58 · ICN 13:15→KIX 15:15 / KIX 10:05→ICN 12:05 · 시부 결제",
+        }
+        html = build_index.checklist_card(it)
+        self.assertIn("<details", html, "long note should be collapsible")
+        summary = html.split("<summary>")[1].split("</summary>")[0]
+        self.assertNotIn("자세히", summary, "summary must not be the generic '자세히' label")
+        self.assertIn("에어서울 RS", summary, "first segment must appear in summary")
+        self.assertIn("예약번호 A8YW58", summary, "second segment must appear in summary")
+
+    def test_note_with_markdown_links_preserves_clickable_links(self):
+        """note 안의 markdown [text](url) 링크가 <a>로 렌더되어야 한다 (linkify 유지)."""
+        import sys
+        sys.path.insert(0, str(BASE / "scripts"))
+        import build_index
+        it = {
+            "label": "식당", "status": "예약중",
+            "note": "링크 [예약](https://example.com) 참조 · 전화 [☎02-000](tel:+8200000)",
+        }
+        html = build_index.checklist_card(it)
+        self.assertIn('<a href="https://example.com"', html)
+        self.assertIn('<a href="tel:+8200000"', html)
+
+    def test_note_without_dot_separator_uses_sentence_summary(self):
+        """' · ' 구분자가 없고 '. '(문장) 구분이 있는 note는 첫 문장을 요약으로 써야 한다.
+
+        첫 어절만 덜렁 남는 '두…' 같은 의미 없는 잘림을 방지.
+        """
+        import sys
+        sys.path.insert(0, str(BASE / "scripts"))
+        import build_index
+        it = {
+            "label": "식당", "status": "예약중",
+            "note": "두 저녁 모두 워크인 대기 리스크 커 사전 넷예약 권장(전화 불요). "
+                    "① 大鵬은 AutoReserve로 예약. ② まんざら亭은 楽天으로 예약.",
+        }
+        html = build_index.checklist_card(it)
+        self.assertIn("<details", html, "long note should be collapsible")
+        summary = html.split("<summary>")[1].split("</summary>")[0]
+        # 첫 어절 '두…'가 아니라 첫 문장 전체가 요약이어야 함
+        self.assertNotIn("…", summary, "summary must not be a dangling first-word truncation")
+        self.assertIn("워크인 대기 리스크", summary, "first full sentence should be the summary")
+
+    def test_long_first_segment_summary_capped_to_one(self):
+        """seg0이 길면 seg1을 합쳐 60자를 넘으므로 요약은 seg0 하나로 제한해야 한다."""
+        import sys
+        sys.path.insert(0, str(BASE / "scripts"))
+        import build_index
+        long_seg0 = "영욱 라인 = Airalo Moshi Moshi 5GB/7일 $10≈₩13,800 확정(2026-05-26)"
+        it = {
+            "label": "eSIM", "status": "예약중",
+            "note": f"{long_seg0} · 소연 라인 = Airalo Moshi Moshi 3GB/7일 $8≈₩11,040 추가 · 시부모 핫스팟 ₩0",
+        }
+        html = build_index.checklist_card(it)
+        summary = html.split("<summary>")[1].split("</summary>")[0]
+        self.assertNotIn("소연 라인", summary, "second long segment must be folded, not in summary")
+        self.assertIn("영욱 라인", summary, "first segment stays in summary")
+
+    def test_checklist_html_note_summary_is_not_generic(self):
+        """생성된 viz/checklist.html에서 note summary가 '자세히'가 아니어야 한다."""
+        run()
+        html = CHECKLIST.read_text(encoding="utf-8")
+        # <summary> 태그 내에 '자세히'가 없어야 함 (권장·예약번호 등 다른 label은 허용)
+        import re
+        summaries = re.findall(r"<summary>(.*?)</summary>", html)
+        for s in summaries:
+            self.assertNotEqual(s.strip(), "자세히",
+                                f"note summary must not be generic '자세히': {s!r}")
+
+    def test_checklist_html_note_summary_no_dangling_word(self):
+        """생성된 viz/checklist.html에서 note summary가 '단어…' 형태의 의미 없는 잘림이 아니어야 한다."""
+        run()
+        html = CHECKLIST.read_text(encoding="utf-8")
+        import re
+        summaries = re.findall(r"<summary>(.*?)</summary>", html)
+        for s in summaries:
+            s = s.strip()
+            # '출국…' '두…'처럼 공백 없는 한 어절 + '…' 으로 끝나면 실패
+            if s.endswith("…") and " " not in s.rstrip("…"):
+                self.fail(f"note summary is a dangling single-word truncation: {s!r}")
+
+
+class ChecklistCardDocLinkTests(unittest.TestCase):
+    """checklist_card doc-link가 렌더 컨텍스트(root vs viz)에 맞는 경로를 생성해야 한다.
+
+    booking-checklist.json 항목의 link.url(예: docs/essential-iphone-apps.md)은
+    - index.html(루트)에서는 viz/essential-iphone-apps.html
+    - viz/checklist.html(viz/)에서는 essential-iphone-apps.html
+    로 렌더되어야 한다. 잘못 생성된 경로는 Vercel에서 404를 유발한다.
+    """
+
+    def _find_checklist_doc_links(self, html: str) -> list[str]:
+        import re
+        return re.findall(r'class="doc-link"\s+href="([^"]+)"', html)
+
+    def test_index_checklist_doc_link_has_viz_prefix(self):
+        """index.html의 checklist doc-link는 viz/ 접두어가 있어야 한다."""
+        run()
+        html = INDEX.read_text(encoding="utf-8")
+        hrefs = self._find_checklist_doc_links(html)
+        for href in hrefs:
+            if href.endswith(".html") and not href.startswith("http"):
+                self.assertTrue(
+                    href.startswith("viz/"),
+                    f"index.html checklist doc-link must start with viz/: {href!r}",
+                )
+
+    def test_checklist_page_doc_link_has_no_viz_prefix(self):
+        """viz/checklist.html의 doc-link는 viz/ 없는 상대경로여야 한다."""
+        run()
+        html = CHECKLIST.read_text(encoding="utf-8")
+        hrefs = self._find_checklist_doc_links(html)
+        for href in hrefs:
+            if href.endswith(".html") and not href.startswith("http"):
+                self.assertFalse(
+                    href.startswith("viz/"),
+                    f"viz/checklist.html doc-link must NOT start with viz/: {href!r}",
+                )
+
+    def test_index_checklist_doc_link_target_exists(self):
+        """index.html checklist doc-link 대상 파일이 실제로 빌드되어야 한다."""
+        run()
+        html = INDEX.read_text(encoding="utf-8")
+        hrefs = self._find_checklist_doc_links(html)
+        for href in hrefs:
+            if href.endswith(".html") and not href.startswith("http"):
+                self.assertTrue(
+                    (BASE / href).exists(),
+                    f"index.html checklist doc-link target not built: {href!r}",
+                )
 
 
 class OfflineCapabilityTests(unittest.TestCase):
