@@ -348,7 +348,7 @@
             "source_fetched_at": "2026-05-31",
             "data_quality": "researched_market_rate",
             "url": "https://tabelog.com/en/kyoto/A2601/A260201/26001330/",
-            "note": "우나기 명물 킨시동(京風 두툼한 다시마키 계란 얹은 우나동). 中京区 新京極通六角 — {{kyoto_shiyakushomae_station}} 도보 7분(京阪三条·阪急河原町 도보 10분). 일요일 11:30~15:30/17:00~20:30(L.O.20:00)·수요일 휴무. 킨시동 並¥3,000/上¥4,000/特¥6,100. 明治 창업 노포·인기점.",
+            "note": "우나기 명물 킨시동(京風 두툼한 다시마키 계란 얹은 우나동). 中京区 新京極通六角 — {{kyoto_shiyakushomae_station}} 도보 7분(京阪三条·阪急河原町 도보 10분). 일요일 11:30~15:30/17:00~20:30(L.O.20:00)·수요일 휴무. 메뉴: 킨시동(계란지단 덮밥) 並¥3,000/上¥4,000/特¥6,100 · 우나기동(장어만) 並¥3,200/上¥4,500/特¥6,600 · 키모야키(장어 간 꼬치구이) ¥1,500 · 키모스이(간 맑은국) ¥500 · 우나기 카이세키 코스(사전예약 필수) ¥15,000 · 포장 +¥100. 明治 창업 노포·인기점.",
             "place_info": {},
             "business_hours": [],
             "ratings": [
@@ -379,7 +379,19 @@
             "source_fetched_at": "2026-05-31",
             "data_quality": "researched_market_rate",
             "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Nijo+Station,+Kyoto&destination=%E4%BA%AC%E6%A5%B5%E3%81%8B%E3%81%AD%E3%82%88&travelmode=transit"
-          }
+          },
+          "blog_reviews": [
+            {
+              "url": "https://flywithmoxie.com/moxie%EC%9D%98-2018%EB%85%84-%EC%98%A4%EC%82%AC%EC%B9%B4-%EA%B5%90%ED%86%A0-%EB%A7%9B%EC%A7%91%EA%B8%B0%ED%96%89-2%ED%8E%B8-%EC%9D%BC%EB%B3%B8%EC%97%90-%EC%99%94%EC%9C%BC%EB%A9%B4-%EC%9E%A5%EC%96%B4/",
+              "img": "https://flywithmoxie.com/wp-content/uploads/xe_attach/attach/images/812/564/183/b222b791976f76317d8b16668dcd9b8b.jpg",
+              "comment": "명물 킨시동 — 두툼한 쿄토풍 계란지단이 덮밥을 가득 덮음. 다시 머금은 폭신한 계란과 짭짤한 양념의 조화가 좋다는 평. 100년 비법 양념"
+            },
+            {
+              "url": "https://flywithmoxie.com/moxie%EC%9D%98-2018%EB%85%84-%EC%98%A4%EC%82%AC%EC%B9%B4-%EA%B5%90%ED%86%A0-%EB%A7%9B%EC%A7%91%EA%B8%B0%ED%96%89-2%ED%8E%B8-%EC%9D%BC%EB%B3%B8%EC%97%90-%EC%99%94%EC%9C%BC%EB%A9%B4-%EC%9E%A5%EC%96%B4/",
+              "img": "https://flywithmoxie.com/wp-content/uploads/xe_attach/attach/images/812/564/183/d51ec20854bdd2e3f9532e878132cbc0.jpg",
+              "comment": "칸토식(등 갈라 쪄서 굽는) 장어라 부드럽고 잡내 없음. 양도 푸짐. 소탈한 노포 분위기·좌식 자리, 매장 작아 예약 권장"
+            }
+          ]
         },
         {
           "time": "20:00",

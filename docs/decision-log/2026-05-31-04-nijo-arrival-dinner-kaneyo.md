@@ -34,3 +34,9 @@ Accepted
   - 일요 L.O.20:00이라 18:30 착석을 권장(여유 시간 감소).
 - 후속 행동: 예약은 사용자 확인 후 넷예약(핫페퍼 strJ000903290·타베로그 26001330) 또는 전화로 실행.
 - 영향 받은 파일: `data/itinerary.json`(places 3개 추가 + items[4]/[5] + day 메타), `docs/kyoto-itinerary-may31-jun3-2026.md`(§1.1·§3 사본 동기화), `tests/test_build_index.py`(food-note 폴딩 회귀 가드 production 문자열 갱신). `cost-options.json`은 5/31 지하철이 기존에도 미계상이라 변경 불필요.
+
+### 후속 보강 (같은 PR) — 카네요 후기·메뉴 추가
+
+- **Context**: 가족이 화면에서 카네요 후기·메뉴를 바로 보도록 보강 요청.
+- **Decision**: 카네요 항목(items[4])에 ① `food_quality.note` 메뉴를 전체 메뉴(킨시동/우나기동 並·上·特, 키모야키 ¥1,500·키모스이 ¥500·우나기 카이세키 코스 ¥15,000·포장 +¥100)로 확장, ② `blog_reviews` 2장 추가(실제 한국어 후기 블로그 flywithmoxie의 자체 호스팅 이미지 2장 — HTTP 200·referer-less 검증, `fetch_assets.py`로 자가호스팅). 후기 문구는 flywithmoxie·타베로그 일본어 口コミ·검색 요약의 실제 평가를 자연스러운 한국어로 옮긴 것(추측 금지). 출처 주의: `かね正`(기온)는 동명이점이라 제외, `京極かねよ`만 사용.
+- **Consequences**: 메뉴·후기 출처는 공식 사이트(kyogoku-kaneyo.co.jp)·flywithmoxie·Tabelog(26001330)·공식 메뉴 2026-05-31. `data/local-image-map.json`에 매핑 4건 추가(flywithmoxie 2 + 부수적으로 기존 외부였던 아라시야마 죽림 후기 pstatic 썸네일 2장도 자가호스팅 — 오프라인 커버리지 개선). `test_build_index`의 food-note 폴딩 회귀 가드 detail-tail 문자열을 새 메뉴(우나기동 並¥3,200…)로 갱신. `validate.py` 검사 K는 `blog_reviews.comment`를 스캔하지 않아 후기 문구는 무관, `food_quality.note`(스캔 대상)에는 생(生) 레지스트리 장소명을 넣지 않음.
