@@ -96,4 +96,4 @@
 
 ---
 
-> 원문 참고: [manzaratei.com](https://manzaratei.com/) · [Tabelog 万ざ良亭](https://tabelog.com/kyoto/A2601/A260201/26000957/)
+> 원문 참고: [구글 맵에서 검색](https://www.google.com/maps/search/%E4%B8%87%E3%81%96%E8%89%AF%E4%BA%AD+%E5%85%88%E6%96%97%E7%94%BA+%E4%BA%AC%E9%83%BD) (타베로그·공식사이트 기반)
