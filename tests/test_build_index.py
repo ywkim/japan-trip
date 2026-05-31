@@ -1545,7 +1545,7 @@ class BlogImageSelfHostGateTests(unittest.TestCase):
     onerror가 카드를 숨겨 "있다가 없다가" 회귀. 본 게이트가 머지 단계에서 차단한다.
     """
 
-    def _iter_blog_imgs(self):
+    def _iter_blog_reviews(self):
         import json as _json
         d = _json.loads((BASE / "data" / "itinerary.json").read_text(encoding="utf-8"))
         days = list(d.get("days", []))
@@ -1555,7 +1555,11 @@ class BlogImageSelfHostGateTests(unittest.TestCase):
             for it in day.get("items", []):
                 ko = (it.get("title") or {}).get("ko_name", "?")
                 for r in it.get("blog_reviews", []):
-                    yield ko, (r.get("img") or "").strip()
+                    yield ko, r
+
+    def _iter_blog_imgs(self):
+        for ko, r in self._iter_blog_reviews():
+            yield ko, (r.get("img") or "").strip()
 
     def test_every_blog_image_is_self_hosted(self):
         """비어있지 않은 모든 blog_reviews.img는 local-image-map에 매핑 + 파일 존재."""
@@ -1574,6 +1578,31 @@ class BlogImageSelfHostGateTests(unittest.TestCase):
             offenders, [],
             "자가호스팅 안 된 blog_reviews 이미지 — 라이브에서 카드가 사라진다. "
             "`uv run python scripts/fetch_assets.py` 실행 후 재커밋하거나 죽은 URL은 img를 비우라:\n"
+            + "\n".join(offenders),
+        )
+
+    def test_naver_blog_reviews_link_to_specific_posts(self):
+        """blog_reviews의 네이버 URL은 특정 포스트(작성자ID/글번호)여야 한다.
+
+        근거: docs/decision-log/2026-05-31-08-excafe-blog-reviews-fabrication-removal.md
+        검색결과 페이지(search.naver)·글번호 없는 블로그 홈은 '후기 읽기'가 실제 후기로
+        가지 않는 날조 시그니처 → 머지 차단. 실제 포스트는 m.blog.naver.com/<id>/<글번호>.
+        """
+        import re
+        post_re = re.compile(r"blog\.naver\.com/[^/]+/\d+")
+        offenders = []
+        for ko, r in self._iter_blog_reviews():
+            url = (r.get("url") or "").strip()
+            if "naver" not in url:
+                continue  # 사이트 내 .html 등은 면제
+            if "search.naver" in url:
+                offenders.append(f"{ko}: SEARCH-PAGE {url}")
+            elif not post_re.search(url):
+                offenders.append(f"{ko}: BLOG-HOME(글번호 없음) {url}")
+        self.assertEqual(
+            offenders, [],
+            "날조 시그니처 blog_reviews URL — 검색 페이지/블로그 홈은 실제 후기가 아니다. "
+            "특정 포스트 URL(m.blog.naver.com/<id>/<글번호>)로 교체하거나 항목을 제거하라:\n"
             + "\n".join(offenders),
         )
 
