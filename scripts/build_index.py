@@ -534,18 +534,22 @@ def food_quality_html(fq) -> str:
     )
 
 
-def doc_link_html(link) -> str:
+def doc_link_html(link, in_viz: bool = False) -> str:
     """일정 항목 참조 문서 링크 (data/itinerary.json item.link = {url, label}).
 
     조식 슬롯 등이 가리키는 문서를 화면에서 바로 탭해 열 수 있는 <a>로 렌더.
     url이 사이트 내 상대 경로면 같은 탭 내비게이션, 외부(http)면 새 탭으로 연다.
     Vercel은 .md를 raw로 서빙하므로 운영 화면 링크는 사이트 내 HTML 페이지를
     가리킨다(예: 조식 슬롯 → breakfast.html). 외부 GitHub blob 링크 금지.
+    in_viz=False(루트 index.html)일 때 viz-상대 경로에 viz/ 접두어 추가.
     """
     link = link or {}
     url = (link.get("url") or "").strip()
     if not url:
         return ""
+    # viz-상대 경로(breakfast.html 등)를 루트에서 렌더할 때 viz/ 접두어 보정
+    if not in_viz and url.endswith(".html") and not url.startswith(("http://", "https://", "viz/", "/", "#")):
+        url = "viz/" + url
     label = esc(link.get("label", "상세"))
     external = url.startswith(("http://", "https://"))
     attr = ' target="_blank" rel="noopener"' if external else ""
@@ -1395,11 +1399,13 @@ def card_itinerary(d) -> str:
 _STATE_CLASS = {"확정": "done", "예약중": "progress", "미정": "pending"}
 
 
-def checklist_card(it) -> str:
+def checklist_card(it, in_viz: bool = False) -> str:
     """예약 항목 1개를 구조화 카드로 렌더.
 
     제목+상태 배지 / 금액·마감(D-day)·예약번호·권장 행 / 출처 링크 / 접히는 상세 노트.
     마감 D-day는 빌드 결정성을 위해 클라이언트 스크립트가 data-due에서 계산한다.
+    in_viz=True: viz/checklist.html에서 렌더 (viz/ 접두어 불요).
+    in_viz=False: index.html(루트)에서 렌더 (viz/ 접두어 필요).
     """
     st = it.get("status", "미정")
     state = _STATE_CLASS.get(st, "pending")
@@ -1421,9 +1427,8 @@ def checklist_card(it) -> str:
     if link.get("url"):
         url = link["url"]
         # 레포 문서 경로는 사이트 내 렌더 페이지로 치환 (GitHub 링크 금지·검사 J).
-        # 체크리스트는 viz/checklist.html에서만 렌더되므로 in_viz=True.
         if url in DOC_SOURCE_TO_OUT:
-            url = doc_href(DOC_SOURCE_TO_OUT[url], in_viz=True)
+            url = doc_href(DOC_SOURCE_TO_OUT[url], in_viz=in_viz)
         link_html = (
             f'\n    <a class="doc-link" href="{esc(url)}" target="_blank" '
             f'rel="noopener">{esc(link.get("label", "상세"))} ↗</a>'
@@ -1826,7 +1831,7 @@ def build_itinerary(d) -> str:
                 img_html = ""
             reviews_html = blog_reviews_html(it.get("blog_reviews", []))
             food_html = food_quality_html(it.get("food_quality"))
-            link_html = doc_link_html(it.get("link"))
+            link_html = doc_link_html(it.get("link"), in_viz=True)
             item_rows.append(f"""
     <div class="day">
       <div class="date"><span class="k">{esc(it['time'])}</span> {link}</div>
@@ -1883,7 +1888,7 @@ def build_itinerary(d) -> str:
                 pronunciation_html = title_reading_html(it["title"])
                 note_html = memo_block(it.get("note"))
                 food_html = food_quality_html(it.get("food_quality"))
-                link_html = doc_link_html(it.get("link"))
+                link_html = doc_link_html(it.get("link"), in_viz=True)
                 item_rows.append(f"""
     <div class="day">
       <div class="date"><span class="k">{esc(it['time'])}</span> {link}</div>
@@ -1964,7 +1969,7 @@ def build_checklist(d) -> str:
     )
 
     sorted_items = sorted(items, key=checklist_sort_key)
-    item_cards = [checklist_card(it) for it in sorted_items]
+    item_cards = [checklist_card(it, in_viz=True) for it in sorted_items]
 
 
     body = f"""<h1>예약 체크리스트</h1>
@@ -2080,7 +2085,7 @@ def build_itinerary_table(d) -> str:
                 else:
                     img_html = ""
                 food_html = food_quality_html(it.get("food_quality"))
-                link_html = doc_link_html(it.get("link"))
+                link_html = doc_link_html(it.get("link"), in_viz=True)
                 cells.append(
                     f'<td><span class="t-time">{esc(it["time"])}</span>'
                     f'<span class="t-title">{link}</span>{pronunciation_html}{transit}{note_html}{food_html}{link_html}{img_html}</td>'
@@ -2109,7 +2114,7 @@ def build_itinerary_table(d) -> str:
                 img_html = ""
             reviews_html = blog_reviews_html(it.get("blog_reviews", []))
             food_html = food_quality_html(it.get("food_quality"))
-            link_html = doc_link_html(it.get("link"))
+            link_html = doc_link_html(it.get("link"), in_viz=True)
             item_rows.append(f"""
     <div class="day">
       <div class="date"><span class="k">{esc(it["time"])}</span> {link}</div>

@@ -1226,5 +1226,55 @@ class DocPageTests(unittest.TestCase):
         self.assertIn("시버스", result, "should contain detail items")
 
 
+class ChecklistCardDocLinkTests(unittest.TestCase):
+    """checklist_card doc-link가 렌더 컨텍스트(root vs viz)에 맞는 경로를 생성해야 한다.
+
+    booking-checklist.json 항목의 link.url(예: docs/essential-iphone-apps.md)은
+    - index.html(루트)에서는 viz/essential-iphone-apps.html
+    - viz/checklist.html(viz/)에서는 essential-iphone-apps.html
+    로 렌더되어야 한다. 잘못 생성된 경로는 Vercel에서 404를 유발한다.
+    """
+
+    def _find_checklist_doc_links(self, html: str) -> list[str]:
+        import re
+        return re.findall(r'class="doc-link"\s+href="([^"]+)"', html)
+
+    def test_index_checklist_doc_link_has_viz_prefix(self):
+        """index.html의 checklist doc-link는 viz/ 접두어가 있어야 한다."""
+        run()
+        html = INDEX.read_text(encoding="utf-8")
+        hrefs = self._find_checklist_doc_links(html)
+        for href in hrefs:
+            if href.endswith(".html") and not href.startswith("http"):
+                self.assertTrue(
+                    href.startswith("viz/"),
+                    f"index.html checklist doc-link must start with viz/: {href!r}",
+                )
+
+    def test_checklist_page_doc_link_has_no_viz_prefix(self):
+        """viz/checklist.html의 doc-link는 viz/ 없는 상대경로여야 한다."""
+        run()
+        html = CHECKLIST.read_text(encoding="utf-8")
+        hrefs = self._find_checklist_doc_links(html)
+        for href in hrefs:
+            if href.endswith(".html") and not href.startswith("http"):
+                self.assertFalse(
+                    href.startswith("viz/"),
+                    f"viz/checklist.html doc-link must NOT start with viz/: {href!r}",
+                )
+
+    def test_index_checklist_doc_link_target_exists(self):
+        """index.html checklist doc-link 대상 파일이 실제로 빌드되어야 한다."""
+        run()
+        html = INDEX.read_text(encoding="utf-8")
+        hrefs = self._find_checklist_doc_links(html)
+        for href in hrefs:
+            if href.endswith(".html") and not href.startswith("http"):
+                self.assertTrue(
+                    (BASE / href).exists(),
+                    f"index.html checklist doc-link target not built: {href!r}",
+                )
+
+
 if __name__ == "__main__":
     unittest.main()
