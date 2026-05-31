@@ -108,6 +108,18 @@ DOC_PAGES = (
         "교토 여행 필수 앱 5개 설치·설정·운영 가이드 (2026-05-28)",
         "checklist", "checklist", "checklist.html", "← 예약",
     ),
+    DocPage(
+        "docs/excafe-review-translation.md", "viz/excafe-review.html",
+        "eX cafe — 당고 직화구이 & 아라시야마 카페 가이드",
+        "100년 목조 가옥 카페 · 미니 화로 직화구이 · 여름 말차 빙수 · 5개 카페 비교",
+        "itinerary", "itinerary", "itinerary.html", "← 일정",
+    ),
+    DocPage(
+        "docs/manzaratei-review-translation.md", "viz/manzaratei-review.html",
+        "만자라테이 — 130년 교마치야 창작 교토요리",
+        "폰토초 야오 식당 · 전통 교마치야 · 강변 야외석 · 오반자이(가정식)",
+        "itinerary", "itinerary", "itinerary.html", "← 일정",
+    ),
     # ── 아카이브 문서 (8개) ───────────────────────────────────────────────────
     DocPage(
         "docs/candidates.md", "viz/candidates.html",

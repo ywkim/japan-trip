@@ -161,6 +161,26 @@
       "ko": "야마고에나카마치",
       "ja": "山越中町",
       "reading": "야마고에나카마치"
+    },
+    "excafe": {
+      "ko": "eX cafe",
+      "ja": "イクスカフェ",
+      "reading": "이쿠스카페"
+    },
+    "arashiyama_station": {
+      "ko": "아라시야마역",
+      "ja": "嵐山駅",
+      "reading": "아라시야마에키"
+    },
+    "manzaratei": {
+      "ko": "만자라테이",
+      "ja": "万ざ良亭",
+      "reading": "만자라테이"
+    },
+    "pontocho": {
+      "ko": "폰토초",
+      "ja": "先斗町",
+      "reading": "폰토초"
     }
   },
   "trip": {
@@ -333,7 +353,7 @@
             "source_fetched_at": "2026-05-30",
             "data_quality": "researched_market_rate",
             "url": "https://tabelog.com/en/kyoto/A2601/A260201/26034057/",
-            "note": "흑모와규 창작 야끼니꾸. 中京区鍋屋町209-13(폰토초·先斗町) — 한큐 교토카와라마치(京都河原町)역·게이한 {{gion_shijo_stop}}역 도보 2분, {{shio_machiya}}에서 도보권 아님. 일요일 디너 17:00~22:00(L.O.21:30)·1인 ¥5,000~6,000. 인기점·예약 권장.",
+            "note": "흑모와규 창작 야끼니꾸. 中京区鍋屋町209-13(폰토초(先斗町)) — 한큐 교토카와라마치(京都河原町)역·게이한 {{gion_shijo_stop}}역 도보 2분, {{shio_machiya}}에서 도보권 아님. 일요일 디너 17:00~22:00(L.O.21:30)·1인 ¥5,000~6,000. 인기점·예약 권장.",
             "place_info": {},
             "business_hours": [],
             "ratings": [
@@ -393,7 +413,7 @@
         }
       ],
       "walking_km_source": "items[].arrive_from[mode=walk] 합(~0.65km: 三条京阪→enen 0.5 + enen→鴨川 야경 0.15) + 니조역·교토역 환승 도보 추정. 오후 도착으로 첫날 관광 없음(동산 코스는 6/2로 이동).",
-      "pass_recommendation": "iPhone Apple Wallet ICOCA 단권 — JR 하루카는 별도 왕복권(¥2,400/인). {{kyoto_station}}→{{nijo_station}} JR 산인선만 ICOCA 탭(약 ¥190). 저녁 폰토초 enen 이동으로 지하철 도자이선 {{nijo_station}}↔{{sanjo_keihan_station}} 왕복 ICOCA 탭 추가(요금 현지 확인)."
+      "pass_recommendation": "iPhone Apple Wallet ICOCA 단권 — JR 하루카는 별도 왕복권(¥2,400/인). {{kyoto_station}}→{{nijo_station}} JR 산인선만 ICOCA 탭(약 ¥190). 저녁 폰토초(先斗町) enen 이동으로 지하철 도자이선 {{nijo_station}}↔{{sanjo_keihan_station}} 왕복 ICOCA 탭 추가(요금 현지 확인)."
     },
     {
       "date": "2026-06-01",
@@ -545,89 +565,39 @@
         {
           "time": "12:00",
           "title": {
-            "type": "place",
+            "type": "restaurant",
             "ko_name": "eX cafe — 당고 직화구이",
-            "ja_name": "",
-            "ja_reading_ko": "",
+            "ja_name": "イクスカフェ",
+            "ja_reading_ko": "이쿠스카페",
             "en_name": ""
           },
           "maps_query": "eX cafe 京都嵐山本店",
-          "note": "아라시야마역(嵐山駅) 1분 거리. 100년 된 목조 가옥에 일본 정원이 어우러진 카페, 완전 실내 냉방. 시그니처는 호쿠호쿠(ほくほく·따끈따끈) 당고 세트(미니 화로에서 직화구이 체험, 말차·소스 2종 포함, ¥1,320). 여름 한정 말차 빙수(대형, 4인 쉐어 가능)도 인기. 영업 09:00~18:00, 1인 1오더 필수, 예약 불가. 다른 옵션: % Arabica(강변 커피, 08~18시), 사가노유(嵯峨野湯·팬케이크·파스타, 11~19시), 파인투에스프레소(パンとエスプレッソ·빵+커피 고택, 08~18시), 쿠모노차(雲ノ茶·말차라떼·빙수, 10~17:30).",
+          "note": "{{arashiyama_station}} 도보 1분. 100년 목조 가옥·일본 정원·완전 냉방. 시그니처 당고 세트 {{excafe}} 직화구이 체험(소스 2종)·여름 말차 빙수 4인 쉐어 가능. 영업 09:00~18:00·1인 1오더·예약 불가. 다른 {{arashiyama}} 카페 비교 (% Arabica·사가노유·파인투에스프레소·쿠모노차) → 상세 후기 참조.",
+          "link": {
+            "url": "excafe-review.html",
+            "label": "eX cafe + 아라시야마 카페 비교 (번역)"
+          },
+          "food_quality": {
+            "rating": "당고 직화구이 체험 (¥1,320) · 여름 말차 빙수 대형 (¥1,650)",
+            "source": "katakuri-cafe.com · Naver 블로그 (ramu0527·khy7804755·whataday_·minji5153) 2026-05-31",
+            "source_fetched_at": "2026-05-31",
+            "data_quality": "researched_market_rate",
+            "url": "excafe-review.html",
+            "note": "메뉴: 당고 세트(¥1,320·미니 화로 직화구이 + 소스 2종) · 말차 빙수 대형(¥1,650·4인 쉐어) · 파르페 · 각종 디저트. 특징: 100년 목조 가옥 개조·일본 정원 뷰·완전 실내 냉방·다다미/테라스/실외 좌석 선택·예약 불가·피크 시간 대기 길 수 있음. 다른 옵션: % Arabica(강변 커피·08시 오픈) · 嵯峨野湯(팬케이크·파스타·다이쇼 목욕탕 개조) · パン&エスプレッソ(고택 카페·08시 오픈) · 雲ノ茶(일본 차·대나무 테마·10시 오픈) → 상세 비교표 docs/excafe-review-translation.md 참조",
+            "place_info": {},
+            "business_hours": [],
+            "ratings": []
+          },
           "blog_reviews": [
             {
-              "url": "https://m.blog.naver.com/ramu0527/223959935624",
+              "url": "excafe-review.html",
               "img": "http://blogthumb.pstatic.net/MjAxOTA1MDVfMTA1/MDAxNTU3MDQ5MDYyNzA2.-uDIBqRRT9NVhHdgz1-hdOg8w2jEB5LgAOjKIOPa9p0g.4bylF-b-5bE32APT0kSmzoCTFVWYvqfbXglcBRKFwOQg.JPEG.m0846/IMG_9263.JPG?type=w2",
-              "comment": "[eX cafe] 당고 세트+말차 파르페 실식 후기. 미니 화로 직화구이 체험, 일본 정원 뷰 좌석 추천"
+              "comment": "미니 화로에서 당고 직화구이 체험 · 100년 목조 가옥의 일본 정원 뷰 → 상세 후기 및 아라시야마 카페 비교"
             },
             {
-              "url": "https://blog.naver.com/khy7804755",
+              "url": "excafe-review.html",
               "img": "http://blogthumb.pstatic.net/MjAxOTA1MDlfMTEg/MDAxNTU3Mzc4MDk3Mzk4.TjIk7Qu6-Gg4QS3BPGKQ3aRdD_F7lnUeYjap8Ff9A6Eg.l3YL9_A1neca_9jzqBTLEmUC_NNl8hEa7BnRIiUKyosg.JPEG.khy7804755/D0E7D7A8-FC53-4C05-A109-22913123ADCC.jpg?type=w2",
-              "comment": "[eX cafe] 100년 가옥 개조 카페. 여름 한정 말차 빙수 대형 사이즈. 아라시야마역 1분"
-            },
-            {
-              "url": "https://blog.naver.com/whataday_",
-              "img": "http://blogthumb.pstatic.net/MjAxOTAyMDhfNjcg/MDAxNTQ5NjA5NDc1NjA4.dUcS3CFtksPZn9BqS4BvvETT_WxHdiPm9U2mjh-8tIIg.Y2jboZIugMKDGmbQC5d3eLKOhEEm37y234Utz7N6uYg.JPEG.whataday_/IMG_7880.jpg?type=w2",
-              "comment": "[eX cafe] 09:00~18:00. 다다미방 or 테라스 좌석 선택. 조용하고 넓어 시부모님과 최적"
-            },
-            {
-              "url": "https://blog.naver.com/minji5153",
-              "img": "http://blogthumb.pstatic.net/MjAxODAxMjJfMTIz/MDAxNTQ4MTQ0NjkxNjE0.s3TTDkxUspCha-sZzLJHTgEO0_pMS6jFcm2rOLvGHeMg.r0PZUZg1daZzBwFAmo0EXI8yIVrqNitiVuxINgmuzu8g.JPEG.minji5153/P20181109_094918601_8EE49C2C-AB59-4CE5-86D0-A074ACB7D6E4.JPG",
-              "comment": "[% Arabica] 교토 아라시야마 스페셜티 커피. 강변 뷰 테이크아웃 최고. 교토 라떼 600엔"
-            },
-            {
-              "url": "https://blog.naver.com/sjm2014",
-              "img": "http://blogthumb.pstatic.net/MjAxOTA2MjlfNjcg/MDAxNTYxNzM3MDAxNTQz.RJBPX-whRCehUcwjTZdQGJGD5Nq5YxEYdfdYtkRQ4hIg.H_TWMp1h64CnMlJtLWhesDD5aCY1av5nq0rBUZZZbTcg.JPEG.sjm2014/NaverBlog_20190629_005001_39.jpg",
-              "comment": "[% Arabica] 08:00~18:00 조기 오픈. 도게츠교 바로 앞. 입구 계단 포토스팟 필수"
-            },
-            {
-              "url": "https://blog.naver.com/danakimm",
-              "img": "http://blogthumb.pstatic.net/MjAxOTA2MDZfMzQg/MDAxNTU5ODEzODYyMzAw.NekDtKoIOhBdQd_4bbujEyxlmV-hjYjx9H-TvjIKeNUg.qLrjFIf_q8asVkFyRer_WRnbKC6ZGEg.JPEG.danakimm/IMG_3948.JPG",
-              "comment": "[% Arabica] 아이스 라떼+강가 산책 세트. 아라비카 교토 아라시야마점 — 응커피로도 유명"
-            },
-            {
-              "url": "https://search.naver.com/search.naver?where=blog&query=사가노유+교토+아라시야마",
-              "img": "https://tblg.k-img.com/restaurant/images/Rvw/143335/640x640_rect_143335243.jpg",
-              "comment": "[嵯峨野湯] 다이쇼 시대 목욕탕 개조 카페. 팬케이크+파스타. 아라시야마역 1분 — tabelog 3.56"
-            },
-            {
-              "url": "https://search.naver.com/search.naver?where=blog&query=사가노유+교토+팬케이크+후기",
-              "img": "https://tblg.k-img.com/restaurant/images/Rvw/773/640x640_rect_773527.jpg",
-              "comment": "[嵯峨野湯] 목욕탕 레트로 인테리어 포토스팟. 런치 메뉴 가격 합리적 — 11:00~19:00"
-            },
-            {
-              "url": "https://search.naver.com/search.naver?where=blog&query=嵯峨野湯+cafe+교토+여행",
-              "img": "https://tblg.k-img.com/restaurant/images/Rvw/241163/640x640_rect_83531f4dc1f285800e3be22adbb685d2.jpg",
-              "comment": "[嵯峨野湯] 완전 실내 냉방. 아라시야마 죽림길 인근 도보 2분 — 네이버 블로그 후기 검색"
-            },
-            {
-              "url": "https://search.naver.com/search.naver?where=blog&query=파인투에스프레소+아라시야마+정원+교토",
-              "img": "https://tblg.k-img.com/restaurant/images/Rvw/198251/640x640_rect_969bf5f1a23d9eb61ea30cb3a0220137.jpg",
-              "comment": "[パン&エスプ] 210년 고택 문화재 카페. 빵+에스프레소. 08:00~18:00 — tabelog 3.39"
-            },
-            {
-              "url": "https://search.naver.com/search.naver?where=blog&query=パンとエスプレッソ+嵐山庭園+교토+카페",
-              "img": "https://tblg.k-img.com/restaurant/images/Rvw/198251/640x640_rect_3d4fafe127d9ccd34de64eb8a824ef61.jpg",
-              "comment": "[パン&エスプ] 목조 고택 중정 뷰. 드라이 가든+아침 8시 오픈 — 아라시야마역 도보 5분"
-            },
-            {
-              "url": "https://search.naver.com/search.naver?where=blog&query=파인투에스프레소+교토+빵+후기",
-              "img": "https://tblg.k-img.com/restaurant/images/Rvw/300038/640x640_rect_8dcfe5e0b19a73f02c03250ff91f57ce.jpg",
-              "comment": "[パン&エスプ] 식빵+에스프레소 조합. 완전 실내 냉방, 반려동물 동반 가능 — 네이버 검색"
-            },
-            {
-              "url": "https://search.naver.com/search.naver?where=blog&query=쿠모노차+雲ノ茶+교토+아라시야마+카페",
-              "img": "https://tblg.k-img.com/restaurant/images/Rvw/190496/640x640_rect_d5f3ce77b7ba43e7b1cd63f5c5d5b2a6.jpg",
-              "comment": "[雲ノ茶] 대나무 테마 일본 차 카페. 시그니처 대나무통 티라미수. 10:00~17:30"
-            },
-            {
-              "url": "https://search.naver.com/search.naver?where=blog&query=雲ノ茶カフェ+아라시야마+교토+후기",
-              "img": "https://tblg.k-img.com/restaurant/images/Rvw/190496/640x640_rect_aecb45b77bfad837661ffac0a35455d6.jpg",
-              "comment": "[雲ノ茶] 말차라떼·호지차라떼. 실내 완전 냉방, 죽림길 도보 2분 — tabelog 3.13"
-            },
-            {
-              "url": "https://search.naver.com/search.naver?where=blog&query=쿠모노차+교토+카페+말차+후기",
-              "img": "https://tblg.k-img.com/restaurant/images/Rvw/252182/150x150_square_f94fd442b1a0a87a9a66ae39c99d5f90.jpg",
-              "comment": "[雲ノ茶] 두유·귀리우유 변경 가능. 와가시 디저트 세트. 아라시야마역 도보 3분"
+              "comment": "여름 한정 말차 빙수 대형 · 4인 가족과 함께 즐기기 좋음 · 다다미방·테라스·실외 좌석 선택 가능"
             }
           ],
           "arrive_from": {
@@ -759,20 +729,24 @@
           "time": "18:30",
           "title": {
             "type": "restaurant",
-            "ko_name": "폰토초 저녁",
-            "ja_name": "만자라테이·まんざら亭",
+            "ko_name": "만자라테이 — 창작 교토요리",
+            "ja_name": "万ざ良亭",
             "ja_reading_ko": "만자라테이",
             "en_name": ""
           },
           "maps_query": "Manzaratei Pontocho Kyoto",
-          "note": "{{nishiki}}은 17:00 마감이라 낮에 둘러보기",
+          "note": "{{nishiki}}은 17:00 마감이라 낮에 둘러보기 — {{pontocho}} {{manzaratei}} 저녁. 130년 전통 교마치야·창작 교토요리·오반자이 전문. {{kawaramachi}} 도보 5분. 강변 야외석({{pontocho}}·川床) 6~9월 운영·4인 이상 테이블·환승 없음. 4인은 일반석(완전개실은 6인 이상). 예약 필수. 1인 ¥6~8k.",
+          "link": {
+            "url": "manzaratei-review.html",
+            "label": "만자라테이 상세 안내 및 예약 가이드"
+          },
           "food_quality": {
-            "rating": "타베로그 3.30 (92)",
-            "source": "Tabelog 2026-05-24",
-            "source_fetched_at": "2026-05-24",
+            "rating": "타베로그 3.30 (리뷰 92) · 130년 교마치야 창작 교토요리",
+            "source": "Tabelog (26000957) · manzaratei.com 2026-05-31",
+            "source_fetched_at": "2026-05-31",
             "data_quality": "researched_market_rate",
-            "url": "https://tabelog.com/en/kyoto/A2601/A260201/26000957/",
-            "note": "130년 된 교마치야(전통 목조 가옥). 창작 교토요리·오반자이(가정식) 전문. 가와라마치역(河原町駅) 도보 5분. 강변 야외석(川床)은 6~9월 운영. 4인은 일반석 이용(완전개실은 6인 이상). 1인당 ¥6,000~8,000",
+            "url": "manzaratei-review.html",
+            "note": "오반자이(교토 가정식) 세트: ¥6,500~8,000 — 계절 야채 반찬 5~7종 + 주요리. 카이세키 풀 코스(사전예약·최소 2인): ¥12,000~15,000. 특징: 130년 전통 교마치야·강변 야외석(川床·6~9월)·실내 일반석·개실(6인 이상)·예약 필수. 4인 가족은 일반석 권장(강변은 계단 접근). 저녁 17:00~22:00(L.O. 미정·사전 확인)·월요 휴무. 1인당 ¥6,000~8,000. 타베로그 3.30.",
             "place_info": {},
             "business_hours": [],
             "ratings": [
@@ -782,6 +756,18 @@
               }
             ]
           },
+          "blog_reviews": [
+            {
+              "url": "manzaratei-review.html",
+              "img": "https://commons.wikimedia.org/wiki/Special:FilePath/Pontocho_alley.jpg?width=480",
+              "comment": "130년 전통 교마치야 · 교토 가정식 오반자이 전문 · 폰토초의 우아한 식당가 → 예약 가이드 및 상세 메뉴 참조"
+            },
+            {
+              "url": "manzaratei-review.html",
+              "img": "https://commons.wikimedia.org/wiki/Special:FilePath/Kamogawa_river_Pontocho.jpg?width=480",
+              "comment": "가모강 강변 야외석(川床) · 여름 한정 운영 · 4인 이상 테이블 · 폰토초의 정취와 함께"
+            }
+          ],
           "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Nishiki_ichiba_kyoto.jpg?width=480",
           "image_credit": "Wikimedia Commons",
           "arrive_from": {
