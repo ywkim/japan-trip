@@ -591,12 +591,10 @@
           "blog_reviews": [
             {
               "url": "excafe-review.html",
-              "img": "http://blogthumb.pstatic.net/MjAxOTA1MDVfMTA1/MDAxNTU3MDQ5MDYyNzA2.-uDIBqRRT9NVhHdgz1-hdOg8w2jEB5LgAOjKIOPa9p0g.4bylF-b-5bE32APT0kSmzoCTFVWYvqfbXglcBRKFwOQg.JPEG.m0846/IMG_9263.JPG?type=w2",
               "comment": "미니 화로에서 당고 직화구이 체험 · 100년 목조 가옥의 일본 정원 뷰 → 상세 후기 및 아라시야마 카페 비교"
             },
             {
               "url": "excafe-review.html",
-              "img": "http://blogthumb.pstatic.net/MjAxOTA1MDlfMTEg/MDAxNTU3Mzc4MDk3Mzk4.TjIk7Qu6-Gg4QS3BPGKQ3aRdD_F7lnUeYjap8Ff9A6Eg.l3YL9_A1neca_9jzqBTLEmUC_NNl8hEa7BnRIiUKyosg.JPEG.khy7804755/D0E7D7A8-FC53-4C05-A109-22913123ADCC.jpg?type=w2",
               "comment": "여름 한정 말차 빙수 대형 · 4인 가족과 함께 즐기기 좋음 · 다다미방·테라스·실외 좌석 선택 가능"
             }
           ],
@@ -735,7 +733,7 @@
             "en_name": ""
           },
           "maps_query": "Manzaratei Pontocho Kyoto",
-          "note": "{{nishiki}}은 17:00 마감이라 낮에 둘러보기 — {{pontocho}} {{manzaratei}} 저녁. 130년 전통 교마치야·창작 교토요리·오반자이 전문. {{kawaramachi}} 도보 5분. 강변 야외석({{pontocho}}·川床) 6~9월 운영·4인 이상 테이블·환승 없음. 4인은 일반석(완전개실은 6인 이상). 예약 필수. 1인 ¥6~8k.",
+          "note": "⚠️ {{manzaratei}} 월요일 휴무 — 6/1은 월요일이므로 영업하지 않음. {{pontocho}} 골목 내 다른 식당 확인 필요. {{nishiki}}은 17:00 마감이라 낮에 둘러보기 — {{pontocho}} 저녁. {{kawaramachi}} 도보 5분.",
           "link": {
             "url": "manzaratei-review.html",
             "label": "만자라테이 상세 안내 및 예약 가이드"
