@@ -697,6 +697,10 @@
             "source_fetched_at": "2026-05-28",
             "data_quality": "researched_market_rate",
             "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Saihoji+Temple,+Kyoto&destination=eX+cafe+%E4%BA%AC%E9%83%BD%E5%B5%90%E5%B1%B1%E6%9C%AC%E5%BA%97,+Kyoto&travelmode=transit"
+          },
+          "link": {
+            "url": "excafe-review.html",
+            "label": "eX cafe 상세 정보 (당고·카페 비교)"
           }
         },
         {
@@ -854,6 +858,10 @@
             "source_fetched_at": "2026-05-18",
             "data_quality": "researched_market_rate",
             "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Ryoan-ji,+Kyoto&destination=Pontocho+Alley,+Kyoto&travelmode=transit"
+          },
+          "link": {
+            "url": "manzaratei-review.html",
+            "label": "만자라테이 상세 정보 (교마치야·교토요리)"
           }
         }
       ],
