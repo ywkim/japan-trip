@@ -819,7 +819,9 @@ class BlogReviewsTests(unittest.TestCase):
         run()
         itin = ITINERARY.read_text(encoding="utf-8")
         self.assertIn('class="blog-thumb"', itin, "blog thumbnail images missing")
-        self.assertIn("pstatic.net", itin, "expected pstatic.net image URLs in blog reviews")
+        # 자가호스팅 후 외부 URL(pstatic.net 등)은 로컬 경로로 치환되어야 한다 —
+        # 외부 URL이 HTML에 남으면 라이브(HTTPS)에서 mixed-content/404로 카드가 사라진다.
+        self.assertIn("/assets/place-images/", itin, "blog thumbnails not self-hosted (local path missing)")
 
     def test_blog_reviews_standalone(self):
         run()
@@ -1533,6 +1535,47 @@ class SelfHostedImageTests(unittest.TestCase):
         sw = SW.read_text(encoding="utf-8")
         self.assertIn("referrerPolicy", sw)
         self.assertIn("no-referrer", sw)
+
+
+class BlogImageSelfHostGateTests(unittest.TestCase):
+    """모든 blog_reviews 이미지가 자가호스팅됐는지 강제하는 회귀 가드.
+
+    근거: docs/decision-log/2026-05-31-07-blog-image-vanish-postmortem.md
+    미매핑(http://) 외부 이미지는 라이브(HTTPS)에서 mixed-content/404로 실패 →
+    onerror가 카드를 숨겨 "있다가 없다가" 회귀. 본 게이트가 머지 단계에서 차단한다.
+    """
+
+    def _iter_blog_imgs(self):
+        import json as _json
+        d = _json.loads((BASE / "data" / "itinerary.json").read_text(encoding="utf-8"))
+        days = list(d.get("days", []))
+        for rc in d.get("route_candidates", []):
+            days += rc.get("days", []) if isinstance(rc, dict) else []
+        for day in days:
+            for it in day.get("items", []):
+                ko = (it.get("title") or {}).get("ko_name", "?")
+                for r in it.get("blog_reviews", []):
+                    yield ko, (r.get("img") or "").strip()
+
+    def test_every_blog_image_is_self_hosted(self):
+        """비어있지 않은 모든 blog_reviews.img는 local-image-map에 매핑 + 파일 존재."""
+        import json as _json
+        lm = _json.loads((BASE / "data" / "local-image-map.json").read_text(encoding="utf-8"))
+        offenders = []
+        for ko, img in self._iter_blog_imgs():
+            if not img:
+                continue  # 빈 img = 텍스트 전용 카드(허용, onerror 숨김 대상 아님)
+            local = lm.get(img)
+            if not local:
+                offenders.append(f"{ko}: UNMAPPED {img[:60]}")
+            elif not (BASE / local.lstrip("/")).exists():
+                offenders.append(f"{ko}: FILE-MISSING {local}")
+        self.assertEqual(
+            offenders, [],
+            "자가호스팅 안 된 blog_reviews 이미지 — 라이브에서 카드가 사라진다. "
+            "`uv run python scripts/fetch_assets.py` 실행 후 재커밋하거나 죽은 URL은 img를 비우라:\n"
+            + "\n".join(offenders),
+        )
 
 
 if __name__ == "__main__":

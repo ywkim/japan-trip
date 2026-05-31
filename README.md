@@ -38,6 +38,7 @@
 - `assets/og-*.svg` — 6장의 OG/Twitter 카드 이미지 (1200×630). 카톡·Slack·X 공유 시 페이지별 썸네일·제목·설명 노출
 - `sw.js`·`manifest.json`·`assets/icon.svg` — **오프라인(PWA) 산출물**. 서비스 워커가 전 페이지·로컬 자산을 사전 캐시해 **비행기 모드에서도 모든 페이지가 다시 열린다**(HTTPS 한 번 방문 후). PWA 매니페스트로 홈 화면 추가(앱 모드) 가능. 근거: `docs/decision-log/2026-05-31-offline-service-worker.md`
 - `assets/place-images/`(커밋) + `data/local-image-map.json` — **외부 일정 이미지 자가호스팅**. `scripts/fetch_assets.py`가 위키미디어·네이버·타베로그 이미지를 referer 없이 내려받아 로컬 저장 → 빌드 시 외부 URL을 로컬 경로로 치환 → **오프라인에서 장소 사진·블로그 썸네일까지 표시**. 이미지 추가/교체 시 `uv run python scripts/fetch_assets.py` 재실행 후 재커밋(`--check`로 누락 감시). 근거: `docs/decision-log/2026-05-31-02-offline-image-selfhosting.md`
+  - **`blog_reviews` 썸네일은 전수 자가호스팅 강제(CI 게이트 `BlogImageSelfHostGateTests`)**: 미자가호스팅 `http://` 이미지는 라이브(HTTPS)에서 차단돼 카드가 사라지므로 머지 차단. 죽은 URL은 `img`를 비워 텍스트 카드로 유지(리뷰 링크 보존). 근거: `docs/decision-log/2026-05-31-07-blog-image-vanish-postmortem.md`
 - **HTML 13개·SVG 6장 모두 `scripts/build_index.py` 빌드 산출물 — 직접 편집 금지**. **레포에 커밋하지 않는다(`.gitignore`)** — 배포(CD)와 소스를 분리해 PR 머지 충돌을 줄인다. 클론 직후 로컬에서 보려면 `uv run python scripts/build_index.py`를 1회 실행(`markdown` 의존 — uv가 자동 설치). 실제 배포는 Vercel이 매번 빌드(`buildCommand`가 `uv run`으로 lockfile에서 markdown 설치), CI도 검증 전에 빌드한다(재현성·콘텐츠 검사는 `tests/test_build_index.py`)
 - 각 섹션 위 `<!-- SYNC: ... -->` 주석이 데이터 출처를 명시. CI(`scripts/validate.py`)가 경로 유효성과 §N 절 번호를 검증
 

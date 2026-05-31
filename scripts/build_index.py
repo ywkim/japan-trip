@@ -634,7 +634,10 @@ def blog_reviews_html(reviews: list, in_viz: bool = False) -> str:
         return ""
     def card(r):
         href, attr = _blog_card_href(r["url"], in_viz)
-        img_tag = f'<img src="{esc(local_src(r["img"]))}" class="blog-thumb" loading="lazy" alt="" referrerpolicy="no-referrer" onerror="this.closest(\'.blog-card\').style.display=\'none\'">' if r.get("img") else ''
+        # onerror: 이미지만 숨기고 카드(댓글·링크)는 유지 — 이미지 실패로 카드가 통째로
+        # 사라지는 회귀 방어(근거: docs/decision-log/2026-05-31-07-blog-image-vanish-postmortem.md).
+        # 모든 img는 자가호스팅(검사: BlogImageSelfHostGateTests)이라 라이브에서 실패하지 않는 것이 1차 보증.
+        img_tag = f'<img src="{esc(local_src(r["img"]))}" class="blog-thumb" loading="lazy" alt="" referrerpolicy="no-referrer" onerror="this.style.display=\'none\'">' if r.get("img") else ''
         return (
             f'<a href="{href}"{attr} class="blog-card">'
             f'{img_tag}'
