@@ -1115,6 +1115,22 @@ DOC_PAGE_OUTPUTS = (
     BASE / "viz" / "transit-pass.html",
     BASE / "viz" / "decision-kyoto.html",
     BASE / "viz" / "decision-log.html",
+    BASE / "viz" / "icoca-setup.html",
+    BASE / "viz" / "essential-iphone-apps.html",
+    # 아카이브 문서
+    BASE / "viz" / "candidates.html",
+    BASE / "viz" / "weather.html",
+    BASE / "viz" / "flights.html",
+    BASE / "viz" / "budget-options.html",
+    BASE / "viz" / "airbnb-comparison.html",
+    BASE / "viz" / "jejuair.html",
+    BASE / "viz" / "itinerary-may.html",
+    BASE / "viz" / "transit-mcp-handoff.html",
+    # 운영 문서
+    BASE / "viz" / "transit-guide.html",
+    BASE / "viz" / "saihoji.html",
+    BASE / "viz" / "soyeon-maps.html",
+    BASE / "viz" / "breakfast-doc.html",
 )
 
 

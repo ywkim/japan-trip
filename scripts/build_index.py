@@ -120,6 +120,80 @@ DOC_PAGES = (
         "교토 도심 550m 지붕 아케이드 — 로쿄쿠야키·니시키텐만구·식후 산책 코스",
         "itinerary", "itinerary", "itinerary.html", "← 일정",
     ),
+    # ── 아카이브 문서 (8개) ───────────────────────────────────────────────────
+    DocPage(
+        "docs/candidates.md", "viz/candidates.html",
+        "후보지 상세 비교",
+        "6개 여행지 후보 상세 비교 (아카이브)",
+        "archive", "home", "archive.html", "← 아카이브",
+    ),
+    DocPage(
+        "docs/weather.md", "viz/weather.html",
+        "날씨 분석",
+        "6개 후보지 × 4개 시기 기후 비교 (아카이브)",
+        "archive", "home", "archive.html", "← 아카이브",
+    ),
+    DocPage(
+        "docs/flights.md", "viz/flights.html",
+        "항공권 분석",
+        "후보지별 항공권 시세 분석 (아카이브)",
+        "archive", "home", "archive.html", "← 아카이브",
+    ),
+    DocPage(
+        "docs/budget-options.md", "viz/budget-options.html",
+        "3M 예산 비교",
+        "예산 시나리오 9개 비교 도구 (아카이브)",
+        "archive", "home", "archive.html", "← 아카이브",
+    ),
+    DocPage(
+        "docs/airbnb-kyoto-may31-jun2-2026.md", "viz/airbnb-comparison.html",
+        "에어비앤비 후보 비교",
+        "교토 에어비앤비 5개 후보 비교 (아카이브)",
+        "archive", "home", "archive.html", "← 아카이브",
+    ),
+    DocPage(
+        "docs/jejuair-icn-kobe-june-2026.md", "viz/jejuair.html",
+        "제주항공 인천-고베 리서치",
+        "제주항공 인천-고베 신규 취항 조사 (아카이브)",
+        "archive", "home", "archive.html", "← 아카이브",
+    ),
+    DocPage(
+        "docs/kyoto-itinerary-may-2026.md", "viz/itinerary-may.html",
+        "교토 일정 구버전 (5/24~27)",
+        "5/31~6/3 확정 전 구버전 일정 (아카이브)",
+        "archive", "home", "archive.html", "← 아카이브",
+    ),
+    DocPage(
+        "docs/transit-mcp-handoff.md", "viz/transit-mcp-handoff.html",
+        "교통 MCP 위임 가이드",
+        "tbd_needs_browser_mcp 교통 leg 측정 위임 노트",
+        "archive", "home", "archive.html", "← 아카이브",
+    ),
+    # ── 운영 문서 (4개) ───────────────────────────────────────────────────────
+    DocPage(
+        "docs/transit-guide-may31-jun3.md", "viz/transit-guide.html",
+        "이동 경로 상세 가이드",
+        "5/31~6/3 4인 이동 경로 상세 가이드",
+        "itinerary", "itinerary", "itinerary.html", "← 일정",
+    ),
+    DocPage(
+        "docs/saihoji-reservation-2026-06.md", "viz/saihoji.html",
+        "사이호지 예약 가능성",
+        "사이호지(苔寺) 참배 예약 가능성 리서치 (2026-06)",
+        "itinerary", "itinerary", "itinerary.html", "← 일정",
+    ),
+    DocPage(
+        "docs/soyeon-maps-list.md", "viz/soyeon-maps.html",
+        "소연 구글맵 목록",
+        "소연 구글맵 저장 장소 41개 (카테고리별 정리)",
+        "itinerary", "itinerary", "itinerary.html", "← 일정",
+    ),
+    DocPage(
+        "docs/breakfast-near-lodging.md", "viz/breakfast-doc.html",
+        "숙소 인근 조식 상세",
+        "숙소(시오·카덴쇼) 인근 조식 옵션 상세 문서",
+        "itinerary", "itinerary", "breakfast.html", "← 조식",
+    ),
 )
 
 DOC_SOURCE_TO_OUT = {p.source: p.out for p in DOC_PAGES}
@@ -1690,12 +1764,70 @@ def build_index(d) -> str:
 ARCHIVE_TITLE = "의사결정 아카이브 · 교토 가족여행 2026"
 ARCHIVE_DESCRIPTION = "의사결정 아카이브 · 장마 확률·예산 시나리오·후보지 점수 (2026-05-12 종료)"
 
+ARCHIVE_EXTRA_CSS = """
+  .doc-card-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+    gap: 0.6rem; margin: 0.6rem 0 1.1rem;
+  }
+  .doc-card-link {
+    display: flex; flex-direction: column; gap: 0.2rem;
+    padding: 0.75rem 0.9rem; border: 1px solid var(--border); border-radius: 8px;
+    text-decoration: none; color: var(--fg); background: var(--card);
+  }
+  .doc-card-link:hover { border-color: var(--accent); }
+  .doc-card-title { font-weight: 600; font-size: 0.88rem; }
+  .doc-card-desc { font-size: 0.78rem; color: var(--muted); }
+  .docs-subhead { font-size: 0.82rem; color: var(--muted); margin: 1rem 0 0.4rem; font-weight: 500; }
+"""
+
+_ARCHIVE_DOC_CARDS = (
+    ("candidates.html", "후보지 상세 비교", "6개 후보지 × 기준 비교"),
+    ("weather.html", "날씨 분석", "6개 후보지 × 4개 시기 기후"),
+    ("flights.html", "항공권 분석", "후보지별 항공권 시세"),
+    ("budget-options.html", "3M 예산 비교", "예산 시나리오 9개"),
+    ("airbnb-comparison.html", "에어비앤비 후보 비교", "교토 매물 5개 비교"),
+    ("jejuair.html", "제주항공 인천-고베", "신규 취항 리서치"),
+    ("itinerary-may.html", "구버전 일정 (5/24~27)", "확정 전 초안"),
+    ("transit-mcp-handoff.html", "교통 MCP 위임 노트", "tbd leg 측정 위임"),
+)
+
+_OPERATIONAL_DOC_CARDS = (
+    ("transit-guide.html", "이동 경로 상세", "5/31~6/3 4인 교통 가이드"),
+    ("saihoji.html", "사이호지 예약", "苔寺 참배 예약 가능성"),
+    ("soyeon-maps.html", "소연 구글맵 목록", "저장 장소 41개"),
+    ("breakfast-doc.html", "조식 옵션 상세 문서", "숙소별 조식 리서치"),
+)
+
+
+def _doc_card_item(href: str, title: str, desc: str) -> str:
+    return (
+        f'<a class="doc-card-link" href="{esc(href)}">'
+        f'<span class="doc-card-title">{esc(title)}</span>'
+        f'<span class="doc-card-desc">{esc(desc)}</span>'
+        f'</a>'
+    )
+
+
+def card_docs_archive(d) -> str:  # noqa: ARG001
+    ops_items = "".join(_doc_card_item(h, t, de) for h, t, de in _OPERATIONAL_DOC_CARDS)
+    arch_items = "".join(_doc_card_item(h, t, de) for h, t, de in _ARCHIVE_DOC_CARDS)
+    return (
+        f'<section id="docs" class="card">'
+        f'<h2 style="margin-bottom:0.1rem;">참고 문서</h2>'
+        f'<p class="docs-subhead">운영</p>'
+        f'<div class="doc-card-grid">{ops_items}</div>'
+        f'<p class="docs-subhead">아카이브</p>'
+        f'<div class="doc-card-grid">{arch_items}</div>'
+        f'</section>'
+    )
+
 
 def build_archive(d) -> str:
     sections = [
         card_tsuyu(d),
         card_budget(d),
         card_score(d),
+        card_docs_archive(d),
     ]
     head = f"""<h1>의사결정 아카이브</h1>
 <div class="status">2026-05-12 의사결정 종료 · 회귀 가드·재참조용 분석 자료</div>
@@ -1705,6 +1837,7 @@ def build_archive(d) -> str:
   <a href="#tsuyu">장마</a>
   <a href="#budget">예산 시나리오</a>
   <a href="#score">후보지 점수</a>
+  <a href="#docs">참고 문서</a>
 </nav>
 """
     footer = """
@@ -1718,6 +1851,7 @@ def build_archive(d) -> str:
         description=ARCHIVE_DESCRIPTION,
         og_slug="archive",
         page_path="viz/archive.html",
+        extra_css=ARCHIVE_EXTRA_CSS,
     )
 
 
