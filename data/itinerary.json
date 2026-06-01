@@ -181,6 +181,11 @@
       "ko": "사가노유",
       "ja": "嵯峨野湯",
       "reading": "사가노유"
+    },
+    "arashiyama_yoshimura": {
+      "ko": "아라시야마 요시무라",
+      "ja": "嵐山よしむら",
+      "reading": "아라시야마요시무라"
     }
   },
   "trip": {
@@ -634,29 +639,29 @@
           ]
         },
         {
-          "time": "11:30",
+          "time": "12:00",
           "priority": "권장",
           "title": {
             "type": "restaurant",
-            "ko_name": "사가노유 — 파스타·팬케이크",
-            "ja_name": "嵯峨野湯",
-            "ja_reading_ko": "사가노유",
+            "ko_name": "아라시야마 요시무라 — 수타 소바",
+            "ja_name": "嵐山よしむら",
+            "ja_reading_ko": "아라시야마요시무라",
             "en_name": ""
           },
-          "maps_query": "嵯峨野湯 京都嵐山",
+          "maps_query": "嵐山よしむら 京都",
           "food_quality": {
-            "rating": "타베로그 3.5 — {{arashiyama}}(嵐山) 파스타·팬케이크",
-            "source": "Tabelog",
-            "source_fetched_at": "2026-05-31",
+            "rating": "타베로그 3.58 (641리뷰) — {{arashiyama}}(嵐山) 소바 1위",
+            "source": "Tabelog(26000403)·yoshimura-gr.com 2026-06-01",
+            "source_fetched_at": "2026-06-01",
             "data_quality": "researched_market_rate",
-            "note": "{{arashiyama}}(嵐山) 전통 기와 건물에서 이탈리안 파스타·팬케이크 제공. 조용한 분위기, 전망대 있음. 예약 권장, 경우에 따라 대기 가능. 영업 11:00~19:00.",
-            "url": "https://tabelog.com/en/kyoto/A2601/A260105/26005250/",
+            "url": "https://tabelog.com/en/kyoto/A2601/A260403/26000403/",
+            "note": "도게쓰교(渡月橋)·가쓰라강이 내려다보이는 2층 창가석. 石臼挽き 국산 소바 수타. 니신소바(¥1,650)·자루소바(¥1,250)·텐자루(¥1,950). 예약 불가(당일 전화 우선예약만, 시간 미확정). 평일 점심 30~40분 대기 가능. 영업 11:00~17:00 연중무휴.",
             "place_info": {},
             "business_hours": [],
             "ratings": [
               {
                 "source": "tabelog",
-                "score": 3.5
+                "score": 3.58
               }
             ]
           },
@@ -677,14 +682,14 @@
                 "to": "{{arashiyama_tenryuji_stop}}"
               }
             ],
-            "source": "https://www.kyotobus.jp/route/system/rosen/73-rosen.html",
+            "source": "https://www.kyotobus.jp/route/timetable/kana10/kokedera.html",
             "source_fetched_at": "2026-05-28",
             "data_quality": "researched_market_rate",
-            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Saihoji+Temple,+Kyoto&destination=%E5%B5%AF%E5%B3%A8%E9%87%8E%E6%B9%AF,+Kyoto&travelmode=transit"
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Saihoji+Temple,+Kyoto&destination=%E5%B5%90%E5%B1%B1%E3%82%88%E3%81%97%E3%82%80%E3%82%89,+Kyoto&travelmode=transit"
           }
         },
         {
-          "time": "13:30",
+          "time": "14:00",
           "priority": "필수",
           "title": {
             "type": "place",
@@ -752,7 +757,7 @@
           ]
         },
         {
-          "time": "15:00",
+          "time": "15:30",
           "priority": "권장",
           "title": {
             "type": "place",
