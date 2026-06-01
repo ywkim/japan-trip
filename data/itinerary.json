@@ -176,6 +176,11 @@
       "ko": "야마고에나카마치",
       "ja": "山越中町",
       "reading": "야마고에나카마치"
+    },
+    "saganoyu": {
+      "ko": "사가노유",
+      "ja": "嵯峨野湯",
+      "reading": "사가노유"
     }
   },
   "trip": {
@@ -592,22 +597,37 @@
           ]
         },
         {
-          "time": "12:00",
-          "priority": "대체",
+          "time": "11:30",
+          "priority": "권장",
           "title": {
-            "type": "place",
-            "ko_name": "eX cafe — 당고 직화구이",
-            "ja_name": "",
-            "ja_reading_ko": "",
+            "type": "restaurant",
+            "ko_name": "사가노유 — 파스타·팬케이크",
+            "ja_name": "嵯峨野湯",
+            "ja_reading_ko": "사가노유",
             "en_name": ""
           },
-          "maps_query": "eX cafe 京都嵐山本店",
-          "note": "아라시야마역(嵐山駅) 1분 거리. 100년 된 목조 가옥에 일본 정원이 어우러진 카페, 완전 실내 냉방. 시그니처는 호쿠호쿠(ほくほく·따끈따끈) 당고 세트(미니 화로에서 직화구이 체험, 말차·소스 2종 포함, ¥1,320). 여름 한정 말차 빙수(대형, 4인 쉐어 가능)도 인기. 영업 09:00~18:00, 1인 1오더 필수, 예약 불가. 다른 옵션: % Arabica(강변 커피, 08~18시), 사가노유(嵯峨野湯·팬케이크·파스타, 11~19시), 파인투에스프레소(パンとエスプレッソ·빵+커피 고택, 08~18시), 쿠모노차(雲ノ茶·말차라떼·빙수, 10~17:30).",
+          "maps_query": "嵯峨野湯 京都嵐山",
+          "food_quality": {
+            "rating": "타베로그 3.5 — {{arashiyama}}(嵐山) 파스타·팬케이크",
+            "source": "Tabelog",
+            "source_fetched_at": "2026-05-31",
+            "data_quality": "researched_market_rate",
+            "note": "{{arashiyama}}(嵐山) 전통 기와 건물에서 이탈리안 파스타·팬케이크 제공. 조용한 분위기, 전망대 있음. 예약 권장, 경우에 따라 대기 가능. 영업 11:00~19:00.",
+            "url": "https://tabelog.com/en/kyoto/A2601/A260105/26005250/",
+            "place_info": {},
+            "business_hours": [],
+            "ratings": [
+              {
+                "source": "tabelog",
+                "score": 3.5
+              }
+            ]
+          },
           "arrive_from": {
             "steps": [
               {
                 "mode": "bus",
-                "duration_min": 20,
+                "duration_min": 18,
                 "distance_km": 3.0,
                 "fare_jpy": 260,
                 "operator": {
@@ -620,10 +640,36 @@
                 "to": "{{arashiyama_tenryuji_stop}}"
               }
             ],
-            "source": "https://saihoji-kokedera.com/en/ + 교토버스 73계통 노선도",
+            "source": "https://www.kyotobus.jp/route/system/rosen/73-rosen.html",
             "source_fetched_at": "2026-05-28",
             "data_quality": "researched_market_rate",
-            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Saihoji+Temple,+Kyoto&destination=eX+cafe+%E4%BA%AC%E9%83%BD%E5%B5%90%E5%B1%B1%E6%9C%AC%E5%BA%97,+Kyoto&travelmode=transit"
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Saihoji+Temple,+Kyoto&destination=%E5%B5%AF%E5%B3%A8%E9%87%8E%E6%B9%AF,+Kyoto&travelmode=transit"
+          }
+        },
+        {
+          "time": "12:00",
+          "priority": "대체",
+          "title": {
+            "type": "place",
+            "ko_name": "eX cafe — 당고 직화구이",
+            "ja_name": "",
+            "ja_reading_ko": "",
+            "en_name": ""
+          },
+          "maps_query": "eX cafe 京都嵐山本店",
+          "note": "아라시야마역(嵐山駅) 1분 거리. 100년 된 목조 가옥에 일본 정원이 어우러진 카페, 완전 실내 냉방. 당고 직화구이와 말차 빙수 전문 — 카페/디저트 시간. 영업 09:00~18:00, 1인 1오더 필수, 예약 불가.",
+          "arrive_from": {
+            "steps": [
+              {
+                "mode": "walk",
+                "duration_min": 5,
+                "distance_km": 0.3
+              }
+            ],
+            "source": "Google Maps Arashiyama area",
+            "source_fetched_at": "2026-05-31",
+            "data_quality": "researched_market_rate",
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Saganoyu,+Kyoto&destination=eX+cafe,+Kyoto&travelmode=walking"
           },
           "link": {
             "url": "excafe-review.html",
