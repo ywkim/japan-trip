@@ -869,6 +869,18 @@
             "data_quality": "researched_market_rate",
             "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Nijo+Station,+Kyoto&destination=御料理めなみ,+Kyoto&travelmode=transit"
           },
+          "blog_reviews": [
+            {
+              "url": "https://m.blog.naver.com/chochocho_o/223691590267",
+              "img": "https://mblogthumb-phinf.pstatic.net/MjAyNDEyMTFfMjA0/MDAxNzMzOTIyODAwMDY0.9d8VrW22I9rAPSADZ28lPokCdvqakurrpiDqUzJacd0g.Ym7H2R3uXajLIjhKybjSvZoQ2GkapxwY_c7Y8KHcBJcg.JPEG/SE-a1a78633-adae-4dce-b54e-d3d237459c46.jpg?type=w800",
+              "comment": "외관부터 고급 진 느낌이 뿜뿜했는데, 내부와 맛은 어떠했을지!"
+            },
+            {
+              "url": "https://m.blog.naver.com/laputaa/221890693037",
+              "img": "https://mblogthumb-phinf.pstatic.net/MjAyMDA0MDRfMjg1/MDAxNTg1OTkzMTQ5MTc4.MVohJ32UWGSSwRxpA77ZfIP3mJ3nm87_rlr7GafQsz4g.BSdcqv9N2StOdYEosNLVJ3zLMaFaZm3zCx5SJTMBZiIg.JPEG.laputaa/IMG_2139.JPG?type=w800",
+              "comment": "교토 오반자이 스타일의 원조... 교토 오반자이를 맛보고 싶은 분들이라면 가볼만한 곳"
+            }
+          ],
           "link": {
             "url": "menami-review.html",
             "label": "메나미 상세 (오반자이 노포·메뉴·예산)"
