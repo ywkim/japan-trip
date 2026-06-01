@@ -30,6 +30,8 @@
 - `viz/archive.html` — 📦 의사결정 아카이브 (장마 확률·9 예산 시나리오·7 후보지 점수). 메인 페이지의 무게중심을 운영 정보로 유지하기 위해 분석·결정 자료는 이곳으로 분리
 - `viz/breakfast.html` — 🍞 숙소 인근 조식 옵션 (아침 3회·숙소별 가게·영업시간·아침별 권장). `data/breakfast.json` 단일 출처. 일정 카드의 조식 슬롯에서 탭해 이동 (Vercel 화면은 외부 GitHub 링크 대신 사이트 내 페이지로 연결). 가게명은 모바일에서 탭하면 구글 지도가 열린다
 - `viz/report.html`·`viz/itinerary-doc.html`·`viz/research.html`·`viz/transit-pass.html`·`viz/decision-kyoto.html` — 레포 마크다운 문서(최종 보고서·일정 문서·예약 리서치·교통패스 비교·교토 변경 결정)를 사이트 내 HTML로 렌더한 페이지. 가족 공유 시 GitHub 노출 없이 열람 (검사 J: `github.com` 링크 금지)
+- `viz/kaneyo-review.html` — 교고쿠 카네요(京極かねよ) 일본어 방문기 한국어 번역 페이지. `docs/kaneyo-review-translation.md` 정본. 5/31 저녁 식당 후기 카드에서 탭 진입
+- `viz/shinkyogoku-review.html` — 신쿄고쿠 상점가(新京極商店街) 안내·방문기 번역 페이지. `docs/shinkyogoku-review-translation.md` 정본. 5/31 20:00 야경 산책 카드에서 탭 진입
 - `viz/decision-log.html` — 결정 일지 인덱스 (`docs/decision-log/*.md` 최신순 제목 목록, 교토 변경 결정만 링크)
 - `assets/og-*.svg` — 6장의 OG/Twitter 카드 이미지 (1200×630). 카톡·Slack·X 공유 시 페이지별 썸네일·제목·설명 노출
 - `sw.js`·`manifest.json`·`assets/icon.svg` — **오프라인(PWA) 산출물**. 서비스 워커가 전 페이지·로컬 자산을 사전 캐시해 **비행기 모드에서도 모든 페이지가 다시 열린다**(HTTPS 한 번 방문 후). PWA 매니페스트로 홈 화면 추가(앱 모드) 가능. 근거: `docs/decision-log/2026-05-31-offline-service-worker.md`
