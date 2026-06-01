@@ -643,25 +643,25 @@
           "priority": "권장",
           "title": {
             "type": "restaurant",
-            "ko_name": "아라시야마 요시무라 — 수타 소바",
-            "ja_name": "嵐山よしむら",
-            "ja_reading_ko": "아라시야마요시무라",
+            "ko_name": "권타로 금각사점 — 소바·텐동",
+            "ja_name": "権太呂 金閣寺店",
+            "ja_reading_ko": "곤타로",
             "en_name": ""
           },
-          "maps_query": "嵐山よしむら 京都",
+          "maps_query": "権太呂 金閣寺店 京都",
           "food_quality": {
-            "rating": "타베로그 3.58 (641리뷰) — {{arashiyama}}(嵐山) 소바 1위",
-            "source": "Tabelog(26000403)·yoshimura-gr.com 2026-06-01",
+            "rating": "타베로그 3.45 (206리뷰) — 1910년 창업 교토 노포",
+            "source": "Tabelog(26002741)·권태로 공식사이트 2026-06-01",
             "source_fetched_at": "2026-06-01",
             "data_quality": "researched_market_rate",
-            "url": "https://tabelog.com/en/kyoto/A2601/A260403/26000403/",
-            "note": "도게쓰교(渡月橋)·가쓰라강이 내려다보이는 2층 창가석. 石臼挽き 국산 소바 수타. 니신소바(¥1,650)·자루소바(¥1,250)·텐자루(¥1,950). 예약 불가(당일 전화 우선예약만, 시간 미확정). 평일 점심 30~40분 대기 가능. 영업 11:00~17:00 연중무휴.",
+            "url": "https://tabelog.com/en/kyoto/A2601/A260501/26002741/",
+            "note": "築100년 교마치야 개조 공간에 정원. 黄金の一汁(황금의 국물) 자가 제조 출장 지하수 사용. 텐동·소바·우동 세트 ¥1,250~¥2,400. 영업 평일 11:00~20:00·토일 11:00~21:00. 수요일 휴무.",
             "place_info": {},
             "business_hours": [],
             "ratings": [
               {
                 "source": "tabelog",
-                "score": 3.58
+                "score": 3.45
               }
             ]
           },
@@ -686,10 +686,6 @@
             "source_fetched_at": "2026-05-28",
             "data_quality": "researched_market_rate",
             "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Saihoji+Temple,+Kyoto&destination=%E5%B5%90%E5%B1%B1%E3%82%88%E3%81%97%E3%82%80%E3%82%89,+Kyoto&travelmode=transit"
-          },
-          "link": {
-            "url": "yoshimura-review.html",
-            "label": "아라시야마 요시무라 상세 정보 (소바·메뉴)"
           }
         },
         {
