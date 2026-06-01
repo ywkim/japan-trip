@@ -574,7 +574,7 @@ class TransitFromToRegistryTests(unittest.TestCase):
         # (date, ko, 기대 분 합, 기대 요금 합)
         expectations = [
             ("2026-06-01", "금각사", 38, 460),   # 버스 환승: 요금 2회(¥230×2)
-            ("2026-06-02", "후시미이나리", 20, 200),  # JR 통표: 단일 ¥200, 합계 20분
+            ("2026-06-02", "후시미이나리", 19, 150),  # 카덴쇼 경유: 도보 8분+나라선 11분=19분, ¥150
         ]
         for date, ko, exp_dur, exp_fare in expectations:
             with self.subTest(leg=ko):
