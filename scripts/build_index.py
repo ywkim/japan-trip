@@ -127,9 +127,9 @@ DOC_PAGES = (
         "itinerary", "itinerary", "itinerary.html", "← 일정",
     ),
     DocPage(
-        "docs/manzaratei-review-translation.md", "viz/manzaratei-review.html",
-        "만자라테이 先斗町店 — 폰토초의 창작 교토요리",
-        "Tabelog 일본어 정보 한국어 번역 — 폰토초 교마치야·오반자이·창작 교토요리",
+        "docs/menami-review-translation.md", "viz/menami-review.html",
+        "御料理めなみ — 1939년 오반자이 노포 저녁",
+        "Tabelog·공식사이트 일본어 정보 한국어 번역 — 1939년 오반자이 노포·메뉴·술 없이 예산",
         "itinerary", "itinerary", "itinerary.html", "← 일정",
     ),
     DocPage(

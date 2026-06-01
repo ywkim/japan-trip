@@ -202,10 +202,10 @@
       "ja": "銀閣寺",
       "reading": "긴카쿠지"
     },
-    "manzaratei": {
-      "ko": "만자라테이",
-      "ja": "万ざ良亭",
-      "reading": "만자라테이"
+    "menami": {
+      "ko": "메나미",
+      "ja": "御料理めなみ",
+      "reading": "메나미"
     },
     "nijojo_mae_stop": {
       "ko": "니조성앞",
@@ -780,7 +780,7 @@
             "en_name": ""
           },
           "maps_query": "Nijo Station Kyoto",
-          "note": "한낮 가장 더운 시간(28~30°C·습도 73%) 구간을 {{shio_machiya}}에서 회복 — 완전 냉방·샤워·누워서 휴식. 백화점·카페보다 시부모 체력 회복에 유리하고 비용 0. 약 1.5시간 쉬고 17:00경 폰토초 저녁으로 출발(짐 없이 가볍게). 시오는 {{kinkakuji}}와 도심 사이라 되돌아옴 적음.",
+          "note": "한낮 가장 더운 시간(28~30°C·습도 73%) 구간을 {{shio_machiya}}에서 회복 — 완전 냉방·샤워·누워서 휴식. 백화점·카페보다 시부모 체력 회복에 유리하고 비용 0. 약 1.5시간 쉬고 17:00경 키야마치 저녁으로 출발(짐 없이 가볍게). 시오는 {{kinkakuji}}와 도심 사이라 되돌아옴 적음.",
           "arrive_from": {
             "steps": [
               {
@@ -813,34 +813,32 @@
         },
         {
           "time": "17:30",
-          "priority": "대체",
+          "priority": "필수",
           "title": {
             "type": "restaurant",
-            "ko_name": "폰토초 저녁",
-            "ja_name": "만자라테이·まんざら亭",
-            "ja_reading_ko": "만자라테이",
+            "ko_name": "키야마치 저녁",
+            "ja_name": "메나미·御料理めなみ",
+            "ja_reading_ko": "메나미",
             "en_name": ""
           },
-          "maps_query": "Manzaratei Pontocho Kyoto",
-          "note": "{{shio_machiya}} 휴식 후 지하철 도자이선으로 폰토초 이동. 저녁은 {{manzaratei}} — 130년 교마치야 창작 교토요리·오반자이. 강변 야외석(川床)은 6~9월 운영(4인은 일반석).",
+          "maps_query": "御料理めなみ 京都 木屋町",
+          "note": "{{shio_machiya}} 휴식 후 지하철 도자이선으로 키야마치(木屋町) 이동. 저녁은 {{menami}} — 1939년 창업 오반자이(가정식) 노포 '식사처'(술집 아님). 술 없이 밥·오반자이·생선구이로 한 상 완결, 두부 메뉴(유바·교토부 두부전골)만 빼면 두부 비중심. 6/1 점심 소바·우동스키와 안 겹침.",
           "food_quality": {
-            "rating": "타베로그 3.30 (92)",
-            "source": "Tabelog 2026-05-24",
-            "source_fetched_at": "2026-05-24",
+            "rating": "타베로그 3.52 (331)",
+            "source": "Tabelog/menami.jp 2026-06-01",
+            "source_fetched_at": "2026-06-01",
             "data_quality": "researched_market_rate",
-            "url": "https://tabelog.com/en/kyoto/A2601/A260201/26000957/",
-            "note": "130년 된 교마치야(전통 목조 가옥). 창작 교토요리·오반자이(가정식) 전문. 가와라마치역(河原町駅) 도보 5분. 강변 야외석(川床)은 6~9월 운영. 4인은 일반석 이용(완전개실은 6인 이상). 1인당 ¥6,000~8,000",
+            "url": "https://tabelog.com/en/kyoto/A2601/A260201/26001266/",
+            "note": "1939년 창업 80년 오반자이 노포(お食事処·日本料理, 이자카야 아님). 키야마치도리 산조 상행, 교토시야쿠쇼마에역(京都市役所前駅) 1번출구 도보 2분. 수요일 휴무 → 6/1(월) 영업. 오반자이 모둠 5종 ¥1,430, 생선구이(さわら西京焼 ¥1,430·ぶり大根 ¥1,100·いわし生姜煮 ¥770)·오리 숯불구이 ¥1,320·밥류/된장국 ¥660 균일. 술 없이 4인이 모둠 2·계란말이·생선구이·오리구이·밥·국·호지차까지 푸짐하게 시켜 ¥15,730(1인 약 3,930엔) — Tabelog 평균 ¥8,000은 사케·회모둠·소꼬리찜 등 술/고가항목 포함분. 예약 전화 전용(075-231-1095, 예약 080-9308-5905). 두부 메뉴(京とうふ小鍋·生ゆば)만 피하면 됨",
             "place_info": {},
             "business_hours": [],
             "ratings": [
               {
                 "source": "tabelog",
-                "score": 3.3
+                "score": 3.52
               }
             ]
           },
-          "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Nishiki_ichiba_kyoto.jpg?width=480",
-          "image_credit": "Wikimedia Commons",
           "arrive_from": {
             "steps": [
               {
@@ -861,19 +859,19 @@
               {
                 "mode": "walk",
                 "from": "{{kyoto_shiyakushomae_station}}",
-                "to": "{{manzaratei}}",
-                "duration_min": 8,
-                "distance_km": 0.5
+                "to": "{{menami}}",
+                "duration_min": 2,
+                "distance_km": 0.2
               }
             ],
-            "source": "교토 지하철 도자이선 二条→京都市役所前 ¥220·6분 (교토시 교통국) + 도보 (Google Maps)",
+            "source": "교토 지하철 도자이선 二条→京都市役所前 ¥220·6분 (교토시 교통국) + 京都市役所前駅 1번출구→메나미 도보 2분 (menami.jp/about·Google Maps)",
             "source_fetched_at": "2026-06-01",
             "data_quality": "researched_market_rate",
-            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Nijo+Station,+Kyoto&destination=Manzaratei+Pontocho,+Kyoto&travelmode=transit"
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Nijo+Station,+Kyoto&destination=御料理めなみ,+Kyoto&travelmode=transit"
           },
           "link": {
-            "url": "manzaratei-review.html",
-            "label": "만자라테이 상세 정보 (교마치야·교토요리)"
+            "url": "menami-review.html",
+            "label": "메나미 상세 (오반자이 노포·메뉴·예산)"
           }
         }
       ],

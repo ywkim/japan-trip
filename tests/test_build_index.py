@@ -1339,7 +1339,7 @@ class ChecklistCardNoteFoldTests(unittest.TestCase):
         it = {
             "label": "식당", "status": "예약중",
             "note": "두 저녁 모두 워크인 대기 리스크 커 사전 넷예약 권장(전화 불요). "
-                    "① 大鵬은 AutoReserve로 예약. ② まんざら亭은 楽天으로 예약.",
+                    "① 大鵬은 AutoReserve로 예약. ② 御料理めなみ는 전화로 예약.",
         }
         html = build_index.checklist_card(it)
         self.assertIn("<details", html, "long note should be collapsible")

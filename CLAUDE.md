@@ -124,7 +124,7 @@ japan-trip/
 │   ├── kaneyo-review-translation.md       # 교고쿠 카네요(京極かねよ) 방문기 한국어 번역 (unagiudou.com 2025-05-27 원문) → viz/kaneyo-review.html
 │   ├── shinkyogoku-review-translation.md  # 신쿄고쿠 상점가(新京極商店街) 안내·복수 방문기 번역·재구성 → viz/shinkyogoku-review.html
 │   ├── excafe-review-translation.md       # eX cafe(イクスカフェ)·아라시야마 카페 비교 — Tabelog 일본어 정보 번역 (6/1 12:00) → viz/excafe-review.html
-│   ├── manzaratei-review-translation.md   # 만자라테이 先斗町店 창작 교토요리 — Tabelog·ぐるなび 정보 번역 (6/1 18:30) → viz/manzaratei-review.html
+│   ├── menami-review-translation.md       # 御料理めなみ 1939년 오반자이 노포(키야마치) — Tabelog·공식사이트 정보 번역·술 없이 예산 (6/1 17:30) → viz/menami-review.html
 │   ├── excafe-blog-reviews-handoff.md      # 후속 세션(Playwright MCP) 위임 가이드 — eX cafe·아라시야마 카페 실제 네이버 후기 blog_reviews 수집 (naver egress 차단 환경에서 보류된 작업)
 │   └── screenshots/                       # 리서치 근거 스크린샷 (예: airalo-japan-2026-05-26.png — eSIM 실가격·핫스팟 정책 1차 출처)
 ├── viz/
@@ -143,7 +143,7 @@ japan-trip/
 │   ├── kaneyo-review.html     # 교고쿠 카네요 방문기 번역 페이지 (docs/kaneyo-review-translation.md → HTML, 산출물)
 │   ├── shinkyogoku-review.html # 신쿄고쿠 상점가 안내 번역 페이지 (docs/shinkyogoku-review-translation.md → HTML, 산출물)
 │   ├── excafe-review.html     # eX cafe·아라시야마 카페 비교 페이지 (docs/excafe-review-translation.md → HTML, 산출물)
-│   ├── manzaratei-review.html # 만자라테이 先斗町店 페이지 (docs/manzaratei-review-translation.md → HTML, 산출물)
+│   ├── menami-review.html     # 御料理めなみ 오반자이 노포 페이지 (docs/menami-review-translation.md → HTML, 산출물)
 │   └── decision-log.html      # 의사결정 일지 인덱스 (docs/decision-log/*.md 목록, build_index.py 산출물 — 직접 편집 금지)
 ├── pyproject.toml       # 프로젝트 메타 + 빌드 의존성 (markdown==3.7 — build_index.py 문서 렌더용). uv virtual project
 ├── uv.lock              # uv 잠금 파일 (markdown 정확 버전·해시 고정 — 빌드 산출물 결정성)
@@ -202,7 +202,7 @@ japan-trip/
 - **현재 23 DOC_PAGES 문서 렌더 페이지** + **1개 커스텀 빌더 페이지** + **1개 인덱스** = 25 페이지:
   - DOC_PAGES 렌더(23개):
     - 기본 문서(7): `viz/report.html`·`viz/itinerary-doc.html`·`viz/research.html`·`viz/transit-pass.html`·`viz/decision-kyoto.html`·`viz/icoca-setup.html`·`viz/essential-iphone-apps.html`
-    - 후기·안내(5): `viz/kaneyo-review.html`(카네요 방문기 번역 — 5/31 저녁 blog_reviews)·`viz/shinkyogoku-review.html`(신쿄고쿠 안내 번역 — 5/31 20:00 blog_reviews)·`viz/excafe-review.html`(eX cafe·아라시야마 카페 비교 — 6/1 09:30 Tabelog)·`viz/gontaro-review.html`(권타로 금각사점 — 6/1 12:40 Tabelog·공식사이트)·`viz/manzaratei-review.html`(만자라테이 — 6/1 18:30 Tabelog·ぐるなび)
+    - 후기·안내(5): `viz/kaneyo-review.html`(카네요 방문기 번역 — 5/31 저녁 blog_reviews)·`viz/shinkyogoku-review.html`(신쿄고쿠 안내 번역 — 5/31 20:00 blog_reviews)·`viz/excafe-review.html`(eX cafe·아라시야마 카페 비교 — 6/1 09:30 Tabelog)·`viz/gontaro-review.html`(권타로 금각사점 — 6/1 12:40 Tabelog·공식사이트)·`viz/menami-review.html`(御料理めなみ 오반자이 노포 — 6/1 17:30 Tabelog·공식사이트)
     - 아카이브 문서(8): `viz/candidates.html`·`viz/weather.html`·`viz/flights.html`·`viz/budget-options.html`·`viz/airbnb-comparison.html`·`viz/jejuair.html`·`viz/itinerary-may.html`·`viz/transit-mcp-handoff.html`
     - 운영 문서(3): `viz/transit-guide.html`·`viz/soyeon-maps.html`·`viz/breakfast-doc.html`
   - 커스텀 빌더(1): `viz/saihoji.html`(카드 기반 UI, `build_saihoji()` — data/itinerary.json + data/booking-checklist.json 구조화 데이터 직접 사용, DOC_PAGES에서 분리)

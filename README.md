@@ -33,7 +33,7 @@
 - `viz/kaneyo-review.html` — 교고쿠 카네요(京極かねよ) 일본어 방문기 한국어 번역 페이지. `docs/kaneyo-review-translation.md` 정본. 5/31 저녁 식당 후기 카드에서 탭 진입
 - `viz/shinkyogoku-review.html` — 신쿄고쿠 상점가(新京極商店街) 안내·방문기 번역 페이지. `docs/shinkyogoku-review-translation.md` 정본. 5/31 20:00 야경 산책 카드에서 탭 진입
 - `viz/excafe-review.html` — eX cafe(イクスカフェ)·아라시야마 카페 비교 페이지. `docs/excafe-review-translation.md` 정본(Tabelog 일본어 정보). 6/1 12:00 카드에서 탭 진입
-- `viz/manzaratei-review.html` — 만자라테이 先斗町店 창작 교토요리 페이지. `docs/manzaratei-review-translation.md` 정본(Tabelog·ぐるなび). 6/1 18:30 카드에서 탭 진입
+- `viz/menami-review.html` — 御料理めなみ 1939년 오반자이 노포(키야마치) 페이지. `docs/menami-review-translation.md` 정본(Tabelog·공식사이트). 술 없이 식사 중심·예산 시뮬레이션 포함. 6/1 17:30 저녁 카드에서 탭 진입
 - `viz/decision-log.html` — 결정 일지 인덱스 (`docs/decision-log/*.md` 최신순 제목 목록, 교토 변경 결정만 링크)
 - `assets/og-*.svg` — 6장의 OG/Twitter 카드 이미지 (1200×630). 카톡·Slack·X 공유 시 페이지별 썸네일·제목·설명 노출
 - `sw.js`·`manifest.json`·`assets/icon.svg` — **오프라인(PWA) 산출물**. 서비스 워커가 전 페이지·로컬 자산을 사전 캐시해 **비행기 모드에서도 모든 페이지가 다시 열린다**(HTTPS 한 번 방문 후). PWA 매니페스트로 홈 화면 추가(앱 모드) 가능. 근거: `docs/decision-log/2026-05-31-offline-service-worker.md`
