@@ -1205,11 +1205,13 @@ class DocPageTests(unittest.TestCase):
         self.assertGreater(len(places), 0, "places registry must be populated")
         html = ITINERARY.read_text(encoding="utf-8")
         self.assertNotIn("{{", html, "unexpanded place ref leaked into itinerary.html")
-        # 니시키 레지스트리 항목이 ko(ja) 병기 형태로 확장됐는지
-        if "nishiki" in places:
-            p = places["nishiki"]
+        # 확정 일정에서 항상 참조되는 kinkakuji 항목이 ko(ja) 병기로 확장됐는지
+        # (과거엔 nishiki로 검사했으나 6/1 오후가 숙소 휴식으로 바뀌며 nishiki 참조가
+        #  확정 일정에서 빠짐 — 항상 참조되는 kinkakuji로 가드 유지)
+        if "kinkakuji" in places:
+            p = places["kinkakuji"]
             self.assertIn(f'{p["ko"]}({p["ja"]})', html,
-                          "nishiki place ref not expanded to ko(ja) in itinerary.html")
+                          "kinkakuji place ref not expanded to ko(ja) in itinerary.html")
 
     def test_doc_pages_drift_detected_by_check(self):
         run()

@@ -206,6 +206,11 @@
       "ko": "만자라테이",
       "ja": "万ざ良亭",
       "reading": "만자라테이"
+    },
+    "nijojo_mae_stop": {
+      "ko": "니조성앞",
+      "ja": "二条城前",
+      "reading": "니조조마에"
     }
   },
   "trip": {
@@ -728,7 +733,7 @@
             "en_name": ""
           },
           "maps_query": "Kinkaku-ji",
-          "note": "{{kinkakuji}}는 일방통행 순환 동선이라 30분이면 충분 — 금각 연못 반영 포토존 한 컷 찍고 그늘 위주로 짧게 관람. 14:40경 냉방 휴식(백화점·카페)으로 이동해 한낮 더위 회피.",
+          "note": "{{kinkakuji}}는 일방통행 순환 동선이라 30분이면 충분 — 금각 연못 반영 포토존 한 컷 찍고 그늘 위주로 짧게 관람. 14:40경 {{shio_machiya}} 복귀 휴식으로 이동해 한낮 더위 회피.",
           "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Kinkaku-ji_the_Golden_Temple_in_Kyoto_overlooking_the_lake_-_high_rez.JPG?width=480",
           "image_credit": "Wikimedia Commons",
           "arrive_from": {
@@ -765,6 +770,48 @@
           ]
         },
         {
+          "time": "15:20",
+          "priority": "필수",
+          "title": {
+            "type": "lodging",
+            "ko_name": "시오 마치야 복귀 — 냉방 휴식",
+            "ja_name": "",
+            "ja_reading_ko": "",
+            "en_name": ""
+          },
+          "maps_query": "Nijo Station Kyoto",
+          "note": "한낮 가장 더운 시간(28~30°C·습도 73%) 구간을 {{shio_machiya}}에서 회복 — 완전 냉방·샤워·누워서 휴식. 백화점·카페보다 시부모 체력 회복에 유리하고 비용 0. 약 1.5시간 쉬고 17:00경 폰토초 저녁으로 출발(짐 없이 가볍게). 시오는 {{kinkakuji}}와 도심 사이라 되돌아옴 적음.",
+          "arrive_from": {
+            "steps": [
+              {
+                "mode": "bus",
+                "from": "{{kinkakujimichi_stop}}",
+                "to": "{{nijojo_mae_stop}}",
+                "duration_min": 20,
+                "distance_km": 4.5,
+                "fare_jpy": 230,
+                "operator": {
+                  "ko": "시버스",
+                  "ja": "市バス",
+                  "type": "shibus"
+                },
+                "number": "12"
+              },
+              {
+                "mode": "walk",
+                "from": "{{nijojo_mae_stop}}",
+                "to": "{{shio_machiya}}",
+                "duration_min": 10,
+                "distance_km": 0.7
+              }
+            ],
+            "source": "京都市バス 12号系統 金閣寺道→二条城前 ¥230·약 20분 (京都市交通局/jorudan 2026-06-01) + 二条城前→시오 도보",
+            "source_fetched_at": "2026-06-01",
+            "data_quality": "researched_market_rate",
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Kinkaku-ji,+Kyoto&destination=Nijo+Station,+Kyoto&travelmode=transit"
+          }
+        },
+        {
           "time": "17:30",
           "priority": "대체",
           "title": {
@@ -775,7 +822,7 @@
             "en_name": ""
           },
           "maps_query": "Manzaratei Pontocho Kyoto",
-          "note": "택시 또는 버스로 시내로 이동. 오후 14~17시는 백화점(다이마루·후지이다이마루)·카페에서 시부모 휴식 추천({{nishiki}}는 17:00 마감). 시간 남으면 {{kinkakuji}} 양간당에 올라 {{ginkakuji}} 전망대 방문 또는 강변 산책(해진 뒤 운치 좋음). 저녁 17:30 {{manzaratei}}.",
+          "note": "{{shio_machiya}} 휴식 후 지하철 도자이선으로 폰토초 이동. 저녁은 {{manzaratei}} — 130년 교마치야 창작 교토요리·오반자이. 강변 야외석(川床)은 6~9월 운영(4인은 일반석).",
           "food_quality": {
             "rating": "타베로그 3.30 (92)",
             "source": "Tabelog 2026-05-24",
@@ -797,24 +844,32 @@
           "arrive_from": {
             "steps": [
               {
-                "mode": "bus",
-                "from": "{{kinkakuji}}",
-                "to": "{{shijo_kawaramachi_stop}}",
-                "duration_min": 42,
-                "distance_km": 8,
-                "fare_jpy": 230,
-                "operator": {
-                  "ko": "시버스",
-                  "ja": "市バス",
-                  "type": "shibus"
-                },
-                "number": "59",
-                "note": "가와라마치 도착 예정 16:45"
+                "mode": "walk",
+                "from": "{{shio_machiya}}",
+                "to": "{{nijo_station}}",
+                "duration_min": 7,
+                "distance_km": 0.5
+              },
+              {
+                "mode": "subway",
+                "from": "{{nijo_station}}",
+                "to": "{{kyoto_shiyakushomae_station}}",
+                "duration_min": 6,
+                "distance_km": 2.5,
+                "fare_jpy": 220
+              },
+              {
+                "mode": "walk",
+                "from": "{{kyoto_shiyakushomae_station}}",
+                "to": "{{manzaratei}}",
+                "duration_min": 8,
+                "distance_km": 0.5
               }
             ],
-            "source": "기존 동선",
+            "source": "교토 지하철 도자이선 二条→京都市役所前 ¥220·6분 (교토시 교통국) + 도보 (Google Maps)",
             "source_fetched_at": "2026-06-01",
-            "data_quality": "researched_market_rate"
+            "data_quality": "researched_market_rate",
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Nijo+Station,+Kyoto&destination=Manzaratei+Pontocho,+Kyoto&travelmode=transit"
           },
           "link": {
             "url": "manzaratei-review.html",
