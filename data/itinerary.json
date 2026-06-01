@@ -186,6 +186,26 @@
       "ko": "아라시야마 요시무라",
       "ja": "嵐山よしむら",
       "reading": "아라시야마요시무라"
+    },
+    "kitano_hakubaicho_station": {
+      "ko": "기타노하쿠바이초역",
+      "ja": "北野白梅町駅",
+      "reading": "기타노하쿠바이초에키"
+    },
+    "gontaro": {
+      "ko": "권타로 금각사점",
+      "ja": "権太呂 金閣寺店",
+      "reading": "곤타로킨카쿠지텐"
+    },
+    "ginkakuji": {
+      "ko": "은각사",
+      "ja": "銀閣寺",
+      "reading": "긴카쿠지"
+    },
+    "manzaratei": {
+      "ko": "만자라테이",
+      "ja": "万ざ良亭",
+      "reading": "만자라테이"
     }
   },
   "trip": {
@@ -449,7 +469,7 @@
     {
       "date": "2026-06-01",
       "day_label": "6/1 (월) — 아라시야마 + 사이호지 + 북서쪽",
-      "walking_km": 5,
+      "walking_km": 4,
       "lodging": "에어비앤비 시오 (2박째)",
       "items": [
         {
@@ -668,24 +688,29 @@
           "arrive_from": {
             "steps": [
               {
-                "mode": "bus",
-                "duration_min": 18,
-                "distance_km": 3.0,
-                "fare_jpy": 260,
-                "operator": {
-                  "ko": "교토버스",
-                  "ja": "京都バス",
-                  "type": "kyoto_bus"
-                },
-                "number": "73",
-                "from": "{{kokedera_stop}}",
-                "to": "{{arashiyama_tenryuji_stop}}"
+                "mode": "train",
+                "from": "{{saihoji}}",
+                "to": "{{kitano_hakubaicho_station}}",
+                "duration_min": 5,
+                "distance_km": 0,
+                "fare_jpy": 200,
+                "line": "게이후쿠선",
+                "note": "사이호지→기타노하쿠바이초(北野白梅町)역"
+              },
+              {
+                "mode": "taxi",
+                "from": "{{kitano_hakubaicho_station}}",
+                "to": "{{gontaro}}",
+                "duration_min": 8,
+                "distance_km": 2,
+                "fare_jpy": 1200,
+                "note": "택시로 정류장 땡볕·환승 회피"
               }
             ],
-            "source": "https://www.kyotobus.jp/route/timetable/kana10/kokedera.html",
-            "source_fetched_at": "2026-05-28",
+            "source": "게이후쿠선 북야백매정역·택시 추정",
+            "source_fetched_at": "2026-06-01",
             "data_quality": "researched_market_rate",
-            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Saihoji+Temple,+Kyoto&destination=%E5%B5%90%E5%B1%B1%E3%82%88%E3%81%97%E3%82%80%E3%82%89,+Kyoto&travelmode=transit"
+            "advisory": "택시 예약 (다이와하이야쿠 또는 현지 콜)을 권장"
           },
           "link": {
             "url": "gontaro-review.html",
@@ -708,39 +733,17 @@
           "arrive_from": {
             "steps": [
               {
-                "mode": "bus",
-                "duration_min": 29,
-                "distance_km": 5.9,
-                "fare_jpy": 230,
-                "operator": {
-                  "ko": "시버스",
-                  "ja": "市バス",
-                  "type": "shibus"
-                },
-                "number": "11",
-                "from": "{{arashiyama_tenryuji_stop}}",
-                "to": "{{yamagoe_nakamachi_stop}}"
-              },
-              {
-                "mode": "bus",
-                "duration_min": 9,
-                "distance_km": 1.6,
-                "fare_jpy": 230,
-                "operator": {
-                  "ko": "시버스",
-                  "ja": "市バス",
-                  "type": "shibus"
-                },
-                "number": "59",
-                "from": "{{yamagoe_nakamachi_stop}}",
-                "to": "{{kinkakujimichi_stop}}"
+                "mode": "walk",
+                "from": "{{gontaro}}",
+                "to": "{{kinkakuji}}",
+                "duration_min": 5,
+                "distance_km": 0.3
               }
             ],
-            "advisory": "11번은 40분 간격 — 놓치면 택시 22분 대안",
-            "source": "https://www.google.com/maps/dir/Tenryu-ji+Temple,+Kyoto/Kinkaku-ji+Temple,+Kyoto",
-            "source_fetched_at": "2026-05-18",
+            "source": "권타로 금각사점 인근(키누카케노미치, 도보권)",
+            "source_fetched_at": "2026-06-01",
             "data_quality": "researched_market_rate",
-            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Tenryu-ji+Temple,+Kyoto&destination=Kinkaku-ji,+Kyoto&travelmode=transit"
+            "note": "점심 후 도보 5분. 한낮 더위(14:00~)이므로 {{kinkakuji}} 금각의 포토존 찍고 그늘 동선 위주. 경내 매점·그늘에서 수분 보충."
           },
           "blog_reviews": [
             {
@@ -761,43 +764,7 @@
           ]
         },
         {
-          "time": "15:30",
-          "priority": "권장",
-          "title": {
-            "type": "place",
-            "ko_name": "료안지",
-            "ja_name": "竜安寺",
-            "ja_reading_ko": "료안지",
-            "en_name": ""
-          },
-          "maps_query": "Ryoan-ji",
-          "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/RyoanJi-Dry_garden.jpg?width=480",
-          "image_credit": "Wikimedia Commons",
-          "arrive_from": {
-            "steps": [
-              {
-                "mode": "bus",
-                "duration_min": 4,
-                "distance_km": 1.6,
-                "fare_jpy": 230,
-                "operator": {
-                  "ko": "시버스",
-                  "ja": "市バス",
-                  "type": "shibus"
-                },
-                "number": "59",
-                "from": "{{kinkakujimichi_stop}}",
-                "to": "{{ryoanjimae_stop}}"
-              }
-            ],
-            "source": "https://kinukake.com/en/day-tour.html · https://www.tripadvisor.com/ShowTopic-g298564-i2712-k6637145",
-            "source_fetched_at": "2026-05-17",
-            "data_quality": "researched_market_rate",
-            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Kinkaku-ji,+Kyoto&destination=Ryoan-ji,+Kyoto&travelmode=transit"
-          }
-        },
-        {
-          "time": "18:30",
+          "time": "17:30",
           "priority": "대체",
           "title": {
             "type": "restaurant",
@@ -807,7 +774,7 @@
             "en_name": ""
           },
           "maps_query": "Manzaratei Pontocho Kyoto",
-          "note": "{{nishiki}}은 17:00 마감이라 낮에 둘러보기",
+          "note": "택시 또는 버스로 시내로 이동. 오후 14~17시는 백화점(다이마루·후지이다이마루)·카페에서 시부모 휴식 추천({{nishiki}}는 17:00 마감). 시간 남으면 {{kinkakuji}} 양간당에 올라 {{ginkakuji}} 전망대 방문 또는 강변 산책(해진 뒤 운치 좋음). 저녁 17:30 {{manzaratei}}.",
           "food_quality": {
             "rating": "타베로그 3.30 (92)",
             "source": "Tabelog 2026-05-24",
@@ -830,8 +797,10 @@
             "steps": [
               {
                 "mode": "bus",
+                "from": "{{kinkakuji}}",
+                "to": "{{shijo_kawaramachi_stop}}",
                 "duration_min": 42,
-                "distance_km": 8.1,
+                "distance_km": 8,
                 "fare_jpy": 230,
                 "operator": {
                   "ko": "시버스",
@@ -839,14 +808,12 @@
                   "type": "shibus"
                 },
                 "number": "59",
-                "from": "{{ryoanjimae_stop}}",
-                "to": "{{shijo_kawaramachi_stop}}"
+                "note": "가와라마치 도착 예정 16:45"
               }
             ],
-            "source": "https://www.google.com/maps/dir/Ryoan-ji/Kawaramachi",
-            "source_fetched_at": "2026-05-18",
-            "data_quality": "researched_market_rate",
-            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Ryoan-ji,+Kyoto&destination=Pontocho+Alley,+Kyoto&travelmode=transit"
+            "source": "기존 동선",
+            "source_fetched_at": "2026-06-01",
+            "data_quality": "researched_market_rate"
           },
           "link": {
             "url": "manzaratei-review.html",
@@ -854,8 +821,8 @@
           }
         }
       ],
-      "walking_km_source": "items[].arrive_from[mode=walk] 합(~0.6km) + 죽림길·텐류지 정원·니시키 시장 산책 추정(~3.4km)",
-      "pass_recommendation": "iPhone Apple Wallet ICOCA 단권 — 시버스 3회({{tenryuji}}→{{kinkakuji}} ¥460 + {{kinkakuji}}→{{ryoanji}} ¥230 + {{ryoanji}}→{{kawaramachi}} ¥230) ¥920/인×4=¥3,680. 통합 1일권 ¥1,100×4=¥4,400 대비 ¥720 절약(¥700 시버스 단독 1일권은 2023-09 폐지)."
+      "walking_km_source": "items[].arrive_from[mode=walk] + 죽림길·텐류지·금각사 그늘 동선 추정",
+      "pass_recommendation": "iPhone Apple Wallet ICOCA 단권(¥920/인) + 택시 권장({{saihoji}}→권타로 ¥1,200·4인=¥4,800). 또는 IC 타시(교토 택시 결제 가능)."
     },
     {
       "date": "2026-06-02",

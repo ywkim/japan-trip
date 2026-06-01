@@ -530,7 +530,7 @@ class TransitFromToRegistryTests(unittest.TestCase):
         for from_label, to_label in (
             ("니조역(二条駅)", "교토역(京都駅)"),
             ("교토역(京都駅)", "이나리역(稲荷駅)"),
-            ("아라시야마텐류지마에(嵐山天龍寺前)", "야마고에나카마치(山越中町)"),
+            ("이나리역(稲荷駅)", "토후쿠지역(東福寺駅)"),
         ):
             with self.subTest(route=f"{from_label}→{to_label}"):
                 self.assertIn(from_label, html, f"from 병기 누락: {from_label}")
@@ -539,10 +539,10 @@ class TransitFromToRegistryTests(unittest.TestCase):
     def test_production_transfer_and_advisory_rendered(self):
         run()
         html = ITINERARY.read_text(encoding="utf-8")
-        # 환승 2건(금각사·후시미)이 타임라인 '환승' 태그로 렌더
+        # 환승 점과 조언문이 타임라인에 렌더됨
         self.assertIn('class="tl-tag">환승</span>', html)
         self.assertIn("tl-dot transfer", html)
-        self.assertIn("놓치면 택시 22분 대안", html)
+        self.assertIn("택시 예약", html)  # Gontaro arrive_from advisory
 
     def test_production_no_inline_operator_hex(self):
         """운영사 브랜드 hex(인라인 스타일)가 산출물에 남지 않아야 한다 (DESIGN: 단일 accent)."""
@@ -573,7 +573,6 @@ class TransitFromToRegistryTests(unittest.TestCase):
 
         # (date, ko, 기대 분 합, 기대 요금 합)
         expectations = [
-            ("2026-06-01", "금각사", 38, 460),   # 버스 환승: 요금 2회(¥230×2)
             ("2026-06-02", "후시미이나리", 20, 200),  # JR 통표: 단일 ¥200, 합계 20분
         ]
         for date, ko, exp_dur, exp_fare in expectations:
