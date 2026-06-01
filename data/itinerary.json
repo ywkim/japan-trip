@@ -912,7 +912,7 @@
             "en_name": ""
           },
           "maps_query": "EDION 京都四条河原町店",
-          "note": "저녁 후 귀가 전 쇼핑. ① {{shijo_kawaramachi_stop}} EDION 6F {{treca_capital}} — 포켓몬 카드·유희왕·중고 단품 전문(80석 대전장). **평일 10:30~21:00** 마감이라 여기 먼저(20:00~20:50). ② {{shinkyogoku}} 북상하며 {{matsukiyo_shinkyogoku}}(약국) — 10:00~22:30이라 여유롭게 약 구입(21:00~21:30). 귀가: 산조 방향 {{kyoto_shiyakushomae_station}} → 도자이선 2정거장 ¥220·4분 → {{nijo_station}} → 도보 5~7분 → {{shio_machiya}}(~22:10). 신쿄고쿠는 지붕 아케이드라 비 걱정 없음, 시부모 동반 부담 낮음.",
+          "note": "저녁 후 귀가 전 쇼핑 · ①{{treca_capital}}({{shijo_kawaramachi_stop}} EDION 6F, 20:00~20:50, 포켓몬·유희왕·중고 단품 전문, 평일 21:00 마감) · ②{{matsukiyo_shinkyogoku}}({{shinkyogoku}}, 21:00~21:30, 22:30 마감) · 귀가: {{kyoto_shiyakushomae_station}} → 도자이선 2정거장 ¥220·4분 → {{nijo_station}} → 도보 5~7분 → {{shio_machiya}}(~22:10). 신쿄고쿠는 지붕 아케이드(비 걱정 X, 시부모 부담 낮음).",
           "arrive_from": {
             "steps": [
               {
