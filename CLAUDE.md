@@ -123,6 +123,10 @@ japan-trip/
 │   ├── saihoji-reservation-2026-06.md     # 사이호지(苔寺) 참배 예약 가능성 리서치 (예약 방법·선착순·참배료·사경·접근성)
 │   ├── kaneyo-review-translation.md       # 교고쿠 카네요(京極かねよ) 방문기 한국어 번역 (unagiudou.com 2025-05-27 원문) → viz/kaneyo-review.html
 │   ├── shinkyogoku-review-translation.md  # 신쿄고쿠 상점가(新京極商店街) 안내·복수 방문기 번역·재구성 → viz/shinkyogoku-review.html
+│   ├── excafe-review-translation.md       # eX cafe(イクスカフェ)·아라시야마 카페 비교 — Tabelog 일본어 정보 번역 (6/1 12:00) → viz/excafe-review.html
+│   ├── menami-review-translation.md       # 御料理めなみ 1939년 오반자이 노포(키야마치) — Tabelog·공식사이트 정보 번역·술 없이 예산 (6/1 17:30) → viz/menami-review.html
+│   ├── excafe-blog-reviews-handoff.md      # 후속 세션(Playwright MCP) 위임 가이드 — eX cafe·아라시야마 카페 실제 네이버 후기 blog_reviews 수집 (naver egress 차단 환경에서 보류된 작업)
+│   ├── menami-blog-reviews-handoff.md       # 후속 세션(Playwright MCP) 위임 가이드 — 御料理めなみ(6/1 저녁) 실제 네이버 후기·사진 blog_reviews 수집 (naver egress 차단 환경에서 보류된 작업)
 │   └── screenshots/                       # 리서치 근거 스크린샷 (예: airalo-japan-2026-05-26.png — eSIM 실가격·핫스팟 정책 1차 출처)
 ├── viz/
 │   ├── itinerary.html         # 일자별 카드 뷰 (build_index.py 산출물 — 직접 편집 금지)
@@ -131,6 +135,7 @@ japan-trip/
 │   ├── lodging.html           # 숙박·항공 탭 화면 (build_index.py 산출물 — 직접 편집 금지)
 │   ├── archive.html           # 의사결정 아카이브 (장마 확률·9 예산 시나리오·7 후보지 점수 — build_index.py 산출물 — 직접 편집 금지)
 │   ├── breakfast.html         # 숙소 인근 조식 옵션 페이지 (data/breakfast.json — build_index.py 산출물 — 직접 편집 금지)
+│   ├── saihoji.html           # 사이호지(苔寺) 참배 안내 — 예약 확정 카드 기반 커스텀 UI (build_saihoji() 빌더, data/itinerary.json + data/booking-checklist.json, 산출물)
 │   ├── report.html            # 최종 보고서 렌더 페이지 (reports/final-report.md → HTML, build_index.py 산출물 — 직접 편집 금지)
 │   ├── itinerary-doc.html     # 일정 문서 렌더 페이지 (docs/kyoto-itinerary-may31-jun3-2026.md → HTML, 산출물)
 │   ├── research.html          # 예약 리서치 렌더 페이지 (docs/booking-research-2026-05-24.md → HTML, 산출물)
@@ -138,13 +143,15 @@ japan-trip/
 │   ├── decision-kyoto.html    # 교토 변경 결정 렌더 페이지 (docs/decision-log/2026-05-11-...md → HTML, 산출물)
 │   ├── kaneyo-review.html     # 교고쿠 카네요 방문기 번역 페이지 (docs/kaneyo-review-translation.md → HTML, 산출물)
 │   ├── shinkyogoku-review.html # 신쿄고쿠 상점가 안내 번역 페이지 (docs/shinkyogoku-review-translation.md → HTML, 산출물)
+│   ├── excafe-review.html     # eX cafe·아라시야마 카페 비교 페이지 (docs/excafe-review-translation.md → HTML, 산출물)
+│   ├── menami-review.html     # 御料理めなみ 오반자이 노포 페이지 (docs/menami-review-translation.md → HTML, 산출물)
 │   └── decision-log.html      # 의사결정 일지 인덱스 (docs/decision-log/*.md 목록, build_index.py 산출물 — 직접 편집 금지)
 ├── pyproject.toml       # 프로젝트 메타 + 빌드 의존성 (markdown==3.7 — build_index.py 문서 렌더용). uv virtual project
 ├── uv.lock              # uv 잠금 파일 (markdown 정확 버전·해시 고정 — 빌드 산출물 결정성)
 ├── scripts/
 │   ├── score.py         # 종합 점수 계산 (--json 지원)
 │   ├── budget.py        # 3M 예산 시나리오 평가 (--json 지원)
-│   ├── build_index.py   # index.html + viz/*.html(27개) + assets/og-*.svg(6장) + 오프라인 산출물(sw.js·manifest.json·assets/icon.svg) 빌드 (공통 토큰 주입, DOC_PAGES 문서 렌더 + breakfast). 산출물은 gitignore — Vercel·CI·로컬에서 빌드
+│   ├── build_index.py   # index.html + viz/*.html(27개) + assets/og-*.svg(6장) + 오프라인 산출물(sw.js·manifest.json·assets/icon.svg) 빌드. 포함: index + itinerary·itinerary-table·checklist·lodging·archive·breakfast(7개 UI) + DOC_PAGES 23개 마크다운 렌더(report·research·transit-pass 등) + saihoji 커스텀 빌더(1개) + decision-log 인덱스(1개, 총 32). 공통 토큰 주입, 산출물은 gitignore — Vercel·CI·로컬에서 빌드
 │   ├── validate.py      # 가격 필드·묵은 가격·SYNC 주석·MD↔JSON·DESIGN 동기화·GitHub 링크 검사
 │   ├── list_sources.py  # 출처 인벤토리 — data/*.json 근거 URL 추출·분류 (--json, Playwright 검증용)
 │   ├── fetch_assets.py  # 외부 일정 이미지 자가호스팅 다운로드 (referer 없이 → assets/place-images/ + data/local-image-map.json). 오프라인 이미지 보장. --check로 누락 감시
@@ -172,8 +179,9 @@ japan-trip/
   - `data/flights.json` — 후보지×출발지 항공권 시세 스냅샷 (시점 스냅샷, snapshot_date 명시). 발권은 별도 PR로 `data/booking-checklist.json`·`data/cost-options.json`에 기록
 - **`index.html`·`viz/*.html`(25개)·`assets/og-*.svg`(6장)는 `scripts/build_index.py` 산출물 — 직접 편집 금지**. **이 산출물(26 HTML + 6 SVG = 32개)은 레포에 커밋하지 않는다(`.gitignore`)** — 배포(CD)와 소스를 분리해 거대한 기계 생성 diff로 인한 PR 머지 충돌을 없앤다(근거: `docs/decision-log/2026-05-27-cd-artifact-separation.md`). 데이터(`data/*.json`)·스크립트·렌더 대상 `.md` 변경 후 `uv run python scripts/build_index.py`로 로컬 빌드(클론 직후 1회 필요, `markdown` 의존 — `uv sync`/`uv run`이 자동 설치). 실제 배포는 Vercel이 `vercel.json`의 `buildCommand`(`uv run python scripts/build_index.py` — Vercel 빌드 이미지의 uv가 lockfile에서 markdown 설치 후 빌드)로 매 배포 시점 생성. CI는 검증 전에 `build_index.py`를 실행해 산출물을 만들고(빌드 무오류 + 검사 J가 가드), 재현성(idempotent)·콘텐츠 검사는 `tests/test_build_index.py`가 담당
 - **오프라인(PWA) 산출물 — `sw.js`·`manifest.json`·`assets/icon.svg`도 `build_index.py` 산출물(gitignore, 직접 편집 금지)**. 비행기 모드에서 모든 페이지를 다시 열 수 있게 서비스 워커가 install 시 전 HTML 페이지 + 로컬 자산(숙소 사진·자가호스팅 이미지·아이콘·매니페스트)을 `cache.addAll`로 사전 캐시하고, 자가호스팅 안 된 소수 외부 이미지는 `no-cors`+`no-referrer` best-effort로 받아둔다. fetch는 cache-first(런타임 캐시) + 오프라인 내비게이션 폴백. 캐시 버전(`CACHE`)은 `compute_cache_version(d)` — 전 산출물 콘텐츠 SHA-256 해시(앞 12자, 결정론 → `--check` 통과). `html_doc()`이 전 페이지에 매니페스트 링크 + `SW_REGISTER_SCRIPT`(외부 fetch 없이 register만 — "산출물에 fetch 없음" 규약 유지) 주입. 새 페이지를 `OUTPUTS`에 추가하면 `_precache_core_urls()`가 `.html` 라벨을 자동 사전 캐시. **서비스 워커는 HTTPS/localhost에서만 동작**(`file://` 더블클릭 미동작 — 로컬 미리보기는 페이지만 열림). 근거: `docs/decision-log/2026-05-31-offline-service-worker.md`
-- **외부 일정 이미지 자가호스팅 — 단일 출처 `data/local-image-map.json`(`url → 로컬경로`)**. `scripts/fetch_assets.py`가 itinerary.json의 모든 외부 이미지(`image_url`·`blog_reviews[].img`)를 **referer 없이** 내려받아 `assets/place-images/<url-sha1>.<ext>`(커밋)로 저장하고 매핑을 기록. `build_index.py`의 `local_src(url)`이 빌드 시 외부 URL을 로컬 경로로 치환(`expand_refs_in_obj`처럼 load 시점 적용 아님 — 렌더 4개 지점 + `blog_reviews_html`에서 호출). **빌드는 네트워크 비의존·결정론**(다운로드는 작성자 측 1회). 다운로드 실패(dead URL)는 외부 URL 유지(graceful) + SW best-effort. 일정 이미지 추가·교체 시 `uv run python scripts/fetch_assets.py` 재실행 후 `assets/place-images/`·`data/local-image-map.json` 재커밋(`--check`로 누락 감시). 근거: `docs/decision-log/2026-05-31-02-offline-image-selfhosting.md`
-- 모바일 가독성: 장문 블록(이동 경로 `arrive_from.route`·ICOCA 실행 단계·비선택 예산 시나리오·긴 예약/숙박 메모·일자별 교통패스 추천·조식 가게 그룹·조식 영업시간 주의)은 `build_index.py`의 `fold(summary, detail)` 헬퍼로 "평이 요약 + `<details>` 접기"로 렌더. 이동은 모드별 한국어 동사(`MODE_VERBS`)+소요시간 요약(환승 leg는 "환승 N회 · 약 M분"), 상세는 **역 타임라인 컴포넌트**(`.tl*`, `render_transit_line_steps`→`_render_transit_timeline`)로 렌더 — 역·정류장마다 도트 노드, 환승점은 warn 도트+'환승' 태그, 운영사·노선은 색 대신 아이콘+`.tl-mode` pill, 분·거리·요금은 `.tl-meta`. 역 정보 없는 leg(도보)는 `.tl-simple` 폴백, `advisory`는 `.tl-advisory`(warn 보더). 운영사 브랜드색(인라인 hex) 금지 — 기존 토큰만(근거: `docs/decision-log/2026-05-30-02-transit-timeline-ui.md`, DESIGN.md §4 Transit timeline). 예약·숙박 메모는 `note_block()`이 60자 초과 시 `·` 앞 2개 항목을 요약으로 노출하고 나머지(예약번호·PIN·탑승객 등)를 접는다. 교통패스 추천은 `pass_block()`이 `' — '` 앞 추천명만 보이고 비용 근거를 접는다. 예약 체크리스트(`checklist_card`)의 긴 예약번호·권장 값은 `detail_row(label, value)`이 44자 초과 시 `·` 앞 토막만 요약에 노출하고 나머지(②예약·PIN·취소정책 등)를 접어 우측 정렬 셀(`.row .v`) 오버플로를 막는다(짧으면 기존 k/v 행 유지). lodging 화면 운영 메모도 모두 `note_block()` 경유 — 하드코딩 장문 라인 금지. 일정 카드·시간표의 긴 장소 메모(`note`)·맛집 상세 노트(`food_quality.note`)는 `memo_block()`이 50자 초과 시 첫 문장(". " 또는 " · " 앞 토막, 60자 미만일 때)을 요약으로 노출하고 나머지를 접는다(맛집 평점 줄 `🍽️ …`은 항상 노출 — 검증 신호 유지). 조식 페이지(`viz/breakfast.html`)는 `_breakfast_group()`이 가게 그룹을 "라벨 · N곳"으로 접되 숙소별 첫(가장 편리) 그룹은 펼친 채(`open=True`) 둬 가격·메뉴를 즉시 노출하고, 아침 3회 표·아침별 권장은 긴 텍스트라 우측정렬 k/v 행 대신 좌측정렬 블록(`.bf-item`/`.bf-body`)으로 렌더한다. 문서 렌더 페이지(DOC_PAGES 18개 + `viz/decision-log.html` = 19페이지)는 `DOC_PAGES`로 레포 마크다운을 사이트 내 HTML로 변환(아래 "문서 렌더링" 절); 아카이브·운영 문서는 `viz/archive.html` "참고 문서" 카드 섹션에서 탐색. 모든 화면(index·itinerary·itinerary-table·lodging·checklist·archive·breakfast)이 동일 fold 패턴 적용. 새 장문 정보도 이 패턴을 따른다
+- **외부 일정 이미지 자가호스팅 — 단일 출처 `data/local-image-map.json`(`url → 로컬경로`)**. `scripts/fetch_assets.py`가 itinerary.json의 모든 외부 이미지(`image_url`·`blog_reviews[].img`)를 **referer 없이** 내려받아 `assets/place-images/<url-sha1>.<ext>`(커밋)로 저장하고 매핑을 기록. `build_index.py`의 `local_src(url)`이 빌드 시 외부 URL을 로컬 경로로 치환(`expand_refs_in_obj`처럼 load 시점 적용 아님 — 렌더 4개 지점 + `blog_reviews_html`에서 호출). **빌드는 네트워크 비의존·결정론**(다운로드는 작성자 측 1회). 일정 이미지 추가·교체 시 `uv run python scripts/fetch_assets.py` 재실행 후 `assets/place-images/`·`data/local-image-map.json` 재커밋(`--check`로 누락 감시). 근거: `docs/decision-log/2026-05-31-02-offline-image-selfhosting.md`
+  - **`blog_reviews` 이미지는 전수 자가호스팅이 강제(CI 게이트)** — `tests/test_build_index.py`의 `BlogImageSelfHostGateTests`가 비어있지 않은 모든 `blog_reviews.img`는 `local-image-map.json` 매핑 + 로컬 파일 존재를 요구(route_candidates 포함). **미매핑 `http://` 외부 이미지는 라이브(HTTPS)에서 mixed-content/404로 실패 → 카드가 사라지는 회귀("있다가 없다가")** 를 일으키므로 머지 차단한다. **원본이 죽은(404) URL은 `img`를 빈 문자열로** 둔다(리뷰 댓글·"후기 읽기" 링크는 보존, 카드는 텍스트 전용으로 렌더 — 사라지지 않음). `blog_reviews_html`의 `<img onerror>`는 **이미지만 숨기고 카드는 유지**(`this.style.display='none'`, 카드 통째 숨김 금지 — 2차 방어). 근거: `docs/decision-log/2026-05-31-07-blog-image-vanish-postmortem.md`
+- 모바일 가독성: 장문 블록(이동 경로 `arrive_from.route`·ICOCA 실행 단계·비선택 예산 시나리오·긴 예약/숙박 메모·일자별 교통패스 추천·조식 가게 그룹·조식 영업시간 주의)은 `build_index.py`의 `fold(summary, detail)` 헬퍼로 "평이 요약 + `<details>` 접기"로 렌더. 이동은 모드별 한국어 동사(`MODE_VERBS`)+소요시간 요약(환승 leg는 "환승 N회 · 약 M분"), 상세는 **역 타임라인 컴포넌트**(`.tl*`, `render_transit_line_steps`→`_render_transit_timeline`)로 렌더 — 역·정류장마다 도트 노드, 환승점은 warn 도트+'환승' 태그, 운영사·노선은 색 대신 아이콘+`.tl-mode` pill, 분·거리·요금은 `.tl-meta`. 역 정보 없는 leg(도보)는 `.tl-simple` 폴백, `advisory`는 `.tl-advisory`(warn 보더). 운영사 브랜드색(인라인 hex) 금지 — 기존 토큰만(근거: `docs/decision-log/2026-05-30-02-transit-timeline-ui.md`, DESIGN.md §4 Transit timeline). 예약·숙박 메모는 `note_block()`이 60자 초과 시 `·` 앞 2개 항목을 요약으로 노출하고 나머지(예약번호·PIN·탑승객 등)를 접는다. 교통패스 추천은 `pass_block()`이 `' — '` 앞 추천명만 보이고 비용 근거를 접는다. 예약 체크리스트(`checklist_card`)의 긴 예약번호·권장 값은 `detail_row(label, value)`이 44자 초과 시 `·` 앞 토막만 요약에 노출하고 나머지(②예약·PIN·취소정책 등)를 접어 우측 정렬 셀(`.row .v`) 오버플로를 막는다(짧으면 기존 k/v 행 유지). lodging 화면 운영 메모도 모두 `note_block()` 경유 — 하드코딩 장문 라인 금지. 일정 카드·시간표의 긴 장소 메모(`note`)·맛집 상세 노트(`food_quality.note`)는 `memo_block()`이 50자 초과 시 첫 문장(". " 또는 " · " 앞 토막, 60자 미만일 때)을 요약으로 노출하고 나머지를 접는다(맛집 평점 줄 `🍽️ …`은 항상 노출 — 검증 신호 유지). 조식 페이지(`viz/breakfast.html`)는 `_breakfast_group()`이 가게 그룹을 "라벨 · N곳"으로 접되 숙소별 첫(가장 편리) 그룹은 펼친 채(`open=True`) 둬 가격·메뉴를 즉시 노출하고, 아침 3회 표·아침별 권장은 긴 텍스트라 우측정렬 k/v 행 대신 좌측정렬 블록(`.bf-item`/`.bf-body`)으로 렌더한다. **문서 렌더 페이지**: DOC_PAGES(23개 마크다운 → HTML) + `viz/decision-log.html` 인덱스(1개) = 24페이지(아래 "문서 렌더링" 절). **커스텀 빌더 페이지**: `viz/saihoji.html`(카드 기반 커스텀 UI, `build_saihoji()`) — DOC_PAGES 루프에서 분리해 data/itinerary.json + data/booking-checklist.json의 구조화된 데이터를 직접 사용하는 전용 빌더. 아카이브·운영 문서는 `viz/archive.html` "참고 문서" 카드 섹션에서 탐색. 모든 화면(index·itinerary·itinerary-table·lodging·checklist·archive·breakfast)이 동일 fold 패턴 적용. 새 장문 정보도 이 패턴을 따른다
 - 메인 페이지(`index.html`)는 **운영 모드** — 요약·일자별 일정만. 분석·결정 자료(장마 확률·9 예산 시나리오·7 후보지 점수)는 `viz/archive.html`로 분리. 받는 사람에게 "아직 결정 중"으로 읽히는 콘텐츠는 메인에서 제외
 - `docs/weather.md`·`docs/flights.md`의 표는 각각 `data/weather.json`·`data/flights.json`의 사람용 사본 — JSON 수정 시 함께 갱신 (CI 게이트: `scripts/validate.py` E·F가 도시·시기 수치, snapshot_date, 시세 표기의 drift를 PR 단계에서 차단)
 - `docs/kyoto-itinerary-may31-jun3-2026.md`는 `data/itinerary.json`의 사람용 마크다운 사본 (JSON이 정본). 일정 변경 시 JSON을 먼저 수정 → 마크다운 함께 갱신
@@ -183,6 +191,7 @@ japan-trip/
   - 이전 정책(2026-05-26 이전): 외부 문서를 GitHub blob URL(`https://github.com/ywkim/japan-trip/blob/main/...`)로 링크 — Vercel이 `.md`를 raw text로 서빙해 상대 경로가 깨진다는 이유. **2026-05-26 정책 반전**: 받는 사람(시부모 포함)에게 레포 노출을 막기 위해 산출물에서 GitHub 링크 자체를 제거. 근거: `docs/decision-log/2026-05-26-vercel-no-github-links.md`
   - **2026-05-26 보완**: GitHub 링크 금지는 유지하되, 참조 문서를 없애는 대신 레포 마크다운을 사이트 내 HTML(`viz/report.html` 등)로 렌더해 연결. 근거: `docs/decision-log/2026-05-26-02-vercel-docs-as-html-pages.md`
   - `data/booking-checklist.json`의 `link.url`에 레포 마크다운 경로(예: `docs/booking-research-2026-05-24.md`)를 넣으면 `build_index.py`의 `DOC_SOURCE_TO_OUT`가 사이트 내 렌더 페이지로 치환. GitHub URL은 여전히 금지 (검사 J가 렌더 산출물에서 잡는다)
+- **장소 Google Maps 링크 — 가게 식별 강도에 차등(좌표 추정 금지)**. 일정(`itinerary.json`의 `maps_query`)·번역 문서(카페·식당 비교)의 지도 링크는 가게의 식별 강도에 맞춰 방식을 고른다. ① **상호에 지점명이 포함돼 고유한 가게**(`嵐山本店`·`嵐山店`·`先斗町店`·`嵐山庭園` 등) → **가게명+지점명 검색**(`maps/search/<가게명+지점>`): 구글이 정확한 그 POI에 매칭돼 카드(가게 정보)와 좌표를 동시에 안착. ② **질의로도 모호한 복수 지점 브랜드**(예: `% Arabica` 嵐山·東山) → **Place ID(CID) 직링크**(`https://maps.google.com/?cid=<10진 CID>`): 가게 고유 ID라 이름 중복에 면역. CID 획득 절차 = `WebSearch`로 구글 canonical place URL 노출 → feature ID(`0x…:0x…`) 확보 → 두 번째 hex를 10진 변환(`int(hex,16)`). **주소만으로 검색하면**(`maps/search/<주소>`) 밀집 구역에서 인접 가게 카드가 오표시되므로 단독 사용 금지. **보이는 주소 텍스트는 검증된 일본어 주소(Tabelog 등)를 그대로 유지**하고 링크 href만 위 방식으로 설정. breakfast.json `map_query`도 동일 계열(좌표 추정 금지·검색 질의만). 근거: `docs/decision-log/2026-05-31-05-cafe-maps-links-name-branch-cid.md`
 
 ## 문서 렌더링 (DOC_PAGES)
 
@@ -191,13 +200,15 @@ japan-trip/
 - **의존성**: `markdown==3.7` (`pyproject.toml` + `uv.lock`, 정확 버전·해시 고정). `build_index.py`가 `tables`·`sane_lists` 확장으로 변환. 로컬·CI 모두 uv 사용: `uv sync --locked` 후 `uv run python ...`. CI는 `astral-sh/setup-uv` + `uv sync --locked`. Vercel은 빌드 이미지에 uv가 있어 `buildCommand`를 `uv run python ...`으로 실행(시스템 pip는 PEP 668 externally-managed로 차단됨). **잠금 버전이 빌드 산출물을 결정적으로 고정** — 재현성은 `tests/test_build_index.py`가 검사. 의존성 갱신 시 `uv lock` 재실행 + 빌드 재실행 + 일지화.
 - **단일 출처**: 레포 `.md`가 정본, `viz/*.html`은 빌드 산출물(gitignore — 커밋하지 않음, CI·Vercel이 빌드 시 생성). `.md` 수정 후 `uv run python scripts/build_index.py`로 재빌드(로컬 미리보기). 재현성·콘텐츠는 `tests/test_build_index.py`가 검사.
 - **렌더 대상 등록**: `build_index.py`의 `DOC_PAGES` 튜플에 `DocPage(source, out, title, description, og_slug, tab, back_href, back_label)` 1줄 추가. `og_slug`는 기존 OG 카드 슬러그 재사용(신규 SVG 불필요). 등록 즉시 `OUTPUTS`·검사 J(glob)가 자동 커버.
-- **현재 21 페이지** (DOC_PAGES 20개 + decision-log 인덱스 1개):
-  - 기본 문서(7): `viz/report.html`·`viz/itinerary-doc.html`·`viz/research.html`·`viz/transit-pass.html`·`viz/decision-kyoto.html`·`viz/icoca-setup.html`·`viz/essential-iphone-apps.html`
-  - 후기·안내(2): `viz/kaneyo-review.html`(카네요 방문기 번역 — 5/31 저녁 blog_reviews 목적지)·`viz/shinkyogoku-review.html`(신쿄고쿠 안내 번역 — 5/31 20:00 blog_reviews 목적지)
-  - 아카이브 문서(8): `viz/candidates.html`·`viz/weather.html`·`viz/flights.html`·`viz/budget-options.html`·`viz/airbnb-comparison.html`·`viz/jejuair.html`·`viz/itinerary-may.html`·`viz/transit-mcp-handoff.html`
-  - 운영 문서(4): `viz/transit-guide.html`·`viz/saihoji.html`·`viz/soyeon-maps.html`·`viz/breakfast-doc.html`
-  - `viz/decision-log.html`(결정 일지 인덱스)
-  - 아카이브 문서·운영 문서는 `viz/archive.html`의 "참고 문서" 카드 섹션에서 탐색 가능.
+- **현재 23 DOC_PAGES 문서 렌더 페이지** + **1개 커스텀 빌더 페이지** + **1개 인덱스** = 25 페이지:
+  - DOC_PAGES 렌더(23개):
+    - 기본 문서(7): `viz/report.html`·`viz/itinerary-doc.html`·`viz/research.html`·`viz/transit-pass.html`·`viz/decision-kyoto.html`·`viz/icoca-setup.html`·`viz/essential-iphone-apps.html`
+    - 후기·안내(5): `viz/kaneyo-review.html`(카네요 방문기 번역 — 5/31 저녁 blog_reviews)·`viz/shinkyogoku-review.html`(신쿄고쿠 안내 번역 — 5/31 20:00 blog_reviews)·`viz/excafe-review.html`(eX cafe·아라시야마 카페 비교 — 6/1 09:30 Tabelog)·`viz/gontaro-review.html`(권타로 금각사점 — 6/1 12:40 Tabelog·공식사이트)·`viz/menami-review.html`(御料理めなみ 오반자이 노포 — 6/1 17:30 Tabelog·공식사이트)
+    - 아카이브 문서(8): `viz/candidates.html`·`viz/weather.html`·`viz/flights.html`·`viz/budget-options.html`·`viz/airbnb-comparison.html`·`viz/jejuair.html`·`viz/itinerary-may.html`·`viz/transit-mcp-handoff.html`
+    - 운영 문서(3): `viz/transit-guide.html`·`viz/soyeon-maps.html`·`viz/breakfast-doc.html`
+  - 커스텀 빌더(1): `viz/saihoji.html`(카드 기반 UI, `build_saihoji()` — data/itinerary.json + data/booking-checklist.json 구조화 데이터 직접 사용, DOC_PAGES에서 분리)
+  - 인덱스(1): `viz/decision-log.html`(결정 일지 인덱스, docs/decision-log/*.md 목록)
+  - 아카이브·운영 문서는 `viz/archive.html` "참고 문서" 섹션에서 탐색.
 - **GitHub 링크 금지(검사 J) 유지**: 렌더 대상 `.md`에 `github.com`이 들어가면 산출물에 섞여 머지 차단. 새 문서 등록 시 사전 확인.
 - **링크 치환**: `link.url`/내부 참조에 레포 `.md` 경로를 쓰면 `DOC_SOURCE_TO_OUT`가 in-site 페이지로 치환 (`doc_href(out, in_viz)`가 루트/viz 상대경로 결정).
 
@@ -291,6 +302,23 @@ japan-trip/
 
 - 예약 시점에 모든 `researched_market_rate` 항목을 재검색 → `confirmed_booking`으로 승격
 - 30일 이상 묵은 리서치 가격은 신뢰하지 않고 재조회
+
+### 출처 종류 정책 — 가게(일본어 1차) vs 사찰·관광지(한국어 블로그) (강제 규칙)
+
+> 항목 종류에 따라 **허용 출처가 다르다**. 검증 가능한 "사실"과 경험 공유 "후기"를 구분한다. 근거: `docs/decision-log/2026-05-31-06-source-policy-temple-ko-restaurant-ja.md` (과거 PR #89 카페·식당 한국어 블로그 날조 사건의 교훈).
+
+**두 축을 분리한다 (혼동 금지 — 근거: `docs/decision-log/2026-05-31-09-blog-reviews-url-quality-policy-axis.md`)**:
+- **축 1 — 필드(사실 vs 후기)**: 아래 표는 **사실**(가격·영업·휴무·주소·메뉴·`food_quality`·번역 페이지)의 출처 규칙이다. `blog_reviews`(경험 공유 후기 카드)는 **항목 종류 무관 허용** — **카페·식당에도 한국어 네이버 블로그 카드 OK**(정책 위반 아님). 일본어 1차 출처 제한은 **사실**에만 적용된다.
+- **축 2 — blog_reviews URL 품질**: 한국어 블로그 카드는 허용하되, `url`은 **특정 포스트**(`(m.)blog.naver.com/<id>/<글번호>`)여야 한다. **`search.naver` 검색 페이지·글번호 없는 블로거 홈 금지** — "후기 읽기 →"가 실제 후기로 가지 않는(검색창·피드로 떨어지는) 날조 시그니처(게이트 `test_naver_blog_reviews_link_to_specific_posts`가 종류 무관 차단). 댓글도 실제 글 발췌여야(합성 설명문 금지).
+- **축 3 — 번역 페이지 본문 이미지(`blog_reviews`와 별개)**: 번역 페이지(`docs/*-review-translation.md` → DOC_PAGES 렌더)의 마크다운 본문 이미지(`![alt](url)`)는 **`blog_reviews`의 네이버 특정 포스트 제약(축 2)·자가호스팅 CI 게이트 대상이 아니다**. 출처는 **네이버일 필요 없고**(공식 사이트·Tabelog·일본/한국 블로그 등 무관), 다음만 지키면 된다: ① **그 가게의 실제 이미지**(날조·무관 이미지 금지 — 가능하면 다운로드해 시각 확인) ② **https**(라이브 mixed-content 방지) ③ **출처를 문서에 명기**(캡션/주석). 외부 https hotlink 허용(`fetch_assets.py`는 `data/itinerary.json`의 `image_url`·`blog_reviews[].img`만 자가호스팅 — 번역 페이지 `.md` 이미지는 스캔 대상 아님, 오프라인은 best-effort). 예: 카네요(unagiudou.com)·메나미(공식 menami.jp 갤러리). 근거: `docs/decision-log/2026-06-01-11-menami-obanzai-desc-blog-handoff.md`
+
+| 항목 종류 | 허용 출처 (사실) | 적용 필드 | 이유 |
+|---|---|---|---|
+| **식당·카페** | **일본어 1차 출처만** (Tabelog·ぐるなび·공식 사이트) | `food_quality`, 가게 메뉴·가격·영업시간·휴무·주소 | 가격·영업·휴무는 매일 바뀌고 오정보 위험이 큼. 한국어 블로그는 옛 가격·오역·추측 혼입 → **사실 인용 금지**(검사 I가 food_quality 출처 강제). 번역 문서도 일본어 원문에서만 사실 추출. (단 `blog_reviews` 후기 카드는 위 축 1대로 허용) |
+| **사찰·신사·관광지** | **한국어 블로그(네이버 등) 허용** | `blog_reviews`(후기 카드) | 입장료·동선은 안정적이고, "한국 여행자 관점의 실용 팁"(인파 회피 시간대·시부모 동반 난이도·포토스팟·6월 분위기)이 가치. blog_reviews는 사실 주장이 아닌 **경험 공유 링크**("후기 읽기") |
+
+- **식당·카페에 한국어 블로그 사실 인용 금지**: 가격·휴무 등은 반드시 일본어 1차 출처로 교차검증. (예: 만자라테이 휴무 `不定休`는 ぐるなび·Tabelog로 확인 — 한국어 블로그의 "월요일 휴무"는 오정보였음). 단 이는 **사실**에 한정 — 카페에 한국어 `blog_reviews` 후기 카드를 두는 것은 허용(축 1).
+- **`blog_reviews`(종류 무관)는 한국어 네이버 블로그가 정석**: 실제 존재하는 **특정 포스트 URL(작성자ID/글번호) + 실제 이미지 URL만**. 검색 페이지·블로거 홈·URL·이미지 **날조 금지**(없으면 추가 보류). 신규 후기 추가 시 실제 네이버 포스트를 확보(사용자 제공 또는 검증된 검색)한 뒤 `data/itinerary.json` `blog_reviews`에 기입 → `fetch_assets.py`로 이미지 자가호스팅
 
 ## 메타 문서화 규칙 (모든 PR 공통)
 

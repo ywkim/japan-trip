@@ -16,21 +16,21 @@
 
 | 항목 | 내용 | 출처 |
 |---|---|---|
-| 공식 예약 사이트 | **intosaihoji.com** (saihoji-kokedera.com는 안내 포털) | intosaihoji.com |
-| 예약 방법 | ① 온라인(공식 계정 등록) ② 왕복엽서(往復はがき) | intosaihoji.com/nichinichi |
-| 리드타임 | 온라인 **방문 7일 전 0시 개방**, **전날까지** 신청, **선착순** | flower.kty.tokyo / kyoto-hannarism |
-| 참배료(冥加料) | **1인 ¥4,000** + 온라인 수수료 1인 ¥110 → **4인 ¥16,440** | flower.kty.tokyo |
-| 결제 | 온라인 결제(완료 시 예약번호 메일) | furafurakyoto |
-| 사경(写経) | 원칙 의무이나 **면제 가능** — 어려우면 당일 직원 상담 | intosaihoji.com/faq |
-| 좌식 부담 | 본당 **의자석 있음(수량 제한)**, 지팡이 가능 | intosaihoji.com/faq |
-| 소요시간 | 사경+정원 산책 **약 60분** | intosaihoji.com/nichinichi |
-| 타임슬롯 | **09:30 / 10:00 / 10:30 / 11:00 / 11:30** (마감 13:00) | intosaihoji.com/booking/nichinichi |
-| 나이 제한 | **만 13세 이상** | intosaihoji.com/faq |
-| 1계정 인원 | **계정당 최대 2명** → 4인 = **계정 2개** | flower.kty.tokyo |
-| 가장 가까운 정류장 | 교토버스 73계통 "苔寺・鈴虫寺" 도보 3분 / 한큐 "桂"역 | saihoji-kokedera.com/en |
-| 교토역에서 | 교토버스 73계통 약 60분 + 도보 3분 | saihoji-kokedera.com/en |
-| 휠체어 | **불가** — 정원 산책로 계단·자갈, 통행 불가 | intosaihoji.com/faq |
-| 6월 이끼 | **6~7월(장마)이 최성수기** — 가장 진초록, 비 온 날 운치 | kinarino.jp 외 |
+| 공식 예약 사이트 | **intosaihoji.com** (saihoji-kokedera.com는 안내 포털) | [intosaihoji.com](https://intosaihoji.com) |
+| 예약 방법 | ① 온라인(공식 계정 등록) ② 왕복엽서(往復はがき) | [intosaihoji.com/nichinichi](https://intosaihoji.com/nichinichi) |
+| 리드타임 | 온라인 **방문 7일 전 0시 개방**, **전날까지** 신청, **선착순** | [flower.kty.tokyo](https://flower.kty.tokyo) / [kyoto-hannarism](https://kyoto-hannarism.com) |
+| 참배료(冥加料) | **1인 ¥4,000** + 온라인 수수료 1인 ¥110 → **4인 ¥16,440** | [flower.kty.tokyo](https://flower.kty.tokyo) |
+| 결제 | 온라인 결제(완료 시 예약번호 메일) | [furafurakyoto](https://furafurakyoto.com) |
+| 사경(写経) | 원칙 의무이나 **면제 가능** — 어려우면 당일 직원 상담 | [intosaihoji.com/faq](https://intosaihoji.com/faq) |
+| 좌식 부담 | 본당 **의자석 있음(수량 제한)**, 지팡이 가능 | [intosaihoji.com/faq](https://intosaihoji.com/faq) |
+| 소요시간 | 사경+정원 산책 **약 60분** | [intosaihoji.com/nichinichi](https://intosaihoji.com/nichinichi) |
+| 타임슬롯 | **09:30 / 10:00 / 10:30 / 11:00 / 11:30** (마감 13:00) | [intosaihoji.com/booking/nichinichi](https://intosaihoji.com/booking/nichinichi) |
+| 나이 제한 | **만 13세 이상** | [intosaihoji.com/faq](https://intosaihoji.com/faq) |
+| 1계정 인원 | **계정당 최대 2명** → 4인 = **계정 2개** | [flower.kty.tokyo](https://flower.kty.tokyo) |
+| 가장 가까운 정류장 | 교토버스 73계통 "苔寺・鈴虫寺" 도보 3분 / 한큐 "桂"역 | [saihoji-kokedera.com/en](https://saihoji-kokedera.com/en) |
+| 교토역에서 | 교토버스 73계통 약 60분 + 도보 3분 | [saihoji-kokedera.com/en](https://saihoji-kokedera.com/en) |
+| 휠체어 | **불가** — 정원 산책로 계단·자갈, 통행 불가 | [intosaihoji.com/faq](https://intosaihoji.com/faq) |
+| 6월 이끼 | **6~7월(장마)이 최성수기** — 가장 진초록, 비 온 날 운치 | [kinarino.jp](https://kinarino.jp) 외 |
 
 ## 시부모(60~70대) 동반 적합성
 

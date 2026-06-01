@@ -530,7 +530,7 @@ class TransitFromToRegistryTests(unittest.TestCase):
         for from_label, to_label in (
             ("니조역(二条駅)", "교토역(京都駅)"),
             ("교토역(京都駅)", "이나리역(稲荷駅)"),
-            ("아라시야마텐류지마에(嵐山天龍寺前)", "야마고에나카마치(山越中町)"),
+            ("이나리역(稲荷駅)", "토후쿠지역(東福寺駅)"),
         ):
             with self.subTest(route=f"{from_label}→{to_label}"):
                 self.assertIn(from_label, html, f"from 병기 누락: {from_label}")
@@ -539,10 +539,10 @@ class TransitFromToRegistryTests(unittest.TestCase):
     def test_production_transfer_and_advisory_rendered(self):
         run()
         html = ITINERARY.read_text(encoding="utf-8")
-        # 환승 2건(금각사·후시미)이 타임라인 '환승' 태그로 렌더
+        # 환승 점과 조언문이 타임라인에 렌더됨
         self.assertIn('class="tl-tag">환승</span>', html)
         self.assertIn("tl-dot transfer", html)
-        self.assertIn("놓치면 택시 22분 대안", html)
+        self.assertIn("택시 예약", html)  # Gontaro arrive_from advisory
 
     def test_production_no_inline_operator_hex(self):
         """운영사 브랜드 hex(인라인 스타일)가 산출물에 남지 않아야 한다 (DESIGN: 단일 accent)."""
@@ -573,7 +573,6 @@ class TransitFromToRegistryTests(unittest.TestCase):
 
         # (date, ko, 기대 분 합, 기대 요금 합)
         expectations = [
-            ("2026-06-01", "금각사", 38, 460),   # 버스 환승: 요금 2회(¥230×2)
             ("2026-06-02", "후시미이나리", 20, 200),  # JR 통표: 단일 ¥200, 합계 20분
         ]
         for date, ko, exp_dur, exp_fare in expectations:
@@ -819,7 +818,9 @@ class BlogReviewsTests(unittest.TestCase):
         run()
         itin = ITINERARY.read_text(encoding="utf-8")
         self.assertIn('class="blog-thumb"', itin, "blog thumbnail images missing")
-        self.assertIn("pstatic.net", itin, "expected pstatic.net image URLs in blog reviews")
+        # 자가호스팅 후 외부 URL(pstatic.net 등)은 로컬 경로로 치환되어야 한다 —
+        # 외부 URL이 HTML에 남으면 라이브(HTTPS)에서 mixed-content/404로 카드가 사라진다.
+        self.assertIn("/assets/place-images/", itin, "blog thumbnails not self-hosted (local path missing)")
 
     def test_blog_reviews_standalone(self):
         run()
@@ -1183,6 +1184,16 @@ class DocPageTests(unittest.TestCase):
                 self.assertIn('property="og:title"', html)
                 self.assertIn("/assets/og-", html)
 
+    def test_doc_images_constrained_to_container(self):
+        """문서 본문 이미지는 컨테이너 폭에 맞춰 축소돼야 한다(모바일 가로 넘침 방지)."""
+        run()
+        html = (BASE / "viz" / "report.html").read_text(encoding="utf-8")
+        self.assertIn(".doc img", html, ".doc img rule missing from DOC_CSS")
+        # max-width:100% + height:auto 로 가로 스크롤·왜곡 방지
+        doc_img_block = html.split(".doc img", 1)[1][:120]
+        self.assertIn("max-width", doc_img_block)
+        self.assertIn("100%", doc_img_block)
+
     def test_place_refs_expanded_in_itinerary(self):
         """data/itinerary.json places 레지스트리의 {{id}} 참조가 'ko(ja)'로
         확장 렌더되고, 미확장 {{...}} 토큰이 산출물에 남지 않아야 한다.
@@ -1194,11 +1205,13 @@ class DocPageTests(unittest.TestCase):
         self.assertGreater(len(places), 0, "places registry must be populated")
         html = ITINERARY.read_text(encoding="utf-8")
         self.assertNotIn("{{", html, "unexpanded place ref leaked into itinerary.html")
-        # 니시키 레지스트리 항목이 ko(ja) 병기 형태로 확장됐는지
-        if "nishiki" in places:
-            p = places["nishiki"]
+        # 확정 일정에서 항상 참조되는 kinkakuji 항목이 ko(ja) 병기로 확장됐는지
+        # (과거엔 nishiki로 검사했으나 6/1 오후가 숙소 휴식으로 바뀌며 nishiki 참조가
+        #  확정 일정에서 빠짐 — 항상 참조되는 kinkakuji로 가드 유지)
+        if "kinkakuji" in places:
+            p = places["kinkakuji"]
             self.assertIn(f'{p["ko"]}({p["ja"]})', html,
-                          "nishiki place ref not expanded to ko(ja) in itinerary.html")
+                          "kinkakuji place ref not expanded to ko(ja) in itinerary.html")
 
     def test_doc_pages_drift_detected_by_check(self):
         run()
@@ -1326,7 +1339,7 @@ class ChecklistCardNoteFoldTests(unittest.TestCase):
         it = {
             "label": "식당", "status": "예약중",
             "note": "두 저녁 모두 워크인 대기 리스크 커 사전 넷예약 권장(전화 불요). "
-                    "① 大鵬은 AutoReserve로 예약. ② まんざら亭은 楽天으로 예약.",
+                    "① 大鵬은 AutoReserve로 예약. ② 御料理めなみ는 전화로 예약.",
         }
         html = build_index.checklist_card(it)
         self.assertIn("<details", html, "long note should be collapsible")
@@ -1523,6 +1536,76 @@ class SelfHostedImageTests(unittest.TestCase):
         sw = SW.read_text(encoding="utf-8")
         self.assertIn("referrerPolicy", sw)
         self.assertIn("no-referrer", sw)
+
+
+class BlogImageSelfHostGateTests(unittest.TestCase):
+    """모든 blog_reviews 이미지가 자가호스팅됐는지 강제하는 회귀 가드.
+
+    근거: docs/decision-log/2026-05-31-07-blog-image-vanish-postmortem.md
+    미매핑(http://) 외부 이미지는 라이브(HTTPS)에서 mixed-content/404로 실패 →
+    onerror가 카드를 숨겨 "있다가 없다가" 회귀. 본 게이트가 머지 단계에서 차단한다.
+    """
+
+    def _iter_blog_reviews(self):
+        import json as _json
+        d = _json.loads((BASE / "data" / "itinerary.json").read_text(encoding="utf-8"))
+        days = list(d.get("days", []))
+        for rc in d.get("route_candidates", []):
+            days += rc.get("days", []) if isinstance(rc, dict) else []
+        for day in days:
+            for it in day.get("items", []):
+                ko = (it.get("title") or {}).get("ko_name", "?")
+                for r in it.get("blog_reviews", []):
+                    yield ko, r
+
+    def _iter_blog_imgs(self):
+        for ko, r in self._iter_blog_reviews():
+            yield ko, (r.get("img") or "").strip()
+
+    def test_every_blog_image_is_self_hosted(self):
+        """비어있지 않은 모든 blog_reviews.img는 local-image-map에 매핑 + 파일 존재."""
+        import json as _json
+        lm = _json.loads((BASE / "data" / "local-image-map.json").read_text(encoding="utf-8"))
+        offenders = []
+        for ko, img in self._iter_blog_imgs():
+            if not img:
+                continue  # 빈 img = 텍스트 전용 카드(허용, onerror 숨김 대상 아님)
+            local = lm.get(img)
+            if not local:
+                offenders.append(f"{ko}: UNMAPPED {img[:60]}")
+            elif not (BASE / local.lstrip("/")).exists():
+                offenders.append(f"{ko}: FILE-MISSING {local}")
+        self.assertEqual(
+            offenders, [],
+            "자가호스팅 안 된 blog_reviews 이미지 — 라이브에서 카드가 사라진다. "
+            "`uv run python scripts/fetch_assets.py` 실행 후 재커밋하거나 죽은 URL은 img를 비우라:\n"
+            + "\n".join(offenders),
+        )
+
+    def test_naver_blog_reviews_link_to_specific_posts(self):
+        """blog_reviews의 네이버 URL은 특정 포스트(작성자ID/글번호)여야 한다.
+
+        근거: docs/decision-log/2026-05-31-08-excafe-blog-reviews-fabrication-removal.md
+        검색결과 페이지(search.naver)·글번호 없는 블로그 홈은 '후기 읽기'가 실제 후기로
+        가지 않는 날조 시그니처 → 머지 차단. 실제 포스트는 m.blog.naver.com/<id>/<글번호>.
+        """
+        import re
+        post_re = re.compile(r"blog\.naver\.com/[^/]+/\d+")
+        offenders = []
+        for ko, r in self._iter_blog_reviews():
+            url = (r.get("url") or "").strip()
+            if "naver" not in url:
+                continue  # 사이트 내 .html 등은 면제
+            if "search.naver" in url:
+                offenders.append(f"{ko}: SEARCH-PAGE {url}")
+            elif not post_re.search(url):
+                offenders.append(f"{ko}: BLOG-HOME(글번호 없음) {url}")
+        self.assertEqual(
+            offenders, [],
+            "날조 시그니처 blog_reviews URL — 검색 페이지/블로그 홈은 실제 후기가 아니다. "
+            "특정 포스트 URL(m.blog.naver.com/<id>/<글번호>)로 교체하거나 항목을 제거하라:\n"
+            + "\n".join(offenders),
+        )
 
 
 if __name__ == "__main__":

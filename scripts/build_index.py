@@ -120,6 +120,24 @@ DOC_PAGES = (
         "교토 도심 550m 지붕 아케이드 — 로쿄쿠야키·니시키텐만구·식후 산책 코스",
         "itinerary", "itinerary", "itinerary.html", "← 일정",
     ),
+    DocPage(
+        "docs/excafe-review-translation.md", "viz/excafe-review.html",
+        "eX cafe — 당고 직화구이와 정원 카페",
+        "Tabelog 일본어 정보 한국어 번역 — 당고 직화구이·말차 디저트·아라시야마 카페 비교",
+        "itinerary", "itinerary", "itinerary.html", "← 일정",
+    ),
+    DocPage(
+        "docs/menami-review-translation.md", "viz/menami-review.html",
+        "御料理めなみ — 1939년 오반자이 노포 저녁",
+        "Tabelog·공식사이트 일본어 정보 한국어 번역 — 1939년 오반자이 노포·메뉴·술 없이 예산",
+        "itinerary", "itinerary", "itinerary.html", "← 일정",
+    ),
+    DocPage(
+        "docs/gontaro-review-translation.md", "viz/gontaro-review.html",
+        "권타로 金閣寺店 — 황금의 일즙 조림국수",
+        "Tabelog 일본어 정보 한국어 번역 — 1910년 노포·교마치야 정원·일즙 육수",
+        "itinerary", "itinerary", "itinerary.html", "← 일정",
+    ),
     # ── 아카이브 문서 (8개) ───────────────────────────────────────────────────
     DocPage(
         "docs/candidates.md", "viz/candidates.html",
@@ -174,12 +192,6 @@ DOC_PAGES = (
         "docs/transit-guide-may31-jun3.md", "viz/transit-guide.html",
         "이동 경로 상세 가이드",
         "5/31~6/3 4인 이동 경로 상세 가이드",
-        "itinerary", "itinerary", "itinerary.html", "← 일정",
-    ),
-    DocPage(
-        "docs/saihoji-reservation-2026-06.md", "viz/saihoji.html",
-        "사이호지 예약 가능성",
-        "사이호지(苔寺) 참배 예약 가능성 리서치 (2026-06)",
         "itinerary", "itinerary", "itinerary.html", "← 일정",
     ),
     DocPage(
@@ -628,9 +640,13 @@ def blog_reviews_html(reviews: list, in_viz: bool = False) -> str:
         return ""
     def card(r):
         href, attr = _blog_card_href(r["url"], in_viz)
+        # onerror: 이미지만 숨기고 카드(댓글·링크)는 유지 — 이미지 실패로 카드가 통째로
+        # 사라지는 회귀 방어(근거: docs/decision-log/2026-05-31-07-blog-image-vanish-postmortem.md).
+        # 모든 img는 자가호스팅(검사: BlogImageSelfHostGateTests)이라 라이브에서 실패하지 않는 것이 1차 보증.
+        img_tag = f'<img src="{esc(local_src(r["img"]))}" class="blog-thumb" loading="lazy" alt="" referrerpolicy="no-referrer" onerror="this.style.display=\'none\'">' if r.get("img") else ''
         return (
             f'<a href="{href}"{attr} class="blog-card">'
-            f'<img src="{esc(local_src(r["img"]))}" class="blog-thumb" loading="lazy" alt="" referrerpolicy="no-referrer" onerror="this.closest(\'.blog-card\').style.display=\'none\'">'
+            f'{img_tag}'
             f'<p class="blog-comment">{esc(r["comment"])}</p>'
             f'<span class="blog-read">후기 읽기 →</span>'
             f'</a>'
@@ -2417,12 +2433,15 @@ DOC_CSS = """
     background: var(--subcard); color: var(--muted); border-radius: 0 4px 4px 0;
   }
   .doc blockquote p { margin: 0.3rem 0; }
+  .doc img {
+    max-width: 100%; height: auto; display: block;
+    margin: 0.6rem auto; border-radius: 8px; border: 1px solid var(--border);
+  }
   .doc table {
     border-collapse: collapse; width: 100%; margin: 0.6rem 0; font-size: 0.85rem;
-    display: block; overflow-x: auto; -webkit-overflow-scrolling: touch;
   }
-  .doc th, .doc td { border: 1px solid var(--border); padding: 0.4rem 0.55rem; text-align: left; vertical-align: top; }
-  .doc th { background: var(--subcard); font-weight: 600; white-space: nowrap; }
+  .doc th, .doc td { border: 1px solid var(--border); padding: 0.4rem 0.55rem; text-align: left; vertical-align: top; word-break: break-word; }
+  .doc th { background: var(--subcard); font-weight: 600; white-space: normal; }
   .doc hr { border: none; border-top: 1px solid var(--border); margin: 1.2rem 0; }
 """
 
@@ -2715,6 +2734,155 @@ def build_icon_svg(d) -> str:
 """
 
 
+def build_saihoji(d) -> str:
+    """사이호지(苔寺) — 예약 확정 카드 기반 커스텀 페이지."""
+    itinerary = d["itinerary"]
+    checklist = d["checklist"]
+
+    # itinerary에서 사이호지 항목 추출
+    saihoji_item = None
+    for day in itinerary.get("days", []):
+        for item in day.get("items", []):
+            ko = (item.get("title") or {}).get("ko_name", "")
+            if "사이호지" in ko:
+                saihoji_item = item
+                break
+
+    # booking-checklist에서 예약 정보 추출
+    booking = next(
+        (it for it in checklist.get("items", []) if it.get("id") == "saihoji_research"),
+        None,
+    )
+
+    reviews = (saihoji_item or {}).get("blog_reviews", [])
+
+    # ── 예약 확정 카드
+    booking_card = ""
+    if booking:
+        status_badge = '<span class="badge badge-done" style="font-size:0.85rem;padding:0.2rem 0.7rem;">예약 확정</span>'
+        confirmed = esc(booking.get("confirmed_at", ""))
+        amount = esc(booking.get("amount", ""))
+        ref_full = booking.get("reference", "")
+        ref_short = "① 1400827143416024 · ② 1400827143410570"
+        ref_detail = esc(ref_full)
+        action_html = esc(booking.get("action", ""))
+        booking_card = f"""
+<div class="card">
+  <div class="ck-head">
+    <span class="subtitle">예약 정보</span>
+    {status_badge}
+  </div>
+  <div class="row"><span class="k">날짜·시간</span><span class="v">6/1(월) 10:30</span></div>
+  <div class="row"><span class="k">인원</span><span class="v">성인 4인 (2건)</span></div>
+  <div class="row"><span class="k">확정일</span><span class="v">{confirmed}</span></div>
+  <div class="row"><span class="k">결제 금액</span><span class="v" style="color:var(--ok);font-weight:600;">₩188,216</span></div>
+  {fold(
+      f'<span class="k">예약번호</span> <span class="v">{esc(ref_short)}</span>',
+      f'<div class="sub" style="margin-top:0.4rem;">{ref_detail}</div>',
+  )}
+  <div style="margin-top:0.6rem;padding-top:0.6rem;border-top:1px solid var(--border);font-size:0.82rem;color:var(--muted);">{action_html}</div>
+</div>"""
+
+    # ── 핵심 정보 그리드 (2열)
+    facts = [
+        ("🍃", "이끼 최성수기", "6~7월(장마) — 비 온 날 가장 진초록"),
+        ("⏱", "소요시간", "사경 + 정원 산책 약 60분"),
+        ("💴", "참배료", "1인 ¥4,000 · 4인 ¥16,440"),
+        ("🚌", "이동", "교토버스 73계통 약 18분"),
+        ("🖌️", "사경(写経)", "어려우면 현장 직원 면제 상담 가능"),
+        ("🪑", "의자석", "본당 의자석 있음 (수량 제한)"),
+    ]
+    fact_cells = "".join(
+        f'<div class="sf-cell"><span class="sf-icon">{icon}</span>'
+        f'<span class="sf-label">{esc(label)}</span>'
+        f'<span class="sf-val">{esc(val)}</span></div>'
+        for icon, label, val in facts
+    )
+    facts_card = f"""
+<div class="card">
+  <div class="subtitle" style="margin-bottom:0.6rem;">참배 정보</div>
+  <div class="sf-grid">{fact_cells}</div>
+</div>"""
+
+    # ── 블로그 리뷰 스트립
+    reviews_html = ""
+    if reviews:
+        reviews_html = f"""
+<div class="card">
+  <div class="subtitle" style="margin-bottom:0.5rem;">방문 후기</div>
+  {blog_reviews_html(reviews, in_viz=True)}
+</div>"""
+
+    # ── 시부모 동반 · 접근성 카드
+    access_card = """
+<div class="card">
+  <div class="subtitle" style="margin-bottom:0.4rem;">시부모(60~70대) 동반 포인트</div>
+  <ul style="margin:0;padding-left:1.2rem;font-size:0.88rem;line-height:1.7;">
+    <li><strong>사경 면제</strong> 가능 — 어려우면 당일 입장 시 직원 상담</li>
+    <li><strong>의자석</strong> 있음 (수량 제한 → 조기 도착 권장)</li>
+    <li><strong>지팡이</strong> 사용 가능</li>
+    <li><strong>계단·자갈길</strong> 있음 — 무릎·보행 부담 시 신중히 판단</li>
+    <li><strong>휠체어 불가</strong> (정원 산책로 구조)</li>
+  </ul>
+</div>"""
+
+    # ── 출처 링크
+    sources = [
+        ("공식 예약", "https://intosaihoji.com"),
+        ("참배 안내", "https://intosaihoji.com/nichinichi"),
+        ("FAQ", "https://intosaihoji.com/faq"),
+        ("교통", "https://saihoji-kokedera.com/en"),
+    ]
+    src_links = "".join(
+        f'<a href="{esc(url)}" target="_blank" rel="noopener" class="source-link">'
+        f'<span class="source-tick">✓</span><span>{esc(label)}</span>'
+        f'</a>'
+        for label, url in sources
+    )
+    source_section = f'<div class="source-row" style="margin-top:0.5rem;">{src_links}</div>'
+
+    extra_css = """
+  .sf-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem 0.6rem;
+  }
+  .sf-cell {
+    background: var(--subcard);
+    border-radius: 8px;
+    padding: 0.55rem 0.65rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+  .sf-icon { font-size: 1.1rem; line-height: 1.2; }
+  .sf-label { font-size: 0.72rem; color: var(--muted); }
+  .sf-val { font-size: 0.82rem; font-weight: 500; line-height: 1.3; word-break: keep-all; }
+"""
+
+    body = (
+        '<nav><a href="itinerary.html">← 일정</a><a href="../index.html">🏠 홈</a></nav>'
+        '<h1 style="font-size:1.35rem;margin:0.5rem 0 0.15rem;">사이호지(苔寺)</h1>'
+        '<p class="sub" style="margin:0 0 0.75rem;">이끼 정원 — 사경 체험</p>'
+        + booking_card
+        + facts_card
+        + reviews_html
+        + access_card
+        + f'<div class="card"><div class="subtitle" style="margin-bottom:0.3rem;">참고 링크</div>{source_section}</div>'
+        + '\n<footer>상세 리서치: docs/saihoji-reservation-2026-06.md · 예약: data/booking-checklist.json</footer>\n'
+        + tab_bar("itinerary", in_viz=True)
+    )
+    return html_doc(
+        "사이호지(苔寺) 참배",
+        body,
+        tokens=d["tokens"],
+        description="사이호지(苔寺) 이끼 정원 참배 — 예약 확정, 사경 체험 안내",
+        og_slug="itinerary",
+        page_path="viz/saihoji.html",
+        extra_css=extra_css,
+    )
+
+
 # ─── 메인 ──────────────────────────────────────────────────────────────────
 
 OUTPUTS = (
@@ -2725,6 +2893,7 @@ OUTPUTS = (
     ("viz/lodging.html",              lambda p: p / "viz" / "lodging.html",              build_lodging),
     ("viz/archive.html",              lambda p: p / "viz" / "archive.html",              build_archive),
     ("viz/breakfast.html",            lambda p: p / "viz" / "breakfast.html",            build_breakfast),
+    ("viz/saihoji.html",              lambda p: p / "viz" / "saihoji.html",              build_saihoji),
 ) + tuple(
     (
         page.out,
