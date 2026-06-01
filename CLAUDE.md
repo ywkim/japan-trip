@@ -125,6 +125,7 @@ japan-trip/
 │   ├── shinkyogoku-review-translation.md  # 신쿄고쿠 상점가(新京極商店街) 안내·복수 방문기 번역·재구성 → viz/shinkyogoku-review.html
 │   ├── excafe-review-translation.md       # eX cafe(イクスカフェ)·아라시야마 카페 비교 — Tabelog 일본어 정보 번역 (6/1 12:00) → viz/excafe-review.html
 │   ├── manzaratei-review-translation.md   # 만자라테이 先斗町店 창작 교토요리 — Tabelog·ぐるなび 정보 번역 (6/1 18:30) → viz/manzaratei-review.html
+│   ├── excafe-blog-reviews-handoff.md      # 후속 세션(Playwright MCP) 위임 가이드 — eX cafe·아라시야마 카페 실제 네이버 후기 blog_reviews 수집 (naver egress 차단 환경에서 보류된 작업)
 │   └── screenshots/                       # 리서치 근거 스크린샷 (예: airalo-japan-2026-05-26.png — eSIM 실가격·핫스팟 정책 1차 출처)
 ├── viz/
 │   ├── itinerary.html         # 일자별 카드 뷰 (build_index.py 산출물 — 직접 편집 금지)
