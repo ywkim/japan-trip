@@ -132,6 +132,12 @@ DOC_PAGES = (
         "Tabelog 일본어 정보 한국어 번역 — 폰토초 교마치야·오반자이·창작 교토요리",
         "itinerary", "itinerary", "itinerary.html", "← 일정",
     ),
+    DocPage(
+        "docs/yoshimura-review-translation.md", "viz/yoshimura-review.html",
+        "아라시야마 요시무라 — 도게쓰교가 보이는 수타 소바",
+        "Tabelog 일본어 정보 한국어 번역 — 수타 소바·도게쓰교 창가석·메뉴 상세",
+        "itinerary", "itinerary", "itinerary.html", "← 일정",
+    ),
     # ── 아카이브 문서 (8개) ───────────────────────────────────────────────────
     DocPage(
         "docs/candidates.md", "viz/candidates.html",
