@@ -628,7 +628,14 @@
           "link": {
             "url": "excafe-review.html",
             "label": "eX cafe 상세 정보 (당고·카페 비교)"
-          }
+          },
+          "blog_reviews": [
+            {
+              "url": "https://m.blog.naver.com/ramu0527/223959935624",
+              "img": "http://blogthumb.pstatic.net/MjAxOTA1MDVfMTA1/MDAxNTU3MDQ5MDYyNzA2.-uDIBqRRT9NVhHdgz1-hdOg8w2jEB5LgAOjKIOPa9p0g.4bylF-b-5bE32APT0kSmzoCTFVWYvqfbXglcBRKFwOQg.JPEG.m0846/IMG_9263.JPG?type=w2",
+              "comment": "[eX cafe] 당고 세트+말차 파르페 실식 후기. 미니 화로 직화구이 체험, 일본 정원 뷰 좌석 추천"
+            }
+          ]
         },
         {
           "time": "13:30",
