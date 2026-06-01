@@ -126,6 +126,7 @@ japan-trip/
 │   ├── excafe-review-translation.md       # eX cafe(イクスカフェ)·아라시야마 카페 비교 — Tabelog 일본어 정보 번역 (6/1 12:00) → viz/excafe-review.html
 │   ├── menami-review-translation.md       # 御料理めなみ 1939년 오반자이 노포(키야마치) — Tabelog·공식사이트 정보 번역·술 없이 예산 (6/1 17:30) → viz/menami-review.html
 │   ├── excafe-blog-reviews-handoff.md      # 후속 세션(Playwright MCP) 위임 가이드 — eX cafe·아라시야마 카페 실제 네이버 후기 blog_reviews 수집 (naver egress 차단 환경에서 보류된 작업)
+│   ├── menami-blog-reviews-handoff.md       # 후속 세션(Playwright MCP) 위임 가이드 — 御料理めなみ(6/1 저녁) 실제 네이버 후기·사진 blog_reviews 수집 (naver egress 차단 환경에서 보류된 작업)
 │   └── screenshots/                       # 리서치 근거 스크린샷 (예: airalo-japan-2026-05-26.png — eSIM 실가격·핫스팟 정책 1차 출처)
 ├── viz/
 │   ├── itinerary.html         # 일자별 카드 뷰 (build_index.py 산출물 — 직접 편집 금지)
@@ -309,6 +310,7 @@ japan-trip/
 **두 축을 분리한다 (혼동 금지 — 근거: `docs/decision-log/2026-05-31-09-blog-reviews-url-quality-policy-axis.md`)**:
 - **축 1 — 필드(사실 vs 후기)**: 아래 표는 **사실**(가격·영업·휴무·주소·메뉴·`food_quality`·번역 페이지)의 출처 규칙이다. `blog_reviews`(경험 공유 후기 카드)는 **항목 종류 무관 허용** — **카페·식당에도 한국어 네이버 블로그 카드 OK**(정책 위반 아님). 일본어 1차 출처 제한은 **사실**에만 적용된다.
 - **축 2 — blog_reviews URL 품질**: 한국어 블로그 카드는 허용하되, `url`은 **특정 포스트**(`(m.)blog.naver.com/<id>/<글번호>`)여야 한다. **`search.naver` 검색 페이지·글번호 없는 블로거 홈 금지** — "후기 읽기 →"가 실제 후기로 가지 않는(검색창·피드로 떨어지는) 날조 시그니처(게이트 `test_naver_blog_reviews_link_to_specific_posts`가 종류 무관 차단). 댓글도 실제 글 발췌여야(합성 설명문 금지).
+- **축 3 — 번역 페이지 본문 이미지(`blog_reviews`와 별개)**: 번역 페이지(`docs/*-review-translation.md` → DOC_PAGES 렌더)의 마크다운 본문 이미지(`![alt](url)`)는 **`blog_reviews`의 네이버 특정 포스트 제약(축 2)·자가호스팅 CI 게이트 대상이 아니다**. 출처는 **네이버일 필요 없고**(공식 사이트·Tabelog·일본/한국 블로그 등 무관), 다음만 지키면 된다: ① **그 가게의 실제 이미지**(날조·무관 이미지 금지 — 가능하면 다운로드해 시각 확인) ② **https**(라이브 mixed-content 방지) ③ **출처를 문서에 명기**(캡션/주석). 외부 https hotlink 허용(`fetch_assets.py`는 `data/itinerary.json`의 `image_url`·`blog_reviews[].img`만 자가호스팅 — 번역 페이지 `.md` 이미지는 스캔 대상 아님, 오프라인은 best-effort). 예: 카네요(unagiudou.com)·메나미(공식 menami.jp 갤러리). 근거: `docs/decision-log/2026-06-01-11-menami-obanzai-desc-blog-handoff.md`
 
 | 항목 종류 | 허용 출처 (사실) | 적용 필드 | 이유 |
 |---|---|---|---|
