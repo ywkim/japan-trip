@@ -456,7 +456,7 @@ class TransitFoldTests(unittest.TestCase):
                 html = path.read_text(encoding="utf-8")
                 self.assertIn("🎫 iPhone Apple Wallet ICOCA 단권", html,
                               f"pass recommendation summary missing in {path.name}")
-                self.assertIn("본전 미달", html, f"pass rationale detail lost in {path.name}")
+                self.assertIn("별도 왕복권", html, f"pass rationale detail lost in {path.name}")
 
     def test_playbook_collapsed_but_text_preserved(self):
         run()
@@ -529,7 +529,7 @@ class TransitFromToRegistryTests(unittest.TestCase):
         # (from 병기, to 병기) 튜플 검증
         for from_label, to_label in (
             ("니조역(二条駅)", "교토역(京都駅)"),
-            ("교토역(京都駅)", "이나리역(稲荷駅)"),
+            ("시오 마치야(塩町家)", "카덴쇼(嘉寿庄)"),
             ("아라시야마텐류지마에(嵐山天龍寺前)", "야마고에나카마치(山越中町)"),
         ):
             with self.subTest(route=f"{from_label}→{to_label}"):
@@ -574,7 +574,6 @@ class TransitFromToRegistryTests(unittest.TestCase):
         # (date, ko, 기대 분 합, 기대 요금 합)
         expectations = [
             ("2026-06-01", "금각사", 38, 460),   # 버스 환승: 요금 2회(¥230×2)
-            ("2026-06-02", "후시미이나리", 19, 150),  # 카덴쇼 경유: 도보 8분+나라선 11분=19분, ¥150
         ]
         for date, ko, exp_dur, exp_fare in expectations:
             with self.subTest(leg=ko):
@@ -928,9 +927,9 @@ class ItineraryMemoFoldTests(unittest.TestCase):
         for path in (ITINERARY, TABLE):
             with self.subTest(path=path.name):
                 html = path.read_text(encoding="utf-8")
-                self.assertIn("니넨자카(二年坂)·산넨자카(産寧坂) 인근 말차 디저트 카페</summary>", html,
+                self.assertIn("폭우로 야외 동산(키요미즈데라(清水寺))·디저트(산넨자카 맛차하우스) 코스를 대체한 실내 디저트 휴식</summary>", html,
                               "long place memo should fold into a first-sentence summary")
-                self.assertIn("영업 11:00~18:00(L.O.17:30, Tabelog 기준)", html, "memo tail lost (not lossless)")
+                self.assertIn("14:30~16:00 권장, 피크 15~20분 대기", html, "memo tail lost (not lossless)")
 
     def test_long_food_note_folded_but_rating_kept(self):
         run()

@@ -127,9 +127,9 @@ DOC_PAGES = (
         "itinerary", "itinerary", "itinerary.html", "← 일정",
     ),
     DocPage(
-        "docs/maccha-house-review-translation.md", "viz/maccha-house-review.html",
-        "말차하우스 디저트 정보 — 말차 티라미수",
-        "산넨자카 말차 티라미수 전문 카페 — 메뉴·영업시간·방문 가이드",
+        "docs/isetan-matcha-dessert-translation.md", "viz/isetan-matcha-dessert.html",
+        "교토역 말차 디저트 — 中村藤吉 vs 茶寮都路里",
+        "JR교토 이세탄 같은 건물 두 우지 말차 노포 비교 — 6/2 우천 실내 디저트 휴식",
         "itinerary", "itinerary", "itinerary.html", "← 일정",
     ),
     # ── 아카이브 문서 (8개) ───────────────────────────────────────────────────

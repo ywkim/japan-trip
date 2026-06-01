@@ -124,7 +124,7 @@ japan-trip/
 │   ├── kaneyo-review-translation.md       # 교고쿠 카네요(京極かねよ) 방문기 한국어 번역 (unagiudou.com 2025-05-27 원문) → viz/kaneyo-review.html
 │   ├── shinkyogoku-review-translation.md  # 신쿄고쿠 상점가(新京極商店街) 안내·복수 방문기 번역·재구성 → viz/shinkyogoku-review.html
 │   ├── nakamura-shoten-review-translation.md # 나카무라쇼텐(中村商店) 교토역 라멘코지 가이드 (Tabelog 2026-06-01) → viz/nakamura-shoten-review.html
-│   ├── maccha-house-review-translation.md # 맛차하우스(MACCHA HOUSE 抹茶館) 산넨자카 가이드 (Tabelog 2026-06-01) → viz/maccha-house-review.html
+│   ├── isetan-matcha-dessert-translation.md # 교토역 말차 디저트 비교 中村藤吉 vs 茶寮都路里 (JR이세탄·6/2 우천 실내) → viz/isetan-matcha-dessert.html
 │   └── screenshots/                       # 리서치 근거 스크린샷 (예: airalo-japan-2026-05-26.png — eSIM 실가격·핫스팟 정책 1차 출처)
 ├── viz/
 │   ├── itinerary.html         # 일자별 카드 뷰 (build_index.py 산출물 — 직접 편집 금지)
@@ -141,7 +141,7 @@ japan-trip/
 │   ├── kaneyo-review.html     # 교고쿠 카네요 방문기 번역 페이지 (docs/kaneyo-review-translation.md → HTML, 산출물)
 │   ├── shinkyogoku-review.html # 신쿄고쿠 상점가 안내 번역 페이지 (docs/shinkyogoku-review-translation.md → HTML, 산출물)
 │   ├── nakamura-shoten-review.html # 나카무라쇼텐 라멘 가이드 (docs/nakamura-shoten-review-translation.md → HTML, 산출물)
-│   ├── maccha-house-review.html # 맛차하우스 디저트 가이드 (docs/maccha-house-review-translation.md → HTML, 산출물)
+│   ├── isetan-matcha-dessert.html # 교토역 말차 디저트 비교 中村藤吉 vs 茶寮都路里 (docs/isetan-matcha-dessert-translation.md → HTML, 산출물)
 │   └── decision-log.html      # 의사결정 일지 인덱스 (docs/decision-log/*.md 목록, build_index.py 산출물 — 직접 편집 금지)
 ├── pyproject.toml       # 프로젝트 메타 + 빌드 의존성 (markdown==3.7 — build_index.py 문서 렌더용). uv virtual project
 ├── uv.lock              # uv 잠금 파일 (markdown 정확 버전·해시 고정 — 빌드 산출물 결정성)
@@ -197,7 +197,7 @@ japan-trip/
 - **렌더 대상 등록**: `build_index.py`의 `DOC_PAGES` 튜플에 `DocPage(source, out, title, description, og_slug, tab, back_href, back_label)` 1줄 추가. `og_slug`는 기존 OG 카드 슬러그 재사용(신규 SVG 불필요). 등록 즉시 `OUTPUTS`·검사 J(glob)가 자동 커버.
 - **현재 23 페이지** (DOC_PAGES 22개 + decision-log 인덱스 1개):
   - 기본 문서(7): `viz/report.html`·`viz/itinerary-doc.html`·`viz/research.html`·`viz/transit-pass.html`·`viz/decision-kyoto.html`·`viz/icoca-setup.html`·`viz/essential-iphone-apps.html`
-  - 후기·안내(4): `viz/kaneyo-review.html`(카네요 방문기 번역 — 5/31 저녁 blog_reviews 목적지)·`viz/shinkyogoku-review.html`(신쿄고쿠 안내 번역 — 5/31 20:00 blog_reviews 목적지)·`viz/nakamura-shoten-review.html`(나카무라쇼텐 라멘 가이드 — 6/2 11:00 점심)·`viz/maccha-house-review.html`(맛차하우스 말차 티라미수 가이드 — 6/2 14:30)
+  - 후기·안내(4): `viz/kaneyo-review.html`(카네요 방문기 번역 — 5/31 저녁 blog_reviews 목적지)·`viz/shinkyogoku-review.html`(신쿄고쿠 안내 번역 — 5/31 20:00 blog_reviews 목적지)·`viz/nakamura-shoten-review.html`(나카무라쇼텐 라멘 가이드 — 6/2 11:30 점심)·`viz/isetan-matcha-dessert.html`(교토역 말차 디저트 中村藤吉 vs 茶寮都路里 — 6/2 14:30 우천 실내)
   - 아카이브 문서(8): `viz/candidates.html`·`viz/weather.html`·`viz/flights.html`·`viz/budget-options.html`·`viz/airbnb-comparison.html`·`viz/jejuair.html`·`viz/itinerary-may.html`·`viz/transit-mcp-handoff.html`
   - 운영 문서(4): `viz/transit-guide.html`·`viz/saihoji.html`·`viz/soyeon-maps.html`·`viz/breakfast-doc.html`
   - `viz/decision-log.html`(결정 일지 인덱스)
