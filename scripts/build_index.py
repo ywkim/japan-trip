@@ -108,6 +108,18 @@ DOC_PAGES = (
         "교토 여행 필수 앱 5개 설치·설정·운영 가이드 (2026-05-28)",
         "checklist", "checklist", "checklist.html", "← 예약",
     ),
+    DocPage(
+        "docs/kaneyo-review-translation.md", "viz/kaneyo-review.html",
+        "교고쿠 카네요 후기 번역 — 킨시동",
+        "일본어 후기(unagiudou.com) 한국어 번역 — 킨시동·장어·대정 노포 분위기",
+        "itinerary", "itinerary", "itinerary.html", "← 일정",
+    ),
+    DocPage(
+        "docs/shinkyogoku-review-translation.md", "viz/shinkyogoku-review.html",
+        "신쿄고쿠 상점가 안내 — 지붕 아케이드 야경 산책",
+        "교토 도심 550m 지붕 아케이드 — 로쿄쿠야키·니시키텐만구·식후 산책 코스",
+        "itinerary", "itinerary", "itinerary.html", "← 일정",
+    ),
     # ── 아카이브 문서 (8개) ───────────────────────────────────────────────────
     DocPage(
         "docs/candidates.md", "viz/candidates.html",
@@ -316,6 +328,22 @@ def expand_refs_in_obj(obj):
 
 
 # ─── New schema (Work 4) helper functions ───────────────────────────────────
+
+_PRIORITY_META = {
+    "필수": ("badge-priority-필수", "✅ 필수"),
+    "권장": ("badge-priority-권장", "⚠️ 권장"),
+    "대체": ("badge-priority-대체", "🔄 대체"),
+}
+
+
+def priority_badge_html(priority: str) -> str:
+    if not priority:
+        return ""
+    cls, label = _PRIORITY_META.get(priority, ("", priority))
+    if not cls:
+        return ""
+    return f' <span class="badge {cls}">{esc(label)}</span>'
+
 
 def is_new_schema_title(title) -> bool:
     """Check if title is in new schema (dict with ko_name, ja_name, etc)."""
@@ -575,17 +603,39 @@ def lodging_photo_strip(photos: list, img_prefix: str = "") -> str:
     return f'<div class="lodging-strip">{imgs}</div>'
 
 
-def blog_reviews_html(reviews: list) -> str:
-    """Render a scrollable photo strip of Naver blog reviews."""
+def _blog_card_href(url: str, in_viz: bool) -> tuple[str, str]:
+    """후기 카드 링크의 (href, 새 탭 속성)을 반환.
+
+    외부(http) 링크는 새 탭. 사이트 내 .html 경로(예: kaneyo-review.html)는
+    같은 탭으로 열되, 루트(index.html)에서 렌더될 때 viz/ 접두어를 보정한다
+    (doc_link_html과 동일 규칙 — 루트/viz 양쪽 상대경로 깨짐 방지).
+    """
+    url = (url or "").strip()
+    external = url.startswith(("http://", "https://"))
+    if not external and url.endswith(".html") and not url.startswith(("viz/", "/", "#")):
+        if not in_viz:
+            url = "viz/" + url
+    attr = ' target="_blank" rel="noopener"' if external else ""
+    return esc(url), attr
+
+
+def blog_reviews_html(reviews: list, in_viz: bool = False) -> str:
+    """Render a scrollable photo strip of blog reviews.
+
+    url이 외부(http)면 새 탭, 사이트 내 .html이면 같은 탭(루트에서 viz/ 보정).
+    """
     if not reviews:
         return ""
-    cards = "".join(
-        f'<a href="{esc(r["url"])}" target="_blank" rel="noopener" class="blog-card">'
-        f'<img src="{esc(local_src(r["img"]))}" class="blog-thumb" loading="lazy" alt="" referrerpolicy="no-referrer" onerror="this.closest(\'.blog-card\').style.display=\'none\'">'
-        f'<p class="blog-comment">{esc(r["comment"])}</p>'
-        f'</a>'
-        for r in reviews
-    )
+    def card(r):
+        href, attr = _blog_card_href(r["url"], in_viz)
+        return (
+            f'<a href="{href}"{attr} class="blog-card">'
+            f'<img src="{esc(local_src(r["img"]))}" class="blog-thumb" loading="lazy" alt="" referrerpolicy="no-referrer" onerror="this.closest(\'.blog-card\').style.display=\'none\'">'
+            f'<p class="blog-comment">{esc(r["comment"])}</p>'
+            f'<span class="blog-read">후기 읽기 →</span>'
+            f'</a>'
+        )
+    cards = "".join(card(r) for r in reviews)
     return f'<div class="blog-reviews"><div class="blog-strip">{cards}</div></div>'
 
 
@@ -803,6 +853,9 @@ def render_css(tokens: dict) -> str:
   .badge-done {{ color: var(--ok); border-color: var(--ok); }}
   .badge-pending {{ color: var(--warn); border-color: var(--warn); }}
   .badge-progress {{ color: var(--accent); border-color: var(--accent); }}
+  .badge-priority-필수 {{ color: var(--ok); border-color: var(--ok); }}
+  .badge-priority-권장 {{ color: var(--warn); border-color: var(--warn); }}
+  .badge-priority-대체 {{ color: var(--muted); border-color: var(--border); }}
   .subcard.status-done {{ border-left: 3px solid var(--ok); }}
   .subcard.status-pending {{ border-left: 3px solid var(--warn); }}
   .subcard.status-progress {{ border-left: 3px solid var(--accent); }}
@@ -849,10 +902,13 @@ def render_css(tokens: dict) -> str:
   }}
   .img-credit {{ color: var(--muted); font-size: 0.65rem; text-align: right; }}
   .blog-reviews {{ margin-top: 0.5rem; }}
-  .blog-strip {{ display: flex; gap: 0.5rem; overflow-x: auto; padding-bottom: 0.3rem; -webkit-overflow-scrolling: touch; }}
-  .blog-card {{ flex: 0 0 140px; text-decoration: none; color: var(--fg); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }}
-  .blog-thumb {{ width: 140px; height: 100px; object-fit: cover; display: block; }}
-  .blog-comment {{ font-size: 0.7rem; padding: 0.3rem; margin: 0; color: var(--muted); line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }}
+  .blog-strip {{ display: flex; gap: 0.6rem; overflow-x: auto; padding-bottom: 0.35rem; -webkit-overflow-scrolling: touch; scroll-snap-type: x mandatory; scrollbar-width: none; }}
+  .blog-strip::-webkit-scrollbar {{ display: none; }}
+  .blog-card {{ flex: 0 0 156px; text-decoration: none; color: var(--fg); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; scroll-snap-align: start; transition: opacity 0.15s; }}
+  .blog-card:active {{ opacity: 0.72; }}
+  .blog-thumb {{ width: 156px; height: 112px; object-fit: cover; display: block; }}
+  .blog-comment {{ font-size: 0.72rem; padding: 0.35rem 0.4rem 0.15rem; margin: 0; color: var(--muted); line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }}
+  .blog-read {{ display: block; font-size: 0.68rem; color: var(--accent); padding: 0.15rem 0.4rem 0.3rem; text-align: right; }}
   /* ── 숙소 사진 스트립 ── */
   .lodging-strip {{ display: flex; gap: 0.5rem; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; padding-bottom: 0.25rem; margin: 0.6rem 0 0.4rem; }}
   .lodging-strip::-webkit-scrollbar {{ display: none; }}
@@ -1444,9 +1500,10 @@ def card_itinerary(d) -> str:
                 img_html = ""
             reviews_html = blog_reviews_html(it.get("blog_reviews", []))
             link_html = doc_link_html(it.get("link"), in_viz=False)
+            pbadge = priority_badge_html(it.get("priority", ""))
             item_rows.append(f"""
     <div class="day">
-      <div class="date"><span class="k">{esc(it['time'])}</span> {link}</div>
+      <div class="date"><span class="k">{esc(it['time'])}</span> {link}{pbadge}</div>
       {pronunciation_html}
       {transit}
       {note_html}{link_html}{img_html}{reviews_html}
@@ -1997,12 +2054,13 @@ def build_itinerary(d) -> str:
                 )
             else:
                 img_html = ""
-            reviews_html = blog_reviews_html(it.get("blog_reviews", []))
+            reviews_html = blog_reviews_html(it.get("blog_reviews", []), in_viz=True)
             food_html = food_quality_html(it.get("food_quality"))
             link_html = doc_link_html(it.get("link"), in_viz=True)
+            pbadge = priority_badge_html(it.get("priority", ""))
             item_rows.append(f"""
     <div class="day">
-      <div class="date"><span class="k">{esc(it['time'])}</span> {link}</div>
+      <div class="date"><span class="k">{esc(it['time'])}</span> {link}{pbadge}</div>
       {pronunciation_html}
       {transit}
       {note_html}{food_html}{link_html}{img_html}{reviews_html}
@@ -2280,7 +2338,7 @@ def build_itinerary_table(d) -> str:
                 )
             else:
                 img_html = ""
-            reviews_html = blog_reviews_html(it.get("blog_reviews", []))
+            reviews_html = blog_reviews_html(it.get("blog_reviews", []), in_viz=True)
             food_html = food_quality_html(it.get("food_quality"))
             link_html = doc_link_html(it.get("link"), in_viz=True)
             item_rows.append(f"""
