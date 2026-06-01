@@ -686,6 +686,10 @@
             "source_fetched_at": "2026-05-28",
             "data_quality": "researched_market_rate",
             "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Saihoji+Temple,+Kyoto&destination=%E5%B5%90%E5%B1%B1%E3%82%88%E3%81%97%E3%82%80%E3%82%89,+Kyoto&travelmode=transit"
+          },
+          "link": {
+            "url": "gontaro-review.html",
+            "label": "권타로 금각사점 상세 정보"
           }
         },
         {

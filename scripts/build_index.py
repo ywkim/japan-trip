@@ -132,6 +132,12 @@ DOC_PAGES = (
         "Tabelog 일본어 정보 한국어 번역 — 폰토초 교마치야·오반자이·창작 교토요리",
         "itinerary", "itinerary", "itinerary.html", "← 일정",
     ),
+    DocPage(
+        "docs/gontaro-review-translation.md", "viz/gontaro-review.html",
+        "권타로 金閣寺店 — 황금의 일즙 조림국수",
+        "Tabelog 일본어 정보 한국어 번역 — 1910년 노포·교마치야 정원·일즙 육수",
+        "itinerary", "itinerary", "itinerary.html", "← 일정",
+    ),
     # ── 아카이브 문서 (8개) ───────────────────────────────────────────────────
     DocPage(
         "docs/candidates.md", "viz/candidates.html",
