@@ -120,6 +120,18 @@ DOC_PAGES = (
         "교토 도심 550m 지붕 아케이드 — 로쿄쿠야키·니시키텐만구·식후 산책 코스",
         "itinerary", "itinerary", "itinerary.html", "← 일정",
     ),
+    DocPage(
+        "docs/nakamura-shoten-review-translation.md", "viz/nakamura-shoten-review.html",
+        "나카무라쇼텐 라멘 정보 — 닭파이탄 소금·간장",
+        "교토역 라멘코지 타베로그 최고점 — 닭파이탄 소금·간장·미소 라멘 가이드",
+        "itinerary", "itinerary", "itinerary.html", "← 일정",
+    ),
+    DocPage(
+        "docs/maccha-house-review-translation.md", "viz/maccha-house-review.html",
+        "말차하우스 디저트 정보 — 말차 티라미수",
+        "산넨자카 말차 티라미수 전문 카페 — 메뉴·영업시간·방문 가이드",
+        "itinerary", "itinerary", "itinerary.html", "← 일정",
+    ),
     # ── 아카이브 문서 (8개) ───────────────────────────────────────────────────
     DocPage(
         "docs/candidates.md", "viz/candidates.html",

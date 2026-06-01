@@ -123,6 +123,8 @@ japan-trip/
 │   ├── saihoji-reservation-2026-06.md     # 사이호지(苔寺) 참배 예약 가능성 리서치 (예약 방법·선착순·참배료·사경·접근성)
 │   ├── kaneyo-review-translation.md       # 교고쿠 카네요(京極かねよ) 방문기 한국어 번역 (unagiudou.com 2025-05-27 원문) → viz/kaneyo-review.html
 │   ├── shinkyogoku-review-translation.md  # 신쿄고쿠 상점가(新京極商店街) 안내·복수 방문기 번역·재구성 → viz/shinkyogoku-review.html
+│   ├── nakamura-shoten-review-translation.md # 나카무라쇼텐(中村商店) 교토역 라멘코지 가이드 (Tabelog 2026-06-01) → viz/nakamura-shoten-review.html
+│   ├── maccha-house-review-translation.md # 맛차하우스(MACCHA HOUSE 抹茶館) 산넨자카 가이드 (Tabelog 2026-06-01) → viz/maccha-house-review.html
 │   └── screenshots/                       # 리서치 근거 스크린샷 (예: airalo-japan-2026-05-26.png — eSIM 실가격·핫스팟 정책 1차 출처)
 ├── viz/
 │   ├── itinerary.html         # 일자별 카드 뷰 (build_index.py 산출물 — 직접 편집 금지)
@@ -138,6 +140,8 @@ japan-trip/
 │   ├── decision-kyoto.html    # 교토 변경 결정 렌더 페이지 (docs/decision-log/2026-05-11-...md → HTML, 산출물)
 │   ├── kaneyo-review.html     # 교고쿠 카네요 방문기 번역 페이지 (docs/kaneyo-review-translation.md → HTML, 산출물)
 │   ├── shinkyogoku-review.html # 신쿄고쿠 상점가 안내 번역 페이지 (docs/shinkyogoku-review-translation.md → HTML, 산출물)
+│   ├── nakamura-shoten-review.html # 나카무라쇼텐 라멘 가이드 (docs/nakamura-shoten-review-translation.md → HTML, 산출물)
+│   ├── maccha-house-review.html # 맛차하우스 디저트 가이드 (docs/maccha-house-review-translation.md → HTML, 산출물)
 │   └── decision-log.html      # 의사결정 일지 인덱스 (docs/decision-log/*.md 목록, build_index.py 산출물 — 직접 편집 금지)
 ├── pyproject.toml       # 프로젝트 메타 + 빌드 의존성 (markdown==3.7 — build_index.py 문서 렌더용). uv virtual project
 ├── uv.lock              # uv 잠금 파일 (markdown 정확 버전·해시 고정 — 빌드 산출물 결정성)
@@ -191,9 +195,9 @@ japan-trip/
 - **의존성**: `markdown==3.7` (`pyproject.toml` + `uv.lock`, 정확 버전·해시 고정). `build_index.py`가 `tables`·`sane_lists` 확장으로 변환. 로컬·CI 모두 uv 사용: `uv sync --locked` 후 `uv run python ...`. CI는 `astral-sh/setup-uv` + `uv sync --locked`. Vercel은 빌드 이미지에 uv가 있어 `buildCommand`를 `uv run python ...`으로 실행(시스템 pip는 PEP 668 externally-managed로 차단됨). **잠금 버전이 빌드 산출물을 결정적으로 고정** — 재현성은 `tests/test_build_index.py`가 검사. 의존성 갱신 시 `uv lock` 재실행 + 빌드 재실행 + 일지화.
 - **단일 출처**: 레포 `.md`가 정본, `viz/*.html`은 빌드 산출물(gitignore — 커밋하지 않음, CI·Vercel이 빌드 시 생성). `.md` 수정 후 `uv run python scripts/build_index.py`로 재빌드(로컬 미리보기). 재현성·콘텐츠는 `tests/test_build_index.py`가 검사.
 - **렌더 대상 등록**: `build_index.py`의 `DOC_PAGES` 튜플에 `DocPage(source, out, title, description, og_slug, tab, back_href, back_label)` 1줄 추가. `og_slug`는 기존 OG 카드 슬러그 재사용(신규 SVG 불필요). 등록 즉시 `OUTPUTS`·검사 J(glob)가 자동 커버.
-- **현재 21 페이지** (DOC_PAGES 20개 + decision-log 인덱스 1개):
+- **현재 23 페이지** (DOC_PAGES 22개 + decision-log 인덱스 1개):
   - 기본 문서(7): `viz/report.html`·`viz/itinerary-doc.html`·`viz/research.html`·`viz/transit-pass.html`·`viz/decision-kyoto.html`·`viz/icoca-setup.html`·`viz/essential-iphone-apps.html`
-  - 후기·안내(2): `viz/kaneyo-review.html`(카네요 방문기 번역 — 5/31 저녁 blog_reviews 목적지)·`viz/shinkyogoku-review.html`(신쿄고쿠 안내 번역 — 5/31 20:00 blog_reviews 목적지)
+  - 후기·안내(4): `viz/kaneyo-review.html`(카네요 방문기 번역 — 5/31 저녁 blog_reviews 목적지)·`viz/shinkyogoku-review.html`(신쿄고쿠 안내 번역 — 5/31 20:00 blog_reviews 목적지)·`viz/nakamura-shoten-review.html`(나카무라쇼텐 라멘 가이드 — 6/2 11:00 점심)·`viz/maccha-house-review.html`(맛차하우스 말차 티라미수 가이드 — 6/2 14:30)
   - 아카이브 문서(8): `viz/candidates.html`·`viz/weather.html`·`viz/flights.html`·`viz/budget-options.html`·`viz/airbnb-comparison.html`·`viz/jejuair.html`·`viz/itinerary-may.html`·`viz/transit-mcp-handoff.html`
   - 운영 문서(4): `viz/transit-guide.html`·`viz/saihoji.html`·`viz/soyeon-maps.html`·`viz/breakfast-doc.html`
   - `viz/decision-log.html`(결정 일지 인덱스)

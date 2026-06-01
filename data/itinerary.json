@@ -176,6 +176,11 @@
       "ko": "야마고에나카마치",
       "ja": "山越中町",
       "reading": "야마고에나카마치"
+    },
+    "maccha_house": {
+      "ko": "말차하우스",
+      "ja": "MACCHA HOUSE 抹茶館",
+      "reading": "맛차하우스"
     }
   },
   "trip": {
@@ -1053,6 +1058,10 @@
             "source_fetched_at": "2026-05-17",
             "data_quality": "researched_market_rate",
             "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Tofuku-ji,+Kyoto&destination=Kyoto+Station,+Kyoto&travelmode=transit"
+          },
+          "link": {
+            "url": "nakamura-shoten-review.html",
+            "label": "나카무라쇼텐 상세 정보 (닭파이탄 라멘)"
           }
         },
         {
@@ -1111,13 +1120,13 @@
           "time": "14:30",
           "title": {
             "type": "place",
-            "ko_name": "말차 티라미수",
-            "ja_name": "",
-            "ja_reading_ko": "",
+            "ko_name": "말차하우스",
+            "ja_name": "MACCHA HOUSE 抹茶館",
+            "ja_reading_ko": "맛차하우스",
             "en_name": ""
           },
           "maps_query": "Maccha House Kiyomizu Higashiyama",
-          "note": "니넨자카(二年坂)·산넨자카(産寧坂) 인근 말차 디저트 카페. 시그니처: 말차 티라미수(잘 알려진 한국 SNS 명소). 키요미즈데라(清水寺) 하행 후 산넨자카(産寧坂)로 내려오는 동선에 자연 편입. 4인 좌석 대기 가능 — 16시 전후 빠른 시간 권장. 영업 11:00~20:00 — 30도 더위 대책: 냉방 카페에서 30~40분 충분히 휴식",
+          "note": "니넨자카(二年坂)·산넨자카(産寧坂) 인근 말차 디저트 카페. 시그니처: 말차 티라미수(잘 알려진 한국 SNS 명소). 키요미즈데라(清水寺) 하행 후 산넨자카(産寧坂)로 내려오는 동선에 자연 편입. 4인 좌석 대기 가능 — 16시 전후 빠른 시간 권장. 영업 11:00~18:00(L.O.17:30, Tabelog 기준) — 30도 더위 대책: 냉방 카페에서 30~40분 충분히 휴식",
           "arrive_from": {
             "steps": [
               {
@@ -1157,7 +1166,25 @@
               "img": "https://blogthumb.pstatic.net/MjAyNTAxMjFfMTQ3/MDAxNzM3NDE5OTI1NjM4.T5CCyhpI8A2n7xQrgnseGb3PkklZvXqXM0el6K7YBhcg.dQbMA6_6o9QpmcfQQ_W4FgH0LjmSkQg7LH5E3NrYwcYg.JPEG/IMG_5886.jpg?type=w2",
               "comment": "말차하우스 닌넨자카에는 맛집, 카페가 정말 많은데 그중에서도 이미 유명한 &amp;quot;말차하우스&amp;quot;에 다..."
             }
-          ]
+          ],
+          "food_quality": {
+            "rating": "타베로그 3.44 (176리뷰) — 산넨자카 말차 디저트 카페",
+            "source": "Tabelog(26030960) · 공식 2026-06-01",
+            "source_fetched_at": "2026-06-01",
+            "data_quality": "researched_market_rate",
+            "url": "https://tabelog.com/en/kyoto/A2601/A260301/26030960/",
+            "note": "{{maccha_house}} 말차 티라미수·호지차 티라미수·말차 초코 라떼 전문. 영업 11:00~18:00(L.O.17:30) — Tabelog 2026-06-01 기준. 예약 불가·선착순. 96석(1F·2F·테라스).",
+            "ratings": [
+              {
+                "source": "tabelog",
+                "score": 3.44
+              }
+            ]
+          },
+          "link": {
+            "url": "maccha-house-review.html",
+            "label": "말차하우스 상세 정보 (말차 티라미수)"
+          }
         },
         {
           "time": "15:15",
