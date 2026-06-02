@@ -126,7 +126,7 @@ japan-trip/
 │   ├── nakamura-shoten-review-translation.md # 교토역 라멘코지(京都拉麺小路) 10개 점포 비교 + 中村商店 추천 (Tabelog 2026-06-01) → viz/nakamura-shoten-review.html
 │   ├── isetan-matcha-dessert-translation.md # 교토역 말차 디저트 비교 中村藤吉 vs 茶寮都路里 (JR이세탄·6/2 우천 실내) → viz/isetan-matcha-dessert.html
 │   ├── isetan-porta-shopping-translation.md # 교토역 실내 쇼핑 4개 시설 일본어 후기 번역 (JR이세탄·포르타·돈키호테·요도바시 — 6/2 12:30 우천 실내·선물 봉인팩) → viz/isetan-porta-shopping.html
-│   ├── kyoto-station-kaiten-sushi-translation.md # 교토역 회전초밥 비교 번역 (大起水産 vs 寿しのむさし — 실제 도는 회전 레인, 6/2 저녁·카덴쇼 식사 불포함) → viz/kaiten-sushi-review.html
+│   ├── kyoto-station-kaiten-sushi-translation.md # 교토 회전초밥 3곳 비교 번역 (大起水産·寿しのむさし·くら寿司 — 실제 도는 회전 레인만, 6/2 저녁·카덴쇼 식사 불포함) → viz/kaiten-sushi-review.html
 │   └── screenshots/                       # 리서치 근거 스크린샷 (예: airalo-japan-2026-05-26.png — eSIM 실가격·핫스팟 정책 1차 출처)
 ├── viz/
 │   ├── itinerary.html         # 일자별 카드 뷰 (build_index.py 산출물 — 직접 편집 금지)
@@ -145,7 +145,7 @@ japan-trip/
 │   ├── nakamura-shoten-review.html # 나카무라쇼텐 라멘 가이드 (docs/nakamura-shoten-review-translation.md → HTML, 산출물)
 │   ├── isetan-matcha-dessert.html # 교토역 말차 디저트 비교 中村藤吉 vs 茶寮都路里 (docs/isetan-matcha-dessert-translation.md → HTML, 산출물)
 │   ├── isetan-porta-shopping.html # 교토역 실내 쇼핑 4개 시설 후기 (docs/isetan-porta-shopping-translation.md → HTML, 산출물)
-│   ├── kaiten-sushi-review.html # 교토역 회전초밥 비교 (docs/kyoto-station-kaiten-sushi-translation.md → HTML, 산출물)
+│   ├── kaiten-sushi-review.html # 교토 회전초밥 3곳 비교 (docs/kyoto-station-kaiten-sushi-translation.md → HTML, 산출물)
 │   └── decision-log.html      # 의사결정 일지 인덱스 (docs/decision-log/*.md 목록, build_index.py 산출물 — 직접 편집 금지)
 ├── pyproject.toml       # 프로젝트 메타 + 빌드 의존성 (markdown==3.7 — build_index.py 문서 렌더용). uv virtual project
 ├── uv.lock              # uv 잠금 파일 (markdown 정확 버전·해시 고정 — 빌드 산출물 결정성)
@@ -201,7 +201,7 @@ japan-trip/
 - **렌더 대상 등록**: `build_index.py`의 `DOC_PAGES` 튜플에 `DocPage(source, out, title, description, og_slug, tab, back_href, back_label)` 1줄 추가. `og_slug`는 기존 OG 카드 슬러그 재사용(신규 SVG 불필요). 등록 즉시 `OUTPUTS`·검사 J(glob)가 자동 커버.
 - **현재 26 페이지** (DOC_PAGES 25개 + decision-log 인덱스 1개):
   - 기본 문서(7): `viz/report.html`·`viz/itinerary-doc.html`·`viz/research.html`·`viz/transit-pass.html`·`viz/decision-kyoto.html`·`viz/icoca-setup.html`·`viz/essential-iphone-apps.html`
-  - 후기·안내(6): `viz/kaneyo-review.html`(카네요 방문기 번역 — 5/31 저녁 blog_reviews 목적지)·`viz/shinkyogoku-review.html`(신쿄고쿠 안내 번역 — 5/31 20:00 blog_reviews 목적지)·`viz/nakamura-shoten-review.html`(교토역 라멘코지 10개 점포 비교 — 6/2 11:30 점심)·`viz/isetan-matcha-dessert.html`(교토역 말차 디저트 中村藤吉 vs 茶寮都路里 — 6/2 13:30 우천 실내)·`viz/isetan-porta-shopping.html`(교토역 실내 쇼핑 4개 시설 후기 — JR이세탄·포르타·돈키호테·요도바시, 6/2 12:30)·`viz/kaiten-sushi-review.html`(교토역 회전초밥 비교 大起水産 vs 寿しのむさし — 6/2 18:00 저녁)
+  - 후기·안내(6): `viz/kaneyo-review.html`(카네요 방문기 번역 — 5/31 저녁 blog_reviews 목적지)·`viz/shinkyogoku-review.html`(신쿄고쿠 안내 번역 — 5/31 20:00 blog_reviews 목적지)·`viz/nakamura-shoten-review.html`(교토역 라멘코지 10개 점포 비교 — 6/2 11:30 점심)·`viz/isetan-matcha-dessert.html`(교토역 말차 디저트 中村藤吉 vs 茶寮都路里 — 6/2 13:30 우천 실내)·`viz/isetan-porta-shopping.html`(교토역 실내 쇼핑 4개 시설 후기 — JR이세탄·포르타·돈키호테·요도바시, 6/2 12:30)·`viz/kaiten-sushi-review.html`(교토 회전초밥 3곳 비교 大起水産·寿しのむさし·くら寿司 — 6/2 18:00 저녁)
   - 아카이브 문서(8): `viz/candidates.html`·`viz/weather.html`·`viz/flights.html`·`viz/budget-options.html`·`viz/airbnb-comparison.html`·`viz/jejuair.html`·`viz/itinerary-may.html`·`viz/transit-mcp-handoff.html`
   - 운영 문서(4): `viz/transit-guide.html`·`viz/saihoji.html`·`viz/soyeon-maps.html`·`viz/breakfast-doc.html`
   - `viz/decision-log.html`(결정 일지 인덱스)
