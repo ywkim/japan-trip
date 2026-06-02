@@ -26,7 +26,7 @@ import time
 import urllib.error
 import urllib.request
 from pathlib import Path
-from urllib.parse import urlparse
+from urllib.parse import urlparse, quote
 
 BASE = Path(__file__).resolve().parent.parent
 DATA = BASE / "data"
@@ -90,9 +90,16 @@ def local_name(url: str, content_type: str | None) -> str:
     return f"{h}{ext}"
 
 
+def safe_url(url: str) -> str:
+    """non-ASCII 문자(일본어 파일명 등)를 퍼센트 인코딩해 urllib이 처리할 수 있게 한다."""
+    p = urlparse(url)
+    encoded_path = quote(p.path, safe="/:@!$&'()*+,;=")
+    return p._replace(path=encoded_path).geturl()
+
+
 def download(url: str, ctx) -> tuple[bytes, str | None]:
     # 위키미디어 원본은 거대할 수 있어 폭 1280으로 캡(맵 키는 원본 URL 유지).
-    fetch_url = url
+    fetch_url = safe_url(url)
     if "commons.wikimedia.org" in urlparse(url).netloc and "width=" not in url:
         fetch_url += ("&" if "?" in url else "?") + "width=1280"
     req = urllib.request.Request(fetch_url, headers={"User-Agent": UA})  # Referer 없음

@@ -99,5 +99,30 @@ class FetchAssetsDocUrlTests(unittest.TestCase):
         self.assertTrue(len(wikimedia) >= 1, f"위키미디어 이미지가 doc URLs에 없음: {urls[:5]}")
 
 
+class FetchAssetsNonAsciiUrlTests(unittest.TestCase):
+    """fetch_assets.py가 non-ASCII 문자 포함 URL을 퍼센트 인코딩해 처리한다."""
+
+    def test_safe_url_ascii_unchanged(self):
+        from scripts.fetch_assets import safe_url
+        url = "https://example.com/path/image.jpg"
+        self.assertEqual(safe_url(url), url)
+
+    def test_safe_url_encodes_non_ascii(self):
+        from scripts.fetch_assets import safe_url
+        url = "https://sushinomusashi.com/wp-content/uploads/2022/10/バッテラ.jpg"
+        result = safe_url(url)
+        self.assertNotIn("バッテラ", result)
+        self.assertIn("%E3%83%90%E3%83%83%E3%83%86%E3%83%A9", result)
+        self.assertTrue(result.startswith("https://sushinomusashi.com/"))
+
+    def test_safe_url_preserves_query_and_fragment(self):
+        from scripts.fetch_assets import safe_url
+        url = "https://example.com/path/画像.jpg?size=800&foo=bar"
+        result = safe_url(url)
+        self.assertIn("size=800", result)
+        self.assertIn("foo=bar", result)
+        self.assertNotIn("画像", result)
+
+
 if __name__ == "__main__":
     unittest.main()

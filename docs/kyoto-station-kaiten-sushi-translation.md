@@ -20,12 +20,13 @@
 | 좌석 | **카운터 54석** (테이블 없음) | **카운터 34석** (테이블 없음) |
 | 혼잡 | 타워산도 내·관광객 많음 | **상시 줄·관광객 많음**, 회전 빠름 |
 | 카덴쇼서 | 택시 6분(가라스마구치, 약간 가까움) | 택시 7~8분(하치조구치 반대편) |
+| 구글 맵 | [지도 열기](https://maps.app.goo.gl/CKwSiPXH3MYzA9d39) | [지도 열기](https://maps.app.goo.gl/4o9SyUXmqjUiyGdDA) |
 
 ---
 
 ## ① 大起水産回転寿司 京都タワーサンド店 (가라스마구치 B1)
 
-> [공식 점포 안내](https://sushi.daiki-suisan.co.jp/shop/29) · [타베로그](https://tabelog.com/kyoto/A2601/A260101/26028875/) · [KYOTO TOWER SANDO](https://www.kyoto-tower-sando.jp/shop/index/101)
+> [공식 점포 안내](https://sushi.daiki-suisan.co.jp/shop/29) · [타베로그](https://tabelog.com/kyoto/A2601/A260101/26028875/) · [KYOTO TOWER SANDO](https://www.kyoto-tower-sando.jp/shop/index/101) · [구글 맵](https://maps.app.goo.gl/CKwSiPXH3MYzA9d39)
 
 ![교토타워 주변 전경 — KYOTO TOWER SANDO가 탑 기슭에 위치 (2019, Wikimedia Commons CC BY-SA 4.0)](https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Kyoto_Tower_and_environs_in_Kyoto%2C_Japan_%282019%29_-_277.jpg/960px-Kyoto_Tower_and_environs_in_Kyoto%2C_Japan_%282019%29_-_277.jpg)
 
@@ -45,6 +46,10 @@
 | 해산물 구이 세트(8관) | 海鮮炙りづくし | ¥968 |
 | **카이센동**(해산물 덮밥) | 海鮮丼 | **¥980** |
 
+| 활어 도미(活〆真鯛) ¥363 | 오로라 연어(オーロラサーモン) ¥429 | 해산물 구이 세트(海鮮炙りづくし) ¥968 |
+|:---:|:---:|:---:|
+| ![활어 도미](https://sushi.daiki-suisan.co.jp/uploads/files/94a4d27b97f9e224565b69557faf4009.jpg) | ![오로라 연어](https://sushi.daiki-suisan.co.jp/uploads/files/3a97ec360501d3190c500b0ef5302178.jpg) | ![해산물 구이 세트](https://sushi.daiki-suisan.co.jp/uploads/files/c33d333f5ce2c5ee2f1b635eb1aa0b7c.jpg) |
+
 - **카이센동 ¥980** — 재료 듬뿍, 가성비 메뉴로 인기. 방문기마다 빠짐없이 언급.
 - **본마구로·활어 도미·오로라 연어** — 수산회사 직영의 신선도가 강점.
 - 카운터 54석으로 역앞 회전초밥치고 **좌석이 넉넉**해 4인이 붙어 앉기 비교적 수월.
@@ -61,7 +66,7 @@
 
 ## ② 寿しのむさし 京都駅八条口店 (하치조구치 ASTY)
 
-> [공식사이트](https://sushinomusashi.com/) · [타베로그](https://tabelog.com/en/kyoto/A2601/A260101/26003088/) · [방문기 — 沖縄ランチブログZ](https://lunches.jp/west/sushinomusashi/)
+> [공식사이트](https://sushinomusashi.com/) · [타베로그](https://tabelog.com/en/kyoto/A2601/A260101/26003088/) · [방문기 — 沖縄ランチブログZ](https://lunches.jp/west/sushinomusashi/) · [구글 맵](https://maps.app.goo.gl/4o9SyUXmqjUiyGdDA)
 
 ![교토역 하치조구치(남쪽) 입구 — ASTY 상업 시설이 이 구역에 위치 (Wikimedia Commons CC BY-SA 4.0)](https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Kyoto_station_hachijo_entrance_02.JPG/960px-Kyoto_station_hachijo_entrance_02.JPG)
 
@@ -78,6 +83,10 @@
 | 市松金銀 | ¥697 | 다시마 절임 넙치·전갱이·대새우 |
 | 御所車 | ¥840 | 살진 참다랑어·대형 가리비 |
 | 朱金の鶴(최상급) | **¥977** | 고베규·생우니 |
+
+| 바테라(バッテラ·고등어 누름초밥) ¥161 | 사쿠라(さくら·말고기) ¥289 | 구운 옥수수(とうもろこし) ¥161 |
+|:---:|:---:|:---:|
+| ![바테라](https://sushinomusashi.com/wp-content/uploads/2022/10/バッテラ.jpg) | ![사쿠라](https://sushinomusashi.com/wp-content/uploads/2022/10/さくら.jpg) | ![구운 옥수수](https://sushinomusashi.com/wp-content/uploads/2022/10/とうもろこし.jpg) |
 
 > 방문기 실제 주문 예 (沖縄ランチブログZ): 바테라(¥161)+게소(¥161)+생선군함(¥289)+도미껍질(¥161)+구운 옥수수(¥161)+사쿠라(¥289)+시메사바(¥289) = **7접시 ¥1,511**. "역에 있으면서도 네타가 풍부하고 합리적", "**관광객에게 추천할 만한 로컬 회전초밥**" ★4.0
 
