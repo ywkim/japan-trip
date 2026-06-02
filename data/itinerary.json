@@ -1011,6 +1011,10 @@
             "source_fetched_at": "2026-06-01",
             "data_quality": "researched_market_rate",
             "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Kyoto+Station+Building&destination=JR+Kyoto+Isetan&travelmode=walking"
+          },
+          "link": {
+            "url": "isetan-porta-shopping.html",
+            "label": "이세탄·포르타·돈키호테·요도바시 후기"
           }
         },
         {

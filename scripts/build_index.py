@@ -132,6 +132,12 @@ DOC_PAGES = (
         "JR교토 이세탄 같은 건물 두 우지 말차 노포 비교 — 6/2 우천 실내 디저트 휴식",
         "itinerary", "itinerary", "itinerary.html", "← 일정",
     ),
+    DocPage(
+        "docs/isetan-porta-shopping-translation.md", "viz/isetan-porta-shopping.html",
+        "교토역 실내 쇼핑 — 이세탄·포르타·돈키호테·요도바시",
+        "교토역 직결 4개 시설 일본어 후기 번역 — 6/2 우천 실내 쇼핑·선물 봉인팩 동선",
+        "itinerary", "itinerary", "itinerary.html", "← 일정",
+    ),
     # ── 아카이브 문서 (8개) ───────────────────────────────────────────────────
     DocPage(
         "docs/candidates.md", "viz/candidates.html",
