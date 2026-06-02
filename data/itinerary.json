@@ -176,6 +176,31 @@
       "ko": "야마고에나카마치",
       "ja": "山越中町",
       "reading": "야마고에나카마치"
+    },
+    "ginkakuji": {
+      "ko": "은각사",
+      "ja": "銀閣寺",
+      "reading": "긴카쿠지"
+    },
+    "nanzenji": {
+      "ko": "난젠지",
+      "ja": "南禅寺",
+      "reading": "난젠지"
+    },
+    "tetsugaku_path": {
+      "ko": "철학의 길",
+      "ja": "哲学の道",
+      "reading": "테츠가쿠노미치"
+    },
+    "keage_station": {
+      "ko": "케아게역",
+      "ja": "蹴上駅",
+      "reading": "케아게에키"
+    },
+    "ginkakuji_michi_stop": {
+      "ko": "은각사도",
+      "ja": "銀閣寺道",
+      "reading": "긴카쿠지미치"
     }
   },
   "trip": {
@@ -438,8 +463,8 @@
     },
     {
       "date": "2026-06-01",
-      "day_label": "6/1 (월) — 아라시야마 + 사이호지 + 북서쪽",
-      "walking_km": 5,
+      "day_label": "6/1 (월) — 아라시야마 + 사이호지 + 한낮 휴식 + 은각사·철학의 길 + 폰토초 저녁",
+      "walking_km": 6,
       "lodging": "에어비앤비 시오 (2박째)",
       "items": [
         {
@@ -703,104 +728,129 @@
           "time": "13:30",
           "priority": "필수",
           "title": {
-            "type": "place",
-            "ko_name": "금각사",
-            "ja_name": "金閣寺",
-            "ja_reading_ko": "킨카쿠지",
+            "type": "lodging",
+            "ko_name": "시오 복귀 + 한낮 휴식",
+            "ja_name": "",
+            "ja_reading_ko": "",
             "en_name": ""
           },
-          "maps_query": "Kinkaku-ji",
-          "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Kinkaku-ji_the_Golden_Temple_in_Kyoto_overlooking_the_lake_-_high_rez.JPG?width=480",
-          "image_credit": "Wikimedia Commons",
+          "maps_query": "Nijo Station Kyoto",
+          "note": "{{arashiyama}}({{tenryuji}}·eX카페) 오전 일정 후 {{shio_machiya}}로 복귀해 가장 더운 한낮(13~15시)을 실내에서 쉰다. 시부모 동반·30도 더위 대비 — 에어컨·낮잠·짐 정리. 14:45경 다시 출발해 해 기운 오후에 {{ginkakuji}}·{{tetsugaku_path}} 동쪽 코스로 이동.",
           "arrive_from": {
             "steps": [
               {
-                "mode": "bus",
-                "duration_min": 29,
-                "distance_km": 5.9,
-                "fare_jpy": 230,
-                "operator": {
-                  "ko": "시버스",
-                  "ja": "市バス",
-                  "type": "shibus"
-                },
-                "number": "11",
-                "from": "{{arashiyama_tenryuji_stop}}",
-                "to": "{{yamagoe_nakamachi_stop}}"
+                "mode": "walk",
+                "duration_min": 6,
+                "distance_km": 0.4
               },
               {
-                "mode": "bus",
+                "mode": "jr",
                 "duration_min": 9,
-                "distance_km": 1.6,
-                "fare_jpy": 230,
-                "operator": {
-                  "ko": "시버스",
-                  "ja": "市バス",
-                  "type": "shibus"
-                },
-                "number": "59",
-                "from": "{{yamagoe_nakamachi_stop}}",
-                "to": "{{kinkakujimichi_stop}}"
+                "distance_km": 8.5,
+                "fare_jpy": 200,
+                "line": "산인본선(嵯峨野線)",
+                "from": "{{sagaarashiyama_station}}",
+                "to": "{{nijo_station}}"
+              },
+              {
+                "mode": "walk",
+                "duration_min": 7,
+                "distance_km": 0.5
               }
             ],
-            "advisory": "11번은 40분 간격 — 놓치면 택시 22분 대안",
-            "source": "https://www.google.com/maps/dir/Tenryu-ji+Temple,+Kyoto/Kinkaku-ji+Temple,+Kyoto",
-            "source_fetched_at": "2026-05-18",
+            "source": "https://www.kyotostation.com/jr-sagano-line-for-nijo-uzumasa-saga-arashiyama/ + 아라시야마→시오 복귀 동선",
+            "source_fetched_at": "2026-05-30",
             "data_quality": "researched_market_rate",
-            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Tenryu-ji+Temple,+Kyoto&destination=Kinkaku-ji,+Kyoto&travelmode=transit"
-          },
-          "blog_reviews": [
-            {
-              "url": "https://m.blog.naver.com/sksksk_7026/224186669977",
-              "img": "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNjAyMThfMjAg%2FMDAxNzcxMzQyNTAxODgx.dGdGTIe1WJ53Wqgtw4TH_6yGPQ7sbhfyXlxp4-wRGHEg.933DXc4upmDnUJ3JdiWmWzvpGa5sGRsftLNtakes2WUg.JPEG%2Foutput%25A3%25DF2410698488.jpg%23900x1200&type=f238_208",
-              "comment": "아라시야마·금각사·청수사 교토 버스투어. 금각사 연못 반영 황금 사원 포토스팟 필수"
-            },
-            {
-              "url": "https://m.blog.naver.com/julie_kim_/223872430970",
-              "img": "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNjA1MDJfNzUg%2FMDAxNzc3NjgyNTY0NjAw.sfIT6R0jNUkqI99shNfXU0FkW154Gtgt0TAIK1lgRgwg.rW_xzFKEtQOo-46bzhahyroy1L_fXjw0xZoMinqNWFAg.JPEG%2FIMG%25A3%25DF3462.jpg%23900x1200&type=f238_208",
-              "comment": "입장권 500엔 (현장 구매 가능). 관람 소요 30~40분. 이른 오전 방문 시 인파 적음"
-            },
-            {
-              "url": "https://m.blog.naver.com/sksksk_7026/224186669977",
-              "img": "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNDA3MDlfMjM1%2FMDAxNzIwNTIwNDY1Nzc5.JPEG%2Fgold_temple.jpg%23900x1200&type=f238_208",
-              "comment": "금각사 부적 구매 필수. 버스 101·205번 이용 편리. 료안지·닌나지와 동선 연결 가능"
-            }
-          ]
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Saga-Arashiyama+Station,+Kyoto&destination=Nijo+Station,+Kyoto&travelmode=transit"
+          }
         },
         {
           "time": "15:00",
           "priority": "권장",
           "title": {
             "type": "place",
-            "ko_name": "료안지",
-            "ja_name": "竜安寺",
-            "ja_reading_ko": "료안지",
+            "ko_name": "난젠지 → 철학의 길 산책",
+            "ja_name": "哲学の道",
+            "ja_reading_ko": "테츠가쿠노미치",
             "en_name": ""
           },
-          "maps_query": "Ryoan-ji",
-          "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/RyoanJi-Dry_garden.jpg?width=480",
+          "maps_query": "Philosopher's Path Kyoto",
+          "note": "{{nijo_station}}에서 지하철 도자이선으로 환승 없이 {{keage_station}}까지 한 번에 — 시부모 동반 환승 최소화. {{keage_station}} 도보 5~10분(네지리만포 벽돌터널 통과)에 {{nanzenji}} 산몬·수로각(水路閣). 여기서부터 {{tetsugaku_path}}(약 2km, 천천히 30~45분)을 북상해 {{ginkakuji}} 방향으로. 비와호 운하 따라 나무 그늘길이라 해 기운 늦은 오후 산책에 최적. 봄 벚꽃 대신 6월은 신록.",
+          "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Tetsugaku-no-michi%2C_Kyoto.jpg?width=480",
           "image_credit": "Wikimedia Commons",
           "arrive_from": {
             "steps": [
               {
-                "mode": "bus",
-                "duration_min": 4,
-                "distance_km": 1.6,
-                "fare_jpy": 230,
-                "operator": {
-                  "ko": "시버스",
-                  "ja": "市バス",
-                  "type": "shibus"
-                },
-                "number": "59",
-                "from": "{{kinkakujimichi_stop}}",
-                "to": "{{ryoanjimae_stop}}"
+                "mode": "subway",
+                "duration_min": 13,
+                "distance_km": 5.5,
+                "fare_jpy": 260,
+                "line": "도자이선(東西線)",
+                "from": "{{nijo_station}}",
+                "to": "{{keage_station}}"
+              },
+              {
+                "mode": "walk",
+                "duration_min": 10,
+                "distance_km": 0.7
               }
             ],
-            "source": "https://kinukake.com/en/day-tour.html · https://www.tripadvisor.com/ShowTopic-g298564-i2712-k6637145",
-            "source_fetched_at": "2026-05-17",
+            "source": "Kyoto Travel 공식 (kyoto.travel/en/getting-around/comfortable-access-to-ginkaku-ji-temple-philosophers-path) + LIVE JAPAN 케아게→난젠지 도보",
+            "source_fetched_at": "2026-05-30",
             "data_quality": "researched_market_rate",
-            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Kinkaku-ji,+Kyoto&destination=Ryoan-ji,+Kyoto&travelmode=transit"
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Nijo+Station,+Kyoto&destination=Nanzenji+Temple,+Kyoto&travelmode=transit"
+          }
+        },
+        {
+          "time": "15:45",
+          "title": {
+            "type": "place",
+            "ko_name": "요지야카페 은각사점 — 정원 휴식",
+            "ja_name": "よーじやカフェ 銀閣寺店",
+            "ja_reading_ko": "요지야카페",
+            "en_name": ""
+          },
+          "maps_query": "Yojiya Cafe Ginkakuji",
+          "note": "{{tetsugaku_path}} 중간에 자리한 일본정원 카페 — '가는 길에 꼭 한 번 쉬는' 슬롯. 완전 실내 냉방·정원 뷰 다다미석이라 시부모 동반 30도 더위 대피에 적합. 영업 09:15~18:00(혼넨마치 정류장 도보 3분). 시그니처 말차 음료·녹차 카푸치노. 4인 좌석 대기 가능 — 16시 전후 권장. 30~40분 충분히 쉬고 다시 북상.",
+          "arrive_from": {
+            "steps": [
+              {
+                "mode": "walk",
+                "duration_min": 20,
+                "distance_km": 1.2
+              }
+            ],
+            "source": "https://yojiyacafe.com/ (영업시간) + 哲学の道 중간 도보",
+            "source_fetched_at": "2026-05-30",
+            "data_quality": "researched_market_rate",
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Nanzenji+Temple,+Kyoto&destination=Yojiya+Cafe+Ginkakuji,+Kyoto&travelmode=walking"
+          }
+        },
+        {
+          "time": "16:40",
+          "title": {
+            "type": "place",
+            "ko_name": "은각사",
+            "ja_name": "銀閣寺",
+            "ja_reading_ko": "긴카쿠지",
+            "en_name": ""
+          },
+          "maps_query": "Ginkaku-ji",
+          "note": "{{tetsugaku_path}} 북쪽 끝. 여름(3~11월) 08:30~17:00·마지막 입장 17:00·입장료 ¥500. 관람 ~30~40분(이끼·백사 정원, 긴카쿠 누각, 전망대 산책로). 16:40 입장이면 마감 전 여유. {{kinkakuji}}·{{ryoanji}}(북서)는 정반대편이라 이번 6/1에서 제외 — 동쪽 히가시야마 한 곳에 동선 집중.",
+          "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Ginkakuji_Kyoto03-r.jpg?width=480",
+          "image_credit": "Wikimedia Commons",
+          "arrive_from": {
+            "steps": [
+              {
+                "mode": "walk",
+                "duration_min": 15,
+                "distance_km": 0.9
+              }
+            ],
+            "source": "https://www.shokoku-ji.jp/en/ginkakuji/access/ (운영시간) + 哲学の道 북상 도보",
+            "source_fetched_at": "2026-05-30",
+            "data_quality": "researched_market_rate",
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Yojiya+Cafe+Ginkakuji,+Kyoto&destination=Ginkaku-ji,+Kyoto&travelmode=walking"
           }
         },
         {
@@ -814,7 +864,7 @@
             "en_name": ""
           },
           "maps_query": "Manzaratei Pontocho Kyoto",
-          "note": "{{nishiki}}은 17:00 마감이라 낮에 둘러보기",
+          "note": "{{nishiki}}은 17:00 마감이라 낮에 둘러보기. {{ginkakuji}}·{{tetsugaku_path}} 후 시버스로 {{kawaramachi}} 복귀 — 신쿄고쿠·데라마치 아케이드, 가모강 변 야경 산책 가능.",
           "food_quality": {
             "rating": "타베로그 3.30 (92)",
             "source": "Tabelog 2026-05-24",
@@ -837,28 +887,34 @@
             "steps": [
               {
                 "mode": "bus",
-                "duration_min": 42,
-                "distance_km": 8.1,
+                "duration_min": 35,
+                "distance_km": 6.5,
                 "fare_jpy": 230,
                 "operator": {
                   "ko": "시버스",
                   "ja": "市バス",
                   "type": "shibus"
                 },
-                "number": "59",
-                "from": "{{ryoanjimae_stop}}",
+                "number": "17",
+                "from": "{{ginkakuji_michi_stop}}",
                 "to": "{{shijo_kawaramachi_stop}}"
+              },
+              {
+                "mode": "walk",
+                "duration_min": 5,
+                "distance_km": 0.3
               }
             ],
-            "source": "https://www.google.com/maps/dir/Ryoan-ji/Kawaramachi",
-            "source_fetched_at": "2026-05-18",
+            "advisory": "시버스 17 또는 203 (은각사도→가와라마치, 균일 ¥230). 17은 출데마치야나기 경유, 203은 기온 경유 — 먼저 오는 차 탑승",
+            "source": "https://www2.city.kyoto.lg.jp/kotsu/webguide/en/bus/busstop_bunsetu.html (시버스 17/203) + 은각사도→가와라마치",
+            "source_fetched_at": "2026-05-30",
             "data_quality": "researched_market_rate",
-            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Ryoan-ji,+Kyoto&destination=Pontocho+Alley,+Kyoto&travelmode=transit"
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Ginkakuji-michi,+Kyoto&destination=Pontocho+Alley,+Kyoto&travelmode=transit"
           }
         }
       ],
-      "walking_km_source": "items[].arrive_from[mode=walk] 합(~0.6km) + 죽림길·텐류지 정원·니시키 시장 산책 추정(~3.4km)",
-      "pass_recommendation": "iPhone Apple Wallet ICOCA 단권 — 시버스 3회({{tenryuji}}→{{kinkakuji}} ¥460 + {{kinkakuji}}→{{ryoanji}} ¥230 + {{ryoanji}}→{{kawaramachi}} ¥230) ¥920/인×4=¥3,680. 통합 1일권 ¥1,100×4=¥4,400 대비 ¥720 절약(¥700 시버스 단독 1일권은 2023-09 폐지)."
+      "walking_km_source": "items[].arrive_from[mode=walk] 합(~4.1km: 아라시야마 복귀·케아게→난젠지·철학의 길 산책·은각사·가와라마치) + 죽림길·텐류지 정원 내부 산책 추정(~1.9km)",
+      "pass_recommendation": "iPhone Apple Wallet ICOCA 단권 — 오전 {{nijo_station}}↔{{sagaarashiyama_station}} JR(편도 ¥200)·{{saihoji}} 교토버스 왕복, 오후 복귀 JR ¥200 + {{nijo_station}}→{{keage_station}} 지하철 도자이선 ¥260 + {{ginkakuji_michi_stop}}→{{kawaramachi}} 시버스 ¥230. JR·지하철·시버스·교토버스 운영사가 섞여 통합 1일권 본전 미달 — ICOCA 단권이 최적."
     },
     {
       "date": "2026-06-02",
