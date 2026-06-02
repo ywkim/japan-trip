@@ -206,6 +206,11 @@
       "ko": "요도바시 카메라 교토",
       "ja": "ヨドバシカメラ京都",
       "reading": "요도바시카메라쿄토"
+    },
+    "ganko_yodobashi": {
+      "ko": "해선회전초밥 간코 요도바시점",
+      "ja": "海鮮回転寿司がんこ 京都ヨドバシ店",
+      "reading": "간코교토요도바시텐"
     }
   },
   "trip": {
@@ -1105,34 +1110,47 @@
             "en_name": ""
           },
           "maps_query": "Umekoji Kadensho",
-          "note": "방에서 휴식 후 {{kadensho}} 료칸 대욕장. 가이세키 전 온천으로 몸 풀기 — 6/3 새벽 출발 대비 일찍."
+          "note": "방에서 휴식 후 {{kadensho}} 료칸 대욕장. 회전초밥 전 온천으로 몸 풀기 — 6/3 새벽 출발 대비 일찍."
         },
         {
           "time": "18:00",
           "title": {
             "type": "restaurant",
-            "ko_name": "카덴쇼 가이세키 저녁",
-            "ja_name": "",
-            "ja_reading_ko": "",
+            "ko_name": "간코 회전초밥 저녁 (요도바시 6F)",
+            "ja_name": "海鮮回転寿司がんこ 京都ヨドバシ店",
+            "ja_reading_ko": "간코교토요도바시텐",
             "en_name": ""
           },
-          "maps_query": "Umekoji Kadensho",
-          "note": "17:30~18:00 빠른 시간 권장 (6/3 새벽 출발)",
-          "food_quality": {
-            "rating": "야후트래블 4.50/5 (148) · 一休 4.51 (147) · Trip.com 9.5",
-            "source": "Yahoo Travel · Ikyu · Trip.com 2026-05-24",
-            "source_fetched_at": "2026-05-24",
+          "maps_query": "海鮮回転寿司がんこ 京都ヨドバシ店",
+          "note": "{{kadensho}}→택시→{{yodobashi_kyoto}} 6F {{ganko_yodobashi}}. 한 접시 ¥480~880, 초밥·튀김·라멘·디저트 다양. 전석 금연. 11:00~23:00(L.O.22:30) — 18:00~19:30 목표, 20:00 전 귀환(택시). 폭우·강풍 저녁이라 외출 최소화 — 택시 왕복 권장.",
+          "arrive_from": {
+            "steps": [
+              {
+                "mode": "taxi",
+                "duration_min": 7,
+                "distance_km": 1.9,
+                "from": "{{kadensho}}",
+                "to": "{{yodobashi_kyoto}}"
+              }
+            ],
+            "advisory": "폭우·강풍(저녁) — 택시 왕복 권장. 대안: JR 우메코지교토니시→교토역 1정거장+도보",
+            "source": "https://www.google.com/maps/dir/?api=1&origin=Umekoji+Kadensho,+Kyoto&destination=Yodobashi+Camera+Kyoto&travelmode=driving",
+            "source_fetched_at": "2026-06-02",
             "data_quality": "researched_market_rate",
-            "url": "https://www.ikyu.com/00002982/review/",
-            "note": "예약 료칸 포함 석식(교체 불가). 여성 조리장 계절 가이세키(사시미·복어 나베). 평점은 료칸 종합 — 식사 전용 점수 아님",
-            "place_info": {},
-            "business_hours": [],
-            "ratings": []
+            "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Umekoji+Kadensho,+Kyoto&destination=Yodobashi+Camera+Kyoto&travelmode=driving"
+          },
+          "food_quality": {
+            "rating": "타베로그 3.01 (4리뷰, 2026-05 기준)",
+            "source": "Tabelog 2026-06-02",
+            "source_fetched_at": "2026-06-02",
+            "data_quality": "researched_market_rate",
+            "url": "https://tabelog.com/kyoto/A2601/A260101/26044961/",
+            "note": "2026-04-24 신규. 가이세키 계열 60년 노포 간코 브랜드. ¥480~880/접시. 전석금연. 가족 4인 선택 폭 넓음 — 초밥 외 튀김·라멘·디저트도 운영."
           }
         }
       ],
       "walking_km_source": "실내·택시 위주 우천 대체 코스 — 도보 leg 합 ~0.6km(이세탄·역빌딩 내부 이동). 원안(후시미·토후쿠지·키요미즈·산넨자카·기온 ~7km)은 폭우로 전면 교체",
-      "pass_recommendation": "폭우 대체 코스라 도보·시버스 대신 택시 중심 — {{shio_machiya}}→{{kadensho}}, {{kadensho}}↔{{kyoto_station}} 단거리 택시 3회(각 ¥800~1,200 예상). ICOCA 단권은 JR 대안(우메코지교토니시 1정거장) 이용 시에만. 통합 패스 불필요"
+      "pass_recommendation": "폭우 대체 코스라 도보·시버스 대신 택시 중심 — {{shio_machiya}}→{{kadensho}}, {{kadensho}}↔{{kyoto_station}} 3회·{{kadensho}}↔{{yodobashi_kyoto}} 저녁 왕복 2회(각 ¥800~1,200 예상). ICOCA 단권은 JR 대안(우메코지교토니시 1정거장) 이용 시에만. 통합 패스 불필요"
     },
     {
       "date": "2026-06-03",
