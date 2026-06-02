@@ -138,6 +138,12 @@ DOC_PAGES = (
         "교토역과 바로 연결되는 4개 시설 일본어 후기 번역 — 6/2 비 오는 날 실내 쇼핑·선물 봉인팩 동선",
         "itinerary", "itinerary", "itinerary.html", "← 일정",
     ),
+    DocPage(
+        "docs/kyoto-station-kaiten-sushi-translation.md", "viz/kaiten-sushi-review.html",
+        "교토역 회전초밥 — 大起水産 vs 寿しのむさし",
+        "실제로 도는 교토역 회전초밥 두 곳 일본어 후기 번역·비교 — 6/2 저녁(카덴쇼 식사 불포함)",
+        "itinerary", "itinerary", "itinerary.html", "← 일정",
+    ),
     # ── 아카이브 문서 (8개) ───────────────────────────────────────────────────
     DocPage(
         "docs/candidates.md", "viz/candidates.html",
