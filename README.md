@@ -32,7 +32,7 @@
 - `viz/report.html`·`viz/itinerary-doc.html`·`viz/research.html`·`viz/transit-pass.html`·`viz/decision-kyoto.html` — 레포 마크다운 문서(최종 보고서·일정 문서·예약 리서치·교통패스 비교·교토 변경 결정)를 사이트 내 HTML로 렌더한 페이지. 가족 공유 시 GitHub 노출 없이 열람 (검사 J: `github.com` 링크 금지)
 - `viz/kaneyo-review.html` — 교고쿠 카네요(京極かねよ) 일본어 방문기 한국어 번역 페이지. `docs/kaneyo-review-translation.md` 정본. 5/31 저녁 식당 후기 카드에서 탭 진입
 - `viz/shinkyogoku-review.html` — 신쿄고쿠 상점가(新京極商店街) 안내·방문기 번역 페이지. `docs/shinkyogoku-review-translation.md` 정본. 5/31 20:00 야경 산책 카드에서 탭 진입
-- `viz/nakamura-shoten-review.html` — 나카무라쇼텐(中村商店) 교토역 라멘코지 가이드. `docs/nakamura-shoten-review-translation.md` 정본. 6/2 11:30 점심 카드에서 탭 진입
+- `viz/nakamura-shoten-review.html` — 교토역 라멘코지(京都拉麺小路) 10개 점포 비교 + 中村商店 추천. `docs/nakamura-shoten-review-translation.md` 정본. 6/2 11:30 점심 카드에서 탭 진입
 - `viz/isetan-matcha-dessert.html` — 교토역 말차 디저트 비교(中村藤吉 vs 茶寮都路里, JR이세탄 같은 건물). `docs/isetan-matcha-dessert-translation.md` 정본. 6/2 14:30 우천 실내 디저트 카드에서 탭 진입
 - `viz/decision-log.html` — 결정 일지 인덱스 (`docs/decision-log/*.md` 최신순 제목 목록, 교토 변경 결정만 링크)
 - `assets/og-*.svg` — 6장의 OG/Twitter 카드 이미지 (1200×630). 카톡·Slack·X 공유 시 페이지별 썸네일·제목·설명 노출

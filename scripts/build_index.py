@@ -122,8 +122,8 @@ DOC_PAGES = (
     ),
     DocPage(
         "docs/nakamura-shoten-review-translation.md", "viz/nakamura-shoten-review.html",
-        "나카무라쇼텐 라멘 정보 — 닭파이탄 소금·간장",
-        "교토역 라멘코지 타베로그 최고점 — 닭파이탄 소금·간장·미소 라멘 가이드",
+        "교토역 라멘코지 점포 비교 — 中村商店 외 9",
+        "교토역 라멘코지 10개 점포 지역·스타일 비교 + 中村商店(타베로그 3.56) 추천",
         "itinerary", "itinerary", "itinerary.html", "← 일정",
     ),
     DocPage(
