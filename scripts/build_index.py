@@ -674,7 +674,8 @@ def doc_link_html(link, in_viz: bool = False) -> str:
     url이 사이트 내 상대 경로면 같은 탭 내비게이션, 외부(http)면 새 탭으로 연다.
     Vercel은 .md를 raw로 서빙하므로 운영 화면 링크는 사이트 내 HTML 페이지를
     가리킨다(예: 조식 슬롯 → breakfast.html). 외부 GitHub blob 링크 금지.
-    in_viz=False(루트 index.html)일 때 viz-상대 경로에 viz/ 접두어 추가.
+    in_viz=False(루트 index.html)일 때 viz-상대 경로에 viz/ 접두어 추가 — 안 그러면
+    루트에서 /<page>로 풀려 404.
     """
     link = link or {}
     url = (link.get("url") or "").strip()
@@ -1498,7 +1499,7 @@ def card_itinerary(d) -> str:
             else:
                 img_html = ""
             reviews_html = blog_reviews_html(it.get("blog_reviews", []))
-            link_html = doc_link_html(it.get("link"))
+            link_html = doc_link_html(it.get("link"), in_viz=False)
             pbadge = priority_badge_html(it.get("priority", ""))
             item_rows.append(f"""
     <div class="day">
@@ -1566,7 +1567,7 @@ def checklist_card(it, in_viz: bool = False) -> str:
     제목+상태 배지 / 금액·마감(D-day)·예약번호·권장 행 / 출처 링크 / 접히는 상세 노트.
     마감 D-day는 빌드 결정성을 위해 클라이언트 스크립트가 data-due에서 계산한다.
     in_viz=True: viz/checklist.html에서 렌더 (viz/ 접두어 불요).
-    in_viz=False: index.html(루트)에서 렌더 (viz/ 접두어 필요).
+    in_viz=False: index.html(루트)에서 렌더 (viz/ 접두어 필요 — 안 그러면 /<page>로 풀려 404).
     """
     st = it.get("status", "미정")
     state = _STATE_CLASS.get(st, "pending")
@@ -1583,16 +1584,19 @@ def checklist_card(it, in_viz: bool = False) -> str:
         rows.append(detail_row("예약번호", it["reference"]))
     if it.get("action"):
         rows.append(detail_row("권장", it["action"]))
-    link = it.get("link") or {}
+    # 항목당 참조 문서 링크는 단일 link(dict) 또는 links(list) 모두 지원 (하위 호환).
+    links = it.get("links") or ([it["link"]] if it.get("link") else [])
     link_html = ""
-    if link.get("url"):
-        url = link["url"]
+    for ln in links:
+        url = (ln or {}).get("url")
+        if not url:
+            continue
         # 레포 문서 경로는 사이트 내 렌더 페이지로 치환 (GitHub 링크 금지·검사 J).
         if url in DOC_SOURCE_TO_OUT:
             url = doc_href(DOC_SOURCE_TO_OUT[url], in_viz=in_viz)
-        link_html = (
+        link_html += (
             f'\n    <a class="doc-link" href="{esc(url)}" target="_blank" '
-            f'rel="noopener">{esc(link.get("label", "상세"))} ↗</a>'
+            f'rel="noopener">{esc(ln.get("label", "상세"))} ↗</a>'
         )
     note = it.get("note", "")
     note_html = ""
@@ -1629,7 +1633,7 @@ CHECKLIST_DDAY_SCRIPT = """
 
 def card_checklist(d) -> str:
     items = sorted(d["checklist"]["items"], key=checklist_sort_key)
-    cards = "".join(checklist_card(it) for it in items)
+    cards = "".join(checklist_card(it, in_viz=False) for it in items)
     return f"""
 <!-- SYNC: data/booking-checklist.json -->
 <section id="checklist" class="card">

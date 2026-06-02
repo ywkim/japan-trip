@@ -1,5 +1,5 @@
 {
-  "_doc": "예약 진행 상태. status: 미정|예약중|확정. viz/checklist.html(예약 탭) 카드 데이터 출처. 변경 시 build_index.py 재실행. 선택 필드(스캔용 요약): amount(금액 한 줄)·reference(예약/확정 정보, 확정 항목)·action(권장 다음 행동, 미정 항목)·link({label,url} 출처/상세 문서). link.url 규칙: GitHub URL 금지(검사 J). 레포 마크다운 경로(예: docs/booking-research-2026-05-24.md)를 넣으면 build_index.py의 DOC_SOURCE_TO_OUT가 사이트 내 렌더 페이지(viz/research.html 등)로 치환. 그 외는 사이트 외부 http(s) 링크만 허용. note는 전체 상세(예약 탭에서 '자세히'로 접힘) — build_index.py의 linkify가 벌거벗은 http(s) URL과 마크다운 [라벨](url) 문법(url=http(s)는 새 탭, tel:은 전화 탭)을 클릭 가능한 링크로 렌더하므로 예약 채널·전화번호는 [라벨](url) 형식으로 적어 모바일에서 탭 가능하게 한다. GitHub URL은 note에서도 금지(검사 J).",
+  "_doc": "예약 진행 상태. status: 미정|예약중|확정. viz/checklist.html(예약 탭) 카드 데이터 출처. 변경 시 build_index.py 재실행. 선택 필드(스캔용 요약): amount(금액 한 줄)·reference(예약/확정 정보, 확정 항목)·action(권장 다음 행동, 미정 항목)·link({label,url} 출처/상세 문서) 또는 links([{label,url},…] 배열 — 한 항목이 2개 이상 문서를 참조할 때). link.url/links[].url 규칙: GitHub URL 금지(검사 J). 레포 마크다운 경로(예: docs/booking-research-2026-05-24.md)를 넣으면 build_index.py의 DOC_SOURCE_TO_OUT가 사이트 내 렌더 페이지(viz/research.html 등)로 치환. 그 외는 사이트 외부 http(s) 링크만 허용. note는 전체 상세(예약 탭에서 '자세히'로 접힘) — build_index.py의 linkify가 벌거벗은 http(s) URL과 마크다운 [라벨](url) 문법(url=http(s)는 새 탭, tel:은 전화 탭)을 클릭 가능한 링크로 렌더하므로 예약 채널·전화번호는 [라벨](url) 형식으로 적어 모바일에서 탭 가능하게 한다. GitHub URL은 note에서도 금지(검사 J).",
   "scenario": "kyoto_may31_kadensho_early_bird",
   "items": [
     {
@@ -57,8 +57,8 @@
       "confirmed_at": "2026-05-29",
       "amount": "왕복 4인 (Trip.com 왕복 각 ~₩70,300/4인)",
       "reference": "왕복 모두 확정 · KIX→교토 Trip.com 1400827143412439 (2026-05-25) · 교토→KIX 06:21 출발 (2026-05-29 확정)",
-      "link": {"label": "패스 비교", "url": "docs/transit-pass-jr-kansai-2026.md"},
-      "note": "결정(소연, 2026-05-19): 하루카 편도권 채택, JR 간사이 패스 미채택. 교토 시내 JR·시버스는 4인 Apple Wallet ICOCA 단권(기확정). 왕로: Trip.com 1400827143412439 — KIX→교토 4인, ₩70,300(₩18,500×4, 일본 액티비티 5% 할인, TossPay), 예약자 LEE/SOYEON, 2026-05-25 확정. 귀국편: 교토→KIX 06:21 출발 Trip.com 2026-05-29 확정. 사용법: WEST QR 계정 등록 → 전자티켓 바인딩 → 편명·좌석 예약 → 당일 QR 활성화. 일지: docs/decision-log/2026-05-25-haruka-tripcom-online-booked.md · 비교 근거: docs/transit-pass-jr-kansai-2026.md · 리서치 상세: docs/booking-research-2026-05-24.md"
+      "links": [{"label": "패스 비교", "url": "docs/transit-pass-jr-kansai-2026.md"}, {"label": "ICOCA·PASMO 셋업", "url": "docs/icoca-iphone-setup.md"}],
+      "note": "결정(소연, 2026-05-19): 하루카 편도권 채택, JR 간사이 패스 미채택. 교토 시내 JR·시버스는 4인 Apple Wallet ICOCA 단권(기확정). Wallet에 등록할 Mastercard/Amex가 없는 인원(시부모 가능)은 PASMO 앱 무기명 ¥0 발급+현금 충전으로 대체 — ICOCA·PASMO 셋업 가이드 §3.4 경로 C. 왕로: Trip.com 1400827143412439 — KIX→교토 4인, ₩70,300(₩18,500×4, 일본 액티비티 5% 할인, TossPay), 예약자 LEE/SOYEON, 2026-05-25 확정. 귀국편: 교토→KIX 06:21 출발 Trip.com 2026-05-29 확정. 사용법: WEST QR 계정 등록 → 전자티켓 바인딩 → 편명·좌석 예약 → 당일 QR 활성화. 일지: docs/decision-log/2026-05-25-haruka-tripcom-online-booked.md · 비교 근거: docs/transit-pass-jr-kansai-2026.md · 리서치 상세: docs/booking-research-2026-05-24.md"
     },
     {
       "id": "fx",
