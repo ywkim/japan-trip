@@ -2442,6 +2442,7 @@ DOC_CSS = """
   .doc th, .doc td { border: 1px solid var(--border); padding: 0.4rem 0.55rem; text-align: left; vertical-align: top; }
   .doc th { background: var(--subcard); font-weight: 600; white-space: nowrap; }
   .doc hr { border: none; border-top: 1px solid var(--border); margin: 1.2rem 0; }
+  .doc img { max-width: 100%; height: auto; border-radius: 8px; margin: 0.6rem 0; display: block; }
   /* ── 좁은 화면: 표를 카드형(라벨:값)으로 스택 — 가로 스크롤 제거 ── */
   @media (max-width: 560px) {
     .doc table { display: block; overflow-x: visible; border: none; font-size: 0.9rem; }
@@ -2461,6 +2462,7 @@ DOC_CSS = """
 """
 
 _FRONTMATTER_RE = re.compile(r"\A---\n.*?\n---\n", re.DOTALL)
+_IMG_SRC_RE = re.compile(r'(<img\b[^>]*?\bsrc=")([^"]+)(")')
 
 
 def strip_frontmatter(text: str) -> str:
@@ -2521,6 +2523,7 @@ def render_markdown_body(md_text: str) -> str:
         output_format="html",
     )
     html_body = add_table_data_labels(html_body)
+    html_body = _IMG_SRC_RE.sub(lambda m: m.group(1) + local_src(m.group(2)) + m.group(3), html_body)
     return f'<div class="doc">\n{html_body}\n</div>'
 
 

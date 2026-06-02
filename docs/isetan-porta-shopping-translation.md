@@ -17,6 +17,8 @@
 
 ## ① JR교토 이세탄 — 지하 식품관 선물의 결정판
 
+![JR교토 이세탄 2층 입구 (2025, Wikimedia Commons CC BY 4.0)](https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/JR_Kyoto_Isetan_Level_2_Entrance_2025.JPG/960px-JR_Kyoto_Isetan_Level_2_Entrance_2025.JPG)
+
 > 원문(ことりっぷ): "京都駅構内にあるので新幹線乗車前の最後の買い物にぴったり" → **"교토역 구내에 있어 신칸센 타기 직전 마지막 쇼핑에 딱"**
 
 2018년 12월 지하 1층 식품 매장을 넓혀 새로 단장하며 약 60개 브랜드가 들어선, **지하 식품관(데파치카) 선물의 결정판**. "신선한 식재료와 갓 만든 반찬부터 사계절을 느끼는 화·양과자, 엄선한 술까지 한자리에"(공식). 교토 여행을 마무리하며 **역에서 바로 들어가 한정 선물**을 고르기 좋은 곳으로 자주 꼽힌다.
@@ -37,6 +39,8 @@
 ---
 
 ## ② 교토 포르타 — 비 오는 날의 지하상가
+
+![교토 포르타 아트리움 (2025, Wikimedia Commons CC BY 4.0)](https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Kyoto_Porta_Atrium_2025.JPG/960px-Kyoto_Porta_Atrium_2025.JPG)
 
 > 원문(공식): "JR京都駅直結の地下街で、雨でも濡れない" → **"JR교토역에서 바로 이어지는 지하상가, 비가 와도 안 젖는다"**
 
@@ -61,6 +65,8 @@
 
 ## ③ 돈키호테 아반티점 — 면세·잡화·봉인팩
 
+![교토 아반티 빌딩 전경 (Wikimedia Commons CC BY-SA 3.0)](https://upload.wikimedia.org/wikipedia/commons/c/cb/Kyoto_Avanti_%28Redevelopment_building%29_Kyoto%2C_JAPAN.jpg)
+
 > 원문(京都ピ): "免税と書かれたデカデカした看板…訪日観光客をターゲットにした店舗" → **"'면세'라고 큼지막하게 적힌 간판… 일본을 찾는 관광객을 겨냥한 가게"**
 
 교토역 **하치조구치(남쪽)** 아반티 빌딩 **2층 전체**를 쓰는 대형 할인점. 지하철 교토역에서 걸어서 1분, **지하도로 바로 이어진다**.
@@ -78,6 +84,8 @@
 ---
 
 ## ④ 요도바시 카메라 교토 — 가전·완구·식품·식당가 한 건물
+
+![요도바시 카메라 교토 빌딩 (2010, Wikimedia Commons CC BY-SA 3.0)](https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Kyoto_Yodobashi_Bldg_20101106-001.jpg/960px-Kyoto_Yodobashi_Bldg_20101106-001.jpg)
 
 > 원문(공식): 교토역과 바로 연결, 교토타워 옆. 영업 9:30~22:00.
 

@@ -1579,6 +1579,18 @@ class SelfHostedImageTests(unittest.TestCase):
         self.assertIn("referrerPolicy", sw)
         self.assertIn("no-referrer", sw)
 
+    def test_render_markdown_body_applies_local_src(self):
+        """render_markdown_body가 문서 페이지 img src도 local_src()로 치환한다."""
+        orig_map = dict(build_index.LOCAL_IMAGE_MAP)
+        build_index.LOCAL_IMAGE_MAP["https://ext.example/photo.jpg"] = "/assets/place-images/x.jpg"
+        try:
+            result = build_index.render_markdown_body("![alt](https://ext.example/photo.jpg)")
+            self.assertIn("/assets/place-images/x.jpg", result)
+            self.assertNotIn("https://ext.example/photo.jpg", result)
+        finally:
+            build_index.LOCAL_IMAGE_MAP.clear()
+            build_index.LOCAL_IMAGE_MAP.update(orig_map)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -76,5 +76,28 @@ class BudgetJsonTests(unittest.TestCase):
         self.assertIn("예산 상한", r.stdout)
 
 
+class FetchAssetsDocUrlTests(unittest.TestCase):
+    """fetch_assets.py가 docs/*.md 마크다운 이미지 URL도 수집한다."""
+
+    def test_collect_doc_urls_returns_list(self):
+        from scripts.fetch_assets import collect_doc_urls
+        urls = collect_doc_urls()
+        self.assertIsInstance(urls, list)
+        for u in urls:
+            self.assertTrue(u.startswith("http"), f"non-http URL in doc urls: {u}")
+
+    def test_collect_doc_urls_no_duplicates(self):
+        from scripts.fetch_assets import collect_doc_urls
+        urls = collect_doc_urls()
+        self.assertEqual(len(urls), len(set(urls)), "duplicate URLs found")
+
+    def test_collect_doc_urls_includes_wikimedia_images(self):
+        """isetan-porta-shopping-translation.md의 위키미디어 이미지가 포함된다."""
+        from scripts.fetch_assets import collect_doc_urls
+        urls = collect_doc_urls()
+        wikimedia = [u for u in urls if "upload.wikimedia.org" in u]
+        self.assertTrue(len(wikimedia) >= 1, f"위키미디어 이미지가 doc URLs에 없음: {urls[:5]}")
+
+
 if __name__ == "__main__":
     unittest.main()

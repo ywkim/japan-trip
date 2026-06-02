@@ -19,6 +19,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 import ssl
 import sys
 import time
@@ -43,6 +44,9 @@ EXT_BY_CT = {
 UA = "Mozilla/5.0 (japan-trip-offline asset fetcher)"
 
 
+_MD_IMG_RE = re.compile(r'!\[[^\]]*\]\((https?://[^)]+)\)')
+
+
 def collect_urls() -> list:
     """itinerary.json의 모든 외부 이미지 URL(image_url + blog_reviews[].img). 순서 보존·중복 제거."""
     d = json.loads(ITINERARY.read_text(encoding="utf-8"))
@@ -62,6 +66,17 @@ def collect_urls() -> list:
             add(it.get("image_url"))
             for r in it.get("blog_reviews", []) or []:
                 add(r.get("img"))
+    return out
+
+
+def collect_doc_urls() -> list:
+    """docs/*.md의 마크다운 이미지 URL(외부만). 순서 보존·중복 제거."""
+    seen, out = set(), []
+    for f in sorted((DATA.parent / "docs").glob("*.md")):
+        for url in _MD_IMG_RE.findall(f.read_text(encoding="utf-8")):
+            if url not in seen:
+                seen.add(url)
+                out.append(url)
     return out
 
 
@@ -99,7 +114,9 @@ def main() -> int:
     ap.add_argument("--check", action="store_true", help="미다운로드 URL만 보고(쓰기 없음)")
     args = ap.parse_args()
 
-    urls = collect_urls()
+    itinerary_urls = collect_urls()
+    doc_urls = [u for u in collect_doc_urls() if u not in set(itinerary_urls)]
+    urls = itinerary_urls + doc_urls
     existing = json.loads(MAP_PATH.read_text(encoding="utf-8")) if MAP_PATH.exists() else {}
 
     if args.check:
