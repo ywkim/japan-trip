@@ -135,7 +135,7 @@ DOC_PAGES = (
     DocPage(
         "docs/isetan-porta-shopping-translation.md", "viz/isetan-porta-shopping.html",
         "교토역 실내 쇼핑 — 이세탄·포르타·돈키호테·요도바시",
-        "교토역 직결 4개 시설 일본어 후기 번역 — 6/2 우천 실내 쇼핑·선물 봉인팩 동선",
+        "교토역과 바로 연결되는 4개 시설 일본어 후기 번역 — 6/2 비 오는 날 실내 쇼핑·선물 봉인팩 동선",
         "itinerary", "itinerary", "itinerary.html", "← 일정",
     ),
     # ── 아카이브 문서 (8개) ───────────────────────────────────────────────────
@@ -2415,7 +2415,7 @@ def build_itinerary_table(d) -> str:
 # ─── 문서 페이지 렌더 (마크다운 → HTML) ─────────────────────────────────────
 
 DOC_CSS = """
-  .doc { line-height: 1.6; word-break: keep-all; }
+  .doc { line-height: 1.6; word-break: keep-all; overflow-wrap: anywhere; }
   .doc h1 { font-size: 1.4rem; margin: 1rem 0 0.5rem; color: var(--fg); font-weight: 600; }
   .doc h2 { font-size: 1.1rem; margin: 1.3rem 0 0.4rem; color: var(--fg); font-weight: 600;
             border-bottom: 1px solid var(--border); padding-bottom: 0.2rem; }
@@ -2444,18 +2444,18 @@ DOC_CSS = """
   .doc hr { border: none; border-top: 1px solid var(--border); margin: 1.2rem 0; }
   /* ── 좁은 화면: 표를 카드형(라벨:값)으로 스택 — 가로 스크롤 제거 ── */
   @media (max-width: 560px) {
-    .doc table { display: block; overflow-x: visible; border: none; font-size: 0.88rem; }
+    .doc table { display: block; overflow-x: visible; border: none; font-size: 0.9rem; }
     .doc thead { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
                  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
     .doc tbody { display: block; }
     .doc tr { display: block; border: 1px solid var(--border); border-radius: 8px;
               margin: 0.55rem 0; background: var(--card); overflow: hidden; }
-    .doc td { display: flex; gap: 0.6rem; border: none; padding: 0.4rem 0.7rem;
-              border-bottom: 1px solid var(--border); }
+    .doc td { display: block; border: none; padding: 0.4rem 0.7rem;
+              border-bottom: 1px solid var(--border); overflow-wrap: anywhere; }
     .doc tr td:last-child { border-bottom: none; }
     .doc td[data-label]::before {
-      content: attr(data-label); flex: 0 0 5rem; font-weight: 600;
-      color: var(--muted); word-break: keep-all;
+      content: attr(data-label); display: block; font-weight: 600;
+      color: var(--muted); font-size: 0.78em; margin-bottom: 0.1rem; word-break: keep-all;
     }
   }
 """

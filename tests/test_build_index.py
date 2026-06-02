@@ -1324,6 +1324,13 @@ class DocTableResponsiveTests(unittest.TestCase):
         self.assertIn("@media", css, "responsive media query missing")
         self.assertIn("attr(data-label)", css, "data-label ::before rule missing")
 
+    def test_doc_css_wraps_long_text_to_fit_width(self):
+        """긴 일본어 원문(공백 없는 CJK)이 모바일 폭을 넘기지 않게 줄바꿈 허용해야 한다.
+        근거: word-break:keep-all 단독이면 공백 없는 긴 문자열이 안 끊겨 가로 스크롤 발생
+        (2026-06-02 모바일 캡처)."""
+        css = build_index.DOC_CSS
+        self.assertIn("overflow-wrap: anywhere", css, "long-string wrapping rule missing")
+
     def test_production_shopping_page_stacks_columns(self):
         run()
         html = (BASE / "viz" / "isetan-porta-shopping.html").read_text(encoding="utf-8")
