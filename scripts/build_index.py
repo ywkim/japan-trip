@@ -120,6 +120,30 @@ DOC_PAGES = (
         "교토 도심 550m 지붕 아케이드 — 로쿄쿠야키·니시키텐만구·식후 산책 코스",
         "itinerary", "itinerary", "itinerary.html", "← 일정",
     ),
+    DocPage(
+        "docs/nakamura-shoten-review-translation.md", "viz/nakamura-shoten-review.html",
+        "교토역 라멘코지 점포 비교 — 中村商店 외 9",
+        "교토역 라멘코지 10개 점포 지역·스타일 비교 + 中村商店(타베로그 3.56) 추천",
+        "itinerary", "itinerary", "itinerary.html", "← 일정",
+    ),
+    DocPage(
+        "docs/isetan-matcha-dessert-translation.md", "viz/isetan-matcha-dessert.html",
+        "교토역 말차 디저트 — 中村藤吉 vs 茶寮都路里",
+        "JR교토 이세탄 같은 건물 두 우지 말차 노포 비교 — 6/2 우천 실내 디저트 휴식",
+        "itinerary", "itinerary", "itinerary.html", "← 일정",
+    ),
+    DocPage(
+        "docs/isetan-porta-shopping-translation.md", "viz/isetan-porta-shopping.html",
+        "교토역 실내 쇼핑 — 이세탄·포르타·돈키호테·요도바시",
+        "교토역과 바로 연결되는 4개 시설 일본어 후기 번역 — 6/2 비 오는 날 실내 쇼핑·선물 봉인팩 동선",
+        "itinerary", "itinerary", "itinerary.html", "← 일정",
+    ),
+    DocPage(
+        "docs/kyoto-station-kaiten-sushi-translation.md", "viz/kaiten-sushi-review.html",
+        "교토 회전초밥 3곳 — 大起水産 · 寿しのむさし · くら寿司",
+        "실제로 도는 교토 회전초밥 3곳 일본어 후기 번역·비교(역앞 2곳 + 저가 회전 1곳) — 6/2 저녁(카덴쇼 식사 불포함)",
+        "itinerary", "itinerary", "itinerary.html", "← 일정",
+    ),
     # ── 아카이브 문서 (8개) ───────────────────────────────────────────────────
     DocPage(
         "docs/candidates.md", "viz/candidates.html",
@@ -2401,7 +2425,7 @@ def build_itinerary_table(d) -> str:
 # ─── 문서 페이지 렌더 (마크다운 → HTML) ─────────────────────────────────────
 
 DOC_CSS = """
-  .doc { line-height: 1.6; word-break: keep-all; }
+  .doc { line-height: 1.6; word-break: keep-all; overflow-wrap: anywhere; }
   .doc h1 { font-size: 1.4rem; margin: 1rem 0 0.5rem; color: var(--fg); font-weight: 600; }
   .doc h2 { font-size: 1.1rem; margin: 1.3rem 0 0.4rem; color: var(--fg); font-weight: 600;
             border-bottom: 1px solid var(--border); padding-bottom: 0.2rem; }
@@ -2428,14 +2452,78 @@ DOC_CSS = """
   .doc th, .doc td { border: 1px solid var(--border); padding: 0.4rem 0.55rem; text-align: left; vertical-align: top; }
   .doc th { background: var(--subcard); font-weight: 600; white-space: nowrap; }
   .doc hr { border: none; border-top: 1px solid var(--border); margin: 1.2rem 0; }
+  .doc img { max-width: 100%; height: auto; border-radius: 8px; margin: 0.6rem 0; display: block; }
+  /* ── 좁은 화면: 표를 카드형(라벨:값)으로 스택 — 가로 스크롤 제거 ── */
+  @media (max-width: 560px) {
+    .doc table { display: block; overflow-x: visible; border: none; font-size: 0.9rem; }
+    .doc thead { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+                 overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+    .doc tbody { display: block; }
+    .doc tr { display: block; border: 1px solid var(--border); border-radius: 8px;
+              margin: 0.55rem 0; background: var(--card); overflow: hidden; }
+    .doc td { display: block; border: none; padding: 0.4rem 0.7rem;
+              border-bottom: 1px solid var(--border); overflow-wrap: anywhere; }
+    .doc tr td:last-child { border-bottom: none; }
+    .doc td[data-label]::before {
+      content: attr(data-label); display: block; font-weight: 600;
+      color: var(--muted); font-size: 0.78em; margin-bottom: 0.1rem; word-break: keep-all;
+    }
+  }
 """
 
 _FRONTMATTER_RE = re.compile(r"\A---\n.*?\n---\n", re.DOTALL)
+_IMG_SRC_RE = re.compile(r'(<img\b[^>]*?\bsrc=")([^"]+)(")')
 
 
 def strip_frontmatter(text: str) -> str:
     """선두 YAML frontmatter(---...---) 블록 제거. 없으면 원문 그대로."""
     return _FRONTMATTER_RE.sub("", text, count=1)
+
+
+_TABLE_RE = re.compile(r"<table>(.*?)</table>", re.DOTALL)
+_THEAD_RE = re.compile(r"<thead>(.*?)</thead>", re.DOTALL)
+_TBODY_RE = re.compile(r"<tbody>(.*?)</tbody>", re.DOTALL)
+_TH_RE = re.compile(r"<th[^>]*>(.*?)</th>", re.DOTALL)
+_TR_RE = re.compile(r"<tr>(.*?)</tr>", re.DOTALL)
+_TD_OPEN_RE = re.compile(r"<td([^>]*)>")
+_TAG_RE = re.compile(r"<[^>]+>")
+
+
+def add_table_data_labels(html: str) -> str:
+    """마크다운 표의 헤더 텍스트를 각 <td>의 data-label 속성으로 주입한다.
+
+    좁은 화면(모바일)에서 thead를 숨기고 셀을 'label: value' 카드로 스택하기 위한
+    DOM 라벨. 데스크톱에는 영향 없음(속성은 무시됨). 4컬럼 표가 가로 스크롤로
+    위치·가격 컬럼이 잘리던 문제(2026-06-02)의 구조적 해법."""
+
+    def repl(m: "re.Match[str]") -> str:
+        table = m.group(1)
+        thead_m = _THEAD_RE.search(table)
+        tbody_m = _TBODY_RE.search(table)
+        if not (thead_m and tbody_m):
+            return m.group(0)
+        labels = [_TAG_RE.sub("", x).strip() for x in _TH_RE.findall(thead_m.group(1))]
+        if not labels:
+            return m.group(0)
+
+        def row_repl(rm: "re.Match[str]") -> str:
+            cnt = [0]
+
+            def td_repl(tdm: "re.Match[str]") -> str:
+                i = cnt[0]
+                cnt[0] += 1
+                attrs = tdm.group(1)
+                if i < len(labels) and "data-label" not in attrs:
+                    lab = labels[i].replace('"', "&quot;")
+                    return f'<td{attrs} data-label="{lab}">'
+                return tdm.group(0)
+
+            return "<tr>" + _TD_OPEN_RE.sub(td_repl, rm.group(1)) + "</tr>"
+
+        new_tbody = "<tbody>" + _TR_RE.sub(row_repl, tbody_m.group(1)) + "</tbody>"
+        return "<table>" + table.replace(tbody_m.group(0), new_tbody) + "</table>"
+
+    return _TABLE_RE.sub(repl, html)
 
 
 def render_markdown_body(md_text: str) -> str:
@@ -2444,6 +2532,8 @@ def render_markdown_body(md_text: str) -> str:
         extensions=["tables", "sane_lists"],
         output_format="html",
     )
+    html_body = add_table_data_labels(html_body)
+    html_body = _IMG_SRC_RE.sub(lambda m: m.group(1) + local_src(m.group(2)) + m.group(3), html_body)
     return f'<div class="doc">\n{html_body}\n</div>'
 
 

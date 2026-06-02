@@ -456,7 +456,7 @@ class TransitFoldTests(unittest.TestCase):
                 html = path.read_text(encoding="utf-8")
                 self.assertIn("🎫 iPhone Apple Wallet ICOCA 단권", html,
                               f"pass recommendation summary missing in {path.name}")
-                self.assertIn("본전 미달", html, f"pass rationale detail lost in {path.name}")
+                self.assertIn("별도 왕복권", html, f"pass rationale detail lost in {path.name}")
 
     def test_playbook_collapsed_but_text_preserved(self):
         run()
@@ -529,7 +529,7 @@ class TransitFromToRegistryTests(unittest.TestCase):
         # (from 병기, to 병기) 튜플 검증
         for from_label, to_label in (
             ("니조역(二条駅)", "교토역(京都駅)"),
-            ("교토역(京都駅)", "이나리역(稲荷駅)"),
+            ("시오 마치야(塩町家)", "카덴쇼(嘉寿庄)"),
             ("아라시야마텐류지마에(嵐山天龍寺前)", "야마고에나카마치(山越中町)"),
         ):
             with self.subTest(route=f"{from_label}→{to_label}"):
@@ -574,7 +574,6 @@ class TransitFromToRegistryTests(unittest.TestCase):
         # (date, ko, 기대 분 합, 기대 요금 합)
         expectations = [
             ("2026-06-01", "금각사", 38, 460),   # 버스 환승: 요금 2회(¥230×2)
-            ("2026-06-02", "후시미이나리", 19, 150),  # 카덴쇼 경유: 도보 8분+나라선 11분=19분, ¥150
         ]
         for date, ko, exp_dur, exp_fare in expectations:
             with self.subTest(leg=ko):
@@ -1025,9 +1024,9 @@ class ItineraryMemoFoldTests(unittest.TestCase):
         for path in (ITINERARY, TABLE):
             with self.subTest(path=path.name):
                 html = path.read_text(encoding="utf-8")
-                self.assertIn("니넨자카(二年坂)·산넨자카(産寧坂) 인근 말차 디저트 카페</summary>", html,
+                self.assertIn("폭우로 야외 동산(키요미즈데라(清水寺))·디저트(산넨자카 맛차하우스) 코스를 대체한 실내 디저트 휴식</summary>", html,
                               "long place memo should fold into a first-sentence summary")
-                self.assertIn("영업 11:00~20:00", html, "memo tail lost (not lossless)")
+                self.assertIn("13:30~14:45 권장(15:00 입실 맞춤), 피크 15~20분 대기", html, "memo tail lost (not lossless)")
 
     def test_long_food_note_folded_but_rating_kept(self):
         run()
@@ -1380,6 +1379,62 @@ class DocPageTests(unittest.TestCase):
         self.assertIn("시버스", result, "should contain detail items")
 
 
+class DocTableResponsiveTests(unittest.TestCase):
+    """문서 페이지 마크다운 표를 모바일에서 카드형(라벨:값)으로 렌더하는 회귀 가드.
+
+    근거: 4컬럼 표가 좁은 화면에서 가로 스크롤되어 위치·가격 컬럼이 잘리는 문제
+    (2026-06-02 사용자 모바일 캡처). 헤더 텍스트를 각 td의 data-label로 주입하고
+    좁은 화면에서 thead를 숨겨 'label: value' 카드로 스택한다."""
+
+    def test_add_table_data_labels_injects_header_labels(self):
+        html = (
+            "<table>\n<thead>\n<tr>\n<th>상품</th>\n<th>가격</th>\n</tr>\n</thead>\n"
+            "<tbody>\n<tr>\n<td>파르페</td>\n<td>¥1,501</td>\n</tr>\n</tbody>\n</table>"
+        )
+        out = build_index.add_table_data_labels(html)
+        self.assertIn('<td data-label="상품">파르페</td>', out)
+        self.assertIn('<td data-label="가격">¥1,501</td>', out)
+
+    def test_add_table_data_labels_ignores_tableless_html(self):
+        html = "<p>표 없음</p>"
+        self.assertEqual(build_index.add_table_data_labels(html), html)
+
+    def test_add_table_data_labels_handles_td_attrs(self):
+        """기존 td 속성(정렬 등)이 있어도 data-label을 보존·추가한다."""
+        html = (
+            '<table>\n<thead>\n<tr>\n<th>층</th>\n<th>내용</th>\n</tr>\n</thead>\n'
+            '<tbody>\n<tr>\n<td style="text-align:right">6F</td>\n<td>다이닝</td>\n</tr>\n</tbody>\n</table>'
+        )
+        out = build_index.add_table_data_labels(html)
+        self.assertIn('data-label="층"', out)
+        self.assertIn('style="text-align:right"', out)
+
+    def test_rendered_markdown_table_has_data_labels(self):
+        md = "| 시설 | 위치 |\n|---|---|\n| 이세탄 | 교토역 |\n"
+        body = build_index.render_markdown_body(md)
+        self.assertIn('data-label="시설"', body)
+        self.assertIn('data-label="위치"', body)
+
+    def test_doc_css_has_responsive_card_table(self):
+        """DOC_CSS에 좁은 화면 미디어쿼리 + data-label ::before 카드 규칙이 있어야 한다."""
+        css = build_index.DOC_CSS
+        self.assertIn("@media", css, "responsive media query missing")
+        self.assertIn("attr(data-label)", css, "data-label ::before rule missing")
+
+    def test_doc_css_wraps_long_text_to_fit_width(self):
+        """긴 일본어 원문(공백 없는 CJK)이 모바일 폭을 넘기지 않게 줄바꿈 허용해야 한다.
+        근거: word-break:keep-all 단독이면 공백 없는 긴 문자열이 안 끊겨 가로 스크롤 발생
+        (2026-06-02 모바일 캡처)."""
+        css = build_index.DOC_CSS
+        self.assertIn("overflow-wrap: anywhere", css, "long-string wrapping rule missing")
+
+    def test_production_shopping_page_stacks_columns(self):
+        run()
+        html = (BASE / "viz" / "isetan-porta-shopping.html").read_text(encoding="utf-8")
+        self.assertIn('data-label="위치"', html, "위치 column label not injected")
+        self.assertIn("attr(data-label)", html, "responsive card CSS not present in page")
+
+
 class ChecklistCardNoteFoldTests(unittest.TestCase):
     """checklist_card note가 PR #71 fold 패턴(의미있는 요약 + 접기)을 따르는지 검증."""
 
@@ -1620,6 +1675,18 @@ class SelfHostedImageTests(unittest.TestCase):
         sw = SW.read_text(encoding="utf-8")
         self.assertIn("referrerPolicy", sw)
         self.assertIn("no-referrer", sw)
+
+    def test_render_markdown_body_applies_local_src(self):
+        """render_markdown_body가 문서 페이지 img src도 local_src()로 치환한다."""
+        orig_map = dict(build_index.LOCAL_IMAGE_MAP)
+        build_index.LOCAL_IMAGE_MAP["https://ext.example/photo.jpg"] = "/assets/place-images/x.jpg"
+        try:
+            result = build_index.render_markdown_body("![alt](https://ext.example/photo.jpg)")
+            self.assertIn("/assets/place-images/x.jpg", result)
+            self.assertNotIn("https://ext.example/photo.jpg", result)
+        finally:
+            build_index.LOCAL_IMAGE_MAP.clear()
+            build_index.LOCAL_IMAGE_MAP.update(orig_map)
 
 
 if __name__ == "__main__":
