@@ -196,6 +196,16 @@
       "ko": "교토 포르타",
       "ja": "京都ポルタ",
       "reading": "쿄토포루타"
+    },
+    "donki_avanti": {
+      "ko": "돈키호테 아반티점",
+      "ja": "ドン・キホーテ京都アバンティ店",
+      "reading": "돈키호테쿄토아반티텐"
+    },
+    "yodobashi_kyoto": {
+      "ko": "요도바시 카메라 교토",
+      "ja": "ヨドバシカメラ京都",
+      "reading": "요도바시카메라쿄토"
     }
   },
   "trip": {
@@ -987,7 +997,7 @@
             "en_name": ""
           },
           "maps_query": "JR Kyoto Isetan",
-          "note": "{{jr_kyoto_isetan}}(백화점)·{{kyoto_porta}}(지하상가)는 {{kyoto_station}} 빌딩 직결 완전 실내·지하. 폭우·강풍과 무관하게 쇼핑·구경·식품관(데파치카) 둘러보기. 시부모 휴식 겸 천천히.",
+          "note": "{{jr_kyoto_isetan}}(백화점)·{{kyoto_porta}}(지하상가)는 {{kyoto_station}} 빌딩 직결 완전 실내·지하. 폭우·강풍과 무관하게 쇼핑·구경·식품관(데파치카) 둘러보기. 시부모 휴식 겸 천천히. 선물용 포켓몬 봉인팩(미개봉 낱팩)은 하치조구치 지하도 직결 {{donki_avanti}}(아반티 2F, 면세) 완구코너 먼저 확인 → 인기세트 결품이면 가라스마구치 {{yodobashi_kyoto}}(도보 5분, 정가·재고 안정)에서 마무리. 둘 다 {{kyoto_station}} 권역 실내라 비 노출 없음.",
           "arrive_from": {
             "steps": [
               {
@@ -1063,7 +1073,7 @@
             "en_name": ""
           },
           "maps_query": "Umekoji Kadensho",
-          "note": "디저트 후 {{kadensho}} 복귀. 가이세키 전 온천 휴식. 저녁 천둥·강풍(N 10~11m/s) 예보 — 이 시간대엔 이미 실내.",
+          "note": "디저트 후 {{kadensho}} 복귀·체크인(15:00부터 가능, 16:00경 입실)·짐 회수. 가이세키 전 온천 휴식. 저녁 천둥·강풍(N 10~11m/s) 예보 — 이 시간대엔 이미 실내.",
           "arrive_from": {
             "steps": [
               {
