@@ -929,7 +929,7 @@ class ItineraryMemoFoldTests(unittest.TestCase):
                 html = path.read_text(encoding="utf-8")
                 self.assertIn("폭우로 야외 동산(키요미즈데라(清水寺))·디저트(산넨자카 맛차하우스) 코스를 대체한 실내 디저트 휴식</summary>", html,
                               "long place memo should fold into a first-sentence summary")
-                self.assertIn("14:30~16:00 권장, 피크 15~20분 대기", html, "memo tail lost (not lossless)")
+                self.assertIn("13:30~14:45 권장(15:00 입실 맞춤), 피크 15~20분 대기", html, "memo tail lost (not lossless)")
 
     def test_long_food_note_folded_but_rating_kept(self):
         run()

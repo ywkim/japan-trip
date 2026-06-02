@@ -988,7 +988,7 @@
           }
         },
         {
-          "time": "13:00",
+          "time": "12:30",
           "title": {
             "type": "place",
             "ko_name": "이세탄·포르타 실내 구경",
@@ -1014,7 +1014,7 @@
           }
         },
         {
-          "time": "14:30",
+          "time": "13:30",
           "title": {
             "type": "restaurant",
             "ko_name": "교토역 말차 디저트 (中村藤吉 / 茶寮都路里)",
@@ -1023,7 +1023,7 @@
             "en_name": ""
           },
           "maps_query": "Nakamura Tokichi Kyoto Station",
-          "note": "폭우로 야외 동산({{kiyomizu}})·디저트(산넨자카 맛차하우스) 코스를 대체한 실내 디저트 휴식. {{jr_kyoto_isetan}} 같은 건물 {{nakamura_tokichi}} 3F·{{saryo_tsujiri}} 6F 중 당일 택1 — 역 직결 완전 실내라 비 무관. 14:30~16:00 권장, 피크 15~20분 대기.",
+          "note": "폭우로 야외 동산({{kiyomizu}})·디저트(산넨자카 맛차하우스) 코스를 대체한 실내 디저트 휴식. {{jr_kyoto_isetan}} 같은 건물 {{nakamura_tokichi}} 3F·{{saryo_tsujiri}} 6F 중 당일 택1 — 역 직결 완전 실내라 비 무관. 13:30~14:45 권장(15:00 입실 맞춤), 피크 15~20분 대기.",
           "food_quality": {
             "rating": "中村藤吉 타베로그 3.54(1,427)·타베로그100 / 茶寮都路里 3.53(929) — {{jr_kyoto_isetan}} 우지 말차 노포",
             "source": "Tabelog(26005903·26000853)·공식 2026-06-01",
@@ -1064,16 +1064,16 @@
           }
         },
         {
-          "time": "17:15",
+          "time": "15:00",
           "title": {
             "type": "lodging",
-            "ko_name": "천연식 온천",
-            "ja_name": "",
-            "ja_reading_ko": "",
+            "ko_name": "카덴쇼 복귀·입실(체크인)",
+            "ja_name": "嘉寿庄",
+            "ja_reading_ko": "카덴쇼",
             "en_name": ""
           },
           "maps_query": "Umekoji Kadensho",
-          "note": "디저트 후 {{kadensho}} 복귀·체크인(15:00부터 가능, 16:00경 입실)·짐 회수. 가이세키 전 온천 휴식. 저녁 천둥·강풍(N 10~11m/s) 예보 — 이 시간대엔 이미 실내.",
+          "note": "디저트 후 {{kadensho}} 복귀·체크인(15:00 입실)·짐 회수. 입실 후 온천·가이세키까지 방에서 휴식 — 시부모 충분한 쉼. 저녁 천둥·강풍(N 10~11m/s) 예보 시간엔 이미 료칸 실내.",
           "arrive_from": {
             "steps": [
               {
@@ -1090,6 +1090,18 @@
             "data_quality": "researched_market_rate",
             "maps_url": "https://www.google.com/maps/dir/?api=1&origin=Kyoto+Station,+Kyoto&destination=Umekoji+Kadensho,+Kyoto&travelmode=driving"
           }
+        },
+        {
+          "time": "17:15",
+          "title": {
+            "type": "lodging",
+            "ko_name": "천연식 온천",
+            "ja_name": "",
+            "ja_reading_ko": "",
+            "en_name": ""
+          },
+          "maps_query": "Umekoji Kadensho",
+          "note": "방에서 휴식 후 {{kadensho}} 료칸 대욕장. 가이세키 전 온천으로 몸 풀기 — 6/3 새벽 출발 대비 일찍."
         },
         {
           "time": "18:00",
