@@ -206,6 +206,7 @@ japan-trip/
   - 아카이브 문서·운영 문서는 `viz/archive.html`의 "참고 문서" 카드 섹션에서 탐색 가능.
 - **GitHub 링크 금지(검사 J) 유지**: 렌더 대상 `.md`에 `github.com`이 들어가면 산출물에 섞여 머지 차단. 새 문서 등록 시 사전 확인.
 - **링크 치환**: `link.url`/내부 참조에 레포 `.md` 경로를 쓰면 `DOC_SOURCE_TO_OUT`가 in-site 페이지로 치환 (`doc_href(out, in_viz)`가 루트/viz 상대경로 결정).
+- **모바일 표 = 카드형 스택**: 마크다운 표는 `add_table_data_labels()`가 렌더 후 헤더 텍스트를 각 `<td>`의 `data-label`로 주입하고, `DOC_CSS`의 `@media (max-width:560px)`가 thead를 숨겨 'label: value' 카드로 스택한다(데스크톱은 기존 `overflow-x:auto` 표). 4컬럼 표가 좁은 화면에서 가로 스크롤로 잘리던 문제 해결 — 새 문서 표에도 자동 적용. 근거: `docs/decision-log/2026-06-02-04-doc-table-mobile-cards.md`
 
 ## CI 검증 (PR 게이트)
 
